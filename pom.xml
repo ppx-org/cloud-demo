@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.ppx.cloud</groupId>
+		<artifactId>cloud-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../cloud-parent</relativePath>
+	</parent>
+
+	<artifactId>cloud-demo</artifactId>
+	<properties>
+		<context-path>/demo</context-path>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
+	
+	<!--  
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<properties><env>dev</env></properties>
+			<activation><activeByDefault>true</activeByDefault></activation>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties><env>dev</env></properties>
+		</profile>
+	</profiles>
+	-->
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/net.coobird/thumbnailator -->
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+			<version>0.4.8</version>
+		</dependency>
+
+
+
+		<dependency>
+			<groupId>com.ppx.cloud</groupId>
+			<artifactId>cloud-commons</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-devtools</artifactId> 
+			<optional>true</optional> <scope>true</scope> </dependency> -->
+	</dependencies>
+
+
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>unpack</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>com.ppx.cloud</groupId>
+									<artifactId>cloud-commons</artifactId>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/classes</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- <plugin> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-maven-plugin</artifactId> 
+				<configuration> <fork>true</fork> </configuration> </plugin> -->
+		</plugins>
+
+
+
+		 
+        
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/config</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		
+		
+		<!-- 
+		<filters>
+			<filter>src/main/config/application.properties</filter>
+			<filter>src/main/config/messages.properties</filter>
+			<filter>src/main/config/banner.txt</filter>
+		</filters>
+		 -->
+	</build>
+
+
+</project>
