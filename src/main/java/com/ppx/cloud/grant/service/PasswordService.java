@@ -14,14 +14,14 @@ public class PasswordService extends MyDaoSupport {
 	
 	public int updatePassword(String oldP, String newP) {
 		Integer accoutId = GrantContext.getLoginAccount().getAccountId();
-		Map<String, Object> map = getJdbcTemplate().queryForMap("select LOGIN_PASSWORD from merchant_account where ACCOUT_ID = ?", accoutId);
+		Map<String, Object> map = getJdbcTemplate().queryForMap("select LOGIN_PASSWORD from merchant_account where ACCOUNT_ID = ?", accoutId);
 		String password = (String)map.get("LOGIN_PASSWORD");
-		if (!password.equals(MD5Utils.getMD5(GrantUtils.getMD5Password(oldP)))) {
+		if (!password.equals(GrantUtils.getMD5Password(oldP))) {
 			// 旧密码不正确
 			return -1;
 		}
 		// 更新密码
-		int r = getJdbcTemplate().update("update merchant_account LOGIN_PASSWORD = md5(?) set where ACCOUT_ID = ?",
+		int r = getJdbcTemplate().update("update merchant_account set LOGIN_PASSWORD = ? where ACCOUNT_ID = ?",
 			GrantUtils.getMD5Password(newP), accoutId);
 		return r;
 	}

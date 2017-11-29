@@ -17,9 +17,9 @@
     	<a href="javascript:gotoIndex()">首页</a>
     	
     	<!-- 管理员不能修改密码 -->
+    	<span th:if="${isAdmin==false}"> 
     	<a href="javascript:editPassword()">修改密码</a>
-    	
-    	
+    	</span>
     	
     	<span th:text="${account.loginAccount}"></span>
     	<span th:text="${account.merchantName}"></span>
@@ -30,14 +30,14 @@
     		监控
     	</a>
     	
-    	<a target="_blank" href="javascript:alert('连接到github');" class="badge" style="color:white;">
-    		<span class="badge" style="background-color: red; height:14px;width:14px;display:inline-block;"></span>
-    		有话说
-    	</a>
-    	
-    	<a target="_blank" href="javascript:alert('连接到github');" class="badge" style="color:white;">
+    	<a target="_blank" href="https://github.com/ppx-org/cloud-parent" class="badge" style="color:white;">
     		<span class="badge" style="background-color: red; height:14px;width:14px;display:inline-block;"></span>
     		源码(github)
+    	</a>
+    	
+    	<a target="_blank" href="https://github.com/ppx-org/cloud-parent/issues" class="badge" style="color:white;">
+    		<span class="badge" style="background-color: red; height:14px;width:14px;display:inline-block;"></span>
+    		有话说
     	</a>
     </div>
     

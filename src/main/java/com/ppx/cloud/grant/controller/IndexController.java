@@ -62,9 +62,11 @@ public class IndexController {
 		mv.addObject("account", account);
 		if ("admin".equals(account.getLoginAccount())) {			
 			mv.addObject("menu", getAdminResource());
+			mv.addObject("isAdmin", true);
 		}
 		else {
 			mv.addObject("menu", menuService.getMenu());
+			mv.addObject("isAdmin", false);
 		}
 		
 		return mv;
