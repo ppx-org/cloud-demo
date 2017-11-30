@@ -210,7 +210,7 @@ function authorize() {
 	showLoading();
 	var para = "accountId=" + $("#grantAccountId").val() + "&resIds=" + checkedIds;
 	$.post(contextPath + "saveAuthorize", para, function(r) {
-		if (r.result == 1) {
+		if (r.result == 0 || r.result == 1) {
 			hideLoading();
 			alertSuccess();
 			$('#grantModal').modal('hide');
