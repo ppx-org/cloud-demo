@@ -20,15 +20,16 @@
 </style>
 
 <script th:inline="javascript">
+contextPath = contextPath + "child/";
 $(function() {
 	refreshPageData([[${listJson}]]);
 });
 
-function queryPage(pageNum) {
+function queryPage(pageNumber) {
 	showLoading();
 	$("#pageNumber").val(pageNumber);
-	$.post([[@{/grant/listChildAccount}]], $("#queryForm").serialize(), function(data) {
-		refreshPageData(data);
+	$.post([[@{/child/listChildAccount}]], $("#queryForm").serialize(), function(r) {
+		refreshPageData(r);
 		hideLoading();
 	});
 }
@@ -43,7 +44,7 @@ function queryPage(pageNum) {
 	<label>accountId:</label>	
 	<input type="text" class="form-control input-sm" name="accountId" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
 	<label>loginAccount:</label>		
-	<input type="text" class="form-control input-sm" name="merchantName" >			
+	<input type="text" class="form-control input-sm" name="loginAccount" >			
 	<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>		
 </div>
 

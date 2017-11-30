@@ -61,7 +61,7 @@ treeUtils.decompressNode = function(node, resMap) {
 function initResource() {
 	$('#tree').html("");
 	$('#loading').modal('show');
-	$.post(contextPath + "grant/getAuthorize", "accountId=" + $("#grantAccountId").val(), function(r){
+	$.post(contextPath + "getAuthorize", "accountId=" + $("#grantAccountId").val(), function(r){
 		if (r.result == -1) {
 			// 刚开始没有数据时
 			var tree = [{text:"资源", icon:"glyphicon glyphicon-home"}];
@@ -209,9 +209,11 @@ function authorize() {
 	
 	showLoading();
 	var para = "accountId=" + $("#grantAccountId").val() + "&resIds=" + checkedIds;
-	$.post(contextPath + "grant/saveAuthorize", para, function(r) {
-		hideLoading();
-		alertSuccess("保存成功");
-		$('#grantModal').modal('hide');
+	$.post(contextPath + "saveAuthorize", para, function(r) {
+		if (r.result == 1) {
+			hideLoading();
+			alertSuccess();
+			$('#grantModal').modal('hide');
+		}
 	});
 }

@@ -42,19 +42,6 @@ public class GrantController {
 		return ControllerReturn.ok(list, page);
 	}
 	
-	@GetMapping
-    public ModelAndView grantToChild() {			
-		ModelAndView mv = new ModelAndView();
-		mv.addObject("listJson", listChildAccount(new Page(), new MerchantAccount()));
-		return mv;
-	}
-	
-	@PostMapping @ResponseBody
-	public Map<String, Object> listChildAccount(Page page, MerchantAccount child) {
-		List<MerchantAccount> list = serv.listChildAccount(page, child);
-		return ControllerReturn.ok(list, page);
-	}
-	
 	@PostMapping @ResponseBody
 	public Map<String, Object> getAuthorize(@RequestParam Integer accountId) {		
 		Map<?, ?> authorizeMap = serv.getAuthorize(accountId);
@@ -69,8 +56,8 @@ public class GrantController {
 	
 	@PostMapping @ResponseBody
 	public Map<String, Object> saveAuthorize(@RequestParam Integer accountId, @RequestParam String resIds) {
-		serv.saveAuthorize(accountId, resIds);
-		return ControllerReturn.ok();
+		long r = serv.saveAuthorize(accountId, resIds);
+		return ControllerReturn.ok(r);
 	}
 
 }

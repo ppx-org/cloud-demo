@@ -1,5 +1,7 @@
 package com.ppx.cloud.merchant.child;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
 import com.ppx.cloud.grant.bean.MerchantAccount;
+import com.ppx.cloud.grant.service.GrantService;
+import com.ppx.cloud.grant.service.ResourceService;
 
 
 @Controller
@@ -48,7 +52,6 @@ public class ChildController {
 	}
 	
 	
-	
 	@PostMapping @ResponseBody
 	public Map<String, Object> updateAccount(MerchantAccount bean) {
 		int r = serv.updateAccount(bean);
@@ -67,5 +70,45 @@ public class ChildController {
 		int r = serv.deleteMerchant(id);
 		return ControllerReturn.ok(r);
 	}
+	
+	
+	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>子帐号权限
+	@Autowired
+	private GrantService grantService;
+	
+	@Autowired
+	private ResourceService resourceService;
+	
+	@GetMapping
+    public ModelAndView grantToChild() {			
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("listJson", listChildAccount(new Page(), new MerchantAccount()));
+		return mv;
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> listChildAccount(Page page, MerchantAccount child) {
+		PageList<MerchantAccount> list = serv.listChild(page, child);
+		return ControllerReturn.ok(list, page);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> getAuthorize(@RequestParam Integer accountId) {		
+		Map<?, ?> authorizeMap = grantService.getAuthorize(accountId);
+		if (authorizeMap == null) authorizeMap = new HashMap<String, Object>();
+ 		
+		Map<?, ?> resMap = resourceService.getResource();
+		if (resMap == null) {
+			return ControllerReturn.ok(-1);
+		}
+		return ControllerReturn.ok(authorizeMap, resMap);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> saveAuthorize(@RequestParam Integer accountId, @RequestParam String resIds) {
+		long r = grantService.saveAuthorize(accountId, resIds);
+		return ControllerReturn.ok(r);
+	}
+	
 
 }

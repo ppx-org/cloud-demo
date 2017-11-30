@@ -1,5 +1,6 @@
 package com.ppx.cloud.merchant.child;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -22,9 +23,11 @@ public class ChildService extends MyDaoSupport {
 	public PageList<MerchantAccount> listChild(Page page, MerchantAccount child) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
-		MyCriteria c = createCriteria("and").addAnd("LOGIN_ACCOUNT like ?", "%", child.getLoginAccount(), "%");
+		MyCriteria c = createCriteria("and")
+				.addAnd("ACCOUNT_ID = ?", child.getAccountId())
+				.addAnd("LOGIN_ACCOUNT like ?", "%", child.getLoginAccount(), "%");
 		
-		String sql = "from merchant_account where MERCHANT_ID = ? and RECORD_STATUS = ?";
+		String sql = "from merchant_account where MERCHANT_ID = ? and RECORD_STATUS = ? and MERCHANT_ID != ACCOUNT_ID";
 		StringBuilder cSql = new StringBuilder("select count(*) ").append(sql).append(c);
 		StringBuilder qSql = new StringBuilder("select * ").append(sql).append(c).append(" order by ACCOUNT_ID desc");
 		c.addPrePara(merchantId);
@@ -33,6 +36,22 @@ public class ChildService extends MyDaoSupport {
 
 		return new PageList<MerchantAccount>(list, page);
 	}
+	
+//	public List<MerchantAccount> listChildAccount(Page page, MerchantAccount account) {
+//		List<Object> paraList = new ArrayList<Object>();
+//		paraList.add(GrantContext.getLoginAccount().getMerchantId());
+//		
+//		MyCriteria c = createCriteria("and")
+//			.addAnd("a.ACCOUNT_ID = ?", account.getAccountId())
+//			.addAnd("a.LOGIN_ACCOUNT like ?", "%", account.getMerchantName(), "%");
+//		
+//		StringBuilder cSql = new StringBuilder("select count(*) from merchant_accoun where MERCHANT_ID = ? and MERCHANT_ID != ACCOUNT_ID").append(c);
+//		StringBuilder qSql = new StringBuilder("select * from merchant_account a where a.MERCHANT_ID = ? and MERCHANT_ID != ACCOUNT_ID")
+//			.append(c).append(" order by a.MERCHANT_ID");
+//		
+//		paraList.addAll(c.getParaList());
+//		return queryPage(MerchantAccount.class, page, cSql, qSql, paraList);
+//	}
 
 	@Transactional
 	public int insertChild(MerchantAccount bean) {
