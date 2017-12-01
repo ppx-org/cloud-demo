@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+<link th:replace="common/fragment/common::validation"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	var d = [[${listJson}]];
+	if (!d.arrayList) return;
+	
+	for (var i = 0; i < d.arrayList.length; i++) {
+		var cat = d.arrayList[i];
+		if (i == 0) {
+			cat.isFirst = true;
+		}
+		if (i == d.arrayList.length - 1) {
+			cat.isLast = true;
+		}
+		for (var j = 0; cat.children && j < cat.children.length; j++) {
+			var c = cat.children[j];
+			if (j == 0) {
+				c.isFirst = true;
+			}
+			else if (j == cat.children.length - 1) {
+				c.isLast = true;
+			}
+		}
+	}
+	//alert(JSON.stringify(d));
+	
+	var pageTemplateId = "pageTemplate";
+	$("#" + pageTemplateId).parent().find("tr:gt(0)").remove();
+	$("#" + pageTemplateId).parent().append(template(pageTemplateId, d));
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function closeMain(obj, id) {
+	
+	$("[data-parent-id=" + id+ "]").slideToggle("fast");
+	if ($(obj).text() == "[展开]") {
+		$(obj).text("[折叠]");
+	} else {
+		$(obj).text("[展开]");
+	}
+}
+
+function down(id) {
+	
+}
+
+
+function addChild(parentId) {
+	alert(parentId);
+}
+
+/*
+function edit(obj, catId) {
+	var catName = $(obj).attr("data-catName");
+}*/
+
+
+function edit(obj, catId) {
+	
+	$("#editCatId").val(catId);
+	$("#editCatName").val($(obj).attr("data-catName"));
+	
+	$('#edit').modal('show');
+	
+	/*
+	action = function() {
+		if (!$("#editForm").validationEngine('validate')) return;
+		showLoading();
+		$.post([[@{/category/updateCategory}]], $("#editForm").serialize(), function(r) {
+			if (r.result == 1) {
+				$('#edit').modal('hide');
+				queryPage(1);
+			}
+			else if (r.result == 0) {
+				alertWarning("NAME已经存在！");
+				hideLoading();
+			}
+		});
+	}*/
+}
+
+</script>
+</head>
+
+<body>
+
+<div class="page-list-body">
+	<div class="page-list-query">
+		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>CAT</span></div>
+		<!--
+		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
+		-->
+	</div>
+	
+	<table class="page-list-table table table-bordered table-condensed">
+	
+	
+	
+	
+	
+	<tr>
+		<th>ID</th>
+		<th>NAME</th>
+		<th>ACTION</th>
+	</tr>
+	
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr {{if v.parentId != -1}}data-parent-id="{{v.parentId}}"{{/if}}>
+		<td class="w-id">{{v.catId}}</td>
+		<td class="w-title-s" style="text-align:left">{{v.catName}}{{if v.children}}<a href="#" onclick="javascript:closeMain(this, {{v.catId}})">[折叠]</a>{{/if}}</td>
+		<td class="w-action">
+			<a href="javascript:addChild({{v.catId}})">[addChild]</a>
+			<a href="#" onclick="edit(this, {{v.catId}})" data-catName="{{v.catName}}">[修改]</a>
+
+			{{if !(v.isFirst && v.isLast)}} 
+				{{if !v.isLast}}down,last{{/if}}
+				{{if !v.isFirst}}up,top{{/if}}
+			{{/if}}
+		</td>
+	</tr>
+	{{each v.children as c}}
+	<tr data-parent-id="{{c.parentId}}">
+		<td class="w-id">{{c.catId}}</td>
+		<td class="w-title-s">{{c.catName}}</td>
+		<td class="w-action">
+			<a href="#" onclick="edit(this, {{c.catId}})" data-catName="{{c.catName}}">[修改]</a>
+			{{if !(c.isFirst && c.isLast)}} 
+				{{if !c.isLast}}down,last{{/if}}
+				{{if !c.isFirst}}up,top{{/if}}
+			{{/if}}
+		</td>
+	</tr>
+	{{/each}}
+	{{/each}}
+	</script>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 
+	<tr>
+		<td>1</td>
+		<td style="text-align: left;">AAA<a href="#" onclick="javascript:closeMain(this, 1)">[折叠]</a></td>
+		<td><a href="javascript:down(1)">[down]</a></td>
+	</tr>
+	<tr data-parent-id="1">
+		<td>2</td>
+		<td>childAAA1</td>
+		<td></td>
+	</tr>
+	<tr data-parent-id="1">
+		<td>3</td>
+		<td>childAAA2</td>
+		<td></td>
+	</tr>
+	
+	<tr>
+		<td>4</td>
+		<td style="text-align: left;">BBB</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>5</td>
+		<td style="text-align: left;">CCC<a href="#" onclick="javascript:closeMain(this, 5)">[折叠]</a></td>
+		<td></td>
+	</tr>
+	<tr data-parent-id="5">
+		<td>6</td>
+		<td>childCCC1</td>
+		<td></td>
+	</tr>
+	 -->
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	</table>
+
+</div>
+
+
+<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 360)">
+	<input type="hidden" id="editCatId" name="catId">
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>catName：</label>
+		<div class="col-sm-7"><input type="text" id="editCatName" name="catName" class="form-control validate[required]" maxlength="32"></div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+
