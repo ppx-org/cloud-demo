@@ -2,9 +2,14 @@ package com.ppx.cloud.merchant.category;
 
 import java.util.List;
 
+import com.ppx.cloud.common.jdbc.annotation.Id;
+
 public class Category {
 	
+	@Id
 	private Integer catId;
+	
+	private Integer merchantId;
 	
 	private Integer parentId;
 	
@@ -21,6 +26,14 @@ public class Category {
 
 	public void setCatId(Integer catId) {
 		this.catId = catId;
+	}
+
+	public Integer getMerchantId() {
+		return merchantId;
+	}
+
+	public void setMerchantId(Integer merchantId) {
+		this.merchantId = merchantId;
 	}
 
 	public Integer getParentId() {

@@ -3,6 +3,7 @@ package com.ppx.cloud.merchant.category;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
@@ -12,10 +13,36 @@ import com.ppx.cloud.grant.common.GrantContext;
 @Service
 public class CategoryService extends MyDaoSupport {
 
+	private List<Category> getChildren(List<Category> list, int parentId) {
+		List<Category> returnList = new ArrayList<Category>();
+		for (Category c : list) {
+			if (c.getParentId() == parentId) {
+				returnList.add(c);
+			}
+		}
+		return returnList;
+	}
 	
 	public List<Category> listCategory() {
+		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
+		String sql = "select * from category where MERCHANT_ID = ? and RECORD_STATUS = ? order by CAT_PRIO, CAT_ID"; 
+		List<Category> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Category.class), merchantId, 1);	
+		
+		List<Category> returnList = new ArrayList<Category>();
+		for (Category c : list) {
+			if (c.getParentId() == -1) {
+				List<Category> listChild = getChildren(list, c.getCatId());
+				c.setChildren(listChild.size() == 0 ? null : listChild);
+				returnList.add(c);
+			}
+		}
+		
+		
+		
+		
+		/*
 		List<Category> list = new ArrayList<Category>();
 		
 		Category c = new Category();
@@ -59,17 +86,20 @@ public class CategoryService extends MyDaoSupport {
 		c4.setCatName("BBB_2");
 		c4.setCatPrio(2);
 		list.add(c4);
-		
+		*/
 		
 		
 
-		return list;
+		return returnList;
 	}
 
 	
 	
 	
 	public int insertCategory(Category bean) {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		bean.setMerchantId(merchantId);
+		bean.setCatPrio(0);
 		return insert(bean);
 	}
 	
@@ -78,8 +108,7 @@ public class CategoryService extends MyDaoSupport {
 	}
 	
 	public int deleteCategory(Integer id) {
-		// 存在商品不能删除
-		return getJdbcTemplate().update("delete from category where CAT_ID = ?", id);
+		return getJdbcTemplate().update("update category set RECORD_STATUS = ? where CAT_ID = ?", 0, id);
 	}
 	
 	
