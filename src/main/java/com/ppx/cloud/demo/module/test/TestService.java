@@ -1,6 +1,5 @@
 package com.ppx.cloud.demo.module.test;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -9,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
-import com.ppx.cloud.common.page.LimitRecord;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
 
