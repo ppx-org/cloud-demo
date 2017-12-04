@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ppx.cloud.common.jdbc.MyCriteria;
@@ -111,9 +110,9 @@ public class TestService extends MyDaoSupport {
 	}
 	
 	public TestBean getTest(Integer id) {
-		TestBean testBean = getJdbcTemplate().queryForObject("select * from test where TEST_ID = ?",
+		TestBean bean = getJdbcTemplate().queryForObject("select * from test where TEST_ID = ?",
 				BeanPropertyRowMapper.newInstance(TestBean.class), id);		
-		return testBean;
+		return bean;
 	}
 	
 	//@CacheEvict(value = "testCache", allEntries=true)

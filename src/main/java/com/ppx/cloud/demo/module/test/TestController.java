@@ -74,8 +74,8 @@ public class TestController {
 	}
     
 	@PostMapping @ResponseBody
-	public Map<String, Object> deleteTest(@RequestParam Integer testId) {
-		int r = serv.deleteTest(testId);
+	public Map<String, Object> deleteTest(@RequestParam Integer id) {
+		int r = serv.deleteTest(id);
 		return ControllerReturn.ok(r);
 	}
 }
