@@ -7,8 +7,7 @@
 <link th:replace="common/fragment/common::validation"/>
 
 <script type="text/javascript" th:inline="javascript">
-$(function() {
-	var d = [[${listJson}]];
+function refreshData(d) {
 	if (!d.arrayList) return;
 	
 	for (var i = 0; i < d.arrayList.length; i++) {
@@ -34,10 +33,21 @@ $(function() {
 	var pageTemplateId = "pageTemplate";
 	$("#" + pageTemplateId).parent().find("tr:gt(0)").remove();
 	$("#" + pageTemplateId).parent().append(template(pageTemplateId, d));
+}
 
+$(function() {
+	refreshData([[${listJson}]]);
 });
 
 
+function queryData() {
+	showLoading();
+	$("#pageNumber").val(pageNumber);
+	$.post([[@{/category/listJson}]], null, function(r) {
+		refreshData(r);
+		hideLoading();
+	});
+}
 
 function addChild(parentId) {
 	$("#parentId").val(parentId);
@@ -51,22 +61,13 @@ function addChild(parentId) {
 		$.post([[@{/category/insertCategory}]], $("#addForm").serialize(), function(r) {
 			if (r.result == 1) {
 				$('#add').modal('hide');
-				//queryPage(1);
+				queryData();
 			}
 		});
 	}
 }
 
-
-
-
-
-
-
-
-
-function closeMain(obj, id) {
-	
+function toggleMain(obj, id) {
 	$("[data-parent-id=" + id+ "]").slideToggle("fast");
 	if ($(obj).text() == "[展开]") {
 		$(obj).text("[折叠]");
@@ -75,13 +76,9 @@ function closeMain(obj, id) {
 	}
 }
 
-
-
-function edit(obj, catId) {
-	
+function edit(obj, catId) {	
 	$("#editCatId").val(catId);
 	$("#editCatName").val($(obj).attr("data-catName"));
-
 	$('#edit').modal('show');
 	
 	action = function() {
@@ -90,41 +87,45 @@ function edit(obj, catId) {
 		$.post([[@{/category/updateCategory}]], $("#editForm").serialize(), function(r) {
 			if (r.result == 1) {
 				$('#edit').modal('hide');
-				//queryPage(1);
+				queryData();
 			}
 		});
 	}
 }
 
-
 var move = {};
-move.top = function(catId, parentId) {
-	var r = [catId];
-	$("[data-parent-id=" + parentId +"]").find("td:eq(0)").each(function(i) {
-		var cId = $(this).text();
-		if (cId != catId) {
-			r.push(cId);
+move.top = function(catId) {
+	showLoading();
+	$.post([[@{/category/top}]], "id=" + catId, function(r) {
+		if (r.result == 1) {
+			queryData();
+		}
+	});
+}
+move.last = function(catId) {
+	showLoading();
+	$.post([[@{/category/last}]], "id=" + catId, function(r) {
+		if (r.result == 1) {
+			queryData();
 		}
 	})
-	
-	alert(r);
 }
-
-move.last = function(catId, parentId) {
-	var r = [];
-	$("[data-parent-id=" + parentId +"]").find("td:eq(0)").each(function(i) {
-		var cId = $(this).text();
-		if (cId != catId) {
-			r.push(cId);
+move.up = function(catId) {
+	showLoading();
+	$.post([[@{/category/up}]], "id=" + catId, function(r) {
+		if (r.result == 1) {
+			queryData();
 		}
 	})
-	r.push(catId);
-	
-	alert(r);
 }
-
-
-
+move.down = function(catId) {
+	showLoading();
+	$.post([[@{/category/down}]], "id=" + catId, function(r) {
+		if (r.result == 1) {
+			queryData();
+		}
+	})
+}
 </script>
 </head>
 
@@ -136,12 +137,7 @@ move.last = function(catId, parentId) {
 		<button type="button" class="btn btn-success btn-sm" onclick="addChild(-1)">新增</button>
 	</div>
 	
-	<table class="page-list-table table table-bordered table-condensed">
-	
-	
-	
-	
-	
+	<table class="page-list-table table table-bordered table-condensed">	
 	<tr>
 		<th>ID</th>
 		<th>NAME</th>
@@ -152,14 +148,14 @@ move.last = function(catId, parentId) {
 	{{each arrayList as v i}}
 	<tr data-parent-id="{{v.parentId}}">
 		<td class="w-id">{{v.catId}}</td>
-		<td class="w-title-s" style="text-align:left">{{v.catName}}{{if v.children}}<a href="#" onclick="javascript:closeMain(this, {{v.catId}})">[折叠]</a>{{/if}}</td>
+		<td class="w-title-s" style="text-align:left">{{v.catName}}{{if v.children}}<a href="#" onclick="javascript:toggleMain(this, {{v.catId}})">[折叠]</a>{{/if}}</td>
 		<td class="w-action">
 			<a href="javascript:addChild({{v.catId}})">[addChild]</a>
 			<a href="#" onclick="edit(this, {{v.catId}})" data-catName="{{v.catName}}">[修改]</a>
 
 			{{if !(v.isFirst && v.isLast)}} 
-				{{if !v.isLast}}down,<a href="javascript:move.last({{v.catId}}, {{v.parentId}})">last</a>{{/if}}
-				{{if !v.isFirst}}up,<a href="javascript:move.top({{v.catId}}, {{v.parentId}})">top</a>{{/if}}
+				{{if !v.isLast}}<a href="javascript:move.down({{v.catId}})">last</a>,<a href="javascript:move.last({{v.catId}})">last</a>{{/if}}
+				{{if !v.isFirst}}<a href="javascript:move.up({{v.catId}})">up</a>,,<a href="javascript:move.top({{v.catId}})">top</a>{{/if}}
 			{{/if}}
 		</td>
 	</tr>
@@ -170,100 +166,16 @@ move.last = function(catId, parentId) {
 		<td class="w-action">
 			<a href="#" onclick="edit(this, {{c.catId}})" data-catName="{{c.catName}}">[修改]</a>
 			{{if !(c.isFirst && c.isLast) && c.length > 1}}
-				{{if !c.isLast}}down,<a href="javascript:move.last({{c.catId}}, {{c.parentId}})">last</a>{{/if}}
-				{{if !c.isFirst}}up,<a href="javascript:move.top({{c.catId}}, {{c.parentId}})">top</a>{{/if}}
+				{{if !c.isLast}}<a href="javascript:move.down({{c.catId}})">down</a>,<a href="javascript:move.last({{c.catId}})">last</a>{{/if}}
+				{{if !c.isFirst}}<a href="javascript:move.up({{c.catId}})">up</a>,<a href="javascript:move.top({{c.catId}})">top</a>{{/if}}
 			{{/if}}
 		</td>
 	</tr>
 	{{/each}}
 	{{/each}}
 	</script>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<!-- 
-	<tr>
-		<td>1</td>
-		<td style="text-align: left;">AAA<a href="#" onclick="javascript:closeMain(this, 1)">[折叠]</a></td>
-		<td><a href="javascript:down(1)">[down]</a></td>
-	</tr>
-	<tr data-parent-id="1">
-		<td>2</td>
-		<td>childAAA1</td>
-		<td></td>
-	</tr>
-	<tr data-parent-id="1">
-		<td>3</td>
-		<td>childAAA2</td>
-		<td></td>
-	</tr>
-	
-	<tr>
-		<td>4</td>
-		<td style="text-align: left;">BBB</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td>5</td>
-		<td style="text-align: left;">CCC<a href="#" onclick="javascript:closeMain(this, 5)">[折叠]</a></td>
-		<td></td>
-	</tr>
-	<tr data-parent-id="5">
-		<td>6</td>
-		<td>childCCC1</td>
-		<td></td>
-	</tr>
-	 -->
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	
-	
-	
 	</table>
-
 </div>
-
 
 <div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
 	<input type="hidden" id="parentId" name="parentId">
@@ -276,23 +188,10 @@ move.last = function(catId, parentId) {
 <div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 360)">
 	<input type="hidden" id="editCatId" name="catId">
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>catName：</label>
+		<label class="col-sm-3 control-label"><span class="required">*</span>类名：</label>
 		<div class="col-sm-7"><input type="text" id="editCatName" name="catName" class="form-control validate[required]" maxlength="32"></div>
 	</div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </body>
 </html>

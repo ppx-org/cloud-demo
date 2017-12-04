@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
@@ -20,14 +21,21 @@ import com.ppx.cloud.common.page.PageList;
 @Service
 public class TestService extends MyDaoSupport {
 	
+	@Transactional()
 	public void test() {
-		TestBean b = new TestBean();
-		b.setTestId(1);
-		b.setTestDate(new Date());
-		b.setTestName("xxxxx111");
+		System.out.println("xxxxxxx000000000000000001begin:");
+		String sql = "insert into test(TEST_NAME, TEST_TIME) " + 
+				" select TEST_NAME, TEST_TIME from test where TEST_ID = 1";
+		int r = getJdbcTemplate().update(sql);
 		
-		int r = super.update(b, new LimitRecord("TEST_DATE", "2017-11-24"), "TEST_NAME");
-		System.out.println("xxxxxxxr:" + r);
+		try {
+			Thread.sleep(1000 * 10);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
+		System.out.println("xxxxxxx000000000000000001end:" + r);
 	}
 	
 	

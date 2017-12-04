@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
-import com.ppx.cloud.demo.module.TestBean;
 import com.ppx.cloud.grant.common.GrantContext;
 
 @Service
@@ -27,7 +27,7 @@ public class CategoryService extends MyDaoSupport {
 		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
-		String sql = "select * from category where MERCHANT_ID = ? and RECORD_STATUS = ? order by CAT_PRIO, CAT_ID"; 
+		String sql = "select * from category where MERCHANT_ID = ? and RECORD_STATUS = ? order by CAT_PRIO"; 
 		List<Category> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Category.class), merchantId, 1);	
 		
 		List<Category> returnList = new ArrayList<Category>();
@@ -94,12 +94,25 @@ public class CategoryService extends MyDaoSupport {
 	}
 
 	
-	
-	
-	public int insertCategory(Category bean) {
+	private void lockMerchant() {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		String sql = "select * from merchant where MERCHANT_ID = ? for update";
+		getJdbcTemplate().update(sql, merchantId);
+	}
+	
+	@Transactional
+	public int insertCategory(Category bean) {
+		lockMerchant();
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		
+		
+		// 读取同级别最大catPrio+1
+		String prioSql = "select ifnull(max(CAT_PRIO), 0) + 1 PRIO from category where MERCHANT_ID = ? and PARENT_ID = ?";
+		int prio = getJdbcTemplate().queryForObject(prioSql, Integer.class, merchantId, bean.getParentId());
+				
 		bean.setMerchantId(merchantId);
 		bean.setCatPrio(0);
+		bean.setCatPrio(prio);
 		return insert(bean);
 	}
 	
@@ -111,9 +124,90 @@ public class CategoryService extends MyDaoSupport {
 		return getJdbcTemplate().update("update category set RECORD_STATUS = ? where CAT_ID = ?", 0, id);
 	}
 	
+	@Transactional
+	public int top(Integer id) {
+		lockMerchant();
+
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		String prioSql = "select min(CAT_PRIO) - 1 PRIO from category where MERCHANT_ID = ? and PARENT_ID"
+				+ " = (select PARENT_ID from category where CAT_ID = ?)";
+		int prio = getJdbcTemplate().queryForObject(prioSql, Integer.class, merchantId, id);
+		
+		String updateSql = "update category set CAT_PRIO = ? where CAT_ID = ?";
+		
+		return getJdbcTemplate().update(updateSql, prio, id);
+	}
+	
+	@Transactional
+	public int last(Integer id) {
+		lockMerchant();
+
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		String prioSql = "select max(CAT_PRIO) + 1 PRIO from category where MERCHANT_ID = ? and PARENT_ID"
+				+ " = (select PARENT_ID from category where CAT_ID = ?)";
+		int prio = getJdbcTemplate().queryForObject(prioSql, Integer.class, merchantId, id);
+		
+		String updateSql = "update category set CAT_PRIO = ? where CAT_ID = ?";
+		
+		return getJdbcTemplate().update(updateSql, prio, id);
+	}
+	
+	@Transactional
+	public int up(Integer id) {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		lockMerchant();
+		
+		String sql = "select * from category where MERCHANT_ID = ? and PARENT_ID = (select PARENT_ID from category where CAT_ID = ?)"
+				+ " and RECORD_STATUS = ? order by CAT_PRIO";
+		List<Category> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Category.class), merchantId, id, 1);
+		
+		int prio = -1;
+		int upId = -1;
+		int upPrio = -1;
+		for (Category c : list) {
+			upId = c.getCatId();
+			upPrio = c.getCatPrio();
+			if (c.getCatId() == id) {
+				prio = c.getCatPrio();
+				break;
+			}
+		}
+		
+		String updateSql = "update category set CAT_PRIO = ? where CAT_ID = ?";
+		int r1 = getJdbcTemplate().update(updateSql, prio, id);
+		int r2 = getJdbcTemplate().update(updateSql, upPrio, upId);
+		
+		return r1 == 1 && r2 == 1 ? 1 : 0;
+	}
 	
 	
-	
+	@Transactional
+	public int down(Integer id) {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		lockMerchant();
+		
+		String sql = "select * from category where MERCHANT_ID = ? and PARENT_ID = (select PARENT_ID from category where CAT_ID = ?)"
+				+ " and RECORD_STATUS = ? order by CAT_PRIO";
+		List<Category> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Category.class), merchantId, id, 1);
+		
+		int prio = -1;
+		int downId = -1;
+		int downPrio = -1;
+		for (Category c : list) {
+			if (c.getCatId() == id) {
+				prio = c.getCatPrio();
+				break;
+			}
+			downId = c.getCatId();
+			downPrio = c.getCatPrio();
+		}
+		
+		String updateSql = "update category set CAT_PRIO = ? where CAT_ID = ?";
+		int r1 = getJdbcTemplate().update(updateSql, prio, id);
+		int r2 = getJdbcTemplate().update(updateSql, downPrio, downId);
+		
+		return r1 == 1 && r2 == 1 ? 1 : 0;
+	}
 	
 	
 	

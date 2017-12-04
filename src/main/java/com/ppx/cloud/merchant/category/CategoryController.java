@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -46,11 +47,30 @@ public class CategoryController {
 	}
     
 	@PostMapping @ResponseBody
-	public Map<String, Object> deleteCategory(Integer catId) {
+	public Map<String, Object> deleteCategory(@RequestParam Integer catId) {
 		int r = serv.deleteCategory(catId);
 		return ControllerReturn.ok(r);
 	}
 	
-
+	
+	public Map<String, Object> top(@RequestParam Integer id) {
+		int r = serv.top(id);
+		return ControllerReturn.ok(r);
+	}
+	
+	public Map<String, Object> last(@RequestParam Integer id) {
+		int r = serv.last(id);
+		return ControllerReturn.ok(r);
+	}
+	
+	public Map<String, Object> up(@RequestParam Integer id) {
+		int r = serv.up(id);
+		return ControllerReturn.ok(r);
+	}
+	
+	public Map<String, Object> down(@RequestParam Integer id) {
+		int r = serv.down(id);
+		return ControllerReturn.ok(r);
+	}
 
 }
