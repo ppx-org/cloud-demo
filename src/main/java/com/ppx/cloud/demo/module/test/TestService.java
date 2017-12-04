@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ppx.cloud.common.jdbc.MyCriteria;
@@ -21,8 +23,11 @@ import com.ppx.cloud.common.page.PageList;
 @Service
 public class TestService extends MyDaoSupport {
 	
-	@Transactional()
+	@Transactional(isolation=Isolation.READ_COMMITTED)
 	public void test() {
+		
+		// 事务隔离级别改成RC可能会影响工作流功能，我们项目里几乎看不到for update语句，改成RC容易出BUG
+		// 建议在考勤中使用@Transactional(isolation=Isolation.READ_COMMITTED)去除insert...select的锁，而不影响其它功能
 		System.out.println("xxxxxxx000000000000000001begin:");
 		String sql = "insert into test(TEST_NAME, TEST_TIME) " + 
 				" select TEST_NAME, TEST_TIME from test where TEST_ID = 1";

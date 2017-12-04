@@ -15,7 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.grant.bean.Merchant;
-import com.ppx.cloud.grant.bean.MerchantAccount;
 import com.ppx.cloud.grant.service.GrantService;
 import com.ppx.cloud.grant.service.ResourceService;
 

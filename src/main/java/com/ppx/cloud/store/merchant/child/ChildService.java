@@ -1,6 +1,5 @@
 package com.ppx.cloud.store.merchant.child;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
