@@ -1,4 +1,4 @@
-package com.ppx.cloud.merchant.child;
+package com.ppx.cloud.store.merchant.child;
 
 import java.util.HashMap;
 import java.util.List;
