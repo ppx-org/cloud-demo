@@ -14,7 +14,7 @@ $(function() {
 function queryPage(pageNumber) {
 	showLoading();
 	$("#pageNumber").val(pageNumber);
-	$.post([[@{/store/listStore}]], $("#queryForm").serialize(), function(r) {
+	$.post([[@{/store/listJson}]], $("#queryForm").serialize(), function(r) {
 		refreshPageData(r);
 		hideLoading();
 	});
@@ -72,23 +72,27 @@ function remove(id) {
 </head>
 
 <body>
-<div th:replace="common/fragment/common::pageList('仓库管理')">
+<div th:replace="common/fragment/common::pageList('STxxx')">
 	<div th:fragment="queryFragment">
 		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
-		<input type="text" class="form-control input-sm" name="storeName" placeholder="请输入仓库名称" style="width:200px;">
+		<input type="text" class="form-control input-sm" name="storeName" placeholder="请输入stxxx" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
 		<th>ID</th>
 		<th>NAME</th>
+		<th>No</th>
+		<th>ADD</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
 	<tr>
 		<td class="w-id">{{v.storeId}}</td>
-		<td class="w-title-m">{{v.storeName}}</td>
+		<td class="w-title-s">{{v.storeName}}</td>
+		<td class="w-title-s">{{v.storeNo}}</td>
+		<td class="w-title-s">{{v.storeAddress}}</td>
 		<td class="w-action">
 			<a href="#" onclick="remove('{{v.storeId}}')" class="glyphicon glyphicon-trash" title="删除"></a>&nbsp;&nbsp;
 			<a href="#" onclick="edit('{{v.storeId}}')" class="glyphicon glyphicon-edit" title="修改"></a>
@@ -101,8 +105,20 @@ function remove(id) {
 
 <div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
 	<div class="form-group">
-		<label class="col-sm-2 control-label"><span class="required">*</span>NAME：</label>
-		<div class="col-sm-10"><input type="text" name="storeName" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
+		<div class="col-sm-7">
+			<select class="form-control input-sm" name="storeId">
+				<option th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${listRepo}"></option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
+		<div class="col-sm-7"><input type="text" name="storeName" class="form-control validate[required]" maxlength="32"></div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>No：</label>
+		<div class="col-sm-7"><input type="text" name="storeNo" class="form-control validate[required]" maxlength="32"></div>
 	</div>
 </div>
 
@@ -115,6 +131,10 @@ function remove(id) {
 	<div class="form-group">
 		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
 		<div class="col-sm-7"><input type="text" name="storeName" value="{{store.storeName}}" class="form-control validate[required]" maxlength="32"></div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
+		<div class="col-sm-7"><input type="text" name="storeNo" value="{{store.storeNo}}" class="form-control validate[required]" maxlength="32"></div>
 	</div>
 	</script>
 </div>

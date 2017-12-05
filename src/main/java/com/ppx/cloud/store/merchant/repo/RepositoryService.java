@@ -9,6 +9,7 @@ import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
+import com.ppx.cloud.grant.common.GrantContext;
 
 @Service
 public class RepositoryService extends MyDaoSupport {
@@ -24,12 +25,20 @@ public class RepositoryService extends MyDaoSupport {
 		return new PageList<Repository>(list, page);
 	}
 	
+	public List<Repository> listAllRepository() {
+		String sql = "select REPO_ID, REPO_NAME from repository where RECORD_STATUS = ?";
+		List<Repository> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Repository.class), 1);
+		return list;
+	}
+	
 	public int insertRepository(Repository bean) {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		bean.setMerchantId(merchantId);
 		return insert(bean);
 	}
 	
 	public Repository getRepository(Integer id) {
-		Repository bean = getJdbcTemplate().queryForObject("select * from repository where CAT_ID = ?",
+		Repository bean = getJdbcTemplate().queryForObject("select * from repository where REPO_ID = ?",
 				BeanPropertyRowMapper.newInstance(Repository.class), id);		
 		return bean;
 	}
@@ -39,6 +48,6 @@ public class RepositoryService extends MyDaoSupport {
 	}
 	
 	public int deleteRepository(Integer id) {
-		return getJdbcTemplate().update("update repository set RECORD_STATUS = ? where CAT_ID = ?", 0, id);
+		return getJdbcTemplate().update("update repository set RECORD_STATUS = ? where REPO_ID = ?", 0, id);
 	}
 }

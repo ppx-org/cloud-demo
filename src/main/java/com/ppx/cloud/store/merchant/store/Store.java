@@ -3,28 +3,50 @@ package com.ppx.cloud.store.merchant.store;
 import com.ppx.cloud.common.jdbc.annotation.Id;
 import com.ppx.cloud.common.jdbc.annotation.Table;
 
-@Table(name = "test")
+@Table(name = "store")
 public class Store {
 
 	@Id
-	private Integer repoId;
+	private Integer storeId;
 
-	private String repoName;
+	private String storeName;
+	
+	private String storeNo;
+	
+	private String storeAddress;
 
-	public Integer getRepoId() {
-		return repoId;
+	public Integer getStoreId() {
+		return storeId;
 	}
 
-	public void setRepoId(Integer repoId) {
-		this.repoId = repoId;
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
 	}
 
-	public String getRepoName() {
-		return repoName;
+	public String getStoreName() {
+		return storeName;
 	}
 
-	public void setRepoName(String repoName) {
-		this.repoName = repoName;
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
 	}
 
+	public String getStoreNo() {
+		return storeNo;
+	}
+
+	public void setStoreNo(String storeNo) {
+		this.storeNo = storeNo;
+	}
+
+	public String getStoreAddress() {
+		return storeAddress;
+	}
+
+	public void setStoreAddress(String storeAddress) {
+		this.storeAddress = storeAddress;
+	}
+
+	
+	
 }

@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
+import com.ppx.cloud.store.merchant.repo.RepositoryService;
 
 
 @Controller	
@@ -21,11 +22,15 @@ public class StoreController {
 	@Autowired
 	private StoreService serv;
 	
+	@Autowired
+	private RepositoryService repoServ;
 	
 	@GetMapping
 	public ModelAndView listStore() {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("listJson", listJson(new Page(), new Store()));
+		mv.addObject("listRepo", repoServ.listAllRepository());
+		
 		return mv;
 	}
 
