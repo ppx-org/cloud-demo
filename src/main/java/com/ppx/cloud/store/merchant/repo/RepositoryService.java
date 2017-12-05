@@ -31,6 +31,12 @@ public class RepositoryService extends MyDaoSupport {
 		return list;
 	}
 	
+	public List<Repository> listStoreRepo(Integer storeId) {
+		String sql = "select REPO_ID, REPO_NAME from repository where RECORD_STATUS = ?";
+		List<Repository> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Repository.class), 1);
+		return list;
+	}
+	
 	public int insertRepository(Repository bean) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		bean.setMerchantId(merchantId);

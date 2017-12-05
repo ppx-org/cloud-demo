@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
@@ -27,8 +29,17 @@ public class StoreService extends MyDaoSupport {
 		return new PageList<Store>(list, page);
 	}
 	
+
+	@Transactional
 	public int insertStore(Store bean) {
-		return insert(bean);
+		insert(bean);
+		
+		int id = getLastInsertId();
+		// 插入数据到关系表
+		String sql = "insert into store_map_repo(REPO_ID, STORE_ID) values(?, ?)";
+		int r = getJdbcTemplate().update(sql, id, id);
+		
+		return r;
 	}
 	
 	public Store getStore(Integer id) {
@@ -43,5 +54,18 @@ public class StoreService extends MyDaoSupport {
 	
 	public int deleteStore(Integer id) {
 		return getJdbcTemplate().update("update store set RECORD_STATUS = ? where STORE_ID = ?", 0, id);
+	}
+	
+	@Transactional
+	public int saveStoreRepo(@RequestParam Integer id, @RequestParam Integer[] repoId) {
+		String delSql = "delete from store_map_repo where STORE_ID = ?";
+		getJdbcTemplate().update(delSql, id);
+		
+		String insertSql = "insert into store_map_repo(REPO_ID, STORE_ID) values(?, ?)";
+		for (Integer rId : repoId) {
+			getJdbcTemplate().update(insertSql, rId, id);
+		}
+		
+		return 1;
 	}
 }

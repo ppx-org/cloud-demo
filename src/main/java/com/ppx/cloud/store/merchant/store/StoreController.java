@@ -1,5 +1,6 @@
 package com.ppx.cloud.store.merchant.store;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
+import com.ppx.cloud.store.merchant.repo.Repository;
 import com.ppx.cloud.store.merchant.repo.RepositoryService;
 
 
@@ -63,5 +65,22 @@ public class StoreController {
 		int r = serv.deleteStore(id);
 		return ControllerReturn.ok(r);
 	}
+	
+	// repo
+	@PostMapping @ResponseBody
+	public Map<String, Object> listStoreRepo(@RequestParam Integer id) {
+		List<Repository> list = repoServ.listStoreRepo(id);
+		return ControllerReturn.ok(list);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> saveStoreRepo(@RequestParam Integer id, @RequestParam Integer[] repoId) {
+		int r = serv.saveStoreRepo(id, repoId);
+		return ControllerReturn.ok(r);
+	}
+	
+	
+	
+
 }
 

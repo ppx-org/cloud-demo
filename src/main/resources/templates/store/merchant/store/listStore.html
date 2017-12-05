@@ -68,13 +68,40 @@ function remove(id) {
 	}
 	confirm(id, callback);
 }
+
+function repo(id) {
+	showLoading();
+	$.post([[@{/store/listStoreRepo}]], "id=" + id, function(r) {
+		hideLoading();
+		$('#repo').modal('show');
+		$("#selectedRepo").empty();
+		for (var i = 0; r.arrayList && i < r.arrayList.length; i++) {
+			$("#selectedRepo").append('<option value=' + r.arrayList[i].repoId + '>' + r.arrayList[i].repoName + '</option>');
+		}
+	});
+	
+	action = function() {
+		var val = [];
+		$("#selectedRepo>option").each(function() {
+			val.push("repo=" + $(this).val());
+		})
+		
+		showLoading();
+		$.post([[@{/store/saveStoreRepo}]], "id=" + id + "&" + val.join("&"), function(r) {
+			if (r.result == 1) {
+				$('#repo').modal('hide');
+				queryPage(1);
+			}
+		});
+	}
+}
 </script>
 </head>
 
 <body>
 <div th:replace="common/fragment/common::pageList('STxxx')">
 	<div th:fragment="queryFragment">
-		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
+		<button type="button" class="btn btn-success btn-sm" onclick="repo(1)">新增</button>
 		<input type="text" class="form-control input-sm" name="storeName" placeholder="请输入stxxx" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
@@ -94,6 +121,7 @@ function remove(id) {
 		<td class="w-title-s">{{v.storeNo}}</td>
 		<td class="w-title-s">{{v.storeAddress}}</td>
 		<td class="w-action">
+			<a href="#" onclick="repo('{{v.storeId}}')">[repo]</a>&nbsp;&nbsp;
 			<a href="#" onclick="remove('{{v.storeId}}')" class="glyphicon glyphicon-trash" title="删除"></a>&nbsp;&nbsp;
 			<a href="#" onclick="edit('{{v.storeId}}')" class="glyphicon glyphicon-edit" title="修改"></a>
 		</td>
@@ -137,6 +165,21 @@ function remove(id) {
 		<div class="col-sm-7"><input type="text" name="storeNo" value="{{store.storeNo}}" class="form-control validate[required]" maxlength="32"></div>
 	</div>
 	</script>
+</div>
+
+
+<div th:fragment="repo" th:replace="common/fragment/common::modal('repo', 'repo', 400)">
+	<div class="form-group">
+		<div class="col-sm-5">
+			<select id="selectedRepo" class="form-control" style="width:150px" size="10">
+			</select>
+		</div>
+		<div class="col-sm-5">
+			<select class="form-control" style="width:150px" size="10">
+				<option th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${listRepo}"></option>
+			</select>
+		</div>
+	</div>
 </div>
 
 </body>
