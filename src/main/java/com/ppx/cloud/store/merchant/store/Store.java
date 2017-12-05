@@ -8,6 +8,8 @@ public class Store {
 
 	@Id
 	private Integer storeId;
+	
+	private Integer merchantId;
 
 	private String storeName;
 	
@@ -21,6 +23,14 @@ public class Store {
 
 	public void setStoreId(Integer storeId) {
 		this.storeId = storeId;
+	}
+
+	public Integer getMerchantId() {
+		return merchantId;
+	}
+
+	public void setMerchantId(Integer merchantId) {
+		this.merchantId = merchantId;
 	}
 
 	public String getStoreName() {

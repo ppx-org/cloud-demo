@@ -23,8 +23,7 @@ public class CategoryService extends MyDaoSupport {
 		return returnList;
 	}
 	
-	public List<Category> listCategory() {
-		
+	public List<Category> listCategory() {		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
 		String sql = "select CAT_ID, PARENT_ID, CAT_NAME from category where MERCHANT_ID = ? and RECORD_STATUS = ? order by CAT_PRIO"; 
@@ -38,10 +37,11 @@ public class CategoryService extends MyDaoSupport {
 				returnList.add(c);
 			}
 		}
-		
-
 		return returnList;
 	}
+	
+	
+	
 
 	
 	private void lockMerchant() {

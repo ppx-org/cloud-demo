@@ -11,18 +11,22 @@ import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
+import com.ppx.cloud.grant.common.GrantContext;
 
 @Service
 public class StoreService extends MyDaoSupport {
 
 	public PageList<Store> listStore(Page page, Store bean) {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		
 		MyCriteria c = createCriteria("where").addAnd("s.STORE_NAME like ?", "%", bean.getStoreName(), "%");
 		
 		
-		
-		StringBuilder cSql = new StringBuilder("select count(*) from store s where s.RECORD_STATUS = ?").append(c);
+		String sql = " where s.MERCHANT_ID = ? and s.RECORD_STATUS = ? ";
+		StringBuilder cSql = new StringBuilder("select count(*) from store s").append(sql).append(c);
 		StringBuilder qSql = new StringBuilder("select s.STORE_ID, s.STORE_NAME, s.STORE_NO, r.REPO_ADDRESS STORE_ADDRESS"
-				+ " from store s left join repository r on s.STORE_ID = r.REPO_ID where s.RECORD_STATUS = ? order by s.STORE_ID desc").append(c);
+				+ " from store s left join repository r on s.STORE_ID = r.REPO_ID").append(sql).append("order by s.STORE_ID desc").append(c);
+		c.addPrePara(merchantId);
 		c.addPrePara(1);
 		
 		List<Store> list = queryPage(Store.class, page, cSql, qSql, c.getParaList());
@@ -32,6 +36,8 @@ public class StoreService extends MyDaoSupport {
 
 	@Transactional
 	public int insertStore(Store bean) {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		bean.setMerchantId(merchantId);
 		insert(bean);
 		
 		int id = getLastInsertId();

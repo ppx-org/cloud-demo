@@ -15,19 +15,24 @@ import com.ppx.cloud.grant.common.GrantContext;
 public class RepositoryService extends MyDaoSupport {
 
 	public PageList<Repository> listRepository(Page page, Repository bean) {
-		MyCriteria c = createCriteria("where").addAnd("REPO_NAME like ?", "%", bean.getRepoName(), "%");
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
-		StringBuilder cSql = new StringBuilder("select count(*) from repository where RECORD_STATUS = ?").append(c);
-		StringBuilder qSql = new StringBuilder("select * from repository where RECORD_STATUS = ? order by REPO_ID desc").append(c);
+		MyCriteria c = createCriteria("and").addAnd("REPO_NAME like ?", "%", bean.getRepoName(), "%");
+		
+		String sql = " where MERCHANT_ID = ? and RECORD_STATUS = ? ";
+		StringBuilder cSql = new StringBuilder("select count(*) from repository").append(sql).append(c);
+		StringBuilder qSql = new StringBuilder("select * from repository").append(sql).append("order by REPO_ID desc").append(c);
+		c.addPrePara(merchantId);
 		c.addPrePara(1);
 		
 		List<Repository> list = queryPage(Repository.class, page, cSql, qSql, c.getParaList());
 		return new PageList<Repository>(list, page);
 	}
 	
-	public List<Repository> listAllRepository() {
-		String sql = "select REPO_ID, REPO_NAME from repository where RECORD_STATUS = ?";
-		List<Repository> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Repository.class), 1);
+	public List<Repository> listRepository() {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		String sql = "select REPO_ID, REPO_NAME from repository where MERCHANT_ID = ? and RECORD_STATUS = ?";
+		List<Repository> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Repository.class), merchantId, 1);
 		return list;
 	}
 	
