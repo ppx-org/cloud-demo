@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+<link th:replace="common/fragment/common::validation"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	refreshPageData([[${listJson}]]);
+});
+
+function queryPage(pageNumber) {
+	showLoading();
+	$("#pageNumber").val(pageNumber);
+	$.post([[@{/product/listJson}]], $("#queryForm").serialize(), function(r) {
+		refreshPageData(r);
+		hideLoading();
+	});
+}
+
+function add() {
+	location.href = [[@{/product/addProduct}]];
+}
+
+function edit() {
+	
+}
+
+</script>
+</head>
+
+<body>
+<div th:replace="common/fragment/common::pageList('PROD')">
+	<div th:fragment="queryFragment">
+		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
+		<input type="text" class="form-control input-sm" name="testName" placeholder="请输入NAME" style="width:200px;">
+		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
+	</div>
+	<table th:fragment="listFragment">
+	<tr>
+		<th>ID</th>
+		<th>TIME</th>
+		<th>操作</th>
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td class="w-id">{{v.prodId}}</td>
+		<td class="w-title-s">{{v.prodTitle}}</td>
+		<td class="w-action">
+			<a href="#" onclick="edit('{{v.prodId}}')" class="glyphicon glyphicon-edit" title="修改"></a>
+		</td>
+	</tr>
+	{{/each}}
+	</script>
+	</table>
+</div>
+
+
+
+</body>
+</html>
+

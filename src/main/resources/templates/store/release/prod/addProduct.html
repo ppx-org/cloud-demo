@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+<link th:replace="common/fragment/common::validation"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	
+});
+
+function add() {
+	
+}
+
+</script>
+</head>
+
+<body>
+
+<div class="page-list-body">
+	<div class="page-list-query">
+		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>DEMO_TEST</span></div>
+	</div>
+	<div class="page-list-table">
+	<form id="addForm" class="form-horizontal">
+	
+	<div class="form-group">
+		
+	</div>
+	
+	
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><span class="required">*</span>Title：</label>
+		<div class="col-sm-3"><input type="text" name="prodTitle" class="form-control validate[required]" maxlength="32"></div>
+	
+		<label class="col-sm-2 control-label"><span class="required">*</span>Title：</label>
+		<div class="col-sm-3"><input type="text" name="prodTitle" class="form-control validate[required]" maxlength="32"></div>
+	</div>
+	
+	
+	</form>
+	</div>
+	<div>
+		<button class="btn btn-primary btn-sm" onclick="add()" type="button">确定</button>
+		<button class="btn btn-default btn-sm" type="button">返回</button>
+	</div>
+</div>
+
+
+</body>
+</html>
+
