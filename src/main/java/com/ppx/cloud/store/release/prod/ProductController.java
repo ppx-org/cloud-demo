@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -58,12 +59,40 @@ public class ProductController {
 	}
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> insertProduct(Product bean) {
-		int r = serv.insertProduct(bean);
-		return ControllerReturn.ok(r);
+	public Map<String, Object> insertProduct(Product bean, @RequestParam Integer[] stockNum, @RequestParam Float[] price,
+			String[] skuName, String[] skuImgSrc) {
+		System.out.println("..........getRepoId:" + bean.getRepoId());
+		System.out.println("..........getCatId:" + bean.getCatId());
+		System.out.println("..........getProdTitle:" + bean.getProdTitle());
+		
+		for (Integer n : stockNum) {
+			System.out.println("nnnnnnn:" + n);
+		}
+		
+		for (Float p : price) {
+			System.out.println("pppppppp:" + p);
+		}
+		
+		if (skuName != null) {
+			for (String name : skuName) {
+				System.out.println("skuName:" + name);
+			}
+		}
+		
+		if (skuImgSrc != null) {
+			for (String src : skuImgSrc) {
+				System.out.println("skuImgSrc:" + src);
+			}
+		}
+	
+		
+		return ControllerReturn.ok(1);
+		
+		//int r = serv.insertProduct(bean);
+		//return ControllerReturn.ok(r);
 	}
 	
-	
+
 	
 	
 	private List<Category> displaySubCat(List<Category> list) {
