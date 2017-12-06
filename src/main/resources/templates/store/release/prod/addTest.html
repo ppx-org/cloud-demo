@@ -6,6 +6,8 @@
 <link th:replace="common/fragment/common::common"/>
 <link th:replace="common/fragment/common::validation"/>
 
+<script type="text/javascript" th:src="@{/static/module/store/release/prod/product.js}"></script>
+
 <script type="text/javascript" th:inline="javascript">
 $(function() {
 	
@@ -29,7 +31,7 @@ function uploadImg(callback) {
 	var formData = new FormData();
 	$(".uploadImg").each(function() {formData.append("file", $(this).data("file"))});	
 	
-	$.ajax({url:[[@{/imgUpload/multipleSave}]],type:"POST",contentType:false,data:formData,processData:false,
+	$.ajax({url:[[@{/imgUpload/multipleSave}]], type:"POST", contentType:false, data:formData ,processData:false,
 		success:function(r){
 			var len = r.arrayList.length;
 			if ($(".uploadImg").length != len) {
@@ -37,7 +39,6 @@ function uploadImg(callback) {
 				return;
 			}
 			
-			// {"actionStatus":"OK","errorCode":"0","arrayList":["-1/20171206/86c4e70293234c93b0a4ef939e6ed496.png"]}
 			for (var i = 0; i < len; i++) {
 				// 上传后路径写回img
 				$(".uploadImg").eq(i).data("imgSrc", r.arrayList[i]);
@@ -51,18 +52,9 @@ function uploadImg(callback) {
 				});
 				$(this).find("[name=skuImgSrc]").val(r);
 			});
-			
 			callback.call();
 		}
 	});
-}
-
-function testChange(obj) {
-	var f = obj.files;
-	if (f.length == 0) return;
-	
-	$("#storage").data("file", f[0]);
-	
 }
 
 </script>
@@ -76,20 +68,6 @@ function testChange(obj) {
 </head>
 
 <body>
-
-<!--  
-<img id="storage" src="">
-
-<img class="test" data-str="abc">
-<img class="test" data-str="efgf">
-
-<input type="file" multiple="multiple" onchange="testChange(this)" style="display:none" accept=".jpg,.png">
-<a href="#" onclick="$(this).prev().click()">[+]</a>
-<button onclick="uploadImg()">测试导出</button>
-
--->
-
-
 
 
 <div class="form-horizontal form-body" style="display:">
@@ -189,78 +167,6 @@ function testChange(obj) {
 		</table>
 		</div>
 	</div>
-	
-	<script>
-	var sku = {};
-	sku.top = function(obj) {
-		var firstSku = $("#skuTable>tbody>tr:eq(1)");
-		firstSku.find(".skuAction").html('<a href="#" onclick="sku.remove(this)">[删除]</a><a href="#" onclick="sku.top(this)">[T]</a>');
-		
-		$(obj).parent().parent().clone(true).insertAfter($("#skuTable>tbody>tr:eq(0)"));
-		$(obj).parent().parent().remove();
-		
-		var firstSku = $("#skuTable>tbody>tr:eq(1)");
-		firstSku.find(".skuAction").html('<a href="#" onclick="sku.add(this)">[增加]</a>');
-	}
-	sku.add = function(obj) {
-		// 显示firstSkuTitle
-		$(".firstSkuTitle").show();
-		$(obj).parent().parent().after('<tr class="skuTr">' + $("#moreSkuTr").html() + '</tr>')
-	}
-	sku.remove = function(obj) {
-		// 只剩下一个sku时，隐藏firstSkuTitle
-		var len = $("#skuTable>tbody>tr").length;
-		if (len == 4) {
-			$(".firstSkuTitle").hide();
-		}
-		$(obj).parent().parent().remove();
-	}
-	
-	
-	var img = {};
-	img.html = '<td class="imgTd">\
-		<table style="height:80px"><tr><td rowspan="2"><img class="uploadImg" onload="img.resize(this)"/></td><td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td></tr>\
-		<tr><td class="glyphicon glyphicon-step-backward leftTopImg" onclick="img.top(this)"></td></tr></table></td>';
-	img.fileChange = function(obj) {
-		var f = obj.files;
-		if (f.length == 0) return;
-		
-		this.loadImg(f, f.length, $(obj).parent().parent());
-	}
-	img.loadImg = function(f, n, imgTr) {
-		n--;
-		var td = $(this.html);
-		td.appendTo(imgTr);
-		var reader = new FileReader();
-		reader.onload = function(e) {
-			var imgObj = td.find("img");
-			imgObj.prop("src", this.result);
-			imgObj.data("file", f[n]);
-			if (n > 0) img.loadImg(f, n, imgTr);
-		}
-		reader.readAsDataURL(f[n]);
-	}
-	img.resize = function(img) {
-		if (img.height > img.width) $(img).css({height:80, width:80 * img.width/img.height});
-		else $(img).css({width:80, height:80 * img.height/img.width});
-	}
-	img.remove = function(obj) {
-		$(obj).parents(".imgTd").remove();
-		this.refreshTop();
-	}
-	img.refreshTop = function() {
-		$(".leftTopImg").show();
-		$(".leftTopImg").first().hide();
-	}
-	img.top = function(obj) {
-		var firstImgTd = $(obj).parents(".imgTr").find("td:eq(0)");
-		$(obj).parents(".imgTd").clone(true).insertAfter(firstImgTd);
-		$(obj).parents(".imgTd").remove();
-		this.refreshTop();
-	}
-		
-	
-	</script>
 
 	
 	
