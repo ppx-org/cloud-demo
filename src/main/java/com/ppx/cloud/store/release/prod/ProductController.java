@@ -48,7 +48,7 @@ public class ProductController {
 	
 	
 	@GetMapping
-	public ModelAndView addProduct() {
+	public ModelAndView addTest() {
 		ModelAndView mv = new ModelAndView();
 		// repo
 		mv.addObject("listRepo", repoServ.listRepository());

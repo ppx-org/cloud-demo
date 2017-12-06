@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+<link th:replace="common/fragment/common::validation"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	
+});
+
+function add() {
+	if (!$("#addForm").validationEngine('validate')) return;
+	
+	alert(1)
+}
+
+</script>
+
+<style>
+.form-body {padding:3px;min-width:1200px;overflow-x:hidden}
+.form-title {height:20px;font-size:15px;line-height:30px;padding-left:20px;}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="form-horizontal form-body">
+	<div class="form-group">
+		<div class="form-title"><span class="glyphicon glyphicon-th-list"></span><span>DEMO_TEST</span></div>
+	</div>
+	
+	
+	
+	<form id="addForm">
+	<!--  
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><span class="required">*</span>REPO：</label>
+		<div class="col-sm-3">
+			<select class="form-control">
+				<option th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${listRepo}"></option>
+			</select>
+		</div>
+		
+		<label class="col-sm-2 control-label"><span class="required">*</span>TEST：</label>
+		<div class="col-sm-3">
+			<select class="form-control">
+				<option th:value="${item.catId}" th:text="${item.catName}" th:each="item:${listCat}"></option>
+			</select>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><span class="required">*</span>Title：</label>
+		<div class="col-sm-7"><input type="text" name="prodTitle" class="form-control validate[required]" maxlength="32" style="width:500px"></div>
+	</div>
+	-->
+	<!--  NUM PRI IMG  -->
+	
+	<!--
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><span class="required">*</span>NUM：</label>
+		<div class="col-sm-3"><input type="text" name="prodTitle" class="form-control validate[required]" maxlength="32"></div>
+	
+		<label class="col-sm-2 control-label"><span class="required">*</span>DOUBLE：</label>
+		<div class="col-sm-3"><input type="text" name="prodTitle" class="form-control validate[required]" maxlength="32"></div>
+	</div>
+	-->
+	
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><span class="required">*</span>测试导出：</label>
+		<div class="col-sm-8">
+		<table id="skuTable">
+			<tr>
+				<th style="width:55px">数量</th>
+				<th style="width:95px">DDDD</th>
+				<th style="display:none;" class="firstSkuTitle">TITLE</th>
+				<th style="width:60px">AC</th>
+				<th>IM</th>	
+			</tr>
+			<tr>
+				<td><input type="text" name="NUM" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px"></td>
+				<td><input type="text" name="DOUBLE" class="form-control validate[required,custom[number]]" maxlength="7" style="width:90px"></td>
+				<td style="display:none;" class="firstSkuTitle"><input type="text" name="TITLE" class="form-control validate[required]" maxlength="32"></td>
+				<td class="skuAction">
+					<a href="#" onclick="addSku(this)">[增加]</a>
+				</td>
+				<td>
+				<table>
+				<tr>
+					<td>
+						<input type="file" multiple="multiple" onchange="multiChange(this)" style="display:none" accept=".jpg,.png">
+						<a href="#" onclick="$(this).prev().click()">[+]</a>
+					</td>
+					<td class="imgTd"></td>
+				</tr>
+				</table>
+				</td>
+			</tr>
+			
+			<tr id="moreSkuTr" style="display: none">
+				<td><input type="text" name="NUM" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px"></td>
+				<td><input type="text" name="DOUBLE" class="form-control validate[required,custom[number]]" maxlength="7" style="width:90px"></td>
+				<td><input type="text" name="TITLE" class="form-control" maxlength="32"></td>
+				<td class="skuAction">
+					<a href="#" onclick="removeSku(this)">[删除]</a>
+					<a href="#" onclick="topSku(this)">[T]</a>
+				</td>
+				<td>
+				<table>
+				<tr>
+					<td>
+						<input type="file" multiple="multiple" onchange="multiChange(this)" style="display:none" accept=".jpg,.png">
+						<a href="#" onclick="$(this).prev().click()">[+]</a>
+					</td>
+					<td class="imgTd"></td>
+				</tr>
+				</table>
+				</td>
+			</tr>
+		</table>
+		</div>
+	</div>
+	
+	<script>
+	function topSku(obj) {
+		var firstSku = $("#skuTable>tbody>tr:eq(1)");
+		firstSku.find(".skuAction").html('<a href="#" onclick="removeSku(this)">[删除]</a><a href="#" onclick="topSku(this)">[T]</a>');
+		
+		$(obj).parent().parent().clone(true).insertAfter($("#skuTable>tbody>tr:eq(0)"));
+		$(obj).parent().parent().remove();
+		
+		var firstSku = $("#skuTable>tbody>tr:eq(1)");
+		firstSku.find(".skuAction").html('<a href="#" onclick="addSku(this)">[增加]</a>');
+	}
+	
+	
+	
+	function multiChange(obj) {
+		var f = obj.files;
+		if (f.length == 0) return;
+		
+		/*
+		if ($(".multiImgDiv").length + f.length >= 6) {
+			return myAlert("最多5张");
+		}*/
+		
+		loadMultiImg(f, f.length, $(obj).parent().next());
+	}
+	
+	function _imgResize(img) {
+		if (img.height > img.width) $(img).css({height:80, width:80 * img.width/img.height});
+		else $(img).css({width:80, height:80 * img.height/img.width});
+	}
+	
+		
+	var mainImgHtml = '<td>\
+		<table style="height:80px"><tr><td rowspan="2"><img onload="_imgResize(this)"/></td><td class="glyphicon glyphicon-remove-circle" onclick="delMulti(this)"></td></tr>\
+		<tr><td class="glyphicon glyphicon-step-backward leftTopImg" onclick="topMulti(this)"></td></tr></table></td>';
+	
+	function topMulti(obj) {
+		//var imgTd = $(obj).parent().parent().parent().parent().parent();
+		var imgTd = $(obj).parents(".imgTd");
+		$(obj).parent().parent().parent().parent().clone(true).prependTo(imgTd);
+		$(obj).parent().parent().parent().parent().remove();
+		delFirstTop();
+	}
+		
+	function delFirstTop() {
+		$(".leftTopImg").show();
+		$(".leftTopImg").first().hide();
+	} 	
+	
+	function delMulti(obj) {
+		$(obj).parent().parent().parent().parent().remove();
+		delFirstTop();
+	}
+
+	function loadMultiImg(f, n, imgTd) {
+		n--;
+		var td = $(mainImgHtml);
+		var img = td.find("img");
+		td.appendTo(imgTd);
+		
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			img.prop("src", this.result);
+			if (n > 0) loadMultiImg(f, n, imgTd);
+		}
+		reader.readAsDataURL(f[n]);
+	}
+	
+	
+	function addSku(obj) {
+		// 显示firstSkuTitle
+		$(".firstSkuTitle").show();
+		
+		$(obj).parent().parent().after('<tr>' + $("#moreSkuTr").html() + '</tr>')
+	}
+	function removeSku(obj) {
+		// 只剩下一个sku时，隐藏firstSkuTitle
+		var len = $("#skuTable>tbody>tr").length;
+		if (len == 4) {
+			$(".firstSkuTitle").hide();
+		}
+		
+		
+		$(obj).parent().parent().remove();
+	}
+	</script>
+
+	
+	
+	<div class="form-group">
+		  
+		<div style="text-align: center;">
+			<button class="btn btn-primary btn-sm" onclick="add()" type="button">导出</button>
+			&nbsp;&nbsp;&nbsp;
+			<button type="button" class="btn btn-default btn-sm">返回</button>
+		</div>
+		
+	</div>
+	</form>
+	
+</div>
+
+</body>
+</html>
+
