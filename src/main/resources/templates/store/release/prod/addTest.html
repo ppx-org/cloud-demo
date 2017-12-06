@@ -11,10 +11,58 @@ $(function() {
 	
 });
 
+function insert() {
+	$.post([[@{/product/insertProduct}]], $("#addForm").serialize(), function(r) {
+		if (r.result == 1) {
+			alertSuccess();
+		}
+	});
+}
+
 function add() {
 	if (!$("#addForm").validationEngine('validate')) return;
+	uploadImg(insert);
+}
+
+
+function uploadImg(callback) {
+	var formData = new FormData();
+	$(".uploadImg").each(function() {formData.append("file", $(this).data("file"))});	
 	
-	alert(1)
+	$.ajax({url:[[@{/imgUpload/multipleSave}]],type:"POST",contentType:false,data:formData,processData:false,
+		success:function(r){
+			var len = r.arrayList.length;
+			if ($(".uploadImg").length != len) {
+				alertDanger("上传失败");
+				return;
+			}
+			
+			// {"actionStatus":"OK","errorCode":"0","arrayList":["-1/20171206/86c4e70293234c93b0a4ef939e6ed496.png"]}
+			for (var i = 0; i < len; i++) {
+				// 上传后路径写回img
+				$(".uploadImg").eq(i).data("imgSrc", r.arrayList[i]);
+			}
+			
+			// 路径以,分格写到hidden
+			$(".skuTr").each(function() {
+				var r = [];
+				$(this).find("img").each(function(){
+					r.push($(this).data("imgSrc"));
+				});
+				$(this).find("[name=skuImgSrc]").val(r);
+			});
+			
+			callback.call();
+		}
+	});
+}
+
+function testChange(obj) {
+	var f = obj.files;
+	if (f.length == 0) return;
+	
+	$("#storage").data("file", f[0]);
+	
 }
 
 </script>
@@ -29,8 +77,22 @@ function add() {
 
 <body>
 
+<!--  
+<img id="storage" src="">
 
-<div class="form-horizontal form-body">
+<img class="test" data-str="abc">
+<img class="test" data-str="efgf">
+
+<input type="file" multiple="multiple" onchange="testChange(this)" style="display:none" accept=".jpg,.png">
+<a href="#" onclick="$(this).prev().click()">[+]</a>
+<button onclick="uploadImg()">测试导出</button>
+
+-->
+
+
+
+
+<div class="form-horizontal form-body" style="display:">
 	<div class="form-group">
 		<div class="form-title"><span class="glyphicon glyphicon-th-list"></span><span>DEMO_TEST</span></div>
 	</div>
@@ -42,14 +104,14 @@ function add() {
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>REPO：</label>
 		<div class="col-sm-3">
-			<select class="form-control">
+			<select class="form-control" name="repoId">
 				<option th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${listRepo}"></option>
 			</select>
 		</div>
 		
 		<label class="col-sm-2 control-label"><span class="required">*</span>TEST：</label>
 		<div class="col-sm-3">
-			<select class="form-control">
+			<select class="form-control" name="catId">
 				<option th:value="${item.catId}" th:text="${item.catName}" th:each="item:${listCat}"></option>
 			</select>
 		</div>
@@ -83,42 +145,43 @@ function add() {
 				<th style="width:60px">AC</th>
 				<th>IM</th>	
 			</tr>
-			<tr>
-				<td><input type="text" name="NUM" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px"></td>
-				<td><input type="text" name="DOUBLE" class="form-control validate[required,custom[number]]" maxlength="7" style="width:90px"></td>
-				<td style="display:none;" class="firstSkuTitle"><input type="text" name="TITLE" class="form-control validate[required]" maxlength="32"></td>
+			<tr class="skuTr">
+				<td><input type="text" name="stockNum" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px"></td>
+				<td><input type="text" name="price" class="form-control validate[required,custom[number]]" maxlength="7" style="width:90px"></td>
+				<td style="display:none;" class="firstSkuTitle"><input type="text" name="skuName" class="form-control validate[required]" maxlength="32"></td>
 				<td class="skuAction">
-					<a href="#" onclick="addSku(this)">[增加]</a>
+					<a href="#" onclick="sku.add(this)">[增加]</a>
 				</td>
 				<td>
+				<input type="hidden" name="skuImgSrc">
 				<table>
-				<tr>
+				<tr class="imgTr">
 					<td>
-						<input type="file" multiple="multiple" onchange="multiChange(this)" style="display:none" accept=".jpg,.png">
+						<input type="file" multiple="multiple" onchange="img.fileChange(this)" style="display:none" accept=".jpg,.png">
 						<a href="#" onclick="$(this).prev().click()">[+]</a>
 					</td>
-					<td class="imgTd"></td>
 				</tr>
 				</table>
 				</td>
 			</tr>
 			
-			<tr id="moreSkuTr" style="display: none">
-				<td><input type="text" name="NUM" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px"></td>
-				<td><input type="text" name="DOUBLE" class="form-control validate[required,custom[number]]" maxlength="7" style="width:90px"></td>
-				<td><input type="text" name="TITLE" class="form-control" maxlength="32"></td>
+			<!-- TODO删除 -->
+			<tr class="skuTr" id="moreSkuTr" style="display: none">
+				<td><input type="text" name="stockNum" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px"></td>
+				<td><input type="text" name="price" class="form-control validate[required,custom[number]]" maxlength="7" style="width:90px"></td>
+				<td><input type="text" name="skuName" class="form-control" maxlength="32"></td>
 				<td class="skuAction">
-					<a href="#" onclick="removeSku(this)">[删除]</a>
-					<a href="#" onclick="topSku(this)">[T]</a>
+					<a href="#" onclick="sku.remove(this)">[删除]</a>
+					<a href="#" onclick="sku.top(this)">[T]</a>
 				</td>
 				<td>
+				<input type="hidden" name="skuImgSrc">
 				<table>
-				<tr>
+				<tr class="imgTr">
 					<td>
-						<input type="file" multiple="multiple" onchange="multiChange(this)" style="display:none" accept=".jpg,.png">
+						<input type="file" multiple="multiple" onchange="img.fileChange(this)" style="display:none" accept=".jpg,.png">
 						<a href="#" onclick="$(this).prev().click()">[+]</a>
 					</td>
-					<td class="imgTd"></td>
 				</tr>
 				</table>
 				</td>
@@ -128,90 +191,75 @@ function add() {
 	</div>
 	
 	<script>
-	function topSku(obj) {
+	var sku = {};
+	sku.top = function(obj) {
 		var firstSku = $("#skuTable>tbody>tr:eq(1)");
-		firstSku.find(".skuAction").html('<a href="#" onclick="removeSku(this)">[删除]</a><a href="#" onclick="topSku(this)">[T]</a>');
+		firstSku.find(".skuAction").html('<a href="#" onclick="sku.remove(this)">[删除]</a><a href="#" onclick="sku.top(this)">[T]</a>');
 		
 		$(obj).parent().parent().clone(true).insertAfter($("#skuTable>tbody>tr:eq(0)"));
 		$(obj).parent().parent().remove();
 		
 		var firstSku = $("#skuTable>tbody>tr:eq(1)");
-		firstSku.find(".skuAction").html('<a href="#" onclick="addSku(this)">[增加]</a>');
+		firstSku.find(".skuAction").html('<a href="#" onclick="sku.add(this)">[增加]</a>');
 	}
-	
-	
-	
-	function multiChange(obj) {
-		var f = obj.files;
-		if (f.length == 0) return;
-		
-		/*
-		if ($(".multiImgDiv").length + f.length >= 6) {
-			return myAlert("最多5张");
-		}*/
-		
-		loadMultiImg(f, f.length, $(obj).parent().next());
-	}
-	
-	function _imgResize(img) {
-		if (img.height > img.width) $(img).css({height:80, width:80 * img.width/img.height});
-		else $(img).css({width:80, height:80 * img.height/img.width});
-	}
-	
-		
-	var mainImgHtml = '<td>\
-		<table style="height:80px"><tr><td rowspan="2"><img onload="_imgResize(this)"/></td><td class="glyphicon glyphicon-remove-circle" onclick="delMulti(this)"></td></tr>\
-		<tr><td class="glyphicon glyphicon-step-backward leftTopImg" onclick="topMulti(this)"></td></tr></table></td>';
-	
-	function topMulti(obj) {
-		//var imgTd = $(obj).parent().parent().parent().parent().parent();
-		var imgTd = $(obj).parents(".imgTd");
-		$(obj).parent().parent().parent().parent().clone(true).prependTo(imgTd);
-		$(obj).parent().parent().parent().parent().remove();
-		delFirstTop();
-	}
-		
-	function delFirstTop() {
-		$(".leftTopImg").show();
-		$(".leftTopImg").first().hide();
-	} 	
-	
-	function delMulti(obj) {
-		$(obj).parent().parent().parent().parent().remove();
-		delFirstTop();
-	}
-
-	function loadMultiImg(f, n, imgTd) {
-		n--;
-		var td = $(mainImgHtml);
-		var img = td.find("img");
-		td.appendTo(imgTd);
-		
-		var reader = new FileReader();
-		reader.onload = function(e) {
-			img.prop("src", this.result);
-			if (n > 0) loadMultiImg(f, n, imgTd);
-		}
-		reader.readAsDataURL(f[n]);
-	}
-	
-	
-	function addSku(obj) {
+	sku.add = function(obj) {
 		// 显示firstSkuTitle
 		$(".firstSkuTitle").show();
-		
-		$(obj).parent().parent().after('<tr>' + $("#moreSkuTr").html() + '</tr>')
+		$(obj).parent().parent().after('<tr class="skuTr">' + $("#moreSkuTr").html() + '</tr>')
 	}
-	function removeSku(obj) {
+	sku.remove = function(obj) {
 		// 只剩下一个sku时，隐藏firstSkuTitle
 		var len = $("#skuTable>tbody>tr").length;
 		if (len == 4) {
 			$(".firstSkuTitle").hide();
 		}
-		
-		
 		$(obj).parent().parent().remove();
 	}
+	
+	
+	var img = {};
+	img.html = '<td class="imgTd">\
+		<table style="height:80px"><tr><td rowspan="2"><img class="uploadImg" onload="img.resize(this)"/></td><td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td></tr>\
+		<tr><td class="glyphicon glyphicon-step-backward leftTopImg" onclick="img.top(this)"></td></tr></table></td>';
+	img.fileChange = function(obj) {
+		var f = obj.files;
+		if (f.length == 0) return;
+		
+		this.loadImg(f, f.length, $(obj).parent().parent());
+	}
+	img.loadImg = function(f, n, imgTr) {
+		n--;
+		var td = $(this.html);
+		td.appendTo(imgTr);
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			var imgObj = td.find("img");
+			imgObj.prop("src", this.result);
+			imgObj.data("file", f[n]);
+			if (n > 0) img.loadImg(f, n, imgTr);
+		}
+		reader.readAsDataURL(f[n]);
+	}
+	img.resize = function(img) {
+		if (img.height > img.width) $(img).css({height:80, width:80 * img.width/img.height});
+		else $(img).css({width:80, height:80 * img.height/img.width});
+	}
+	img.remove = function(obj) {
+		$(obj).parents(".imgTd").remove();
+		this.refreshTop();
+	}
+	img.refreshTop = function() {
+		$(".leftTopImg").show();
+		$(".leftTopImg").first().hide();
+	}
+	img.top = function(obj) {
+		var firstImgTd = $(obj).parents(".imgTr").find("td:eq(0)");
+		$(obj).parents(".imgTd").clone(true).insertAfter(firstImgTd);
+		$(obj).parents(".imgTd").remove();
+		this.refreshTop();
+	}
+		
+	
 	</script>
 
 	

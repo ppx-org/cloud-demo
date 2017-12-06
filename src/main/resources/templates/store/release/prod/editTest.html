@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+<link th:replace="common/fragment/common::validation"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	
+});
+
+</script>
+
+
+
+</head>
+
+<body>
+<span th:text="${prod.repoId}"></span>
+
+<select class="form-control" name="repoId">
+	<option th:selected="${prod.repoId == item.repoId}" th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${listRepo}"></option>
+</select>
+
+</body>
+</html>
+
