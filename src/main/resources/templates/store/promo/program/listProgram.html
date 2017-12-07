@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+<link th:replace="common/fragment/common::validation"/>
+<link th:replace="common/fragment/common::date"/>
+
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	refreshPageData([[${listJson}]]);
+});
+
+function queryPage(pageNumber) {
+	showLoading();
+	$("#pageNumber").val(pageNumber);
+	$.post([[@{/program/listJson}]], $("#queryForm").serialize(), function(r) {
+		refreshPageData(r);
+		hideLoading();
+	});
+}
+
+function add() {
+	$('#addForm')[0].reset();
+	$('#add').modal('show');
+	
+	action = function() {
+		if (!$("#addForm").validationEngine('validate')) return;
+		showLoading();
+		$.post([[@{/program/insertProgram}]], $("#addForm").serialize(), function(r) {
+			if (r.result == 1) {
+				$('#add').modal('hide');
+				queryPage(1);
+			}
+		});
+	}
+}
+
+function edit(id) {
+	showLoading();
+	$.post([[@{/program/getProgram}]], "id=" + id, function(r) {
+		hideLoading();
+		$('#edit').modal('show');
+		$("#editTemplate").nextAll().remove();
+		$("#editTemplate").parent().append(template("editTemplate", r));
+	});
+	
+	action = function() {
+		if (!$("#editForm").validationEngine('validate')) return;
+		showLoading();
+		$.post([[@{/program/updateProgram}]], $("#editForm").serialize(), function(r) {
+			if (r.result == 1) {
+				$('#edit').modal('hide');
+				queryPage(1);
+			}
+		});
+	}
+}
+
+function remove(id) {
+	var callback = function () {
+		showLoading();
+		$.post([[@{/program/deleteProgram}]], "id=" + id, function(r) {
+			if (r.result == 1) {
+				queryPage(1);
+			}
+		});	
+	}
+	confirm(id, callback);
+}
+</script>
+</head>
+
+<body>
+
+<div th:replace="common/fragment/common::pageList('DEMO')">
+	<div th:fragment="queryFragment">
+		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
+		<input type="text" class="form-control input-sm" name="progName" placeholder="请输入NAME" style="width:200px;">
+		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
+	</div>
+	<table th:fragment="listFragment">
+	<tr>
+		<th>ID</th>
+		<th>Name</th>
+		<th>DATE1</th>
+		<th>DATE2</th>
+		<th>PRIO</th>
+		<th>TIME</th>
+		<th>操作</th>
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td class="w-id">{{v.progId}}</td>
+		<td class="w-title-m">{{v.progName}}</td>
+		<td class="w-date">{{v.progBegin}}</td>
+		<td class="w-date">{{v.progEnd}}</td>
+		<td class="w-id">{{v.progPrio}}</td>
+		<td class="w-time">{{v.created}}</td>
+		<td class="w-action">
+			<a href="#" onclick="remove('{{v.progId}}')" class="glyphicon glyphicon-trash" title="删除"></a>&nbsp;&nbsp;
+			<a href="#" onclick="edit('{{v.progId}}')" class="glyphicon glyphicon-edit" title="修改"></a>
+		</td>
+	</tr>
+	{{/each}}
+	</script>
+	</table>
+</div>
+
+<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
+		<div class="col-sm-7"><input type="text" name="progName" class="form-control validate[required]" maxlength="32"></div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>PRIO：</label>
+		<div class="col-sm-7"><input type="text" name="progPrio" class="form-control validate[required,custom[integer]]" maxlength="32"></div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>begin：</label>
+		<div class="col-sm-7"><input type="text" name="progBegin" class="form-control" onclick="WdatePicker()"></div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>end：</label>
+		<div class="col-sm-7"><input type="text" name="progEnd" class="form-control" onclick="WdatePicker()"></div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>poli：</label>
+		<div class="col-sm-7">
+		<select class="form-control" name="policy">
+			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listPolicy}"></option>
+		</select>
+		</div>
+	</div>
+</div>
+
+<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 360)">
+	<script id="editTemplate" type="text/html">
+	<div class="form-group">
+		<label class="col-sm-3 control-label">ID：</label>
+		<div class="col-sm-7"><input type="text" name="progId" value="{{program.progId}}" class="form-control" readonly></div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
+		<div class="col-sm-7"><input type="text" name="progName" value="{{program.progName}}" class="form-control validate[required]" maxlength="32"></div>
+	</div>
+	</script>
+</div>
+
+
+
+
+</body>
+</html>
+

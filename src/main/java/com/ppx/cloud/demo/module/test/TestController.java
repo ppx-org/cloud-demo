@@ -38,7 +38,18 @@ public class TestController {
 	@GetMapping @ResponseBody
 	public Map<String, Object> test() {
 	
-		serv.test();
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//serv.test();
 		return ControllerReturn.ok();
 	}
 	

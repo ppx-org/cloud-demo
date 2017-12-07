@@ -74,7 +74,7 @@ function remove(id) {
 			}
 		});	
 	}
-	confirm("确定要删除" + id + "?", callback);
+	confirm(id, callback);
 }
 </script>
 </head>
@@ -120,8 +120,8 @@ function remove(id) {
 
 <div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
 	<div class="form-group">
-		<label class="col-sm-2 control-label"><span class="required">*</span>NAME：</label>
-		<div class="col-sm-10"><input type="text" name="testName" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
+		<div class="col-sm-7"><input type="text" name="testName" class="form-control validate[required]" maxlength="32"></div>
 	</div>
 </div>
 
