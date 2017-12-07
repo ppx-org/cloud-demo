@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+<link th:replace="common/fragment/common::validation"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	
+});
+
+</script>
+
+
+
+</head>
+
+<body>
+
+
+<select class="form-control">
+	<option th:value="${item.brandId}" th:text="${item.brandName}" th:each="item:${listBrand}"></option>
+</select>
+
+<select class="form-control">
+	<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listBrandPolicy}"></option>
+</select>
+
+</body>
+</html>
+

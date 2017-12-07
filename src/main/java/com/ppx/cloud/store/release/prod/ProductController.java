@@ -53,7 +53,7 @@ public class ProductController {
 		ModelAndView mv = new ModelAndView();
 		// repo
 		mv.addObject("listRepo", repoServ.listRepository());
-		mv.addObject("listCat", displaySubCat(catServ.listCategory()));
+		mv.addObject("listCat", catServ.displaySubCat());
 		
 		return mv;
 	}
@@ -98,7 +98,7 @@ public class ProductController {
 		ModelAndView mv = new ModelAndView();
 		// repo
 		mv.addObject("listRepo", repoServ.listRepository());
-		mv.addObject("listCat", displaySubCat(catServ.listCategory()));
+		mv.addObject("listCat", catServ.displaySubCat());
 		
 		
 		mv.addObject("prod", serv.getProduct(prodId));
@@ -108,20 +108,6 @@ public class ProductController {
 	}
 
 	
-	
-	private List<Category> displaySubCat(List<Category> list) {
-		List<Category> returnList = new ArrayList<Category>();
-		for (Category category : list) {
-			if (category.getChildren() == null) continue;
-			for (Category child : category.getChildren()) {
-				Category c = new Category();
-				c.setCatId(child.getCatId());
-				c.setCatName(category.getCatName() + "-" + child.getCatName());
-				returnList.add(c);
-			}
-		}
-		return returnList;
-	}
 	
 }
 

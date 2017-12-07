@@ -40,9 +40,79 @@ public class CategoryService extends MyDaoSupport {
 		return returnList;
 	}
 	
+	public List<Category> displaySubCat() {
+		List<Category> catList = listCategory();
+		List<Category> returnList = new ArrayList<Category>();
+		for (Category category : catList) {
+			if (category.getChildren() == null) continue;
+			for (Category child : category.getChildren()) {
+				Category c = new Category();
+				c.setCatId(child.getCatId());
+				c.setCatName(category.getCatName() + "-" + child.getCatName());
+				returnList.add(c);
+			}
+		}
+		return returnList;
+	}
+	
+	public List<Category> displayAllCat() {
+		List<Category> catList = listCategory();
+		List<Category> returnList = new ArrayList<Category>();
+		for (Category category : catList) {
+			Category mainC = new Category();
+			mainC.setCatId(category.getCatId());
+			mainC.setCatName(category.getCatName());
+			returnList.add(mainC);
+			
+			if (category.getChildren() != null) {
+				for (Category child : category.getChildren()) {
+					Category childC = new Category();
+					childC.setCatId(child.getCatId());
+					childC.setCatName(category.getCatName() + "-" + child.getCatName());
+					returnList.add(childC);
+				}
+			}
+			
+		}
+		return returnList;
+	}
+	
 	
 	
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	private void lockMerchant() {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
@@ -166,6 +236,22 @@ public class CategoryService extends MyDaoSupport {
 		
 		return r1 == 1 && r2 == 1 ? 1 : 0;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

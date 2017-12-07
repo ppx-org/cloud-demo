@@ -10,15 +10,113 @@ import java.util.List;
  * @date 2017年12月7日
  */
 public class PolicyUtils {
-	private static List<Policy> policyList = new ArrayList<Policy>();
+	private static List<Policy> policyTypeList = new ArrayList<Policy>();
+	
+	private static List<Policy> catPolicyList = new ArrayList<Policy>();
+	private static List<Policy> brandPolicyList = new ArrayList<Policy>();
+	private static List<Policy> subjectPolicyList = new ArrayList<Policy>();
+	
+	private static List<Policy> prodPolicyList = new ArrayList<Policy>();
 	
 	static {
-		policyList.add(new Policy("CAT_DISCOUNT", "CAT-discount"));
-		policyList.add(new Policy("BRAND_DISCOUNT", "BRAND-discount"));
-		policyList.add(new Policy("SUBJECT_DISCOUNT", "SUBJECT-discount"));
+		// type
+		policyTypeList.add(new Policy("CAT", "CAT"));
+		policyTypeList.add(new Policy("BRAND", "BRAND"));
+		policyTypeList.add(new Policy("SUBJECT", "SUBJECT"));
+		
+		// cat
+		catPolicyList.add(new Policy("%", "%"));
+		catPolicyList.add(new Policy("-", "-"));
+		
+		// brand
+		brandPolicyList.add(new Policy("%", "%"));
+		brandPolicyList.add(new Policy("-", "-"));
+		
+		// brand
+		subjectPolicyList.add(new Policy("%", "%"));
+		subjectPolicyList.add(new Policy("-", "-"));
+		
+		// prod
+		prodPolicyList.add(new Policy("%", "%"));
+		prodPolicyList.add(new Policy("%", "%"));
+		
+		
+		
+		// $:7 2+%:0.5 2+%:0.7 4-1
 	}
 	
-	public static List<Policy> listPolicy() {
-		return policyList;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static List<Policy> listPolicyType() {
+		return policyTypeList;
 	}
+	
+	public static List<Policy> listCatPolicy() {
+		return catPolicyList;
+	}
+	
+	public static List<Policy> listBrandPolicy() {
+		return brandPolicyList;
+	}
+	
+	public static List<Policy> listSubjectPolicy() {
+		return subjectPolicyList;
+	}
+	
+	public static List<Policy> listProdPolicy() {
+		return prodPolicyList;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

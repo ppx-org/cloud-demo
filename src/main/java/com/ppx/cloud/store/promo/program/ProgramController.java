@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
+import com.ppx.cloud.store.merchant.category.CategoryService;
 import com.ppx.cloud.store.promo.util.PolicyUtils;
 
 
@@ -27,7 +28,7 @@ public class ProgramController {
 	public ModelAndView listProgram() {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("listJson", listJson(new Page(), new Program()));
-		mv.addObject("listPolicy", PolicyUtils.listPolicy());
+		mv.addObject("listPolicy", PolicyUtils.listPolicyType());
 		return mv;
 	}
 
@@ -60,5 +61,23 @@ public class ProgramController {
 		int r = serv.deleteProgram(id);
 		return ControllerReturn.ok(r);
 	}
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
 
