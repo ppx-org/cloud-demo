@@ -57,8 +57,8 @@ public class CategoryService extends MyDaoSupport {
 		
 		
 		// 读取同级别最大catPrio+1
-		String prioSql = "select ifnull(max(CAT_PRIO), 0) + 1 PRIO from category where MERCHANT_ID = ? and PARENT_ID = ?";
-		int prio = getJdbcTemplate().queryForObject(prioSql, Integer.class, merchantId, bean.getParentId());
+		String prioSql = "select ifnull(max(CAT_PRIO), 0) + 1 PRIO from category where MERCHANT_ID = ? and PARENT_ID = ? and RECORD_STATUS = ?";
+		int prio = getJdbcTemplate().queryForObject(prioSql, Integer.class, merchantId, bean.getParentId(), 1);
 				
 		bean.setMerchantId(merchantId);
 		bean.setCatPrio(0);
