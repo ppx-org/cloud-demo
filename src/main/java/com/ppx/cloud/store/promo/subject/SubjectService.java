@@ -1,4 +1,4 @@
-package com.ppx.cloud.store.merchant.subject;
+package com.ppx.cloud.store.promo.subject;
 
 import java.util.List;
 
