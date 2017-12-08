@@ -7,6 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.store.merchant.brand.BrandService;
 import com.ppx.cloud.store.merchant.category.CategoryService;
+import com.ppx.cloud.store.promo.subject.SubjectService;
 import com.ppx.cloud.store.promo.util.PolicyUtils;
 
 
@@ -19,6 +20,9 @@ public class ProgramConfController {
 	
 	@Autowired
 	private BrandService brandServ;
+	
+	@Autowired
+	private SubjectService subjectServ;
 	
 	@GetMapping
 	public ModelAndView promoCat() {
@@ -36,6 +40,13 @@ public class ProgramConfController {
 		return mv;
 	}
 	
+	@GetMapping
+	public ModelAndView promoSubject() {
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("listSubject", subjectServ.listSubject());
+		mv.addObject("listSubjectPolicy", PolicyUtils.listSubjectPolicy());
+		return mv;
+	}
 	
 	
 	

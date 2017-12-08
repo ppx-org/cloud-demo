@@ -16,8 +16,7 @@ public class PolicyUtils {
 	private static List<Policy> brandPolicyList = new ArrayList<Policy>();
 	private static List<Policy> subjectPolicyList = new ArrayList<Policy>();
 	
-	private static List<Policy> prodPolicyList = new ArrayList<Policy>();
-	
+
 	static {
 		// type
 		policyTypeList.add(new Policy("CAT", "CAT"));
@@ -32,18 +31,17 @@ public class PolicyUtils {
 		brandPolicyList.add(new Policy("%", "%"));
 		brandPolicyList.add(new Policy("-", "-"));
 		
-		// brand
+		// subject
 		subjectPolicyList.add(new Policy("%", "%"));
 		subjectPolicyList.add(new Policy("-", "-"));
 		
-		// prod
-		prodPolicyList.add(new Policy("%", "%"));
-		prodPolicyList.add(new Policy("%", "%"));
-		
-		
+	
 		
 		// $:7 2+%:0.5 2+%:0.7 4-1
 	}
+	
+	
+	
 	
 	
 	
@@ -104,16 +102,6 @@ public class PolicyUtils {
 	public static List<Policy> listSubjectPolicy() {
 		return subjectPolicyList;
 	}
-	
-	public static List<Policy> listProdPolicy() {
-		return prodPolicyList;
-	}
-	
-	
-	
-	
-	
-	
 	
 	
 	
