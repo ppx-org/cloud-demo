@@ -78,16 +78,16 @@ function uploadImg(callback) {
 	
 	
 	<form id="addForm">
-	<!--  
+	  
 	<div class="form-group">
-		<label class="col-sm-2 control-label"><span class="required">*</span>REPO：</label>
+		<label class="col-sm-2 control-label"><span class="required">*</span>仓库：</label>
 		<div class="col-sm-3">
 			<select class="form-control" name="repoId">
 				<option th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${listRepo}"></option>
 			</select>
 		</div>
 		
-		<label class="col-sm-2 control-label"><span class="required">*</span>TEST：</label>
+		<label class="col-sm-2 control-label"><span class="required">*</span>类目：</label>
 		<div class="col-sm-3">
 			<select class="form-control" name="catId">
 				<option th:value="${item.catId}" th:text="${item.catName}" th:each="item:${listCat}"></option>
@@ -96,32 +96,21 @@ function uploadImg(callback) {
 	</div>
 	
 	<div class="form-group">
-		<label class="col-sm-2 control-label"><span class="required">*</span>Title：</label>
+		<label class="col-sm-2 control-label"><span class="required">*</span>标题：</label>
 		<div class="col-sm-7"><input type="text" name="prodTitle" class="form-control validate[required]" maxlength="32" style="width:500px"></div>
 	</div>
-	-->
-	<!--  NUM PRI IMG  -->
 	
-	<!--
-	<div class="form-group">
-		<label class="col-sm-2 control-label"><span class="required">*</span>NUM：</label>
-		<div class="col-sm-3"><input type="text" name="prodTitle" class="form-control validate[required]" maxlength="32"></div>
-	
-		<label class="col-sm-2 control-label"><span class="required">*</span>DOUBLE：</label>
-		<div class="col-sm-3"><input type="text" name="prodTitle" class="form-control validate[required]" maxlength="32"></div>
-	</div>
-	-->
 	
 	<div class="form-group">
-		<label class="col-sm-2 control-label"><span class="required">*</span>测试导出：</label>
+		<label class="col-sm-2 control-label"><span class="required">*</span>SKU：</label>
 		<div class="col-sm-8">
 		<table id="skuTable">
 			<tr>
 				<th style="width:55px">数量</th>
-				<th style="width:95px">DDDD</th>
-				<th style="display:none;" class="firstSkuTitle">TITLE</th>
-				<th style="width:60px">AC</th>
-				<th>IM</th>	
+				<th style="width:95px">价格</th>
+				<th style="display:none;" class="firstSkuTitle">SKU名称</th>
+				<th style="width:60px">操作</th>
+				<th>图片</th>	
 			</tr>
 			<tr class="skuTr">
 				<td><input type="text" name="stockNum" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px"></td>
@@ -173,7 +162,7 @@ function uploadImg(callback) {
 	<div class="form-group">
 		  
 		<div style="text-align: center;">
-			<button class="btn btn-primary btn-sm" onclick="add()" type="button">导出</button>
+			<button class="btn btn-primary btn-sm" onclick="add()" type="button">确定</button>
 			&nbsp;&nbsp;&nbsp;
 			<button type="button" class="btn btn-default btn-sm">返回</button>
 		</div>

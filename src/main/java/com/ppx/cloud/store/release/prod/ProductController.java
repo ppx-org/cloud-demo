@@ -49,7 +49,7 @@ public class ProductController {
 	
 	
 	@GetMapping
-	public ModelAndView addTest() {
+	public ModelAndView addProduct() {
 		ModelAndView mv = new ModelAndView();
 		// repo
 		mv.addObject("listRepo", repoServ.listRepository());
@@ -94,7 +94,7 @@ public class ProductController {
 	
 
 	@GetMapping
-	public ModelAndView editTest(@RequestParam Integer prodId) {
+	public ModelAndView editProduct(@RequestParam Integer prodId) {
 		ModelAndView mv = new ModelAndView();
 		// repo
 		mv.addObject("listRepo", repoServ.listRepository());
