@@ -24,7 +24,7 @@ public class ProductService extends MyDaoSupport {
 		
 		// 分开两条sql，mysql在count还会执行子查询
 		StringBuilder cSql = new StringBuilder("select count(*) from product p").append(c);
-		StringBuilder qSql = new StringBuilder("select p. from product p").append(c);
+		StringBuilder qSql = new StringBuilder("select p.* from product p").append(c);
 		
 		List<Product> list = queryPage(Product.class, page, cSql, qSql, c.getParaList());
 		return new PageList<Product>(list, page);

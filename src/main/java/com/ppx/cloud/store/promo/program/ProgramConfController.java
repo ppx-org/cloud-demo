@@ -24,8 +24,11 @@ public class ProgramConfController {
 	@Autowired
 	private SubjectService subjectServ;
 	
+	
+	
+	
 	@GetMapping
-	public ModelAndView promoCat() {
+	public ModelAndView category() {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("listCat", catServ.displayAllCat());
 		mv.addObject("listCatPolicy", PolicyUtils.listCatPolicy());

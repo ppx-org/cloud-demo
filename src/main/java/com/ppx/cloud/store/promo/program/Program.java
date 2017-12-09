@@ -1,9 +1,10 @@
 package com.ppx.cloud.store.promo.program;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.InitBinder;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ppx.cloud.common.jdbc.annotation.Id;
@@ -28,9 +29,9 @@ public class Program {
 	@DateTimeFormat(pattern=DateUtils.DATE_PATTERN)
 	private Date progEnd;
 
-	private String policy;
-
-	private String policyArgs;
+	private String policyType;
+	
+	private Date created;
 
 	public Integer getProgId() {
 		return progId;
@@ -77,23 +78,33 @@ public class Program {
 	}
 
 	public void setProgEnd(Date progEnd) {
+		if (progEnd == null) {
+			try {
+				progEnd = new SimpleDateFormat(DateUtils.DATE_PATTERN).parse(DateUtils.MAX_DATE);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
 		this.progEnd = progEnd;
 	}
 
-	public String getPolicy() {
-		return policy;
+	public String getPolicyType() {
+		return policyType;
 	}
 
-	public void setPolicy(String policy) {
-		this.policy = policy;
+	public void setPolicyType(String policyType) {
+		this.policyType = policyType;
 	}
 
-	public String getPolicyArgs() {
-		return policyArgs;
+	public Date getCreated() {
+		return created;
 	}
 
-	public void setPolicyArgs(String policyArgs) {
-		this.policyArgs = policyArgs;
+	public void setCreated(Date created) {
+		this.created = created;
 	}
+
+	
+	
 
 }

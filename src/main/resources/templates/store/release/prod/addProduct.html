@@ -45,7 +45,7 @@ function uploadImg(callback) {
 			}
 			
 			// 路径以,分格写到hidden
-			$(".skuTr").each(function() {
+			$(".imgTr").each(function() {
 				var r = [];
 				$(this).find("img").each(function(){
 					r.push($(this).data("imgSrc"));
@@ -63,6 +63,9 @@ function uploadImg(callback) {
 .form-body {padding:3px;min-width:1200px;overflow-x:hidden}
 .form-title {height:20px;font-size:15px;line-height:30px;padding-left:20px;}
 
+
+
+#skuTable>tbody>tr>td {height:86px;vertical-align:middle;}
 </style>
 
 </head>
@@ -97,49 +100,32 @@ function uploadImg(callback) {
 	
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>标题：</label>
-		<div class="col-sm-7"><input type="text" name="prodTitle" class="form-control validate[required]" maxlength="32" style="width:500px"></div>
+		<div class="col-sm-7"><input type="text" name="prodTitle" class="form-control validate[required]" maxlength="32" style="width:500px" value="title1"></div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><span class="required">*</span>描述：</label>
+		<div class="col-sm-7"><textarea type="text" name="prodDesc" class="form-control validate[required]" maxlength="256" style="width:500px">desc1</textarea></div>
 	</div>
 	
 	
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>SKU：</label>
 		<div class="col-sm-8">
-		<table id="skuTable">
+		<table id="skuTable" class="page-list-table table table-bordered table-condensed">
 			<tr>
 				<th style="width:55px">数量</th>
 				<th style="width:95px">价格</th>
-				<th style="display:none;" class="firstSkuTitle">SKU名称</th>
-				<th style="width:60px">操作</th>
+				<th style="display:none;" class="firstSkuTitle w-title-s">SKU名称</th>
+				<th style="width:90px" class="">操作</th>
 				<th>图片</th>	
 			</tr>
-			<tr class="skuTr">
-				<td><input type="text" name="stockNum" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px"></td>
-				<td><input type="text" name="price" class="form-control validate[required,custom[number]]" maxlength="7" style="width:90px"></td>
+			<tr>
+				<td><input type="text" name="stockNum" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px" value="1"></td>
+				<td><input type="text" name="price" class="form-control validate[required,custom[number]]" maxlength="7" style="width:90px" value="8.8"></td>
 				<td style="display:none;" class="firstSkuTitle"><input type="text" name="skuName" class="form-control validate[required]" maxlength="32"></td>
 				<td class="skuAction">
 					<a href="#" onclick="sku.add(this)">[增加]</a>
-				</td>
-				<td>
-				<input type="hidden" name="skuImgSrc">
-				<table>
-				<tr class="imgTr">
-					<td>
-						<input type="file" multiple="multiple" onchange="img.fileChange(this)" style="display:none" accept=".jpg,.png">
-						<a href="#" onclick="$(this).prev().click()">[+]</a>
-					</td>
-				</tr>
-				</table>
-				</td>
-			</tr>
-			
-			<!-- TODO删除 -->
-			<tr class="skuTr" id="moreSkuTr" style="display: none">
-				<td><input type="text" name="stockNum" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px"></td>
-				<td><input type="text" name="price" class="form-control validate[required,custom[number]]" maxlength="7" style="width:90px"></td>
-				<td><input type="text" name="skuName" class="form-control" maxlength="32"></td>
-				<td class="skuAction">
-					<a href="#" onclick="sku.remove(this)">[删除]</a>
-					<a href="#" onclick="sku.top(this)">[T]</a>
 				</td>
 				<td>
 				<input type="hidden" name="skuImgSrc">

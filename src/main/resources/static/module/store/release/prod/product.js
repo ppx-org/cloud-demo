@@ -1,8 +1,9 @@
 
 var sku = {};
+sku.REMOVE_HTML = '<a href="#" onclick="sku.remove(this)">[删除]</a><a href="#" onclick="sku.top(this)">[置顶]</a>';
 sku.top = function(obj) {
 	var firstSku = $("#skuTable>tbody>tr:eq(1)");
-	firstSku.find(".skuAction").html('<a href="#" onclick="sku.remove(this)">[删除]</a><a href="#" onclick="sku.top(this)">[T]</a>');
+	firstSku.find(".skuAction").html(this.REMOVE_HTML);
 	
 	$(obj).parent().parent().clone(true).insertAfter($("#skuTable>tbody>tr:eq(0)"));
 	$(obj).parent().parent().remove();
@@ -13,12 +14,24 @@ sku.top = function(obj) {
 sku.add = function(obj) {
 	// 显示firstSkuTitle
 	$(".firstSkuTitle").show();
-	$(obj).parent().parent().after('<tr class="skuTr">' + $("#moreSkuTr").html() + '</tr>')
+	
+	var firstSku = $("#skuTable>tbody>tr:eq(1)");
+	var newTr = $('<tr>' + firstSku.html() + '</tr>');
+	newTr.find(".skuAction").html(this.REMOVE_HTML);
+	newTr.find(".imgTr>td:gt(0)").remove();
+	
+	
+	
+	$("#skuTable").append(newTr);
+	
+	
+	
+	
 }
 sku.remove = function(obj) {
 	// 只剩下一个sku时，隐藏firstSkuTitle
 	var len = $("#skuTable>tbody>tr").length;
-	if (len == 4) {
+	if (len == 3) {
 		$(".firstSkuTitle").hide();
 	}
 	$(obj).parent().parent().remove();
@@ -33,7 +46,15 @@ img.fileChange = function(obj) {
 	var f = obj.files;
 	if (f.length == 0) return;
 	
+	
+	
+	
+	
 	this.loadImg(f, f.length, $(obj).parent().parent());
+	
+	
+	// 重新生成一个，防止在图片被删除时onchange不生效
+	$(obj).prop("outerHTML", $(obj).prop("outerHTML"));
 }
 img.loadImg = function(f, n, imgTr) {
 	n--;

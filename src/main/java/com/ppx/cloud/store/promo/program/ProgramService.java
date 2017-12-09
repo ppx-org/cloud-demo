@@ -18,7 +18,9 @@ public class ProgramService extends MyDaoSupport {
 	public PageList<Program> listProgram(Page page, Program bean) {
 		
 		// 分页排序查询
-		MyCriteria c = createCriteria("where").addAnd("PROG_NAME like ?", "%", bean.getProgName(), "%");
+		MyCriteria c = createCriteria("where")
+				.addAnd("POLICY_TYPE like ?", bean.getPolicyType())
+				.addAnd("PROG_NAME like ?", "%", bean.getProgName(), "%");
 		
 		StringBuilder cSql = new StringBuilder("select count(*) from program").append(c);
 		StringBuilder qSql = new StringBuilder("select * from program").append(c);
