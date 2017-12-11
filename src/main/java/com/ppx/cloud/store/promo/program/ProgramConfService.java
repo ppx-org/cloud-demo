@@ -19,6 +19,9 @@ public class ProgramConfService extends MyDaoSupport {
 	}
 	
 	public int insertProgramCategory(ProgramCategory bean) {
+		
+		
+		
 		return insert(bean);
 	}
 }

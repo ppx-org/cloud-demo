@@ -42,6 +42,10 @@ function addProgramCat() {
 		}
 	});
 }
+
+template.helper('getCatName', function(catId) {
+	return $("#catId [value=" + catId + "]").text();
+})
 </script>
 
 
@@ -83,7 +87,7 @@ function addProgramCat() {
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
 	<tr>
-		<td class="w-id">{{v.catId}}</td>
+		<td class="w-id">{{getCatName(v.catId)}}</td>
 		<td class="w-title-s">{{v.catPolicy}}</td>
 		<td class="w-action">
 			<a href="#" onclick="remove({{v.topicId}})" class="glyphicon glyphicon-trash" title="删除"></a>
