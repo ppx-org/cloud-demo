@@ -34,10 +34,13 @@ function addProgramCat() {
 	if ($("#catPolicy").val() == "%:d") {
 		catPolicy = catPolicy.replace("d", $("#discount").val());
 	}
+	else if ($("#catPolicy").val() == "E:y,-:y") {
+		$('#addForm').validationEngine('attach', {promptPosition: 'bottomLeft'});
+		if (!$("#addForm").validationEngine('validate')) return;
+		
+		catPolicy = catPolicy.replace("E:y", "E:" + $("#enough").val()).replace("-:y", "-:" + $("#minus").val());
+	}
 	catPolicy = encodeURIComponent(catPolicy);
-	
-	
-	
 	
 	var para = "progId=" + $("#progId").val() + "&catId=" + $("#catId").val() + "&catPolicy=" + catPolicy;
 	
@@ -81,6 +84,15 @@ function policyChange(obj) {
 		$("#enoughSpan").show();
 	}
 }
+
+function validateMax() {
+	var enough = $("#enough").val();
+	var minus = $("#minus").val();
+	if (minus >= enough) {
+		return "minus必须小于enough";
+	}
+}
+
 </script>
 
 
@@ -96,7 +108,7 @@ function policyChange(obj) {
 <div class="page-list-body">
 	<div class="page-list-query">
 		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>test</span></div>
-		<form id="queryForm" class="form-inline">
+		<form id="addForm" class="form-inline">
 		<div>
 		<input type="hidden" id="progId" th:value="${progId}">
 		<div class="input-group">
@@ -118,26 +130,26 @@ function policyChange(obj) {
 		<div id="discountSpan" class="input-group">
 			<span class="input-group-addon">disc</span>	
 			<select class="form-control" id="discount">
-				<option value="0.95">9.5折</option>
-				<option value="0.9">9折</option>
-				<option value="0.85">8.5折</option>
-				<option value="0.8">8折</option>
-				<option value="0.75">7.5折</option>
-				<option value="0.7">7折</option>
-				<option value="0.6">6折</option>
-				<option value="0.5">5折</option>
+				<option value="0.95">9.5d</option>
+				<option value="0.9">9d</option>
+				<option value="0.85">8.5d</option>
+				<option value="0.8">8d</option>
+				<option value="0.75">7.5d</option>
+				<option value="0.7">7d</option>
+				<option value="0.6">6d</option>
+				<option value="0.5">5d</option>
 			</select>
 		</div>
 		
 		<div id="enoughSpan" style="display:none"class="input-group">
 			<span class="input-group-addon">E</span>
-			<input class="form-control validate[required,custom[number]]" id="enough" type="text" style="width:70px" maxlength="7">
+			<input class="form-control validate[required,custom[number]]" id="enough" type="text" style="width:70px" maxlength="5">
 			<span class="input-group-addon">-</span>
-			<input class="form-control validate[required,custom[number]]" id="minus" type="text" style="width:70px" maxlength="7">
+			<input class="form-control validate[required,custom[number,funcCall[validateMax]]]" id="minus" type="text" style="width:70px" maxlength="5">
 		</div>
 		
 		
-		<button type="button" class="btn btn-success btn-sm" onclick="addProgramCat()">新增</button>
+		<button type="button" class="btn btn-success" onclick="addProgramCat()">新增</button>
 		</div>
 		</form>
 	</div>

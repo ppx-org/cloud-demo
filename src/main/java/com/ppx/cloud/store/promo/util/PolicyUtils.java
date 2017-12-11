@@ -164,29 +164,8 @@ public class PolicyUtils {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
 	
 	
 	
@@ -216,6 +195,47 @@ public class PolicyUtils {
 	public static Policy getChangePolicy() {
 		return changePolicy;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static String decodePolicy(String policy) {
+		return policy.replace(":", "").replace(",", "")
+			.replace("%", "disc")
+			.replace("E", "E¥")
+			.replace("-", "M¥");
+			
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

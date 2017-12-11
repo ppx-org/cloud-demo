@@ -1,5 +1,7 @@
 package com.ppx.cloud.store.promo.program.bean;
 
+import com.ppx.cloud.store.promo.util.PolicyUtils;
+
 public class ProgramCategory {
 	private Integer progId;
 
@@ -24,6 +26,7 @@ public class ProgramCategory {
 	}
 
 	public String getCatPolicy() {
+		catPolicy = PolicyUtils.decodePolicy(catPolicy);
 		return catPolicy;
 	}
 

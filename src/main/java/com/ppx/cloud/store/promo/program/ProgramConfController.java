@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.store.merchant.brand.BrandService;
 import com.ppx.cloud.store.merchant.category.CategoryService;
+import com.ppx.cloud.store.promo.program.bean.ProgramBrand;
 import com.ppx.cloud.store.promo.program.bean.ProgramCategory;
 import com.ppx.cloud.store.promo.subject.SubjectService;
 import com.ppx.cloud.store.promo.util.PolicyUtils;
@@ -67,6 +68,9 @@ public class ProgramConfController {
 		return ControllerReturn.ok(r);
 	}
 	
+	
+	// -----------------------------brand--------------------------------
+	
 	@GetMapping
 	public ModelAndView promoBrand() {
 		ModelAndView mv = new ModelAndView();
@@ -74,6 +78,26 @@ public class ProgramConfController {
 		mv.addObject("listBrandPolicy", PolicyUtils.listBrandPolicy());
 		return mv;
 	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> listProgramBrand(@RequestParam Integer progId) {
+		List<ProgramBrand> list = serv.listProgramBrand(progId);
+		return ControllerReturn.ok(list);
+	}
+
+	@PostMapping @ResponseBody
+	public Map<String, Object> insertProgramBrand(ProgramBrand bean) {
+		int r = serv.insertProgramBrand(bean);
+		return ControllerReturn.ok(r);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> deleteProgramBrand(@RequestParam Integer progId, @RequestParam Integer brandId) {
+		int r = serv.deleteProgramBrand(progId, brandId);
+		return ControllerReturn.ok(r);
+	}
+	
+	// -----------------------------subject-----------------------------
 	
 	@GetMapping
 	public ModelAndView promoSubject() {
