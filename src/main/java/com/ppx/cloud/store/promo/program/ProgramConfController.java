@@ -1,12 +1,20 @@
 package com.ppx.cloud.store.promo.program;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.store.merchant.brand.BrandService;
 import com.ppx.cloud.store.merchant.category.CategoryService;
+import com.ppx.cloud.store.promo.program.bean.ProgramCategory;
 import com.ppx.cloud.store.promo.subject.SubjectService;
 import com.ppx.cloud.store.promo.util.PolicyUtils;
 
@@ -14,6 +22,8 @@ import com.ppx.cloud.store.promo.util.PolicyUtils;
 @Controller	
 public class ProgramConfController {
 	
+	@Autowired
+	private ProgramConfService serv;
 	
 	@Autowired
 	private CategoryService catServ;
@@ -25,15 +35,37 @@ public class ProgramConfController {
 	private SubjectService subjectServ;
 	
 	
-	
-	
+
 	@GetMapping
-	public ModelAndView category() {
+	public ModelAndView promoCategory(@RequestParam Integer progId) {
 		ModelAndView mv = new ModelAndView();
+		mv.addObject("listJson", listProgramCat(progId));
+		
+		mv.addObject("progId", progId);
 		mv.addObject("listCat", catServ.displayAllCat());
 		mv.addObject("listCatPolicy", PolicyUtils.listCatPolicy());
+		
+		
 		return mv;
 	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> listProgramCat(@RequestParam Integer progId) {
+		List<ProgramCategory> list = serv.listProgramCat(progId);
+		return ControllerReturn.ok(list);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> insertProgramCategory(ProgramCategory bean) {
+		int r = serv.insertProgramCategory(bean);
+		return ControllerReturn.ok(r);
+	}
+	
+	
+	
+	
+	
+	
 	
 	@GetMapping
 	public ModelAndView promoBrand() {

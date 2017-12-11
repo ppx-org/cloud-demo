@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+<link th:replace="common/fragment/common::validation"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	
+});
+
+
+function policyChange(obj) {
+	
+}
+
+
+function addProgramCat() {
+	
+}
+</script>
+
+
+<style>
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="form-horizontal form-body">
+	<div class="form-group">
+		<div class="form-title"><span class="glyphicon glyphicon-th-list"></span><span>TEST</span></div>
+	</div>
+	
+	  
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><span class="required">*</span>CAT：</label>
+		<div class="col-sm-8">
+			<select class="form-control">
+				<option th:value="${item.catId}" th:text="${item.catName}" th:each="item:${listCat}"></option>
+			</select>
+		
+			<select class="form-control" onchange="policyChange(this)">
+				<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listCatPolicy}"></option>
+			</select>
+			
+			<span>
+				E<input class="form-control validate[required,custom[number]]" type="text" style="width:50px" maxlength="7">
+				D<input class="form-control validate[required,custom[number]]" type="text" style="width:50px" maxlength="7">
+			</span>
+			
+			
+			<button class="btn btn-primary btn-sm" onclick="addProgramCat()" type="button">添加</button>
+		</div>
+		
+		
+	</div>
+	
+	
+
+
+</div>
+
+</body>
+</html>
+

@@ -102,11 +102,11 @@ public class PolicyUtils {
 
 	static {
 		// type
-		policyTypeList.add(new Policy("category", "CAT_N"));
-		policyTypeList.add(new Policy("brand", "BRAND_N"));
-		policyTypeList.add(new Policy("subject", "SUBJECT_N"));
-		policyTypeList.add(new Policy("special", "SPECIAL_N"));
-		policyTypeList.add(new Policy("change", "CHANG_N"));
+		policyTypeList.add(new Policy("Category", "CAT_N"));
+		policyTypeList.add(new Policy("Brand", "BRAND_N"));
+		policyTypeList.add(new Policy("Subject", "SUBJECT_N"));
+		policyTypeList.add(new Policy("Special", "SPECIAL_N"));
+		policyTypeList.add(new Policy("Change", "CHANG_N"));
 		
 		// cat
 		catPolicyList.add(new Policy("%:d", "%:d"));

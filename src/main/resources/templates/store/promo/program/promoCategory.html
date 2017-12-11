@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+<link th:replace="common/fragment/common::validation"/>
+
+<script type="text/javascript" th:inline="javascript">
+
+function refreshData(data) {
+	var pageTemplateId = "pageTemplate";
+	$("#" + pageTemplateId).parent().find("tr:gt(0)").remove();
+	$("#" + pageTemplateId).parent().append(template(pageTemplateId, data));
+}
+
+$(function() {
+	refreshData([[${listJson}]]);
+});
+
+function query() {
+	showLoading();
+	$.post([[@{'/programConf/listProgramCat?progId=' + ${progId}}]], null, function(r) {
+		refreshData(r);
+		hideLoading();
+	});
+}
+
+function policyChange(obj) {
+	
+}
+
+
+function addProgramCat() {
+	var para = "progId=" + $("#progId").val() + "&catId=" + $("#catId").val() + "&catPolicy=" + encodeURIComponent($("#catPolicy").val());
+	alert(para)
+	
+	showLoading();
+	$.post([[@{/programConf/insertProgramCategory}]], para, function(r) {
+		if (r.result == 1) {
+			query();
+		}
+	});
+}
+</script>
+
+
+<style>
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="page-list-body">
+	<div class="page-list-query">
+		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>test</span></div>
+		<input type="hidden" id="progId" th:value="${progId}">
+		<select class="form-control" id="catId">
+			<option th:value="${item.catId}" th:text="${item.catName}" th:each="item:${listCat}"></option>
+		</select>
+	
+		<select class="form-control" onchange="policyChange(this)" id="catPolicy">
+			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listCatPolicy}"></option>
+		</select>
+		
+		<span>
+			E<input class="form-control validate[required,custom[number]]" type="text" style="width:50px" maxlength="7">
+			D<input class="form-control validate[required,custom[number]]" type="text" style="width:50px" maxlength="7">
+		</span>
+		
+		
+		<button type="button" class="btn btn-success btn-sm" onclick="addProgramCat()">新增</button>
+	</div>
+	<table class="page-list-table table table-bordered table-condensed">
+	<tr>
+		<th>CAT</th>
+		<th>POLI</th>
+		<th>ACTION</th>
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td class="w-id">{{v.catId}}</td>
+		<td class="w-title-s">{{v.catPolicy}}</td>
+		<td class="w-action">
+			<a href="#" onclick="remove({{v.topicId}})" class="glyphicon glyphicon-trash" title="删除"></a>
+		</td>
+	</tr>
+	{{/each}}
+	</script>
+	</table>
+</div>
+
+
+
+</body>
+</html>
+
