@@ -26,19 +26,29 @@ function query() {
 	});
 }
 
-function policyChange(obj) {
-	
-}
+
 
 
 function addProgramCat() {
-	var para = "progId=" + $("#progId").val() + "&catId=" + $("#catId").val() + "&catPolicy=" + encodeURIComponent($("#catPolicy").val());
-	alert(para)
+	var catPolicy = $("#catPolicy").val();
+	if ($("#catPolicy").val() == "%:d") {
+		catPolicy = catPolicy.replace("d", $("#discount").val());
+	}
+	catPolicy = encodeURIComponent(catPolicy);
+	
+	
+	
+	
+	var para = "progId=" + $("#progId").val() + "&catId=" + $("#catId").val() + "&catPolicy=" + catPolicy;
 	
 	showLoading();
 	$.post([[@{/programConf/insertProgramCategory}]], para, function(r) {
 		if (r.result == 1) {
 			query();
+		}
+		else if (r.result == 0) {
+			alertWarning("类目、父类或子类已经存在，添加失败！");
+			hideLoading();
 		}
 	});
 }
@@ -46,6 +56,31 @@ function addProgramCat() {
 template.helper('getCatName', function(catId) {
 	return $("#catId [value=" + catId + "]").text();
 })
+
+function remove(progId, catId) {
+	
+	var callback = function () {
+		showLoading();
+		$.post([[@{/programConf/deleteProgramCategory}]], "progId=" + progId + "&catId=" + catId, function(r) {
+			if (r.result == 1) {
+				query();
+			}
+		});
+	}
+	confirm(progId, callback);
+}
+
+
+function policyChange(obj) {
+	if (obj.value == "%:d") {
+		$("#discountSpan").show();
+		$("#enoughSpan").hide();
+	}
+	else if (obj.value == "E:y,-:y") {
+		$("#discountSpan").hide();
+		$("#enoughSpan").show();
+	}
+}
 </script>
 
 
@@ -61,22 +96,50 @@ template.helper('getCatName', function(catId) {
 <div class="page-list-body">
 	<div class="page-list-query">
 		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>test</span></div>
+		<form id="queryForm" class="form-inline">
+		<div>
 		<input type="hidden" id="progId" th:value="${progId}">
-		<select class="form-control" id="catId">
-			<option th:value="${item.catId}" th:text="${item.catName}" th:each="item:${listCat}"></option>
-		</select>
+		<div class="input-group">
+			<span class="input-group-addon">CAT</span>	
+			<select class="form-control" id="catId">
+				<option th:value="${item.catId}" th:text="${item.catName}" th:each="item:${listCat}"></option>
+			</select>
+		</div>
 	
-		<select class="form-control" onchange="policyChange(this)" id="catPolicy">
-			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listCatPolicy}"></option>
-		</select>
+		<div class="input-group">
+			<span class="input-group-addon">type</span>	
+			<select class="form-control" onchange="policyChange(this)" id="catPolicy">
+				<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listCatPolicy}"></option>
+			</select>
+		</div>
 		
-		<span>
-			E<input class="form-control validate[required,custom[number]]" type="text" style="width:50px" maxlength="7">
-			D<input class="form-control validate[required,custom[number]]" type="text" style="width:50px" maxlength="7">
-		</span>
+		
+		
+		<div id="discountSpan" class="input-group">
+			<span class="input-group-addon">disc</span>	
+			<select class="form-control" id="discount">
+				<option value="0.95">9.5折</option>
+				<option value="0.9">9折</option>
+				<option value="0.85">8.5折</option>
+				<option value="0.8">8折</option>
+				<option value="0.75">7.5折</option>
+				<option value="0.7">7折</option>
+				<option value="0.6">6折</option>
+				<option value="0.5">5折</option>
+			</select>
+		</div>
+		
+		<div id="enoughSpan" style="display:none"class="input-group">
+			<span class="input-group-addon">E</span>
+			<input class="form-control validate[required,custom[number]]" id="enough" type="text" style="width:70px" maxlength="7">
+			<span class="input-group-addon">-</span>
+			<input class="form-control validate[required,custom[number]]" id="minus" type="text" style="width:70px" maxlength="7">
+		</div>
 		
 		
 		<button type="button" class="btn btn-success btn-sm" onclick="addProgramCat()">新增</button>
+		</div>
+		</form>
 	</div>
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
@@ -90,7 +153,7 @@ template.helper('getCatName', function(catId) {
 		<td class="w-id">{{getCatName(v.catId)}}</td>
 		<td class="w-title-s">{{v.catPolicy}}</td>
 		<td class="w-action">
-			<a href="#" onclick="remove({{v.topicId}})" class="glyphicon glyphicon-trash" title="删除"></a>
+			<a href="#" onclick="remove({{v.progId}}, {{v.catId}})">[删除]</a>
 		</td>
 	</tr>
 	{{/each}}

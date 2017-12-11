@@ -12,10 +12,19 @@ import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
 import com.ppx.cloud.grant.bean.Merchant;
 import com.ppx.cloud.grant.bean.MerchantAccount;
+import com.ppx.cloud.grant.common.GrantContext;
 import com.ppx.cloud.grant.common.GrantUtils;
 
 @Service
 public class MerchantService extends MyDaoSupport {
+	
+	
+	public void lockMerchant() {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		String sql = "select 1 from merchant where MERCHANT_ID = ? for update";
+		getJdbcTemplate().queryForMap(sql, merchantId);
+	}
+	
 
 	public PageList<Merchant> listMerchant(Page page, Merchant mer) {
 		MyCriteria c = createCriteria("and").addAnd("m.MERCHANT_NAME like ?", "%", mer.getMerchantName(), "%");

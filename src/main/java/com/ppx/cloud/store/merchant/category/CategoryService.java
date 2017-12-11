@@ -3,15 +3,20 @@ package com.ppx.cloud.store.merchant.category;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.grant.common.GrantContext;
+import com.ppx.cloud.grant.service.MerchantService;
 
 @Service
 public class CategoryService extends MyDaoSupport {
+	
+	@Autowired
+	private MerchantService merchantService;
 
 	private List<Category> getChildren(List<Category> list, int parentId) {
 		List<Category> returnList = new ArrayList<Category>();
@@ -114,15 +119,11 @@ public class CategoryService extends MyDaoSupport {
 	
 	
 	
-	private void lockMerchant() {
-		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		String sql = "select 1 from merchant where MERCHANT_ID = ? for update";
-		getJdbcTemplate().queryForMap(sql, merchantId);
-	}
+	
 	
 	@Transactional
 	public int insertCategory(Category bean) {
-		lockMerchant();
+		merchantService.lockMerchant();
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
 		
@@ -148,7 +149,7 @@ public class CategoryService extends MyDaoSupport {
 	
 	@Transactional
 	public int top(Integer id) {
-		lockMerchant();
+		merchantService.lockMerchant();
 
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		String prioSql = "select min(CAT_PRIO) - 1 PRIO from category where MERCHANT_ID = ? and PARENT_ID"
@@ -162,7 +163,7 @@ public class CategoryService extends MyDaoSupport {
 	
 	@Transactional
 	public int last(Integer id) {
-		lockMerchant();
+		merchantService.lockMerchant();
 
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		String prioSql = "select max(CAT_PRIO) + 1 PRIO from category where MERCHANT_ID = ? and PARENT_ID"
@@ -177,7 +178,7 @@ public class CategoryService extends MyDaoSupport {
 	@Transactional
 	public int up(Integer id) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		lockMerchant();
+		merchantService.lockMerchant();
 		
 		String sql = "select CAT_ID, CAT_PRIO from category where MERCHANT_ID = ? and PARENT_ID = (select PARENT_ID from category where CAT_ID = ?)"
 				+ " and RECORD_STATUS = ? order by CAT_PRIO";
@@ -207,7 +208,7 @@ public class CategoryService extends MyDaoSupport {
 	@Transactional
 	public int down(Integer id) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		lockMerchant();
+		merchantService.lockMerchant();
 		
 		String sql = "select * from category where MERCHANT_ID = ? and PARENT_ID = (select PARENT_ID from category where CAT_ID = ?)"
 				+ " and RECORD_STATUS = ? order by CAT_PRIO";

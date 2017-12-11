@@ -61,11 +61,11 @@ public class ProgramConfController {
 		return ControllerReturn.ok(r);
 	}
 	
-	
-	
-	
-	
-	
+	@PostMapping @ResponseBody
+	public Map<String, Object> deleteProgramCategory(@RequestParam Integer progId, @RequestParam Integer catId) {
+		int r = serv.deleteProgramCategory(progId, catId);
+		return ControllerReturn.ok(r);
+	}
 	
 	@GetMapping
 	public ModelAndView promoBrand() {
