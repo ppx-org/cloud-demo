@@ -11,6 +11,7 @@ import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.grant.service.MerchantService;
 import com.ppx.cloud.store.promo.program.bean.ProgramBrand;
 import com.ppx.cloud.store.promo.program.bean.ProgramCategory;
+import com.ppx.cloud.store.promo.program.bean.ProgramSubject;
 
 @Service
 public class ProgramConfService extends MyDaoSupport {
@@ -80,7 +81,7 @@ public class ProgramConfService extends MyDaoSupport {
 		// 加锁
 		merchantService.lockMerchant();
 		
-		// catId已经存在，或catId的子类或父类已经存在		
+		// brandId已经存在		
 		String existsSql = "select count(*) from program_brand p where p.PROG_ID = ? and p.BRAND_ID = ?";
 		int c = getJdbcTemplate().queryForObject(existsSql, Integer.class, bean.getProgId(), bean.getBrandId());
 		if (c >= 1) return 0;
@@ -110,7 +111,28 @@ public class ProgramConfService extends MyDaoSupport {
 	
 	
 	
+	public List<ProgramSubject> listProgramSubject(Integer progId) {
+		String sql = "select * from program_subject where PROG_ID = ?";
+		List<ProgramSubject> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(ProgramSubject.class), progId);
+		return list;
+	}
 	
+	@Transactional
+	public int insertProgramSubject(ProgramSubject bean) {
+		// 加锁
+		merchantService.lockMerchant();
+		
+		// subject已经存在		
+		String existsSql = "select count(*) from program_subject p where p.PROG_ID = ? and p.SUBJECT_ID = ?";
+		int c = getJdbcTemplate().queryForObject(existsSql, Integer.class, bean.getProgId(), bean.getSubjectId());
+		if (c >= 1) return 0;
+		
+		return insert(bean);
+	}
+	
+	public int deleteProgramSubject(Integer progId, Integer subjectId) {
+		return getJdbcTemplate().update("delete from program_subject where PROG_ID = ? and SUBJECT_ID = ?", progId, subjectId);
+	}
 	
 	
 	

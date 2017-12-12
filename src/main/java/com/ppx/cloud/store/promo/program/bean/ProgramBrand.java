@@ -1,5 +1,7 @@
 package com.ppx.cloud.store.promo.program.bean;
 
+import com.ppx.cloud.store.promo.util.PolicyUtils;
+
 public class ProgramBrand {
 	private Integer progId;
 
@@ -24,6 +26,7 @@ public class ProgramBrand {
 	}
 
 	public String getBrandPolicy() {
+		brandPolicy = PolicyUtils.decodePolicy(brandPolicy);
 		return brandPolicy;
 	}
 

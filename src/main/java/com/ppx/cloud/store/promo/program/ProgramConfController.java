@@ -16,6 +16,7 @@ import com.ppx.cloud.store.merchant.brand.BrandService;
 import com.ppx.cloud.store.merchant.category.CategoryService;
 import com.ppx.cloud.store.promo.program.bean.ProgramBrand;
 import com.ppx.cloud.store.promo.program.bean.ProgramCategory;
+import com.ppx.cloud.store.promo.program.bean.ProgramSubject;
 import com.ppx.cloud.store.promo.subject.SubjectService;
 import com.ppx.cloud.store.promo.util.PolicyUtils;
 
@@ -40,9 +41,8 @@ public class ProgramConfController {
 	@GetMapping
 	public ModelAndView promoCategory(@RequestParam Integer progId) {
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("listJson", listProgramCat(progId));
-		
 		mv.addObject("progId", progId);
+		mv.addObject("listJson", listProgramCat(progId));
 		mv.addObject("listCat", catServ.displayAllCat());
 		mv.addObject("listCatPolicy", PolicyUtils.listCatPolicy());
 		
@@ -72,8 +72,10 @@ public class ProgramConfController {
 	// -----------------------------brand--------------------------------
 	
 	@GetMapping
-	public ModelAndView promoBrand() {
+	public ModelAndView promoBrand(@RequestParam Integer progId) {
 		ModelAndView mv = new ModelAndView();
+		mv.addObject("progId", progId);
+		mv.addObject("listJson", listProgramBrand(progId));
 		mv.addObject("listBrand", brandServ.listBrand());
 		mv.addObject("listBrandPolicy", PolicyUtils.listBrandPolicy());
 		return mv;
@@ -97,17 +99,39 @@ public class ProgramConfController {
 		return ControllerReturn.ok(r);
 	}
 	
+	
+	
+	
+	
 	// -----------------------------subject-----------------------------
 	
 	@GetMapping
-	public ModelAndView promoSubject() {
+	public ModelAndView promoSubject(@RequestParam Integer progId) {
 		ModelAndView mv = new ModelAndView();
+		mv.addObject("progId", progId);
+		mv.addObject("listJson", listProgramSubject(progId));
 		mv.addObject("listSubject", subjectServ.listSubject());
 		mv.addObject("listSubjectPolicy", PolicyUtils.listSubjectPolicy());
 		return mv;
 	}
 	
+	@PostMapping @ResponseBody
+	public Map<String, Object> listProgramSubject(@RequestParam Integer progId) {
+		List<ProgramSubject> list = serv.listProgramSubject(progId);
+		return ControllerReturn.ok(list);
+	}
+
+	@PostMapping @ResponseBody
+	public Map<String, Object> insertProgramSubject(ProgramSubject bean) {
+		int r = serv.insertProgramSubject(bean);
+		return ControllerReturn.ok(r);
+	}
 	
+	@PostMapping @ResponseBody
+	public Map<String, Object> deleteProgramSubject(@RequestParam Integer progId, @RequestParam Integer subjectId) {
+		int r = serv.deleteProgramSubject(progId, subjectId);
+		return ControllerReturn.ok(r);
+	}
 	
 	
 	

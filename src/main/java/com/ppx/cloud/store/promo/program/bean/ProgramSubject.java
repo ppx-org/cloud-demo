@@ -1,5 +1,7 @@
 package com.ppx.cloud.store.promo.program.bean;
 
+import com.ppx.cloud.store.promo.util.PolicyUtils;
+
 public class ProgramSubject {
 	
 	private Integer progId;
@@ -25,6 +27,7 @@ public class ProgramSubject {
 	}
 
 	public String getSubjectPolicy() {
+		subjectPolicy = PolicyUtils.decodePolicy(subjectPolicy);
 		return subjectPolicy;
 	}
 

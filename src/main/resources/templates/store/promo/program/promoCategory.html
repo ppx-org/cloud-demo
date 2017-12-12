@@ -129,16 +129,7 @@ function validateMax() {
 		
 		<div id="discountSpan" class="input-group">
 			<span class="input-group-addon">disc</span>	
-			<select class="form-control" id="discount">
-				<option value="0.95">9.5d</option>
-				<option value="0.9">9d</option>
-				<option value="0.85">8.5d</option>
-				<option value="0.8">8d</option>
-				<option value="0.75">7.5d</option>
-				<option value="0.7">7d</option>
-				<option value="0.6">6d</option>
-				<option value="0.5">5d</option>
-			</select>
+			<select class="form-control" id="discount" th:include="store/promo/common/promoCommon::discount"></select>
 		</div>
 		
 		<div id="enoughSpan" style="display:none"class="input-group">

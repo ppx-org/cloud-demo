@@ -20,7 +20,7 @@ $(function() {
 
 function query() {
 	showLoading();
-	$.post([[@{'/programConf/listProgramBrand?progId=' + ${progId}}]], null, function(r) {
+	$.post([[@{'/programConf/listProgramSubject?progId=' + ${progId}}]], null, function(r) {
 		refreshData(r);
 		hideLoading();
 	});
@@ -29,22 +29,22 @@ function query() {
 
 
 
-function addProgramBrand() {
-	var brandPolicy = $("#brandPolicy").val();
-	if ($("#brandPolicy").val() == "%:d") {
-		brandPolicy = brandPolicy.replace("d", $("#discount").val());
+function addProgramSubject() {
+	var subjectPolicy = $("#subjectPolicy").val();
+	if ($("#subjectPolicy").val() == "%:d") {
+		subjectPolicy = subjectPolicy.replace("d", $("#discount").val());
 	}
-	else if ($("#brandPolicy").val() == "E:y,-:y") {
+	else if ($("#subjectPolicy").val() == "E:y,-:y") {
 		$('#addForm').validationEngine('attach', {promptPosition: 'bottomLeft'});
 		if (!$("#addForm").validationEngine('validate')) return;
 		
-		brandPolicy = brandPolicy.replace("E:y", "E:" + $("#enough").val()).replace("-:y", "-:" + $("#minus").val());
+		subjectPolicy = subjectPolicy.replace("E:y", "E:" + $("#enough").val()).replace("-:y", "-:" + $("#minus").val());
 	}
 	
-	var para = "progId=" + $("#progId").val() + "&brandId=" + $("#brandId").val() + "&brandPolicy=" + encodeURIComponent(brandPolicy);
+	var para = "progId=" + $("#progId").val() + "&subjectId=" + $("#subjectId").val() + "&subjectPolicy=" + encodeURIComponent(subjectPolicy);
 	
 	showLoading();
-	$.post([[@{/programConf/insertProgramBrand}]], para, function(r) {
+	$.post([[@{/programConf/insertProgramSubject}]], para, function(r) {
 		if (r.result == 1) {
 			query();
 		}
@@ -55,15 +55,15 @@ function addProgramBrand() {
 	});
 }
 
-template.helper('getBrandName', function(brandId) {
-	return $("#brandId [value=" + brandId + "]").text();
+template.helper('getSubjectName', function(subjectId) {
+	return $("#subjectId [value=" + subjectId + "]").text();
 })
 
-function remove(progId, brandId) {
+function remove(progId, subjectId) {
 	
 	var callback = function () {
 		showLoading();
-		$.post([[@{/programConf/deleteProgramBrand}]], "progId=" + progId + "&brandId=" + brandId, function(r) {
+		$.post([[@{/programConf/deleteProgramSubject}]], "progId=" + progId + "&subjectId=" + subjectId, function(r) {
 			if (r.result == 1) {
 				query();
 			}
@@ -111,16 +111,16 @@ function validateMax() {
 		<div>
 		<input type="hidden" id="progId" th:value="${progId}">
 		<div class="input-group">
-			<span class="input-group-addon">BRA</span>	
-			<select class="form-control" id="brandId">
-				<option th:value="${item.brandId}" th:text="${item.brandName}" th:each="item:${listBrand}"></option>
+			<span class="input-group-addon">Sub</span>	
+			<select class="form-control" id="subjectId">
+				<option th:value="${item.subjectId}" th:text="${item.subjectName}" th:each="item:${listSubject}"></option>
 			</select>
 		</div>
 	
 		<div class="input-group">
 			<span class="input-group-addon">type</span>	
-			<select class="form-control" onchange="policyChange(this)" id="brandPolicy">
-				<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listBrandPolicy}"></option>
+			<select class="form-control" onchange="policyChange(this)" id="subjectPolicy">
+				<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listSubjectPolicy}"></option>
 			</select>
 		</div>
 		
@@ -139,23 +139,23 @@ function validateMax() {
 		</div>
 		
 		
-		<button type="button" class="btn btn-success" onclick="addProgramBrand()">新增</button>
+		<button type="button" class="btn btn-success" onclick="addProgramSubject()">新增</button>
 		</div>
 		</form>
 	</div>
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
-		<th>BRA</th>
+		<th>sub</th>
 		<th>POLI</th>
 		<th>ACTION</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
 	<tr>
-		<td class="w-id">{{getBrandName(v.brandId)}}</td>
-		<td class="w-title-s">{{v.brandPolicy}}</td>
+		<td class="w-id">{{getSubjectName(v.subjectId)}}</td>
+		<td class="w-title-s">{{v.subjectPolicy}}</td>
 		<td class="w-action">
-			<a href="#" onclick="remove({{v.progId}}, {{v.brandId}})">[删除]</a>
+			<a href="#" onclick="remove({{v.progId}}, {{v.subjectId}})">[删除]</a>
 		</td>
 	</tr>
 	{{/each}}
