@@ -26,22 +26,27 @@ function query() {
 	});
 }
 
-
-
-
 function addProgramSubject() {
-	var subjectPolicy = $("#subjectPolicy").val();
-	if ($("#subjectPolicy").val() == "%:d") {
-		subjectPolicy = subjectPolicy.replace("d", $("#discount").val());
-	}
-	else if ($("#subjectPolicy").val() == "E:y,-:y") {
-		$('#addForm').validationEngine('attach', {promptPosition: 'bottomLeft'});
-		if (!$("#addForm").validationEngine('validate')) return;
-		
-		subjectPolicy = subjectPolicy.replace("E:y", "E:" + $("#enough").val()).replace("-:y", "-:" + $("#minus").val());
-	}
 	
-	var para = "progId=" + $("#progId").val() + "&subjectId=" + $("#subjectId").val() + "&subjectPolicy=" + encodeURIComponent(subjectPolicy);
+	$('#addForm').validationEngine('attach', {promptPosition: 'bottomLeft'});
+	if (!$("#addForm").validationEngine('validate')) return;
+
+	
+	var resultPolicy = [];
+	var subjectPolicy = $("#subjectPolicy").val();
+	var policyArray = subjectPolicy.split(",");
+	for (var i = 0; i < policyArray.length; i++) {
+		var pre = policyArray[i].split(":")[0] + ":";
+		var v = $("[id='" + subjectPolicy + "']").find("[name='" + policyArray[i] + "']").val();
+		resultPolicy.push(pre + policyArray[i].replace(policyArray[i], v));
+	}
+
+	//alert("resultPolicy:" + resultPolicy);
+	//return;
+	
+	//var para = "progId=" + $("#progId").val() + "&subjectId=" + $("#subjectId").val() + "&subjectPolicy=" + encodeURI(resultPolicy);
+	
+	var para = {progId:$("#progId").val(), subjectId:$("#subjectId").val(), subjectPolicy:encodeURIComponent(resultPolicy)};
 	
 	showLoading();
 	$.post([[@{/programConf/insertProgramSubject}]], para, function(r) {
@@ -49,7 +54,7 @@ function addProgramSubject() {
 			query();
 		}
 		else if (r.result == 0) {
-			alertWarning("类目、父类或子类已经存在，添加失败！");
+			alertWarning("主题已经存在，添加失败！");
 			hideLoading();
 		}
 	});
@@ -60,7 +65,6 @@ template.helper('getSubjectName', function(subjectId) {
 })
 
 function remove(progId, subjectId) {
-	
 	var callback = function () {
 		showLoading();
 		$.post([[@{/programConf/deleteProgramSubject}]], "progId=" + progId + "&subjectId=" + subjectId, function(r) {
@@ -74,19 +78,13 @@ function remove(progId, subjectId) {
 
 
 function policyChange(obj) {
-	if (obj.value == "%:d") {
-		$("#discountSpan").show();
-		$("#enoughSpan").hide();
-	}
-	else if (obj.value == "E:y,-:y") {
-		$("#discountSpan").hide();
-		$("#enoughSpan").show();
-	}
+	$(".policy").hide();
+	$("[id='" + obj.value + "']").show();
 }
 
 function validateMax() {
-	var enough = $("#enough").val();
-	var minus = $("#minus").val();
+	var enough = $("[id='E:y,-:y'] [name='E:y']").val();
+	var minus = $("[id='E:y,-:y'] [name='-:y']").val();
 	if (minus >= enough) {
 		return "minus必须小于enough";
 	}
@@ -102,7 +100,6 @@ function validateMax() {
 
 
 <body>
-
 
 <div class="page-list-body">
 	<div class="page-list-query">
@@ -124,20 +121,49 @@ function validateMax() {
 			</select>
 		</div>
 		
-		
-		
-		<div id="discountSpan" class="input-group">
+		<div id="%:d" class="input-group policy">
 			<span class="input-group-addon">disc</span>	
-			<select class="form-control" id="discount" th:include="store/promo/common/promoCommon::discount"></select>
-		</div>
-		
-		<div id="enoughSpan" style="display:none"class="input-group">
+			<select class="form-control" th:include="store/promo/common/promoCommon::discount" name="%:d"></select>
+		</div>		
+		<div id="E:y,-:y" style="display:none" class="input-group policy">
 			<span class="input-group-addon">E</span>
-			<input class="form-control validate[required,custom[number]]" id="enough" type="text" style="width:70px" maxlength="5">
+			<input class="form-control validate[required,custom[number]]" type="text" style="width:70px" maxlength="5" name="E:y">
 			<span class="input-group-addon">-</span>
-			<input class="form-control validate[required,custom[number,funcCall[validateMax]]]" id="minus" type="text" style="width:70px" maxlength="5">
+			<input class="form-control validate[required,custom[number,funcCall[validateMax]]]" type="text" style="width:70px" maxlength="5" name="-:y">
+		</div>		
+		<div id="%:d,2:d" style="display:none" class="input-group policy">
+			<span class="input-group-addon">1</span>
+			<select class="form-control" id="discount" th:include="store/promo/common/promoCommon::discount" name="%:d"></select>
+			<span class="input-group-addon">2</span>
+			<select class="form-control" id="discount" th:include="store/promo/common/promoCommon::discount" name="2:d"></select>
 		</div>
-		
+		<div id="%:d,2+:d" style="display:none" class="input-group policy">
+			<span class="input-group-addon">1</span>
+			<select class="form-control" id="discount" th:include="store/promo/common/promoCommon::discount" name="%:d"></select>
+			<span class="input-group-addon">2+</span>
+			<select class="form-control" id="discount" th:include="store/promo/common/promoCommon::discount" name="2+:d"></select>
+		</div>
+		<div id="y:Y,n:N" style="display:none" class="input-group policy">
+			<span class="input-group-addon">N</span>
+			<input class="form-control validate[required,custom[integer]]" id="enough" type="text" style="width:70px" maxlength="2" name="y:Y">
+			<span class="input-group-addon">y</span>
+			<input class="form-control validate[required,custom[number]]" id="minus" type="text" style="width:70px" maxlength="5" name="n:N">
+		</div>
+		<div id="+:y,m:1" style="display:none" class="input-group policy">
+			<span class="input-group-addon">y</span>
+			<input class="form-control validate[required,custom[number]]" type="text" style="width:70px" maxlength="5" name="+:y">
+			<input type="hidden" value="1" name="m:1">
+		</div>
+		<div id="B:n,F:n" style="display:none" class="input-group policy">
+			<span class="input-group-addon">bu</span>
+			<select class="form-control" id="discount policy" name="B:n">
+				<option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+			</select>
+			<span class="input-group-addon">free</span>
+			<select class="form-control" id="discount policy" name="F:n">
+				<option value="1">1</option><option value="2">2</option>
+			</select>
+		</div>		
 		
 		<button type="button" class="btn btn-success" onclick="addProgramSubject()">新增</button>
 		</div>
@@ -153,7 +179,7 @@ function validateMax() {
 	{{each arrayList as v i}}
 	<tr>
 		<td class="w-id">{{getSubjectName(v.subjectId)}}</td>
-		<td class="w-title-s">{{v.subjectPolicy}}</td>
+		<td class="w-title-s">{{v.subjectPolicyDesc}}</td>
 		<td class="w-action">
 			<a href="#" onclick="remove({{v.progId}}, {{v.subjectId}})">[删除]</a>
 		</td>
