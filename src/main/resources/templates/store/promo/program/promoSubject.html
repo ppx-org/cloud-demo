@@ -121,7 +121,11 @@ function validateMax() {
 			</select>
 		</div>
 		
-		<div id="%:d" class="input-group policy">
+		<div id="A:y" class="input-group policy">
+			<span class="input-group-addon">avg</span>	
+			<select class="form-control" th:include="store/promo/common/promoCommon::avg" name="A:y"></select>
+		</div>	
+		<div id="%:d" style="display:none" class="input-group policy">
 			<span class="input-group-addon">disc</span>	
 			<select class="form-control" th:include="store/promo/common/promoCommon::discount" name="%:d"></select>
 		</div>		
@@ -130,7 +134,7 @@ function validateMax() {
 			<input class="form-control validate[required,custom[number]]" type="text" style="width:70px" maxlength="5" name="E:y">
 			<span class="input-group-addon">-</span>
 			<input class="form-control validate[required,custom[number,funcCall[validateMax]]]" type="text" style="width:70px" maxlength="5" name="-:y">
-		</div>		
+		</div>	
 		<div id="%:d,2:d" style="display:none" class="input-group policy">
 			<span class="input-group-addon">1</span>
 			<select class="form-control" id="discount" th:include="store/promo/common/promoCommon::discount" name="%:d"></select>

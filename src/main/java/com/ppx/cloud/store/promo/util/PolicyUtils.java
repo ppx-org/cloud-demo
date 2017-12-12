@@ -117,12 +117,12 @@ public class PolicyUtils {
 		brandPolicyList.add(new Policy("E:y,-:y", "E:y,-:y"));
 		
 		// subject
+		subjectPolicyList.add(new Policy("A:y", "A:y"));
 		subjectPolicyList.add(new Policy("%:d", "%:d"));
 		subjectPolicyList.add(new Policy("E:y,-:y", "E:y,-:y"));
 		subjectPolicyList.add(new Policy("%:d,2:d", "%:d,2:d"));
 		subjectPolicyList.add(new Policy("%:d,2+:d", "%:d,2+:d"));
 		subjectPolicyList.add(new Policy("y:Y,n:N", "y:Y,n:N"));
-		//subjectPolicyList.add(new Policy("N:n,Y:y", "N:n,Y:y"));
 		subjectPolicyList.add(new Policy("+:y", "+:y"));
 		subjectPolicyList.add(new Policy("B:n,F:n", "B:n,F:n"));
 		
@@ -209,11 +209,12 @@ public class PolicyUtils {
 	
 	
 	public static String decodePolicy(String policy) {
-		System.out.println("xxxxxxxxxxout-policy:" + policy);
 		
-		return policy.replace("2:", "第二件")
-			.replace("2+:", "第二件及以上")
+		return policy
+			.replace("A:", "avg")
 			.replace("%:", "disc")
+			.replace("2:", "第二件")
+			.replace("2+:", "第二件及以上")
 			.replace("E:", "E¥")
 			.replace("-:", "M¥")
 			.replace(":Y", "yen")

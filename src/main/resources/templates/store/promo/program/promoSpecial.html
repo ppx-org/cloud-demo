@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+<link th:replace="common/fragment/common::validation"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	refreshPageData([[${listJson}]]);
+});
+
+function queryPage(pageNumber) {
+	showLoading();
+	$("#pageNumber").val(pageNumber);
+	$.post([[@{/programConf/listProgramSpecial}]], $("#queryForm").serialize(), function(r) {
+		refreshPageData(r);
+		hideLoading();
+	});
+}
+
+function add() {
+	$('#addForm')[0].reset();
+	$('#add').modal('show');
+	
+	action = function() {
+		if (!$("#addForm").validationEngine('validate')) return;
+		showLoading();
+		$.post([[@{/programConf/insertProgramSpecial}]], $("#addForm").serialize(), function(r) {
+			if (r.result == 1) {
+				$('#add').modal('hide');
+				queryPage(1);
+			}
+		});
+	}
+}
+
+
+function remove(id) {
+	var callback = function () {
+		showLoading();
+		$.post([[@{/programConf/deleteProgramSpecial}]], "id=" + id, function(r) {
+			if (r.result == 1) {
+				queryPage(1);
+			}
+		});	
+	}
+	confirm(id, callback);
+}
+</script>
+</head>
+
+<body>
+<div th:replace="common/fragment/common::pageList('SPECIAL')">
+	<div th:fragment="queryFragment">
+		<input type="hidden" name="progId" th:value="${progId}">
+		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
+		<input type="text" class="form-control input-sm" name="testName" placeholder="请输入PROD_ID" style="width:200px;">
+		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
+	</div>
+	<table th:fragment="listFragment">
+	<tr>
+		<th>PROD_ID</th>
+		<th>PROD_TITLE</th>
+		<th>special</th>
+		<th>操作</th>
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td class="w-id">{{v.prodId}}</td>
+		<td class="w-title-m">{{v.prodTitle}}</td>
+		<td class="w-number">{{v.specialPrice}}</td>
+		<td class="w-action">
+			<a href="#" onclick="remove('{{v.prodId}}')">[删除]</a>
+		</td>
+	</tr>
+	{{/each}}
+	</script>
+	</table>
+</div>
+
+<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 700)">
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><span class="required">*</span>NAME：</label>
+		<div class="col-sm-4">
+			 <textarea rows="8" cols="25" class="form-control validate[required]" style="resize: none;"></textarea>
+		</div>
+		<div class="col-sm-4">
+			 <textarea rows="8" cols="25" class="form-control validate[required]" style="resize: none;"></textarea>
+		</div>
+	</div>
+</div>
+
+
+</body>
+</html>
+

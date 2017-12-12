@@ -12,10 +12,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
+import com.ppx.cloud.common.page.Page;
+import com.ppx.cloud.common.page.PageList;
 import com.ppx.cloud.store.merchant.brand.BrandService;
 import com.ppx.cloud.store.merchant.category.CategoryService;
 import com.ppx.cloud.store.promo.program.bean.ProgramBrand;
 import com.ppx.cloud.store.promo.program.bean.ProgramCategory;
+import com.ppx.cloud.store.promo.program.bean.ProgramSpecial;
 import com.ppx.cloud.store.promo.program.bean.ProgramSubject;
 import com.ppx.cloud.store.promo.subject.SubjectService;
 import com.ppx.cloud.store.promo.util.PolicyUtils;
@@ -138,6 +141,60 @@ public class ProgramConfController {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// ---------------------special----------------------
+	@GetMapping
+	public ModelAndView promoSpecial(@RequestParam Integer progId) {
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("progId", progId);
+		ProgramSpecial bean = new ProgramSpecial();
+		bean.setProgId(progId);
+		mv.addObject("listJson", listProgramSpecial(new Page(), bean));
+		return mv;
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> listProgramSpecial(Page page, ProgramSpecial bean) {
+		PageList<ProgramSpecial> list = serv.listProgramSpecial(page, bean);
+		return ControllerReturn.ok(list);
+	}
+	
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> insertProgramSpecial(@RequestParam Integer progId, @RequestParam Integer[] prodId) {
+		int r = serv.insertProgramSpecial(progId, prodId);
+		return ControllerReturn.ok(r);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> deleteProgramSpecial(@RequestParam Integer progId, @RequestParam Integer prodId) {
+		int r = serv.deleteProgramSpecial(progId, prodId);
+		return ControllerReturn.ok(r);
+	}
 	
 	
 	
