@@ -185,8 +185,9 @@ public class ProgramConfController {
 	
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> insertProgramSpecial(@RequestParam Integer progId, @RequestParam Integer[] prodId) {
-		int r = serv.insertProgramSpecial(progId, prodId);
+	public Map<String, Object> insertProgramSpecial(@RequestParam Integer progId,
+			@RequestParam String prodIdStr, @RequestParam String specialPriceStr) {
+		int r = serv.insertProgramSpecial(progId, prodIdStr, specialPriceStr);
 		return ControllerReturn.ok(r);
 	}
 	

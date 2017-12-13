@@ -1,5 +1,6 @@
 package com.ppx.cloud.store.promo.program;
 
+import java.util.BitSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,11 @@ import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
+import com.ppx.cloud.grant.common.GrantContext;
 import com.ppx.cloud.grant.service.MerchantService;
-import com.ppx.cloud.store.promo.program.bean.ProgramSpecial;
 import com.ppx.cloud.store.promo.program.bean.ProgramBrand;
 import com.ppx.cloud.store.promo.program.bean.ProgramCategory;
+import com.ppx.cloud.store.promo.program.bean.ProgramSpecial;
 import com.ppx.cloud.store.promo.program.bean.ProgramSubject;
 
 @Service
@@ -159,16 +161,82 @@ public class ProgramConfService extends MyDaoSupport {
 	
 	
 	@Transactional
-	public int insertProgramSpecial(Integer progId, Integer[] prodId) {
+	public int insertProgramSpecial(Integer progId, String prodIdStr, String specialPrice) {
 		// 加锁
 		merchantService.lockMerchant();
 		
-		// subject已经存在
+		//  已经存在
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		
+		
+		
+		String[] prodId = prodIdStr.split(",");
+		BitSet prodIdBetSet = new BitSet();
+		for (String id : prodId) {
+			prodIdBetSet.set(Integer.parseInt(id));
+		}
+		
+		// prodId必须属于自己的
+		String existsProdIdSql = "select group_concat(PROD_ID) PROD_ID_STR from product p where PROD_ID in (?)"
+				+ " and (select 1 from repository where REPO_ID = p.REPO_ID and MERCHANT_ID = ?)";
+		String existsProdIdStr = getJdbcTemplate().queryForObject(existsProdIdSql, String.class, prodIdStr, merchantId);
+		String[] existsProdId = existsProdIdStr.split(",");
+		BitSet existsProdIdBitSet = new BitSet();
+		for (String id : existsProdId) {
+			prodIdBetSet.set(Integer.parseInt(id));
+		}
+		
+		// 找出不存在的prodId
+		prodIdBetSet.xor(existsProdIdBitSet);
+		
+		
+		
+		
+	
+		
+		
 		
 		
 		//return insert(bean);
 		return 1;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public int deleteProgramSpecial(Integer progId, Integer subjectId) {
 		return getJdbcTemplate().update("delete from program_subject where PROG_ID = ? and SUBJECT_ID = ?", progId, subjectId);

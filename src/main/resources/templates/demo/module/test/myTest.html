@@ -1,12 +1,214 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>listTest</title>
+<title></title>
 
-</head>
+<link th:replace="common/fragment/common::common"/>
+<link th:replace="common/fragment/common::validation"/>
+
+<script type="text/javascript" th:inline="javascript">
+
+// rule.integer.regex
+// rule.number.regex
+var rule = $.validationEngineLanguage.allRules;
+$(function() {
+	
+});
+
+function validate() {
+	$("#validationResultId").val("");
+	var validationResult = [];
+	
+	
+	//  validate prodId
+	var val = $.trim($("#prodId").val());
+	var prodId = val.split("\n");
+	var prodIdArray = [];
+	for (var i = 0; i < prodId.length; i++) {
+		var v = $.trim(prodId[i]);
+		if (v == "") {
+			validationResult.push((i + 1) + ":empty");
+		}
+		else if (!rule.integer.regex.test(v)) {
+			validationResult.push((i + 1) + ":not integer");
+		}
+		prodIdArray.push(v);
+	}
+	
+	// validate specialPrice
+	var val = $.trim($("#specialPrice").val());
+	var specialPrice = val.split("\n");
+	var specialPriceArray = [];
+	for (var i = 0; i < specialPrice.length; i++) {
+		var v = $.trim(specialPrice[i]);
+		if (v == "") {
+			validationResult.push((i + 1) + ":empty");
+		}
+		else if (!rule.number.regex.test(v)) {
+			validationResult.push((i + 1) + ":not number");
+		}
+		specialPriceArray.push(v);
+	}
+	
+	if (prodIdArray.length != specialPriceArray.length) {
+		validationResult.push("数量不一样");
+	}
+		
+	if (validationResult.length == 0) {
+		var para = "prodIdStr=" + prodIdArray.join(",") + "&specialPriceStr=" + specialPriceArray.join(",");
+		return para;
+	}
+	else {
+		$("#validationResultId").val(validationResult.join("\n"));
+		return false;
+	}
+		
+}
+
+
+
+
+function go() {
+	var r = validate();
+	if (r != false) {
+		alert(r);
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function areaScroll(obj) {
+	if (!obj) obj = $("#areaObj").data("currentObj");
+	$("#rowNum,.areaClass").each(function(){
+		if (this.id != obj.id) {
+			$(this).prop("scrollTop", obj.scrollTop);
+		}
+	})
+}
+
+function areakeyup(obj) {
+	if (event.keyCode != 13) return;
+	$("#areaObj").data("currentObj", obj);
+	createLineNum();
+	createEnter();
+}
+
+function createLineNum() {
+	var currentObj = $("#areaObj").data("currentObj");
+	
+	var lineNum = $(currentObj).val().split("\n").length;
+	var lineNumArray = [];
+	for (var i = 1; i <= lineNum; i++) {
+		lineNumArray.push(i)
+	}
+	$("#rowNum").val(lineNumArray.join("\n"));
+}
+
+function createEnter() {
+	var currentObj = $("#areaObj").data("currentObj");
+	var currentLineNum = $(currentObj).val().split("\n").length;
+	
+	$(".areaClass").each(function() {		
+		if (this.id != currentObj.id) {
+			var lineNum = $(this).val().split("\n").length;
+			var n = currentLineNum - lineNum + 1;
+			if (n > 0) {
+				var enterLine = [];
+				for (var i = 0; i < n; i++) {
+					enterLine.push("");
+				}
+				$(this).val($(this).val() + enterLine.join("\n"));
+			}
+		}
+	});
+}
+
+function areaPaste(obj) {
+	$("#areaObj").data("currentObj", obj);
+	
+	// 去掉空行
+	$(".areaClass").each(function() {
+		var val = $.trim($(this).val());
+		$(this).val(val == "" ? "" : val + "\n");
+	})
+	
+	window.setTimeout(function() {
+		createLineNum();
+		createEnter();
+		areaScroll();
+	}, 100);
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <body>
 
-<link th:replace="common/fragment/common::myTest"/>
+<div>---------</div>
+
+<input type="hidden" id="areaObj">
+<textarea id="rowNum" rows="10" cols="10" wrap="off" onscroll="areaScroll(this)" style="overflow-y:hidden;width:50px;resize:none;border:1px solid white;text-align: right" readonly="readonly"></textarea>
+<textarea id="prodId" rows="10" cols="10" wrap="off" class="areaClass" onscroll="areaScroll(this)" style="resize: none;" onpaste="areaPaste(this)" onkeyup="areakeyup(this)"></textarea>
+<textarea id="specialPrice" rows="10" cols="10" wrap="off" class="areaClass" onscroll="areaScroll(this)" style="resize: none;text-align: right;" onpaste="areaPaste(this)" onkeyup="areakeyup(this)"></textarea>
+
+
+
+<textarea id="validationResultId" rows="10" cols="10" wrap="off" style="resize: none;"></textarea>
+
+
+<a href="javascript:go()">test</a>
 </body>
+
 </html>
