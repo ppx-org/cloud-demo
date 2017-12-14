@@ -1,5 +1,6 @@
 package com.ppx.cloud.store.promo.program;
 
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
@@ -161,7 +163,7 @@ public class ProgramConfService extends MyDaoSupport {
 	
 	
 	@Transactional
-	public int insertProgramSpecial(Integer progId, String prodIdStr, String specialPrice) {
+	public int insertProgramSpecial(Integer progId, String prodIdStr, String specialPriceStr) {
 		// 加锁
 		merchantService.lockMerchant();
 		
@@ -171,15 +173,23 @@ public class ProgramConfService extends MyDaoSupport {
 		
 		
 		String[] prodId = prodIdStr.split(",");
+		String[] specialPrice = specialPriceStr.split(",");
+		if (prodId.length != specialPrice.length) {
+			return -1;
+		}
+		
+		
+		
+		// >>>>>>>>>>>>>>>>>>>>>>>>>判断ID是否已经存在在product
 		BitSet prodIdBetSet = new BitSet();
 		for (String id : prodId) {
 			prodIdBetSet.set(Integer.parseInt(id));
 		}
 		
 		// prodId必须属于自己的
-		String existsProdIdSql = "select group_concat(PROD_ID) PROD_ID_STR from product p where PROD_ID in (?)"
+		String existsProdSql = "select group_concat(PROD_ID) PROD_ID_STR from product p where PROD_ID in (?)"
 				+ " and (select 1 from repository where REPO_ID = p.REPO_ID and MERCHANT_ID = ?)";
-		String existsProdIdStr = getJdbcTemplate().queryForObject(existsProdIdSql, String.class, prodIdStr, merchantId);
+		String existsProdIdStr = getJdbcTemplate().queryForObject(existsProdSql, String.class, prodIdStr, merchantId);
 		String[] existsProdId = existsProdIdStr.split(",");
 		BitSet existsProdIdBitSet = new BitSet();
 		for (String id : existsProdId) {
@@ -190,14 +200,35 @@ public class ProgramConfService extends MyDaoSupport {
 		prodIdBetSet.xor(existsProdIdBitSet);
 		
 		
+		if (prodIdBetSet.cardinality() != 0) {
+			return 0;
+		}
+		
+		// >>>>>>>>>>>>>>>>>>>>>>判断ID存在在program_special
+		String existsSpecialSql = "select group_concat(PROD_ID) PROD_ID_STR from program_special p where PROG_ID = ? PROD_ID in (?)";
+		String existsSpecialIdStr = getJdbcTemplate().queryForObject(existsSpecialSql, String.class, prodIdStr);
+		if (!StringUtils.isEmpty(existsSpecialIdStr)) {
+			return -100;
+		}
 		
 		
-	
 		
 		
 		
 		
-		//return insert(bean);
+		// 批量新增
+		String insertSql = "insert into program_special(PROG_ID, RPOD_ID, SPECIAL_PRICE) values(?, ?, ?)";
+		
+		List<Object[]> insertArgList = new ArrayList<Object[]>();
+		
+		for (int i = 0; i < prodId.length; i++) {
+			Object[] obj = {progId, prodId[i], specialPrice[i]};
+			insertArgList.add(obj);
+		}
+		
+		int[] r = getJdbcTemplate().batchUpdate(insertSql, insertArgList);
+		
+		
 		return 1;
 	}
 	

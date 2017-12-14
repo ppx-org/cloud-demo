@@ -20,24 +20,16 @@ import com.ppx.cloud.common.page.PageList;
 @Service
 public class TestService extends MyDaoSupport {
 	
-	@Transactional(isolation=Isolation.READ_COMMITTED)
+	@Transactional
 	public void test() {
 		
-		// 事务隔离级别改成RC可能会影响工作流功能，我们项目里几乎看不到for update语句，改成RC容易出BUG
-		// 建议在考勤中使用@Transactional(isolation=Isolation.READ_COMMITTED)去除insert...select的锁，而不影响其它功能
-		System.out.println("xxxxxxx000000000000000001begin:");
-		String sql = "insert into test(TEST_NAME, TEST_TIME) " + 
-				" select TEST_NAME, TEST_TIME from test where TEST_ID = 1";
-		int r = getJdbcTemplate().update(sql);
+		System.out.println("------------------begin");
 		
-		try {
-			Thread.sleep(1000 * 10);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+		//getJdbcTemplate().queryfor
 		
 		
-		System.out.println("xxxxxxx000000000000000001end:" + r);
+		System.out.println("------------------end");
+		
 	}
 	
 	

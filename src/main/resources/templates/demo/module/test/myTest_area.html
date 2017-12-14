@@ -73,6 +73,7 @@ function go() {
 	if (r != false) {
 		alert(r);
 	}
+	
 }
 
 
@@ -111,20 +112,22 @@ function go() {
 
 
 function areaScroll(obj) {
-	$("#rownum").prop("scrollTop", obj.scrollTop);
-}
-
-function rownumScroll(obj) {
-	$("#content").prop("scrollTop", obj.scrollTop);
+	if (!obj) obj = $("#areaObj").data("currentObj");
+	$("#rowNum,.areaClass").each(function(){
+		if (this.id != obj.id) {
+			$(this).prop("scrollTop", obj.scrollTop);
+		}
+	})
 }
 
 function areakeyup(obj) {
 	if (event.keyCode != 13) return;
 	$("#areaObj").data("currentObj", obj);
-	createRownum();
+	createLineNum();
+	createEnter();
 }
 
-function createRownum() {
+function createLineNum() {
 	var currentObj = $("#areaObj").data("currentObj");
 	
 	var lineNum = $(currentObj).val().split("\n").length;
@@ -132,40 +135,52 @@ function createRownum() {
 	for (var i = 1; i <= lineNum; i++) {
 		lineNumArray.push(i)
 	}
-	$("#rownum").val(lineNumArray.join("\n"));
+	$("#rowNum").val(lineNumArray.join("\n"));
+}
+
+function createEnter() {
+	var currentObj = $("#areaObj").data("currentObj");
+	var currentLineNum = $(currentObj).val().split("\n").length;
+	
+	$(".areaClass").each(function() {		
+		if (this.id != currentObj.id) {
+			var lineNum = $(this).val().split("\n").length;
+			var n = currentLineNum - lineNum + 1;
+			if (n > 0) {
+				var enterLine = [];
+				for (var i = 0; i < n; i++) {
+					enterLine.push("");
+				}
+				$(this).val($(this).val() + enterLine.join("\n"));
+			}
+		}
+	});
 }
 
 function areaPaste(obj) {
 	$("#areaObj").data("currentObj", obj);
 	
 	// 去掉空行
-	var val = $.trim($(obj).val());
-	$(obj).val(val == "" ? "" : val + "\n");
+	$(".areaClass").each(function() {
+		var val = $.trim($(this).val());
+		$(this).val(val == "" ? "" : val + "\n");
+	})
 	
 	window.setTimeout(function() {
-		createRownum();
+		createLineNum();
+		createEnter();
 		areaScroll();
 	}, 100);
 }
-
-
-
-
-
-function gotoRownum(obj) {
-	var enter = "";
-	for (var i = 0; i < 15; i++) {
-		enter += (i + 1) + "\n";
-	}
-	$("#rownum").val(enter).focus();
-	
-	var enterNew;
-	for (var i = 0; i < 15; i++) {
-		enterNew += (i + 1) + "\n";
-	}
-	$("#rownum").val($("#rownum").val() + enter);
-}
 </script>
+
+
+
+
+
+
+
+
 
 
 
@@ -183,38 +198,17 @@ function gotoRownum(obj) {
 
 <div>---------</div>
 
-<input type="text" class="form-control" value="15"> <button type="button" onclick="gotoRownum(this)">go</button>
-
 <input type="hidden" id="areaObj">
-<textarea id="rownum" rows="10" cols="10" wrap="off" class="form-control" onscroll="rownumScroll(this)" style="overflow-y:hidden;width:50px;resize:none;border:1px solid white;text-align: right" readonly="readonly"></textarea>
-<textarea id="content" rows="10" cols="30" wrap="off" class="form-control" onscroll="areaScroll(this)" style="resize: none;" onpaste="areaPaste(this)" onkeyup="areakeyup(this)"></textarea>
+<textarea id="rowNum" rows="10" cols="10" wrap="off" onscroll="areaScroll(this)" style="overflow-y:hidden;width:50px;resize:none;border:1px solid white;text-align: right" readonly="readonly"></textarea>
+<textarea id="prodId" rows="10" cols="10" wrap="off" class="areaClass" onscroll="areaScroll(this)" style="resize: none;" onpaste="areaPaste(this)" onkeyup="areakeyup(this)"></textarea>
+<textarea id="specialPrice" rows="10" cols="10" wrap="off" class="areaClass" onscroll="areaScroll(this)" style="resize: none;text-align: right;" onpaste="areaPaste(this)" onkeyup="areakeyup(this)"></textarea>
 
 
 
-<textarea id="validationResultId" rows="10" cols="10" wrap="off" style="resize: none;" readonly="readonly"></textarea>
+<textarea id="validationResultId" rows="10" cols="10" wrap="off" style="resize: none;"></textarea>
 
 
 <a href="javascript:go()">test</a>
-
-
-
-
-    <textarea id="txt"></textarea>
-    <input type="button" value="换行" onclick="test()">
-
-<script type="text/javascript">
-    function test(){
-        $("#txt").val($("#txt").val() + "\r\n").focus();
-    }
-</script>
-
-
-
-
-
-
-
-
 </body>
 
 </html>
