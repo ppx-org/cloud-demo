@@ -20,17 +20,26 @@ function queryPage(pageNumber) {
 	});
 }
 
+
+//  insertProgramSpecial(@RequestParam Integer progId, @RequestParam String prodIdStr, @RequestParam String specialPriceStr) 
 function add() {
 	$('#addForm')[0].reset();
 	$('#add').modal('show');
 	
 	action = function() {
-		if (!$("#addForm").validationEngine('validate')) return;
+		
+		var r = validate();
+		if (r == false) {
+			return;
+		}
+		
 		showLoading();
-		$.post([[@{/programConf/insertProgramSpecial}]], $("#addForm").serialize(), function(r) {
+		$.post([[@{/programConf/insertProgramSpecial}]], "progId=" + $("#progId").val() + "&" + r, function(r) {
+			hideLoading();
 			if (r.result == 1) {
-				$('#add').modal('hide');
-				queryPage(1);
+				
+				//$('#add').modal('hide');
+				//queryPage(1);
 			}
 		});
 	}
@@ -48,13 +57,128 @@ function remove(id) {
 	}
 	confirm(id, callback);
 }
+
+
+
+var imp = {};
+imp.areaScroll = function(obj) {
+	$("#rownum").prop("scrollTop", obj.scrollTop);
+}
+imp.rownumScroll = function(obj) {
+	$("#content").prop("scrollTop", obj.scrollTop);
+}
+imp.areakeyup = function(obj) {
+	if (event.keyCode != 13) return;
+	$("#areaObj").data("currentObj", obj);
+	this.createRownum();
+}
+imp.createRownum = function (){
+	var currentObj = $("#areaObj").data("currentObj");
+	
+	var lineNum = $(currentObj).val().split("\n").length;
+	var lineNumArray = [];
+	for (var i = 1; i <= lineNum; i++) {
+		lineNumArray.push(i)
+	}
+	$("#rownum").val(lineNumArray.join("\n"));
+}
+imp.areaPaste = function(obj) {
+	$("#areaObj").data("currentObj", obj);
+	
+	// 去掉空行
+	var val = $.trim($(obj).val());
+	$(obj).val(val == "" ? "" : val + "\n");
+	
+	window.setTimeout(function() {
+		imp.createRownum();
+		imp.areaScroll($("#areaObj").data("currentObj"));
+	}, 100);
+}
+imp.gotoRownum = function(n) {
+	var lineNum = $("#rownum").val().split("\n").length;
+	
+	if (n < '0' || n > lineNum) {
+		return;
+	}
+	
+	var enter = "";
+	for (var i = 0; i < new Number(n); i++) {
+		enter += (i + 1) + "\n";
+	}
+	$("#rownum").val(enter).focus();
+	
+	var enterNew = "";
+	for (var i = 0; i < lineNum - new Number(n); i++) {
+		enterNew += new Number(n) + (i + 1) + "\n";
+	}
+	$("#rownum").val($("#rownum").val() + enterNew);
+}
+
+
+function validate() {
+	// rule.integer.regex
+	// rule.number.regex
+	var rule = $.validationEngineLanguage.allRules;
+
+	
+	$("#hint").empty();
+	var validationResult = [];
+	
+	
+	var prodIdArray = [];
+	var specialPriceArray = [];
+	
+	var content = $.trim($("#content").val());
+	var lineContent = content.split("\n");
+	for (var i = 0; i < lineContent.length; i++) {
+		var lineStr = $.trim(lineContent[i]);
+		if (lineStr == "") {
+			validationResult.push((i + 1) + ":empty");
+		}
+		else {
+			var v = lineStr.split("|")
+			if (v.length != 2) {
+				validationResult.push((i + 1) + ":|不对");
+				continue;
+			}
+			
+			var id = $.trim(v[0]);
+			var price = $.trim(v[1]);
+			if (id == "" || price == "") {
+				validationResult.push((i + 1) + ":empty");
+			}
+			else if (!rule.integer.regex.test(id)) {
+				validationResult.push((i + 1) + ":not integer");
+			}
+			else if (!rule.number.regex.test(price)) {
+				validationResult.push((i + 1) + ":not number");
+			}
+			
+			prodIdArray.push(id);
+			specialPriceArray.push(price);
+		}
+	}
+		
+	if (validationResult.length == 0) {
+		var para = "prodIdStr=" + prodIdArray.join(",") + "&specialPriceStr=" + specialPriceArray.join(",");
+		return para;
+	}
+	else {
+		var hintHtml = "";
+		validationResult.forEach(function(v) {
+			$("#hint").append('<a href="javascript:imp.gotoRownum(' + v.split(":")[0] + ')">' + v + '</a><br>');
+		})
+		
+		return false;
+	}		
+}
 </script>
 </head>
 
 <body>
 <div th:replace="common/fragment/common::pageList('SPECIAL')">
 	<div th:fragment="queryFragment">
-		<input type="hidden" name="progId" th:value="${progId}">
+		<input type="hidden" id="progId" name="progId" th:value="${progId}">
 		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
 		<input type="text" class="form-control input-sm" name="testName" placeholder="请输入PROD_ID" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
@@ -81,16 +205,28 @@ function remove(id) {
 	</table>
 </div>
 
-<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 700)">
-	<div class="form-group">
-		<label class="col-sm-2 control-label"><span class="required">*</span>NAME：</label>
-		<div class="col-sm-4">
-			 <textarea rows="8" cols="25" class="form-control validate[required]" style="resize: none;"></textarea>
-		</div>
-		<div class="col-sm-4">
-			 <textarea rows="8" cols="25" class="form-control validate[required]" style="resize: none;"></textarea>
-		</div>
-	</div>
+<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 600)">
+	
+		<table style="margin-left:30px">
+		<tr>
+			<td>行号</td>
+			<td>内容:产品ID|特价(允许有空格)</td>
+			<td>提示(点击跳到指定行)</td>
+		</tr>
+		<tr>
+			<td style="text-align: right">
+				<input type="hidden" id="areaObj">
+				<textarea id="rownum" rows="15" cols="10" wrap="off" class="form-control" onscroll="imp.rownumScroll(this)" style="overflow-y:hidden;width:50px;resize:none;border:1px solid white;text-align: right" readonly="readonly">1</textarea>
+			</td>
+			<td>
+				<textarea id="content" rows="15" cols="30" wrap="off" class="form-control" onscroll="imp.areaScroll(this)" style="resize: none;" onpaste="imp.areaPaste(this)" onkeyup="imp.areakeyup(this)">1212|112</textarea>
+			</td>
+			<td >
+				<div id="hint" style="height:330px;width:200px;overflow-y:scroll;"></div>
+			</td>
+		</tr>
+		</table>
+	
 </div>
 
 

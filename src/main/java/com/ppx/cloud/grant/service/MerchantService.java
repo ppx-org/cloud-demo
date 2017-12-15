@@ -19,10 +19,11 @@ import com.ppx.cloud.grant.common.GrantUtils;
 public class MerchantService extends MyDaoSupport {
 	
 	
-	public void lockMerchant() {
+	public int lockMerchant() {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		String sql = "select 1 from merchant where MERCHANT_ID = ? for update";
 		getJdbcTemplate().queryForMap(sql, merchantId);
+		return merchantId;
 	}
 	
 

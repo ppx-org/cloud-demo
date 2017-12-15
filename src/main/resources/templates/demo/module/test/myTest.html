@@ -11,6 +11,7 @@
 // rule.integer.regex
 // rule.number.regex
 var rule = $.validationEngineLanguage.allRules;
+
 $(function() {
 	
 });
@@ -49,7 +50,6 @@ function validate() {
 			specialPriceArray.push(price);
 		}
 	}
-	
 		
 	if (validationResult.length == 0) {
 		var para = "prodIdStr=" + prodIdArray.join(",") + "&specialPriceStr=" + specialPriceArray.join(",");
@@ -58,12 +58,11 @@ function validate() {
 	else {
 		var hintHtml = "";
 		validationResult.forEach(function(v) {
-			$("#hint").append('<a href="javascript:gotoRownum(' + v.split(":")[0] + ')">' + v + '</a>');
+			$("#hint").append('<a href="javascript:imp.gotoRownum(' + v.split(":")[0] + ')">' + v + '</a><br>');
 		})
 		
 		return false;
-	}
-		
+	}		
 }
 
 
@@ -78,23 +77,19 @@ function go() {
 }
 
 
-
-
-function areaScroll(obj) {
+var imp = {};
+imp.areaScroll = function(obj) {
 	$("#rownum").prop("scrollTop", obj.scrollTop);
 }
-
-function rownumScroll(obj) {
+imp.rownumScroll = function(obj) {
 	$("#content").prop("scrollTop", obj.scrollTop);
 }
-
-function areakeyup(obj) {
+imp.areakeyup = function(obj) {
 	if (event.keyCode != 13) return;
 	$("#areaObj").data("currentObj", obj);
-	createRownum();
+	this.createRownum();
 }
-
-function createRownum() {
+imp.createRownum = function (){
 	var currentObj = $("#areaObj").data("currentObj");
 	
 	var lineNum = $(currentObj).val().split("\n").length;
@@ -104,8 +99,7 @@ function createRownum() {
 	}
 	$("#rownum").val(lineNumArray.join("\n"));
 }
-
-function areaPaste(obj) {
+imp.areaPaste = function(obj) {
 	$("#areaObj").data("currentObj", obj);
 	
 	// 去掉空行
@@ -113,14 +107,11 @@ function areaPaste(obj) {
 	$(obj).val(val == "" ? "" : val + "\n");
 	
 	window.setTimeout(function() {
-		createRownum();
-		areaScroll($("#areaObj").data("currentObj"));
+		imp.createRownum();
+		imp.areaScroll($("#areaObj").data("currentObj"));
 	}, 100);
 }
-
-
-
-function gotoRownum(n) {
+imp.gotoRownum = function(n) {
 	var lineNum = $("#rownum").val().split("\n").length;
 	
 	if (n < '0' || n > lineNum) {
@@ -145,7 +136,7 @@ function gotoRownum(n) {
 
 <body>
 
-<div>---------</div>
+<div>----xx-----</div>
 
 
 <table>
@@ -157,10 +148,10 @@ function gotoRownum(n) {
 <tr>
 	<td style="text-align: right">
 		<input type="hidden" id="areaObj">
-		<textarea id="rownum" rows="15" cols="10" wrap="off" class="form-control" onscroll="rownumScroll(this)" style="overflow-y:hidden;width:50px;resize:none;border:1px solid white;text-align: right" readonly="readonly"></textarea>
+		<textarea id="rownum" rows="15" cols="10" wrap="off" class="form-control" onscroll="imp.rownumScroll(this)" style="overflow-y:hidden;width:50px;resize:none;border:1px solid white;text-align: right" readonly="readonly">1</textarea>
 	</td>
 	<td>
-		<textarea id="content" rows="15" cols="30" wrap="off" class="form-control" onscroll="areaScroll(this)" style="resize: none;" onpaste="areaPaste(this)" onkeyup="areakeyup(this)"></textarea>
+		<textarea id="content" rows="15" cols="30" wrap="off" class="form-control" onscroll="imp.areaScroll(this)" style="resize: none;" onpaste="imp.areaPaste(this)" onkeyup="imp.areakeyup(this)"></textarea>
 	</td>
 	<td >
 		<div id="hint" style="height:330px;width:200px;overflow-y:scroll;"></div>
@@ -168,12 +159,11 @@ function gotoRownum(n) {
 </tr>
 <tr>
 	<td colspan="3">
-		<button type="button" class="btn btn-default btn-sm" onclick="gotoRownum()">跳到</button>
+		<button type="button" class="btn btn-default btn-sm" onclick="imp.gotoRownum()">跳到</button>
 		<input type="number" id="goNum" class="form-control input-sm" style="width:100px" maxlength="3">
 		<label>行</label>
 	</td>
 </tr>
-
 </table>
 
 

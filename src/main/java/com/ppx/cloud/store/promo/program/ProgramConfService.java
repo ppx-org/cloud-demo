@@ -165,12 +165,7 @@ public class ProgramConfService extends MyDaoSupport {
 	@Transactional
 	public int insertProgramSpecial(Integer progId, String prodIdStr, String specialPriceStr) {
 		// 加锁
-		merchantService.lockMerchant();
-		
-		//  已经存在
-		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		
-		
+		int merchantId = merchantService.lockMerchant();
 		
 		String[] prodId = prodIdStr.split(",");
 		String[] specialPrice = specialPriceStr.split(",");
@@ -178,55 +173,22 @@ public class ProgramConfService extends MyDaoSupport {
 			return -1;
 		}
 		
-		
-		
-		// >>>>>>>>>>>>>>>>>>>>>>>>>判断ID是否已经存在在product
-		BitSet prodIdBetSet = new BitSet();
-		for (String id : prodId) {
-			prodIdBetSet.set(Integer.parseInt(id));
-		}
-		
-		// prodId必须属于自己的
-		String existsProdSql = "select group_concat(PROD_ID) PROD_ID_STR from product p where PROD_ID in (?)"
-				+ " and (select 1 from repository where REPO_ID = p.REPO_ID and MERCHANT_ID = ?)";
-		String existsProdIdStr = getJdbcTemplate().queryForObject(existsProdSql, String.class, prodIdStr, merchantId);
-		String[] existsProdId = existsProdIdStr.split(",");
-		BitSet existsProdIdBitSet = new BitSet();
-		for (String id : existsProdId) {
-			prodIdBetSet.set(Integer.parseInt(id));
-		}
-		
-		// 找出不存在的prodId
-		prodIdBetSet.xor(existsProdIdBitSet);
-		
-		
-		if (prodIdBetSet.cardinality() != 0) {
-			return 0;
-		}
-		
-		// >>>>>>>>>>>>>>>>>>>>>>判断ID存在在program_special
-		String existsSpecialSql = "select group_concat(PROD_ID) PROD_ID_STR from program_special p where PROG_ID = ? PROD_ID in (?)";
-		String existsSpecialIdStr = getJdbcTemplate().queryForObject(existsSpecialSql, String.class, prodIdStr);
-		if (!StringUtils.isEmpty(existsSpecialIdStr)) {
-			return -100;
-		}
-		
-		
-		
-		
-		
-		
-		// 批量新增
-		String insertSql = "insert into program_special(PROG_ID, RPOD_ID, SPECIAL_PRICE) values(?, ?, ?)";
-		
-		List<Object[]> insertArgList = new ArrayList<Object[]>();
-		
+		// result bit,1:产品ID不存在product,2:产品ID已经存在program_special
+		String insertSql = "insert into import_data(MERCHANT_ID, ID, NUM_1, RESULT) " +
+			"select " + merchantId + ", ?, ?, if ((select count(*) from product where PROD_ID = ? and REPO_ID in (select REPO_ID from repository where MERCHANT_ID = " + merchantId + ")) = 1,  0, 1) " +
+			"^ if ((select count(*) from program_special where PROD_ID = ? and PROG_ID = " + progId + ") != 1, 0, 2) r";
+		List<Object[]> argList = new ArrayList<Object[]>();
 		for (int i = 0; i < prodId.length; i++) {
-			Object[] obj = {progId, prodId[i], specialPrice[i]};
-			insertArgList.add(obj);
+			Object[] arg = {prodId[i], specialPrice[i], prodId[i], prodId[i]};
+			argList.add(arg);
 		}
 		
-		int[] r = getJdbcTemplate().batchUpdate(insertSql, insertArgList);
+		// 
+		String deleteSql = "delete from import_data where MERCHANT_ID = ?";
+		getJdbcTemplate().update(deleteSql, merchantId);
+		int r[] = getJdbcTemplate().batchUpdate(insertSql, argList);
+		
+		
 		
 		
 		return 1;
