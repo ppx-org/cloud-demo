@@ -16,50 +16,51 @@ $(function() {
 });
 
 function validate() {
-	$("#validationResultId").val("");
+	$("#hint").empty();
 	var validationResult = [];
 	
 	
-	//  validate prodId
-	var val = $.trim($("#prodId").val());
-	var prodId = val.split("\n");
 	var prodIdArray = [];
-	for (var i = 0; i < prodId.length; i++) {
-		var v = $.trim(prodId[i]);
-		if (v == "") {
-			validationResult.push((i + 1) + ":empty");
-		}
-		else if (!rule.integer.regex.test(v)) {
-			validationResult.push((i + 1) + ":not integer");
-		}
-		prodIdArray.push(v);
-	}
-	
-	// validate specialPrice
-	var val = $.trim($("#specialPrice").val());
-	var specialPrice = val.split("\n");
 	var specialPriceArray = [];
-	for (var i = 0; i < specialPrice.length; i++) {
-		var v = $.trim(specialPrice[i]);
-		if (v == "") {
+	
+	var content = $.trim($("#content").val());
+	var lineContent = content.split("\n");
+	for (var i = 0; i < lineContent.length; i++) {
+		var lineStr = $.trim(lineContent[i]);
+		if (lineStr == "") {
 			validationResult.push((i + 1) + ":empty");
 		}
-		else if (!rule.number.regex.test(v)) {
-			validationResult.push((i + 1) + ":not number");
+		else {
+			var v = lineStr.split("|")
+			if (v.length != 2) {
+				validationResult.push((i + 1) + ":|不对");
+				continue;
+			}
+			var id = $.trim(v[0]);
+			var price = $.trim(v[1]);
+			if (!rule.integer.regex.test(id)) {
+				validationResult.push((i + 1) + ":not integer");
+			}
+			else if (!rule.number.regex.test(price)) {
+				validationResult.push((i + 1) + ":not number");
+			}
+			
+			prodIdArray.push(id);
+			specialPriceArray.push(price);
 		}
-		specialPriceArray.push(v);
 	}
 	
-	if (prodIdArray.length != specialPriceArray.length) {
-		validationResult.push("数量不一样");
-	}
 		
 	if (validationResult.length == 0) {
 		var para = "prodIdStr=" + prodIdArray.join(",") + "&specialPriceStr=" + specialPriceArray.join(",");
 		return para;
 	}
 	else {
-		$("#validationResultId").val(validationResult.join("\n"));
+		var hintHtml = "";
+		validationResult.forEach(function(v) {
+			$("#hint").append('<a href="javascript:gotoRownum(' + v.split(":")[0] + ')">' + v + '</a>');
+		})
+		
 		return false;
 	}
 		
@@ -70,42 +71,11 @@ function validate() {
 
 function go() {
 	var r = validate();
+	alert(r)
 	if (r != false) {
 		alert(r);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -144,38 +114,32 @@ function areaPaste(obj) {
 	
 	window.setTimeout(function() {
 		createRownum();
-		areaScroll();
+		areaScroll($("#areaObj").data("currentObj"));
 	}, 100);
 }
 
 
 
-
-
-function gotoRownum(obj) {
+function gotoRownum(n) {
+	var lineNum = $("#rownum").val().split("\n").length;
+	
+	if (n < '0' || n > lineNum) {
+		return;
+	}
+	
 	var enter = "";
-	for (var i = 0; i < 15; i++) {
+	for (var i = 0; i < new Number(n); i++) {
 		enter += (i + 1) + "\n";
 	}
 	$("#rownum").val(enter).focus();
 	
-	var enterNew;
-	for (var i = 0; i < 15; i++) {
-		enterNew += (i + 1) + "\n";
+	var enterNew = "";
+	for (var i = 0; i < lineNum - new Number(n); i++) {
+		enterNew += new Number(n) + (i + 1) + "\n";
 	}
-	$("#rownum").val($("#rownum").val() + enter);
+	$("#rownum").val($("#rownum").val() + enterNew);
 }
 </script>
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -183,30 +147,47 @@ function gotoRownum(obj) {
 
 <div>---------</div>
 
-<input type="text" class="form-control" value="15"> <button type="button" onclick="gotoRownum(this)">go</button>
 
-<input type="hidden" id="areaObj">
-<textarea id="rownum" rows="10" cols="10" wrap="off" class="form-control" onscroll="rownumScroll(this)" style="overflow-y:hidden;width:50px;resize:none;border:1px solid white;text-align: right" readonly="readonly"></textarea>
-<textarea id="content" rows="10" cols="30" wrap="off" class="form-control" onscroll="areaScroll(this)" style="resize: none;" onpaste="areaPaste(this)" onkeyup="areakeyup(this)"></textarea>
+<table>
+<tr>
+	<td>行号</td>
+	<td>内容:产品ID|特价</td>
+	<td>提示(点击跳到指定行)</td>
+</tr>
+<tr>
+	<td style="text-align: right">
+		<input type="hidden" id="areaObj">
+		<textarea id="rownum" rows="15" cols="10" wrap="off" class="form-control" onscroll="rownumScroll(this)" style="overflow-y:hidden;width:50px;resize:none;border:1px solid white;text-align: right" readonly="readonly"></textarea>
+	</td>
+	<td>
+		<textarea id="content" rows="15" cols="30" wrap="off" class="form-control" onscroll="areaScroll(this)" style="resize: none;" onpaste="areaPaste(this)" onkeyup="areakeyup(this)"></textarea>
+	</td>
+	<td >
+		<div id="hint" style="height:330px;width:200px;overflow-y:scroll;"></div>
+	</td>
+</tr>
+<tr>
+	<td colspan="3">
+		<button type="button" class="btn btn-default btn-sm" onclick="gotoRownum()">跳到</button>
+		<input type="number" id="goNum" class="form-control input-sm" style="width:100px" maxlength="3">
+		<label>行</label>
+	</td>
+</tr>
+
+</table>
 
 
 
-<textarea id="validationResultId" rows="10" cols="10" wrap="off" style="resize: none;" readonly="readonly"></textarea>
 
 
+
+
+<br>
+<br>
+<br>
 <a href="javascript:go()">test</a>
 
 
-
-
-    <textarea id="txt"></textarea>
-    <input type="button" value="换行" onclick="test()">
-
-<script type="text/javascript">
-    function test(){
-        $("#txt").val($("#txt").val() + "\r\n").focus();
-    }
-</script>
 
 
 
