@@ -1,3 +1,34 @@
+ // 要想实现拖拽，首页需要阻止浏览器默认行为，一个四个事件。
+$(document).on({
+	dragleave:function(e){        //拖离
+		e.preventDefault();
+	},
+    drop:function(e){            //拖后放
+    	e.preventDefault();
+	},
+	dragenter:function(e){       //拖进
+		e.preventDefault();
+    },
+	dragover:function(e){        //拖来拖去
+		e.preventDefault();
+	}
+});
+
+var refreshDrag = function() {
+	var dragImg = document.querySelector('.dragImg'); //获得到框体
+	$(".dragImg").on("drop",  function() {
+		var imgTr = $(event.target).find(".imgTr");
+	    var f = event.dataTransfer.files;
+		if (f.length == 0) return;
+		img.loadImg(f, f.length, imgTr);
+	})
+}
+
+$(function() {
+	refreshDrag();
+});
+
+
 
 var sku = {};
 sku.REMOVE_HTML = '<a href="#" onclick="sku.remove(this)">[删除]</a><a href="#" onclick="sku.top(this)">[置顶]</a>';
@@ -24,9 +55,7 @@ sku.add = function(obj) {
 	
 	$("#skuTable").append(newTr);
 	
-	
-	
-	
+	refreshDrag();
 }
 sku.remove = function(obj) {
 	// 只剩下一个sku时，隐藏firstSkuTitle
@@ -45,9 +74,6 @@ img.html = '<td class="imgTd">\
 img.fileChange = function(obj) {
 	var f = obj.files;
 	if (f.length == 0) return;
-	
-	
-	
 	
 	
 	this.loadImg(f, f.length, $(obj).parent().parent());

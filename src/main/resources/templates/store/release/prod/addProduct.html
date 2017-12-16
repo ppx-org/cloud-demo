@@ -117,7 +117,7 @@ function uploadImg(callback) {
 				<th style="width:95px">价格</th>
 				<th style="display:none;" class="firstSkuTitle w-title-s">SKU名称</th>
 				<th style="width:90px" class="">操作</th>
-				<th>图片</th>	
+				<th>图片(可拖拉图片进来)</th>	
 			</tr>
 			<tr>
 				<td><input type="text" name="stockNum" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px" value="1"></td>
@@ -126,7 +126,7 @@ function uploadImg(callback) {
 				<td class="skuAction">
 					<a href="#" onclick="sku.add(this)">[增加]</a>
 				</td>
-				<td>
+				<td class="dragImg">
 				<input type="hidden" name="skuImgSrc">
 				<table>
 				<tr class="imgTr">
