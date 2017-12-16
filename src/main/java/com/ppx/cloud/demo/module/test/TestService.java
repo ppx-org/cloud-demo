@@ -11,6 +11,7 @@ import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
+import com.ppx.cloud.grant.common.GrantContext;
 
 /**
  * 
@@ -22,8 +23,9 @@ public class TestService extends MyDaoSupport {
 	
 	@Transactional
 	public void test() {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
-		System.out.println("------------------begin");
+		System.out.println("------------------begin:" + merchantId);
 		
 		//getJdbcTemplate().queryfor
 		

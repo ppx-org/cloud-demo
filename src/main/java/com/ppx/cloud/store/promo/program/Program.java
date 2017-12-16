@@ -31,6 +31,8 @@ public class Program {
 
 	private String policyType;
 	
+	private String policyArgs;
+	
 	private Date created;
 
 	public Integer getProgId() {
@@ -94,6 +96,14 @@ public class Program {
 
 	public void setPolicyType(String policyType) {
 		this.policyType = policyType;
+	}
+
+	public String getPolicyArgs() {
+		return policyArgs;
+	}
+
+	public void setPolicyArgs(String policyArgs) {
+		this.policyArgs = policyArgs;
 	}
 
 	public Date getCreated() {

@@ -51,8 +51,8 @@ public class PolicyUtils {
 	private static List<Policy> brandPolicyList = new ArrayList<Policy>();
 	private static List<Policy> subjectPolicyList = new ArrayList<Policy>();
 	
-	private static Policy specialPolicy = new Policy("S:y", "特价¥y");
-	private static Policy changePolicy = new Policy("E:y;C:y", "满¥y立减¥y");
+	//private static Policy specialPolicy = new Policy("S:y", "特价¥y");
+	//private static Policy changePolicy = new Policy("E:y;C:y", "满¥y立减¥y");
 
 	
 	
@@ -189,14 +189,14 @@ public class PolicyUtils {
 	public static List<Policy> listSubjectPolicy() {
 		return subjectPolicyList;
 	}
-	
-	public static Policy getSpecialPolicy() {
-		return specialPolicy;
-	}
-
-	public static Policy getChangePolicy() {
-		return changePolicy;
-	}
+//	
+//	public static Policy getSpecialPolicy() {
+//		return specialPolicy;
+//	}
+//
+//	public static Policy getChangePolicy() {
+//		return changePolicy;
+//	}
 	
 	
 	
@@ -212,6 +212,8 @@ public class PolicyUtils {
 	public static String decodePolicy(String policy) {
 		
 		return policy
+			.replace("S:", "special")
+			.replace("C:", "change")
 			.replace("A:", "avg")
 			.replace("%:", "disc")
 			.replace("2:", "第二件")

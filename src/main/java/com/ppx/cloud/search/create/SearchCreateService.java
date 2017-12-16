@@ -1,6 +1,5 @@
 package com.ppx.cloud.search.create;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
@@ -12,54 +11,56 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
+import com.ppx.cloud.common.util.DateUtils;
+import com.ppx.cloud.grant.common.GrantContext;
 import com.ppx.cloud.search.util.BitSetUtils;
 import com.ppx.cloud.search.util.WordUtils;
 
 @Repository
 public class SearchCreateService extends MyDaoSupport {
 	
-	
 	@Transactional
-	public int init() {		
-		String sql = "select prodId, prodTitle from product";
-		List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql);
+	public int init() {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
-		String delSql = "delete from search_prop_word";
-		getJdbcTemplate().update(delSql);
+		String sql = "select PROD_ID, PROD_TITLE from product where MERCHANT_ID = ?";
+		List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql, merchantId);
 		
-		String insertSql = "insert into search_prop_word(prodId, searchWords, merchantId) values(?, ?, ?)";		
+		String delSql = "delete from search_words where MERCHANT_ID = ?";
+		getJdbcTemplate().update(delSql, merchantId);
+		
+		String insertSql = "insert into search_words(PROD_ID, WORDS, MERCHANT_ID) values(?, ?, " + merchantId + ")";
+		
+		List<Object[]> argsList = new ArrayList<Object[]>();
+		
 		for (Map<String, Object> map : list) {
-			int prodId = (Integer)map.get("prodId");
-			String prodTitle = (String)map.get("prodTitle");			
-			String r = WordUtils.splitWord(prodTitle);
-			getJdbcTemplate().update(insertSql, prodId, r, 1);
+			int prodId = (Integer)map.get("PROD_ID");
+			String prodTitle = (String)map.get("PROD_TITLE");			
+			String words = WordUtils.splitWord(prodTitle);
+			Object[] arg = {prodId, words};
+			argsList.add(arg);
 		}
+		
+		int r[] = getJdbcTemplate().batchUpdate(insertSql, argsList);
+		
 		return 1;
 	}
 	
-	/**
-	 * 商户对应每个store的索引
-	 * @param merchantId
-	 * @return
-	 */
-	public int createStore(int merchantId) {
-		String path = "F:/store/search/" + merchantId + "/store/";
+	
+	
+	
+	
+	
+	public int createStoreIndex() {
+		String path = "store";
+		BitSetUtils.initPath(path);
 		
-		File pathFile = new File(path);
-		if (!pathFile.exists()) {
-			if (!pathFile.mkdirs()) return -1;
-		}
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
-		// 删除原来的索引
-		File[] f = pathFile.listFiles();
-		for (File file : f) {
-			file.delete();
-		}
-		
-		String sql = "select storeId from store where merchantId = ?";
+		String sql = "select STORE_ID from store where MERCHANT_ID = ?";
 		List<Integer> storeIdList = getJdbcTemplate().queryForList(sql, Integer.class, merchantId);
 		
-		String prodSql = "select prodId from product where repoId in (select repoId from repo_map_store where storeId = ?)";
+		String prodSql = "select PROD_ID from product where REPO_ID in (select REPO_ID from store_map_repo where STORE_ID = ?)";
 		for (Integer storeId : storeIdList) {
 			BitSet storeBs = new BitSet();
 			List<Integer> prodIdList = getJdbcTemplate().queryForList(prodSql, Integer.class, storeId);
@@ -69,8 +70,8 @@ public class SearchCreateService extends MyDaoSupport {
 			BitSetUtils.writeBitSet(path, storeId + "", storeBs);
 		}
 		
-		// 创建fast和normal索引
-		String fastSql = "select prodId from product where repoId in (select repoId from repo where storeId = ?)";
+		// 创建local store索引
+		String fastSql = "select PROD_ID from product where REPO_ID = ?";
 		
 		for (Integer storeId : storeIdList) {
 			BitSet fastBs = new BitSet();
@@ -78,38 +79,26 @@ public class SearchCreateService extends MyDaoSupport {
 			for (Integer prodId : prodIdList) {
 				fastBs.set(prodId);
 			}
-			BitSetUtils.writeBitSet(path, "fast" + storeId, fastBs);
+			BitSetUtils.writeBitSet(path, "local" + storeId, fastBs);
 		}
-		
 		
 		return 1;
 	}
 	
-	/**
-	 * 创建标题的索引
-	 * @param merchantId
-	 * @return
-	 */
-	public int createTitle(int merchantId) {
-		String path = "F:/store/search/" + merchantId + "/title/";
-		
-		File pathFile = new File(path);
-		if (!pathFile.exists()) {
-			if (!pathFile.mkdirs()) return -1;
-		}
-		
-		// 删除原来的索引
-		File[] f = pathFile.listFiles();
-		for (File file : f) {
-			file.delete();
-		}
+	
+	
+	
+	public int createTitleIndex() {
+		String path = "title";
+		BitSetUtils.initPath(path);
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
 		Map<String, BitSet> workMap = new HashMap<String, BitSet>();		
-		String sql = "select * from search_prop_word where merchantId = ?";
+		String sql = "select PROD_ID, WORDS from search_words where MERCHANT_ID = ?";
 		List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql, merchantId);
 		for (Map<String, Object> map : list) {
-			int searchProdId = (Integer)map.get("prodId");
-			String searchWords = (String)map.get("searchWords");
+			int searchProdId = (Integer)map.get("PROD_ID");
+			String searchWords = (String)map.get("WORDS");
 			
 			String word[] = searchWords.split(",");
 			for (int i = 0; i < word.length; i++) {
@@ -129,26 +118,16 @@ public class SearchCreateService extends MyDaoSupport {
 		return 1;
 	}
 	
-	public int createCat(int merchantId) {
-		String path = "F:/store/search/" + merchantId + "/cat/";
-		
-		// 创建目录
-		File pathFile = new File(path);
-		if (!pathFile.exists()) {
-			if (!pathFile.mkdirs()) return -1;
-		}
-		
-		// 删除原来的索引
-		File[] f = pathFile.listFiles();
-		for (File file : f) {
-			file.delete();
-		}
+	
+	public int createCatIndex() {
+		String path = "cat";
+		BitSetUtils.initPath(path);
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
 		// 创建子类索引
-		String subCatSql = "select s.catId from category_sub s, category c where s.catId = c.catId and c.catStatus = 0 " +
-				"and s.mainCatId in(select m.catId from category_main m, category c where m.catId = c.catId and c.catStatus = 0 and m.merchantId = ?)";
-		List<Integer> catIdList =  getJdbcTemplate().queryForList(subCatSql, Integer.class, merchantId);
-		String prodSql = "select prodId from product where catId = ?"; 
+		String subCatSql = "select CAT_ID from category where MERCHANT_ID = ? and PARENT_ID != ? and RECORD_STATUS = ?";
+		List<Integer> catIdList =  getJdbcTemplate().queryForList(subCatSql, Integer.class, merchantId, -1, 1);
+		String prodSql = "select PROD_ID from product where CAT_ID = ?"; 
 		for (Integer catId : catIdList) {
 			List<Integer> prodIdList =  getJdbcTemplate().queryForList(prodSql, Integer.class, catId);
 			BitSet bs = new BitSet();
@@ -159,14 +138,13 @@ public class SearchCreateService extends MyDaoSupport {
 		}
 		
 		// 创建父类索引
-		String mainCatSql = "select m.catId, (select group_concat(catId) from category_sub where mainCatId = m.catId) subCatIds from category_main m, " +
-				" category c where m.catId = c.catId and c.catStatus = 0 and m.merchantId = ?";
-		List<Map<String, Object>> mainCatIdList =  getJdbcTemplate().queryForList(mainCatSql, merchantId);
+		String mainCatSql = "select CAT_ID, (select group_concat(CAT_ID) from category where PARENT_ID = c.CAT_ID) SUB_CAT_IDS " +
+			"from category c where MERCHANT_ID = ? and PARENT_ID = ? and RECORD_STATUS = ?";
+		List<Map<String, Object>> mainCatIdList =  getJdbcTemplate().queryForList(mainCatSql, merchantId, -1, 1);
 		
-		BitSet allBs = null; // 全类目索引 文件名称为"0"
 		for (Map<String, Object> map : mainCatIdList) {
-			int mainCatId = (Integer)map.get("catId");
-			String subIds = (String)map.get("subCatIds");
+			int mainCatId = (Integer)map.get("CAT_ID");
+			String subIds = (String)map.get("SUB_CAT_IDS");
 			if (subIds != null) {
 				String[] subId = subIds.split(",");
 				BitSet mainBs = null;
@@ -177,191 +155,215 @@ public class SearchCreateService extends MyDaoSupport {
 					else mainBs.or(bs);
 				}
 				BitSetUtils.writeBitSet(path, mainCatId + "", mainBs);
-				if (allBs == null) allBs = mainBs;
-				else allBs.or(mainBs);
 			}
-		}
-		BitSetUtils.writeBitSet(path, "0", allBs);
-		
-		return 1;
-	}
-	
-	public int createPromo(int merchantId) {
-		
-		String path = "F:/store/search/" + merchantId + "/promo/";
-		
-		// 创建目录
-		File pathFile = new File(path);
-		if (!pathFile.exists()) {
-			if (!pathFile.mkdirs()) return -1;
-		}
-		
-		// 删除原来的索引(两层)
-		File[] f = pathFile.listFiles();
-		for (File file : f) {
-			if (file.isFile()) file.delete();
-			if (file.isDirectory()) {
-				File[] subFileArray = file.listFiles();
-				for (File subF : subFileArray) {subF.delete();}
-			}
-			file.delete();
-		}
-		
-		// 以promoId来建立目录，当前时间点只有一个promoId
-		String promoIdSql = "select promoId from promo where merchantId = ? and promoType = 0 and promoTo >= curdate()";
-		List<Integer> promoIdList = getJdbcTemplate().queryForList(promoIdSql, Integer.class, merchantId);
-		for (Integer promoId : promoIdList) {
-			// 创建文件夹
-			String promoIdPath = path + promoId + "/";
-			File pathFileFile = new File(promoIdPath);
-			if (!pathFileFile.mkdir()) return -1;
-			
-			
-			
-			// "m元系列", "t:13,m:?" // 1,2,3,5,10
-			String promoSql = "select prodId from product p where exists(select 1 from promo_sku p, sku s where p.skuId = s.skuId"
-					+ " and p.skuPriceRule like ? and p.promoId = ? and s.prodId = p.prodId)";
-			List<String> ruleList =  new ArrayList<String>();//PriceDef.listSearchItem();
-			for (String r : ruleList) {
-				List<Integer> prodIdList = getJdbcTemplate().queryForList(promoSql, Integer.class, r + "%", promoId);
-				BitSet bs = new BitSet();
-				for (Integer prodId : prodIdList) {
-					bs.set(prodId);
-				}
-				String fileName = r.replaceAll(":", "").replaceAll(",", "");
-				if (bs.cardinality() != 0) 	BitSetUtils.writeBitSet(promoIdPath, fileName, bs);
-			}
-			
-			// 全部促销商品，文件名为0
-			String allPromoSql = "select prodId from product p where exists(select 1 from promo_sku p, sku s where p.skuId = s.skuId"
-					+ " and p.promoId = ? and s.prodId = p.prodId)";
-			List<Integer> prodIdList = getJdbcTemplate().queryForList(allPromoSql, Integer.class, promoId);
-			BitSet bs = new BitSet();
-			for (Integer prodId : prodIdList) {
-				bs.set(prodId);
-			}
-			if (bs.cardinality() != 0) 	BitSetUtils.writeBitSet(promoIdPath, "0", bs);
 		}
 		
 		return 1;
 	}
 	
 	
-	
-	public int createSubject(int merchantId) {		
-		String path = "F:/store/search/" + merchantId + "/subject/";
+	public int createBrandIndex() {		
+		String path = "brand";
+		BitSetUtils.initPath(path);
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
-		// 创建目录
-		File pathFile = new File(path);
-		if (!pathFile.exists()) {
-			if (!pathFile.mkdirs()) return -1;
-		}
-		
-		// 删除原来的索引
-		File[] f = pathFile.listFiles();
-		for (File file : f) {
-			file.delete();
-		}
-		
-		BitSet allBs = null; // 全主题索引 文件名称为"0"
-		String subjectSql =  "select subjectId from prod_subject where merchantId = ?";	
-		List<Integer> subjectList =  getJdbcTemplate().queryForList(subjectSql, Integer.class, merchantId);
-		
-		for (Integer subjectId : subjectList) {
-			BitSet bs = new BitSet();
-			String prodSql = "select prodId from prod_map_subject where subjectId = ?";		
-			List<Integer> prodList =  getJdbcTemplate().queryForList(prodSql, Integer.class, subjectId);
-			for (Integer prodId : prodList) {
-				bs.set(prodId);
-			}
-			if (bs.cardinality() != 0) 	{
-				BitSetUtils.writeBitSet(path, subjectId + "", bs);
-				if (allBs == null) allBs = bs;
-				else allBs.or(bs);
-			}
-		}
-		
-		BitSetUtils.writeBitSet(path, "0", allBs);
-		return 1;
-	}
-	
-	
-	public int createBrand(int merchantId) {		
-		String path = "F:/store/search/" + merchantId + "/brand/";
-		
-		// 创建目录
-		File pathFile = new File(path);
-		if (!pathFile.exists()) {
-			if (!pathFile.mkdirs()) return -1;
-		}
-		
-		// 删除原来的索引
-		File[] f = pathFile.listFiles();
-		for (File file : f) {
-			file.delete();
-		}
-		
-		BitSet allBs = null; // 全品牌索引 文件名称为"0"
-		String brandSql =  "select brandId from prod_brand where merchantId = ?";	
-		List<Integer> brandList =  getJdbcTemplate().queryForList(brandSql, Integer.class, merchantId);
+		String brandSql =  "select BRAND_ID from brand where MERCHANT_ID = ? and RECORD_STATUS = ?";	
+		List<Integer> brandList =  getJdbcTemplate().queryForList(brandSql, Integer.class, merchantId, 1);
 		for (Integer brandId : brandList) {
 			BitSet bs = new BitSet();
-			String prodSql = "select prodId from product where brandId = ?";		
+			String prodSql = "select PROD_ID from product where BRAND_ID = ?";		
 			List<Integer> prodList =  getJdbcTemplate().queryForList(prodSql, Integer.class, brandId);
 			for (Integer prodId : prodList) {
 				bs.set(prodId);
 			}
 			if (bs.cardinality() != 0) {
 				BitSetUtils.writeBitSet(path, brandId + "", bs);
-				if (allBs == null) allBs = bs;
-				else allBs.or(bs);
 			}
 		}
-		BitSetUtils.writeBitSet(path, "0", allBs);
 		return 1;
 	}
 	
 	
-	public int createDisable(int merchantId) {
-		String disablePath = "F:/store/search/" + merchantId + "/disable/";
-		// 创建目录
-		File pathFile = new File(disablePath);
-		if (!pathFile.exists()) {
-			if (!pathFile.mkdirs()) return -1;
+	public int createTopicIndex() {		
+		String path = "topic";
+		BitSetUtils.initPath(path);
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		
+		String topicSql =  "select TOPIC_ID from topic where MERCHANT_ID = ? and RECORD_STATUS = ?";	
+		List<Integer> topicList =  getJdbcTemplate().queryForList(topicSql, Integer.class, merchantId, 1);
+		for (Integer topicId : topicList) {
+			BitSet bs = new BitSet();
+			String prodSql = "select PROD_ID from topic_map_prod where TOPIC_ID = ?";
+			List<Integer> prodList =  getJdbcTemplate().queryForList(prodSql, Integer.class, topicId);
+			for (Integer prodId : prodList) {
+				bs.set(prodId);
+			}
+			if (bs.cardinality() != 0) {
+				BitSetUtils.writeBitSet(path, topicId + "", bs);
+			}
 		}
-		
-		// 删除原来的索引
-		File[] f = pathFile.listFiles();
-		for (File file : f) {
-			file.delete();
-		}
-		
-		String sql = "select p.prodId from product p, repo r where p.repoId = r.repoId and r.merchantId = ? and p.prodStatus < 1";
-		BitSet disableBs = new BitSet();
-		List<Integer> prodIdList = getJdbcTemplate().queryForList(sql, Integer.class, merchantId);
-		for (Integer prodId : prodIdList) {
-			disableBs.set(prodId);
-		}
-		
-		BitSetUtils.writeBitSet(disablePath, "disable", disableBs);
-		
 		return 1;
 	}
 	
-	public boolean addDisable(int merchantId, int prodId) {
-		String disablePath = "F:/store/search/" + merchantId + "/disable/";
-		BitSet disableBs =  BitSetUtils.readBitSet(disablePath, "disable");
-		if (disableBs != null) disableBs.set(prodId);
-		BitSetUtils.writeBitSet(disablePath, "disable", disableBs);
-		return true;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/////////////////////////////////////////////promo生成今天和明天的
+	
+	public int createPromoIndex() {
+		
+		// 处理promo索引
+		
+		
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		// 删除
+		String deleteSql = "delete from program_index where MERCHANT_ID = ?";
+		getJdbcTemplate().update(deleteSql, merchantId);
+		
+		
+		// TODO 加上日期
+		// insert
+		String specialSql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY) " + 
+			" select p.MERCHANT_ID, s.PROG_ID, s.PROD_ID, p.PROG_BEGIN, p.PROG_END, p.PROG_PRIO, concat('S:', s.SPECIAL_PRICE) " + 
+			" from program_special s join program p on s.PROG_ID = p.PROG_ID where p.MERCHANT_ID = -1 and RECORD_STATUS = 1";
+		
+		
+		
+		// 按RPOG_ID分组
+		String changeSql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY) " + 
+			" select p.MERCHANT_ID, c.PROG_ID, c.PROD_ID, p.PROG_BEGIN, p.PROG_END, p.PROG_PRIO, concat('E:', p.POLICY_ARGS,',S:', c.CHANGE_PRICE) " + 
+			" from program_change c join program p on c.PROG_ID = p.PROG_ID where p.MERCHANT_ID = -1 and RECORD_STATUS = 1";
+		
+		
+		
+		// theme
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		// ----------今天----------
+		String path = "promo/" + DateUtils.today();
+		BitSetUtils.initPath(path);
+		//int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		
+		
+		
+		String topicSql =  "select TOPIC_ID from topic where MERCHANT_ID = ? and RECORD_STATUS = ?";	
+		List<Integer> topicList =  getJdbcTemplate().queryForList(topicSql, Integer.class, merchantId, 1);
+		for (Integer topicId : topicList) {
+			BitSet bs = new BitSet();
+			String prodSql = "select PROD_ID from topic_map_prod where TOPIC_ID = ?";
+			List<Integer> prodList =  getJdbcTemplate().queryForList(prodSql, Integer.class, topicId);
+			for (Integer prodId : prodList) {
+				bs.set(prodId);
+			}
+			if (bs.cardinality() != 0) {
+				BitSetUtils.writeBitSet(path, topicId + "", bs);
+			}
+		}
+		return 1;
 	}
 	
-	public boolean removeDisable(int merchantId, int prodId) {
-		String disablePath = "F:/store/search/" + merchantId + "/disable/";
-		BitSet disableBs =  BitSetUtils.readBitSet(disablePath, "disable");
-		if (disableBs != null) disableBs.clear(prodId);
-		BitSetUtils.writeBitSet(disablePath, "disable", disableBs);
-		return true;
-	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }
