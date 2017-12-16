@@ -107,6 +107,7 @@ public class PolicyUtils {
 		policyTypeList.add(new Policy("Subject", "SUBJECT_N"));
 		policyTypeList.add(new Policy("Special", "SPECIAL_N"));
 		policyTypeList.add(new Policy("Change", "CHANG_N"));
+		policyTypeList.add(new Policy("Dependence", "Dependence_N"));
 		
 		// cat
 		catPolicyList.add(new Policy("%:d", "%:d"));

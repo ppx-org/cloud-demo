@@ -5,8 +5,6 @@ public class ProgramChange {
 	private Integer progId;
 
 	private Integer prodId;
-
-	private Float enoughPrice;
 	
 	private Float changePrice;
 
@@ -24,14 +22,6 @@ public class ProgramChange {
 
 	public void setProdId(Integer prodId) {
 		this.prodId = prodId;
-	}
-
-	public Float getEnoughPrice() {
-		return enoughPrice;
-	}
-
-	public void setEnoughPrice(Float enoughPrice) {
-		this.enoughPrice = enoughPrice;
 	}
 
 	public Float getChangePrice() {

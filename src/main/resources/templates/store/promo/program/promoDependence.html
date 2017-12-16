@@ -15,7 +15,7 @@ $(function() {
 function queryPage(pageNumber) {
 	showLoading();
 	$("#pageNumber").val(pageNumber);
-	$.post([[@{/programConf/listProgramSpecial}]], $("#queryForm").serialize(), function(r) {
+	$.post([[@{/programConf/listProgramDependence}]], $("#queryForm").serialize(), function(r) {
 		refreshPageData(r);
 		hideLoading();
 	});
@@ -27,12 +27,12 @@ function add() {
 	
 	action = function() {
 		var r = validate();
-		if (r == false) {
+		if (validate() == false) {
 			return;
 		}
 		
 		showLoading();
-		$.post([[@{/programConf/insertProgramSpecial}]], "progId=" + $("#progId").val() + "&" + r, function(r) {
+		$.post([[@{/programConf/insertProgramDependence}]], "progId=" + $("#progId").val() + "&" + r, function(r) {
 			
 			if (r.string.indexOf("ok") == 0) {
 				alertSuccess(r.string);
@@ -46,14 +46,15 @@ function add() {
 				var hintHtml = "";
 				h.forEach(function(v) {
 					var d = v.split(":")[0] + ":";
-					if (v.split(":")[1] == 1) {
+					var validateResult = new Number(v.split(":")[1]);
+					if ((validateResult & 1) == 1) {
 						d += "无效的产品ID";
 					}
-					else if (v.split(":")[1] == 2) {
+					else if ((validateResult & 2) == 2) {
 						d += "产品ID已经存在";
 					}
-					else if (v.split(":")[1] == 3) {
-						d += "无效的产品ID+产品ID已经存在";
+					else if ((validateResult & 4) == 4) {
+						d += "搭配产品ID无效";
 					}
 					$("#hint").append('<div style="white-space:nowrap"><a href="javascript:imp.gotoRownum(' + v.split(":")[0] + ')">' + d + '</a></div>');
 				})
@@ -66,7 +67,7 @@ function add() {
 function remove(id) {
 	var callback = function () {
 		showLoading();
-		$.post([[@{/programConf/deleteProgramSpecial}]], "progId=" + $("#progId").val() + "&prodId=" + id, function(r) {
+		$.post([[@{/programConf/deleteProgramDependence}]], "progId=" + $("#progId").val() + "&prodId=" + id, function(r) {
 			if (r.result == 1) {
 				queryPage(1);
 			}
@@ -87,7 +88,8 @@ function validate() {
 	
 	
 	var prodIdArray = [];
-	var specialPriceArray = [];
+	var dependPriceArray = [];
+	var dependIdArray = [];
 	
 	var content = $.trim($("#content").val());
 	var lineContent = content.split("\n");
@@ -100,14 +102,15 @@ function validate() {
 		}
 		else {
 			var v = lineStr.split("|")
-			if (v.length != 2) {
+			if (v.length != 3) {
 				validationResult.push((i + 1) + ":|不对");
 				continue;
 			}
 			
 			var id = $.trim(v[0]);
 			var price = $.trim(v[1]);
-			if (id == "" || price == "") {
+			var dependId = $.trim(v[2]);
+			if (id == "" || price == "" || dependId == "") {
 				validationResult.push((i + 1) + ":empty");
 			}
 			else if (!rule.integer.regex.test(id)) {
@@ -116,18 +119,22 @@ function validate() {
 			else if (!rule.number.regex.test(price)) {
 				validationResult.push((i + 1) + ":not number");
 			}
+			else if (!rule.integer.regex.test(dependId)) {
+				validationResult.push((i + 1) + ":not integer");
+			}
 			else if (dupliateId[id]) {
 				validationResult.push((i + 1) + ":dupliateId:" + dupliateId[id]);
 			}
 			dupliateId[id] = i + 1;
 			
 			prodIdArray.push(id);
-			specialPriceArray.push(price);
+			dependPriceArray.push(price);
+			dependIdArray.push(dependId);
 		}
 	}
 		
 	if (validationResult.length == 0) {
-		var para = "prodIdStr=" + prodIdArray.join(",") + "&specialPriceStr=" + specialPriceArray.join(",");
+		var para = "prodIdStr=" + prodIdArray.join(",") + "&dependProdIdStr=" + dependIdArray + "&dependPriceStr=" + dependPriceArray.join(",");
 		return para;
 	}
 	else {
@@ -154,7 +161,7 @@ function validate() {
 	<tr>
 		<th>PROD_ID</th>
 		<th>PROD_TITLE</th>
-		<th>special</th>
+		<th>dependence</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
@@ -162,7 +169,7 @@ function validate() {
 	<tr>
 		<td class="w-id">{{v.prodId}}</td>
 		<td class="w-title-m">{{v.prodTitle}}</td>
-		<td class="w-number">{{v.specialPrice}}</td>
+		<td class="w-number">{{v.dependPrice}}</td>
 		<td class="w-action">
 			<a href="#" onclick="remove('{{v.prodId}}')">[删除]</a>
 		</td>
@@ -177,7 +184,7 @@ function validate() {
 		<table style="margin-left:30px">
 		<tr>
 			<td>行号</td>
-			<td>内容:产品ID|特价(允许有空格)</td>
+			<td>内容:产品ID|搭配价|搭配产品ID(允许有空格)</td>
 			<td>提示(点击跳到指定行)</td>
 		</tr>
 		<tr>
@@ -186,7 +193,7 @@ function validate() {
 				<textarea id="rownum" rows="15" cols="10" wrap="off" class="form-control" onscroll="imp.rownumScroll(this)" style="overflow-y:hidden;width:50px;resize:none;border:1px solid white;text-align: right" readonly="readonly">1</textarea>
 			</td>
 			<td>
-				<textarea id="content" rows="15" cols="30" wrap="off" class="form-control" onscroll="imp.areaScroll(this)" style="resize: none;" onpaste="imp.areaPaste(this)" onkeyup="imp.areakeyup(this)">1212|112</textarea>
+				<textarea id="content" rows="15" cols="30" wrap="off" class="form-control" onscroll="imp.areaScroll(this)" style="resize: none;" onpaste="imp.areaPaste(this)" onkeyup="imp.areakeyup(this)">1|112|44</textarea>
 			</td>
 			<td >
 				<div id="hint" style="height:330px;width:200px;overflow-y:scroll;"></div>

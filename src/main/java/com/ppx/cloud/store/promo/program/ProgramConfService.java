@@ -1,7 +1,6 @@
 package com.ppx.cloud.store.promo.program;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +13,11 @@ import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
-import com.ppx.cloud.grant.common.GrantContext;
 import com.ppx.cloud.grant.service.MerchantService;
 import com.ppx.cloud.store.promo.program.bean.ProgramBrand;
 import com.ppx.cloud.store.promo.program.bean.ProgramCategory;
+import com.ppx.cloud.store.promo.program.bean.ProgramChange;
+import com.ppx.cloud.store.promo.program.bean.ProgramDependence;
 import com.ppx.cloud.store.promo.program.bean.ProgramSpecial;
 import com.ppx.cloud.store.promo.program.bean.ProgramSubject;
 
@@ -161,37 +161,116 @@ public class ProgramConfService extends MyDaoSupport {
 		return new PageList<ProgramSpecial>(list, page);
 	}
 	
-	
 	@Transactional
-	public int insertProgramSpecial(Integer progId, String prodIdStr, String specialPriceStr) {
+	public String insertProgramSpecial(Integer progId, String prodIdStr, String specialPriceStr) {
 		// 加锁
 		int merchantId = merchantService.lockMerchant();
 		
 		String[] prodId = prodIdStr.split(",");
 		String[] specialPrice = specialPriceStr.split(",");
 		if (prodId.length != specialPrice.length) {
-			return -1;
+			return "-1";
 		}
 		
 		// result bit,1:产品ID不存在product,2:产品ID已经存在program_special
-		String insertSql = "insert into import_data(MERCHANT_ID, ID, NUM_1, RESULT) " +
-			"select " + merchantId + ", ?, ?, if ((select count(*) from product where PROD_ID = ? and REPO_ID in (select REPO_ID from repository where MERCHANT_ID = " + merchantId + ")) = 1,  0, 1) " +
+		String importSql = "insert into import_data(MERCHANT_ID, ROWNUM, INT_1, NUM_1, RESULT) " +
+			"select " + merchantId + ", ?, ?, ?, if ((select count(*) from product where PROD_ID = ? and REPO_ID in (select REPO_ID from repository where MERCHANT_ID = " + merchantId + ")) = 1,  0, 1) " +
 			"^ if ((select count(*) from program_special where PROD_ID = ? and PROG_ID = " + progId + ") != 1, 0, 2) r";
 		List<Object[]> argList = new ArrayList<Object[]>();
 		for (int i = 0; i < prodId.length; i++) {
-			Object[] arg = {prodId[i], specialPrice[i], prodId[i], prodId[i]};
+			Object[] arg = {i+1, prodId[i], specialPrice[i], prodId[i], prodId[i]};
 			argList.add(arg);
 		}
 		
-		// 
+		// 清除
 		String deleteSql = "delete from import_data where MERCHANT_ID = ?";
 		getJdbcTemplate().update(deleteSql, merchantId);
-		int r[] = getJdbcTemplate().batchUpdate(insertSql, argList);
+		getJdbcTemplate().batchUpdate(importSql, argList);
 		
 		
+		// 找出不符合条件记录
+		String errorSql = "select group_concat(concat(ROWNUM, ':', RESULT)) msg from import_data where MERCHANT_ID = ? and result != ?";
+		String msg = getJdbcTemplate().queryForObject(errorSql, String.class, merchantId, 0);
+		if (!StringUtils.isEmpty(msg)) {
+			return msg;
+		}
+		else {
+			String insertSql = "insert into program_special(PROG_ID, PROD_ID, SPECIAL_PRICE) select ?, INT_1, NUM_1 from import_data where MERCHANT_ID = ?";
+			int r = getJdbcTemplate().update(insertSql, progId, merchantId);
+			return "ok:" + r;
+		}
+		
+	}
+
+	
+	public int deleteProgramSpecial(Integer progId, Integer prodId) {
+		return getJdbcTemplate().update("delete from program_special where PROG_ID = ? and PROD_ID = ?", progId, prodId);
+	}
+	
+	
+	
+	
+
+	// ----------------dependence-----------------
+	public PageList<ProgramDependence> listProgramDependence(Page page, ProgramDependence bean) {
+	
+		MyCriteria c = createCriteria("and").addAnd("PROD_ID like ?", bean.getProdId());
+		
+		StringBuilder cSql = new StringBuilder("select count(*) from program_dependence where PROG_ID = ?").append(c);
+		StringBuilder qSql = new StringBuilder("select * from program_dependence where PROG_ID = ?").append(c);
+		
+		c.addPrePara(bean.getProgId());
+			
+		List<ProgramDependence> list = queryPage(ProgramDependence.class, page, cSql, qSql, c.getParaList());
+		return new PageList<ProgramDependence>(list, page);
+	}
+	
+	@Transactional
+	public String insertProgramDependence(Integer progId, String prodIdStr, String dependProdIdStr, String dependPriceStr) {
+		// 加锁
+		int merchantId = merchantService.lockMerchant();
+		
+		String[] prodId = prodIdStr.split(",");
+		String[] dependProdId = dependProdIdStr.split(",");
+		String[] dependPrice = dependPriceStr.split(",");
+		
+		if (prodId.length != dependProdId.length || prodId.length != dependPrice.length) {
+			return "-1";
+		}
+		
+		// result bit,1:产品ID不存在product,2:产品ID已经存在program_special
+		String importSql = "insert into import_data(MERCHANT_ID, ROWNUM, INT_1, INT_2, NUM_1, RESULT) " +
+			"select " + merchantId + ", ?, ?, ?, ?, if ((select count(*) from product where PROD_ID = ? and REPO_ID in (select REPO_ID from repository where MERCHANT_ID = " + merchantId + ")) = 1,  0, 1) " +
+			"^ if ((select count(*) from program_dependence where PROD_ID = ? and PROG_ID = " + progId + ") != 1, 0, 2) " +
+			"^ if ((select count(*) from product where PROD_ID = ? and REPO_ID in (select REPO_ID from repository where MERCHANT_ID = " + merchantId + ")) = 1,  0, 4) ";
+		List<Object[]> argList = new ArrayList<Object[]>();
+		for (int i = 0; i < prodId.length; i++) {
+			Object[] arg = {i+1, prodId[i], dependProdId[i], dependPrice[i], prodId[i], prodId[i], dependProdId[i]};
+			argList.add(arg);
+		}
+		
+		// 清除
+		String deleteSql = "delete from import_data where MERCHANT_ID = ?";
+		getJdbcTemplate().update(deleteSql, merchantId);
+		getJdbcTemplate().batchUpdate(importSql, argList);
 		
 		
-		return 1;
+		// 找出不符合条件记录
+		String errorSql = "select group_concat(concat(ROWNUM, ':', RESULT)) msg from import_data where MERCHANT_ID = ? and result != ?";
+		String msg = getJdbcTemplate().queryForObject(errorSql, String.class, merchantId, 0);
+		if (!StringUtils.isEmpty(msg)) {
+			return msg;
+		}
+		else {
+			String insertSql = "insert into program_dependence(PROG_ID, PROD_ID, DEPEND_RPOD_ID, DEPEND_PRICE) select ?, INT_1, INT_2, NUM_1 from import_data where MERCHANT_ID = ?";
+			int r = getJdbcTemplate().update(insertSql, progId, merchantId);
+			return "ok:" + r;
+		}
+		
+	}
+	
+	public int deleteProgramDependence(Integer progId, Integer prodId) {
+		return getJdbcTemplate().update("delete from program_dependence where PROG_ID = ? and PROD_ID = ?", progId, prodId);
 	}
 	
 	
@@ -205,52 +284,65 @@ public class ProgramConfService extends MyDaoSupport {
 	
 	
 	
+	// ----------------change-----------------
+	public PageList<ProgramChange> listProgramChange(Page page, ProgramChange bean) {
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	public int deleteProgramSpecial(Integer progId, Integer subjectId) {
-		return getJdbcTemplate().update("delete from program_subject where PROG_ID = ? and SUBJECT_ID = ?", progId, subjectId);
+		MyCriteria c = createCriteria("and").addAnd("PROD_ID like ?", bean.getProdId());
+		
+		StringBuilder cSql = new StringBuilder("select count(*) from program_change where PROG_ID = ?").append(c);
+		StringBuilder qSql = new StringBuilder("select * from program_change where PROG_ID = ?").append(c);
+		
+		c.addPrePara(bean.getProgId());
+			
+		List<ProgramChange> list = queryPage(ProgramChange.class, page, cSql, qSql, c.getParaList());
+		return new PageList<ProgramChange>(list, page);
 	}
 	
+	@Transactional
+	public String insertProgramChange(Integer progId, String prodIdStr, String changePriceStr) {
+		// 加锁
+		int merchantId = merchantService.lockMerchant();
+		
+		String[] prodId = prodIdStr.split(",");
+		String[] changePrice = changePriceStr.split(",");
+		if (prodId.length != changePrice.length) {
+			return "-1";
+		}
+		
+		// result bit,1:产品ID不存在product,2:产品ID已经存在program_change
+		String importSql = "insert into import_data(MERCHANT_ID, ROWNUM, INT_1, NUM_1, RESULT) " +
+			"select " + merchantId + ", ?, ?, ?, if ((select count(*) from product where PROD_ID = ? and REPO_ID in (select REPO_ID from repository where MERCHANT_ID = " + merchantId + ")) = 1,  0, 1) " +
+			"^ if ((select count(*) from program_change where PROD_ID = ? and PROG_ID = " + progId + ") != 1, 0, 2) r";
+		List<Object[]> argList = new ArrayList<Object[]>();
+		for (int i = 0; i < prodId.length; i++) {
+			Object[] arg = {i+1, prodId[i], changePrice[i], prodId[i], prodId[i]};
+			argList.add(arg);
+		}
+		
+		// 清除
+		String deleteSql = "delete from import_data where MERCHANT_ID = ?";
+		getJdbcTemplate().update(deleteSql, merchantId);
+		getJdbcTemplate().batchUpdate(importSql, argList);
+		
+		
+		// 找出不符合条件记录
+		String errorSql = "select group_concat(concat(ROWNUM, ':', RESULT)) msg from import_data where MERCHANT_ID = ? and result != ?";
+		String msg = getJdbcTemplate().queryForObject(errorSql, String.class, merchantId, 0);
+		if (!StringUtils.isEmpty(msg)) {
+			return msg;
+		}
+		else {
+			String insertSql = "insert into program_change(PROG_ID, PROD_ID, CHANGE_PRICE) select ?, INT_1, NUM_1 from import_data where MERCHANT_ID = ?";
+			int r = getJdbcTemplate().update(insertSql, progId, merchantId);
+			return "ok:" + r;
+		}
+		
+	}
+
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public int deleteProgramChange(Integer progId, Integer prodId) {
+		return getJdbcTemplate().update("delete from program_change where PROG_ID = ? and PROD_ID = ?", progId, prodId);
+	}
 	
 	
 	

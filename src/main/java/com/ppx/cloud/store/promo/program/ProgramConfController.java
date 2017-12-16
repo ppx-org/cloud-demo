@@ -18,6 +18,8 @@ import com.ppx.cloud.store.merchant.brand.BrandService;
 import com.ppx.cloud.store.merchant.category.CategoryService;
 import com.ppx.cloud.store.promo.program.bean.ProgramBrand;
 import com.ppx.cloud.store.promo.program.bean.ProgramCategory;
+import com.ppx.cloud.store.promo.program.bean.ProgramChange;
+import com.ppx.cloud.store.promo.program.bean.ProgramDependence;
 import com.ppx.cloud.store.promo.program.bean.ProgramSpecial;
 import com.ppx.cloud.store.promo.program.bean.ProgramSubject;
 import com.ppx.cloud.store.promo.subject.SubjectService;
@@ -187,7 +189,7 @@ public class ProgramConfController {
 	@PostMapping @ResponseBody
 	public Map<String, Object> insertProgramSpecial(@RequestParam Integer progId,
 			@RequestParam String prodIdStr, @RequestParam String specialPriceStr) {
-		int r = serv.insertProgramSpecial(progId, prodIdStr, specialPriceStr);
+		String r = serv.insertProgramSpecial(progId, prodIdStr, specialPriceStr);
 		return ControllerReturn.ok(r);
 	}
 	
@@ -197,9 +199,67 @@ public class ProgramConfController {
 		return ControllerReturn.ok(r);
 	}
 	
+	// ---------------------dependence----------------------
+	@GetMapping
+	public ModelAndView promoDependence(@RequestParam Integer progId) {
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("progId", progId);
+		ProgramDependence bean = new ProgramDependence();
+		bean.setProgId(progId);
+		mv.addObject("listJson", listProgramDependence(new Page(), bean));
+		return mv;
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> listProgramDependence(Page page, ProgramDependence bean) {
+		PageList<ProgramDependence> list = serv.listProgramDependence(page, bean);
+		return ControllerReturn.ok(list);
+	}
 	
 	
+	@PostMapping @ResponseBody
+	public Map<String, Object> insertProgramDependence(@RequestParam Integer progId,
+			@RequestParam String prodIdStr, @RequestParam String dependProdIdStr,  @RequestParam String dependPriceStr) {
+		String r = serv.insertProgramDependence(progId, prodIdStr, dependProdIdStr, dependPriceStr);
+		return ControllerReturn.ok(r);
+	}
 	
+	@PostMapping @ResponseBody
+	public Map<String, Object> deleteProgramDependence(@RequestParam Integer progId, @RequestParam Integer prodId) {
+		int r = serv.deleteProgramDependence(progId, prodId);
+		return ControllerReturn.ok(r);
+	}
+	
+	// ---------------------change----------------------
+	@GetMapping
+	public ModelAndView promoChange(@RequestParam Integer progId) {
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("progId", progId);
+		ProgramChange bean = new ProgramChange();
+		bean.setProgId(progId);
+		mv.addObject("listJson", listProgramChange(new Page(), bean));
+		return mv;
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> listProgramChange(Page page, ProgramChange bean) {
+		PageList<ProgramChange> list = serv.listProgramChange(page, bean);
+		return ControllerReturn.ok(list);
+	}
+	
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> insertProgramChange(@RequestParam Integer progId,
+			@RequestParam String prodIdStr, @RequestParam String changePriceStr) {
+		String r = serv.insertProgramChange(progId, prodIdStr, changePriceStr);
+		return ControllerReturn.ok(r);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> deleteProgramChange(@RequestParam Integer progId, @RequestParam Integer prodId) {
+		int r = serv.deleteProgramChange(progId, prodId);
+		return ControllerReturn.ok(r);
+	}
 	
 	
 }
