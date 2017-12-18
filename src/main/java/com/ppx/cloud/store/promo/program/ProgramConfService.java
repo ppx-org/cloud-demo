@@ -19,7 +19,7 @@ import com.ppx.cloud.store.promo.program.bean.ProgramCategory;
 import com.ppx.cloud.store.promo.program.bean.ProgramChange;
 import com.ppx.cloud.store.promo.program.bean.ProgramDependence;
 import com.ppx.cloud.store.promo.program.bean.ProgramSpecial;
-import com.ppx.cloud.store.promo.program.bean.ProgramSubject;
+import com.ppx.cloud.store.promo.program.bean.ProgramProduct;
 
 @Service
 public class ProgramConfService extends MyDaoSupport {
@@ -115,31 +115,61 @@ public class ProgramConfService extends MyDaoSupport {
 	
 	
 	
-	// ----------------------------------subject-------------------------------
+	// ----------------------------------product-------------------------------
 	
 	
 	
-	public List<ProgramSubject> listProgramSubject(Integer progId) {
-		String sql = "select * from program_subject where PROG_ID = ?";
-		List<ProgramSubject> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(ProgramSubject.class), progId);
-		return list;
+	public PageList<ProgramProduct> listProgramProduct(Page page, ProgramProduct bean) {
+		
+		MyCriteria c = createCriteria("and").addAnd("PROD_ID like ?", bean.getProdId());
+		
+		StringBuilder cSql = new StringBuilder("select count(*) from program_product where PROG_ID = ?").append(c);
+		StringBuilder qSql = new StringBuilder("select * from program_product where PROG_ID = ?").append(c);
+		
+		c.addPrePara(bean.getProgId());
+			
+		List<ProgramProduct> list = queryPage(ProgramProduct.class, page, cSql, qSql, c.getParaList());
+		return new PageList<ProgramProduct>(list, page);
 	}
 	
 	@Transactional
-	public int insertProgramSubject(ProgramSubject bean) {
+	public String insertProgramProduct(Integer progId, String prodIdStr) {
 		// 加锁
-		merchantService.lockMerchant();
+		int merchantId = merchantService.lockMerchant();
 		
-		// subject已经存在		
-		String existsSql = "select count(*) from program_subject p where p.PROG_ID = ? and p.SUBJECT_ID = ?";
-		int c = getJdbcTemplate().queryForObject(existsSql, Integer.class, bean.getProgId(), bean.getSubjectId());
-		if (c >= 1) return 0;
+		String[] prodId = prodIdStr.split(",");
 		
-		return insert(bean);
+		// result bit,1:产品ID不存在product,2:产品ID已经存在program_product
+		String importSql = "insert into import_data(MERCHANT_ID, ROWNUM, INT_1, RESULT) " +
+			"select " + merchantId + ", ?, ?, if ((select count(*) from product where PROD_ID = ? and REPO_ID in (select REPO_ID from repository where MERCHANT_ID = " + merchantId + ")) = 1,  0, 1) " +
+			"^ if ((select count(*) from program_product where PROD_ID = ? and PROG_ID = " + progId + ") != 1, 0, 2) r";
+		List<Object[]> argList = new ArrayList<Object[]>();
+		for (int i = 0; i < prodId.length; i++) {
+			Object[] arg = {i+1, prodId[i], prodId[i], prodId[i]};
+			argList.add(arg);
+		}
+		
+		// 清除
+		String deleteSql = "delete from import_data where MERCHANT_ID = ?";
+		getJdbcTemplate().update(deleteSql, merchantId);
+		getJdbcTemplate().batchUpdate(importSql, argList);
+		
+		
+		// 找出不符合条件记录
+		String errorSql = "select group_concat(concat(ROWNUM, ':', RESULT)) msg from import_data where MERCHANT_ID = ? and result != ?";
+		String msg = getJdbcTemplate().queryForObject(errorSql, String.class, merchantId, 0);
+		if (!StringUtils.isEmpty(msg)) {
+			return msg;
+		}
+		else {
+			String insertSql = "insert into program_product(PROG_ID, PROD_ID) select ?, INT_1 from import_data where MERCHANT_ID = ?";
+			int r = getJdbcTemplate().update(insertSql, progId, merchantId);
+			return "ok:" + r;
+		}
 	}
 	
-	public int deleteProgramSubject(Integer progId, Integer subjectId) {
-		return getJdbcTemplate().update("delete from program_subject where PROG_ID = ? and SUBJECT_ID = ?", progId, subjectId);
+	public int deleteProgramProduct(Integer progId, Integer prodId) {
+		return getJdbcTemplate().update("delete from program_product where PROG_ID = ? and PROD_ID = ?", progId, prodId);
 	}
 	
 	

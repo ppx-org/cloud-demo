@@ -1,9 +1,10 @@
 package com.ppx.cloud.store.promo.program.bean;
 
-public class ProgramCategory {
+public class ProgramProduct {
+	
 	private Integer progId;
 
-	private Integer catId;
+	private Integer prodId;
 
 	public Integer getProgId() {
 		return progId;
@@ -13,12 +14,17 @@ public class ProgramCategory {
 		this.progId = progId;
 	}
 
-	public Integer getCatId() {
-		return catId;
+	public Integer getProdId() {
+		return prodId;
 	}
 
-	public void setCatId(Integer catId) {
-		this.catId = catId;
+	public void setProdId(Integer prodId) {
+		this.prodId = prodId;
 	}
+
+	
+	
+
+	
 
 }

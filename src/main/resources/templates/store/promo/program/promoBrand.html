@@ -30,18 +30,8 @@ function query() {
 
 
 function addProgramBrand() {
-	var brandPolicy = $("#brandPolicy").val();
-	if ($("#brandPolicy").val() == "%:d") {
-		brandPolicy = brandPolicy.replace("d", $("#discount").val());
-	}
-	else if ($("#brandPolicy").val() == "E:y,-:y") {
-		$('#addForm').validationEngine('attach', {promptPosition: 'bottomLeft'});
-		if (!$("#addForm").validationEngine('validate')) return;
-		
-		brandPolicy = brandPolicy.replace("E:y", "E:" + $("#enough").val()).replace("-:y", "-:" + $("#minus").val());
-	}
 	
-	var para = "progId=" + $("#progId").val() + "&brandId=" + $("#brandId").val() + "&brandPolicy=" + encodeURIComponent(brandPolicy);
+	var para = "progId=" + $("#progId").val() + "&brandId=" + $("#brandId").val();
 	
 	showLoading();
 	$.post([[@{/programConf/insertProgramBrand}]], para, function(r) {
@@ -73,24 +63,6 @@ function remove(progId, brandId) {
 }
 
 
-function policyChange(obj) {
-	if (obj.value == "%:d") {
-		$("#discountSpan").show();
-		$("#enoughSpan").hide();
-	}
-	else if (obj.value == "E:y,-:y") {
-		$("#discountSpan").hide();
-		$("#enoughSpan").show();
-	}
-}
-
-function validateMax() {
-	var enough = $("#enough").val();
-	var minus = $("#minus").val();
-	if (minus >= enough) {
-		return "minus必须小于enough";
-	}
-}
 
 </script>
 
@@ -117,27 +89,6 @@ function validateMax() {
 			</select>
 		</div>
 	
-		<div class="input-group">
-			<span class="input-group-addon">type</span>	
-			<select class="form-control" onchange="policyChange(this)" id="brandPolicy">
-				<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listBrandPolicy}"></option>
-			</select>
-		</div>
-		
-		
-		
-		<div id="discountSpan" class="input-group">
-			<span class="input-group-addon">disc</span>	
-			<select class="form-control" id="discount" th:include="store/promo/common/promoCommon::discount"></select>
-		</div>
-		
-		<div id="enoughSpan" style="display:none"class="input-group">
-			<span class="input-group-addon">E</span>
-			<input class="form-control validate[required,custom[number]]" id="enough" type="text" style="width:70px" maxlength="5">
-			<span class="input-group-addon">-</span>
-			<input class="form-control validate[required,custom[number,funcCall[validateMax]]]" id="minus" type="text" style="width:70px" maxlength="5">
-		</div>
-		
 		
 		<button type="button" class="btn btn-success" onclick="addProgramBrand()">新增</button>
 		</div>
@@ -146,14 +97,14 @@ function validateMax() {
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
 		<th>BRA</th>
-		<th>POLI</th>
+		<th>NAME</th>
 		<th>ACTION</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
 	<tr>
 		<td class="w-id">{{getBrandName(v.brandId)}}</td>
-		<td class="w-title-s">{{v.brandPolicy}}</td>
+		<td class="w-title-s">NAME</td>
 		<td class="w-action">
 			<a href="#" onclick="remove({{v.progId}}, {{v.brandId}})">[删除]</a>
 		</td>
