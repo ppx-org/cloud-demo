@@ -7,6 +7,8 @@ public class Product {
 	
 	private Integer catId;
 	
+	private Integer mainCatId;
+	
 	private String prodTitle;
 
 	public Integer getProdId() {
@@ -31,6 +33,14 @@ public class Product {
 
 	public void setCatId(Integer catId) {
 		this.catId = catId;
+	}
+	
+	public Integer getMainCatId() {
+		return mainCatId;
+	}
+
+	public void setMainCatId(Integer mainCatId) {
+		this.mainCatId = mainCatId;
 	}
 
 	public String getProdTitle() {
