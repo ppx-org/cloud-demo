@@ -238,18 +238,20 @@ public class SearchCreateService extends MyDaoSupport {
 		// TODO 加上日期
 		// insert
 		String specialSql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY) " + 
-			" select p.MERCHANT_ID, s.PROG_ID, s.PROD_ID, p.PROG_BEGIN, p.PROG_END, p.PROG_PRIO, concat('S:', s.SPECIAL_PRICE) " + 
-			" from program_special s join program p on s.PROG_ID = p.PROG_ID where p.MERCHANT_ID = -1 and RECORD_STATUS = 1";
+			"select p.MERCHANT_ID, s.PROG_ID, s.PROD_ID, p.PROG_BEGIN, p.PROG_END, p.PROG_PRIO, concat('S:', s.SPECIAL_PRICE) " + 
+			"from program_special s join program p on s.PROG_ID = p.PROG_ID where p.MERCHANT_ID = -1 and RECORD_STATUS = 1";
 		
 		
 		
 		// 按RPOG_ID分组
 		String changeSql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY) " + 
-			" select p.MERCHANT_ID, c.PROG_ID, c.PROD_ID, p.PROG_BEGIN, p.PROG_END, p.PROG_PRIO, concat('E:', p.POLICY_ARGS,',S:', c.CHANGE_PRICE) " + 
-			" from program_change c join program p on c.PROG_ID = p.PROG_ID where p.MERCHANT_ID = -1 and RECORD_STATUS = 1";
+			"select p.MERCHANT_ID, c.PROG_ID, c.PROD_ID, p.PROG_BEGIN, p.PROG_END, p.PROG_PRIO, concat('E:', p.POLICY_ARGS,',S:', c.CHANGE_PRICE) " + 
+			"from program_change c join program p on c.PROG_ID = p.PROG_ID where p.MERCHANT_ID = -1 and RECORD_STATUS = 1";
 		
 		
-		
+		String productSql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY) " + 
+			"select p.MERCHANT_ID, pp.PROG_ID, pp.PROD_ID, p.PROG_BEGIN, p.PROG_END, p.PROG_PRIO, p.POLICY_ARGS " + 
+			"from program_product pp join program p on pp.PROG_ID = p.PROG_ID where p.MERCHANT_ID = -1 and RECORD_STATUS = 1";
 		// theme
 		
 		

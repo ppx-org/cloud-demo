@@ -49,7 +49,7 @@ public class PolicyUtils {
 	
 	private static List<Policy> catPolicyList = new ArrayList<Policy>();
 	private static List<Policy> brandPolicyList = new ArrayList<Policy>();
-	private static List<Policy> subjectPolicyList = new ArrayList<Policy>();
+	private static List<Policy> productPolicyList = new ArrayList<Policy>();
 	
 	//private static Policy specialPolicy = new Policy("S:y", "特价¥y");
 	//private static Policy changePolicy = new Policy("E:y;C:y", "满¥y立减¥y");
@@ -104,7 +104,7 @@ public class PolicyUtils {
 		// type
 		policyTypeList.add(new Policy("Category", "CAT_N"));
 		policyTypeList.add(new Policy("Brand", "BRAND_N"));
-		policyTypeList.add(new Policy("Subject", "SUBJECT_N"));
+		policyTypeList.add(new Policy("Product", "PRODUCT_N"));
 		policyTypeList.add(new Policy("Special", "SPECIAL_N"));
 		policyTypeList.add(new Policy("Change", "CHANG_N"));
 		policyTypeList.add(new Policy("Dependence", "Dependence_N"));
@@ -117,15 +117,15 @@ public class PolicyUtils {
 		brandPolicyList.add(new Policy("%:d", "%:d"));
 		brandPolicyList.add(new Policy("E:y,-:y", "E:y,-:y"));
 		
-		// subject
-		subjectPolicyList.add(new Policy("A:y", "A:y"));
-		subjectPolicyList.add(new Policy("%:d", "%:d"));
-		subjectPolicyList.add(new Policy("E:y,-:y", "E:y,-:y"));
-		subjectPolicyList.add(new Policy("%:d,2:d", "%:d,2:d"));
-		subjectPolicyList.add(new Policy("%:d,2+:d", "%:d,2+:d"));
-		subjectPolicyList.add(new Policy("y:Y,n:N", "y:Y,n:N"));
-		subjectPolicyList.add(new Policy("+:y", "+:y"));
-		subjectPolicyList.add(new Policy("B:n,F:n", "B:n,F:n"));
+		// product
+		productPolicyList.add(new Policy("A:y", "A:y"));
+		productPolicyList.add(new Policy("%:d", "%:d"));
+		productPolicyList.add(new Policy("E:y,-:y", "E:y,-:y"));
+		productPolicyList.add(new Policy("%:d,2:d", "%:d,2:d"));
+		productPolicyList.add(new Policy("%:d,2+:d", "%:d,2+:d"));
+		productPolicyList.add(new Policy("y:Y,n:N", "y:Y,n:N"));
+		productPolicyList.add(new Policy("+:y", "+:y"));
+		productPolicyList.add(new Policy("B:n,F:n", "B:n,F:n"));
 		
 		
 
@@ -186,17 +186,10 @@ public class PolicyUtils {
 		return brandPolicyList;
 	}
 	
-	public static List<Policy> listSubjectPolicy() {
-		return subjectPolicyList;
+	public static List<Policy> listProductPolicy() {
+		return productPolicyList;
 	}
-//	
-//	public static Policy getSpecialPolicy() {
-//		return specialPolicy;
-//	}
-//
-//	public static Policy getChangePolicy() {
-//		return changePolicy;
-//	}
+
 	
 	
 	

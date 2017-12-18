@@ -113,7 +113,7 @@ public class ProgramConfController {
 		mv.addObject("progId", progId);
 		mv.addObject("listJson", listProgramSubject(progId));
 		//mv.addObject("listSubject", subjectServ.listSubject());
-		mv.addObject("listSubjectPolicy", PolicyUtils.listSubjectPolicy());
+		//mv.addObject("listSubjectPolicy", PolicyUtils.listSubjectPolicy());
 		return mv;
 	}
 	
