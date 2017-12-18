@@ -24,12 +24,19 @@ function queryPage(pageNumber) {
 
 function add() {
 	$('#addForm')[0].reset();
+	initPolicyArgs();
 	$('#add').modal('show');
 	
 	action = function() {
 		if (!$("#addForm").validationEngine('validate')) return;
+		
+		//
+		var para = "progName=" + $("#progName").val() + "&progPrio=" + $("#progPrio").val() + "&progBegin=" + $("#progBegin").val()
+			 + "&progEnd=" + $("#progEnd").val() + "&policyType=" + $("#policyType").val() + "&policyArgs=" + getPolicyArgs($("#policyType").val());
+		
+		
 		showLoading();
-		$.post([[@{/program/insertProgram}]], $("#addForm").serialize(), function(r) {
+		$.post([[@{/program/insertProgram}]], para, function(r) {
 			if (r.result == 1) {
 				$('#add').modal('hide');
 				queryPage(1);
@@ -73,25 +80,33 @@ function remove(id) {
 
 
 template.helper('getPolicyTypeName', function(policyType) {
-	return $("#policyType [value=" + policyType + "]").text();
+	return $("#queryPolicyType [value=" + policyType + "]").text();
 })
 
 function conf(progId, policyType) {
 	open(contextPath + 'programConf/promo' + policyType + "?progId=" + progId);
 }
 
+function initPolicyArgs() {
+	$("#argType").hide();
+	$("#argType select").hide();
+	$(".policy").hide();
+	$("#ChangePolicy").hide();
+}
 
 function policyTypeChange(obj) {
+	initPolicyArgs();
+	
+	
 	var policy = $("#" + $(obj).val() + "Policy");
-	if (policy.length == 1) {
+	if ($(obj).val() == "Change") {
+		policy.show();
+	}
+	else if (policy.length == 1) {
+		policy.find("option:eq(0)").attr("selected", true);
 		$("#argType").show();
 		policy.show();
 		$("[id='%:d']").show();
-	}
-	else {
-		$("#argType").hide();
-		policy.hide();
-		$("[id='%:d']").hide();
 	}
 }
 </script>
@@ -105,7 +120,7 @@ function policyTypeChange(obj) {
 		
 		<div class="input-group input-group-sm">
 			<span class="input-group-addon">type</span>	
-			<select class="form-control" id="policyType" name="policyType">
+			<select class="form-control" id="queryPolicyType" name="policyType">
 				<option value="">全部</option>
 				<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listPolicy}"></option>
 			</select>
@@ -123,6 +138,7 @@ function policyTypeChange(obj) {
 		<th>DATE2</th>
 		<th>PRIO</th>
 		<th>TYPE</th>
+		<th>args</th>
 		<th>TIME</th>
 		<th>操作</th>
 	</tr>
@@ -135,6 +151,7 @@ function policyTypeChange(obj) {
 		<td class="w-date">{{v.progEnd}}</td>
 		<td class="w-id">{{v.progPrio}}</td>
 		<td class="w-id">{{getPolicyTypeName(v.policyType)}}</td>
+		<td class="w-id">{{v.policyArgs}}</td>
 		<td class="w-time">{{v.created}}</td>
 		<td class="w-action">
 			<a href="#" onclick="remove({{v.progId}})">[删除]</a>&nbsp;&nbsp;
@@ -148,35 +165,31 @@ function policyTypeChange(obj) {
 	</table>
 </div>
 
-<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 380)">
+<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 760)">
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
-		<div class="col-sm-7"><input type="text" name="progName" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>NAME：</label>
+		<div class="col-sm-4"><input type="text" id="progName" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>PRIO：</label>
+		<div class="col-sm-4"><input type="text" id="progPrio" class="form-control validate[required,custom[integer]]" maxlength="32"></div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>PRIO：</label>
-		<div class="col-sm-7"><input type="text" name="progPrio" class="form-control validate[required,custom[integer]]" maxlength="32"></div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>begin：</label>
+		<div class="col-sm-4"><input type="text" id="progBegin" th:value="${today}" class="form-control validate[required]" onclick="WdatePicker()"></div>
+		<label class="col-sm-2 control-label"><span class="required"></span>end：</label>
+		<div class="col-sm-4"><input type="text" id="progEnd" class="form-control" onclick="WdatePicker()" placeholder="空表示没有结束"></div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>begin：</label>
-		<div class="col-sm-7"><input type="text" name="progBegin" th:value="${today}" class="form-control validate[required]" onclick="WdatePicker()"></div>
-	</div>
-	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required"></span>end：</label>
-		<div class="col-sm-7"><input type="text" name="progEnd" class="form-control" onclick="WdatePicker()" placeholder="空表示没有结束"></div>
-	</div>
-	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>poli：</label>
-		<div class="col-sm-7">
-		<select class="form-control validate[required]" name="policyType" onchange="policyTypeChange(this)">
+		<label class="col-sm-2 control-label"><span class="required">*</span>poli：</label>
+		<div class="col-sm-8">
+		<select class="form-control validate[required]" id="policyType" onchange="policyTypeChange(this)">
 			<option value="">请选择</option>
 			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listPolicy}"></option>
 		</select>
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required" >*</span>poli_args：</label>
-		<div class="col-sm-7" th:include="store/promo/common/promoCommon::policyArgs"></div>
+		<label class="col-sm-2 control-label"><span class="required" >*</span>poli_args：</label>
+		<div class="col-sm-8 form-inline" th:include="store/promo/common/promoCommon::policyArgs"></div>
 	</div>	
 </div>
 

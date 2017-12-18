@@ -39,8 +39,13 @@
 	}
 	
 	function getPolicyArgs(policyType) {
-		var arg = [];
 		var policy = $("#" + policyType + "Policy").val();
+		if (policyType == "Change") {
+			return policy;
+		}
+		
+		
+		var arg = [];
 		var policyArray = policy.split(",");
 		for (var i = 0; i < policyArray.length; i++) {
 			var pre = policyArray[i].split(":")[0] + ":";
@@ -50,6 +55,8 @@
 		return encodeURI(arg);
 	}
 	</script>
+	
+	<input type="text" style="display:none" id="ChangePolicy" class="form-control validate[required,custom[number]]" placeholder="enoughChange" >
 	<div id="argType" style="display:none" class="input-group">
 		<span class="input-group-addon">type</span>	
 		<select class="form-control" style="display:none" onchange="policyChange(this)" id="ProductPolicy">
@@ -62,6 +69,8 @@
 			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listBrandPolicy}"></option>
 		</select>
 	</div>
+	
+	
 	
 	<div id="%:d" style="display:none" class="input-group policy">
 		<span class="input-group-addon">disc</span>	
