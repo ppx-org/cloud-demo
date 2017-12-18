@@ -22,7 +22,6 @@ import com.ppx.cloud.store.promo.program.bean.ProgramChange;
 import com.ppx.cloud.store.promo.program.bean.ProgramDependence;
 import com.ppx.cloud.store.promo.program.bean.ProgramSpecial;
 import com.ppx.cloud.store.promo.program.bean.ProgramSubject;
-import com.ppx.cloud.store.promo.subject.SubjectService;
 import com.ppx.cloud.store.promo.util.PolicyUtils;
 
 
@@ -38,8 +37,6 @@ public class ProgramConfController {
 	@Autowired
 	private BrandService brandServ;
 	
-	@Autowired
-	private SubjectService subjectServ;
 	
 	
 
@@ -115,7 +112,7 @@ public class ProgramConfController {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("progId", progId);
 		mv.addObject("listJson", listProgramSubject(progId));
-		mv.addObject("listSubject", subjectServ.listSubject());
+		//mv.addObject("listSubject", subjectServ.listSubject());
 		mv.addObject("listSubjectPolicy", PolicyUtils.listSubjectPolicy());
 		return mv;
 	}
