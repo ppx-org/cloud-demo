@@ -30,6 +30,9 @@ public class ProgramController {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("listJson", listJson(new Page(), new Program()));
 		mv.addObject("listPolicy", PolicyUtils.listPolicyType());
+		mv.addObject("listProductPolicy", PolicyUtils.listProductPolicy());
+		mv.addObject("listCatPolicy", PolicyUtils.listCatPolicy());
+		mv.addObject("listBrandPolicy", PolicyUtils.listBrandPolicy());
 		
 		mv.addObject("today", DateUtils.today());
 		return mv;

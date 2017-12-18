@@ -118,8 +118,8 @@ public class PolicyUtils {
 		brandPolicyList.add(new Policy("E:y,-:y", "E:y,-:y"));
 		
 		// product
-		productPolicyList.add(new Policy("A:y", "A:y"));
 		productPolicyList.add(new Policy("%:d", "%:d"));
+		productPolicyList.add(new Policy("A:y", "A:y"));
 		productPolicyList.add(new Policy("E:y,-:y", "E:y,-:y"));
 		productPolicyList.add(new Policy("%:d,2:d", "%:d,2:d"));
 		productPolicyList.add(new Policy("%:d,2+:d", "%:d,2+:d"));

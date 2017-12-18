@@ -21,3 +21,98 @@
 	<option value="0.6">6d</option>
 	<option value="0.5">5d</option>
 </select>
+
+
+<div th:fragment="policyArgs">
+	<script type="text/javascript">	
+	function policyChange(obj) {
+		$(".policy").hide();
+		$("[id='" + obj.value + "']").show();
+	}
+	
+	function validateMax() {
+		var enough = $("[id='E:y,-:y'] [name='E:y']").val();
+		var minus = $("[id='E:y,-:y'] [name='-:y']").val();
+		if (minus >= enough) {
+			return "minus必须小于enough";
+		}
+	}
+	
+	function getPolicyArgs(policyType) {
+		var arg = [];
+		var policy = $("#" + policyType + "Policy").val();
+		var policyArray = policy.split(",");
+		for (var i = 0; i < policyArray.length; i++) {
+			var pre = policyArray[i].split(":")[0] + ":";
+			var v = $("[id='" + policy + "']").find("[name='" + policyArray[i] + "']").val();
+			arg.push(pre + policyArray[i].replace(policyArray[i], v));
+		}
+		return encodeURI(arg);
+	}
+	</script>
+	<div id="argType" style="display:none" class="input-group">
+		<span class="input-group-addon">type</span>	
+		<select class="form-control" style="display:none" onchange="policyChange(this)" id="ProductPolicy">
+			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listProductPolicy}"></option>
+		</select>
+		<select class="form-control" style="display:none" onchange="policyChange(this)" id="CategoryPolicy">
+			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listCatPolicy}"></option>
+		</select>
+		<select class="form-control" style="display:none" onchange="policyChange(this)" id="BrandPolicy">
+			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listBrandPolicy}"></option>
+		</select>
+	</div>
+	
+	<div id="%:d" style="display:none" class="input-group policy">
+		<span class="input-group-addon">disc</span>	
+		<select class="form-control" th:include="::discount" name="%:d"></select>
+	</div>	
+	<div id="A:y" style="display:none" class="input-group policy">
+		<span class="input-group-addon">avg</span>	
+		<select class="form-control" th:include="::avg" name="A:y"></select>
+	</div>
+	<div id="E:y,-:y" style="display:none" class="input-group policy">
+		<span class="input-group-addon">E</span>
+		<input class="form-control validate[required,custom[number]]" type="text" style="width:70px" maxlength="5" name="E:y">
+		<span class="input-group-addon">-</span>
+		<input class="form-control validate[required,custom[number,funcCall[validateMax]]]" type="text" style="width:70px" maxlength="5" name="-:y">
+	</div>	
+	<div id="%:d,2:d" style="display:none" class="input-group policy">
+		<span class="input-group-addon">1</span>
+		<select class="form-control" id="discount" th:include="::discount" name="%:d"></select>
+		<span class="input-group-addon">2</span>
+		<select class="form-control" id="discount" th:include="::discount" name="2:d"></select>
+	</div>
+	<div id="%:d,2+:d" style="display:none" class="input-group policy">
+		<span class="input-group-addon">1</span>
+		<select class="form-control" id="discount" th:include="::discount" name="%:d"></select>
+		<span class="input-group-addon">2+</span>
+		<select class="form-control" id="discount" th:include="::discount" name="2+:d"></select>
+	</div>
+	<div id="y:Y,n:N" style="display:none" class="input-group policy">
+		<span class="input-group-addon">N</span>
+		<input class="form-control validate[required,custom[integer]]" id="enough" type="text" style="width:70px" maxlength="2" name="y:Y">
+		<span class="input-group-addon">y</span>
+		<input class="form-control validate[required,custom[number]]" id="minus" type="text" style="width:70px" maxlength="5" name="n:N">
+	</div>
+	<div id="+:y,m:1" style="display:none" class="input-group policy">
+		<span class="input-group-addon">y</span>
+		<input class="form-control validate[required,custom[number]]" type="text" style="width:70px" maxlength="5" name="+:y">
+		<input type="hidden" value="1" name="m:1">
+	</div>
+	<div id="B:n,F:n" style="display:none" class="input-group policy">
+		<span class="input-group-addon">bu</span>
+		<select class="form-control" name="B:n">
+			<option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+		</select>
+		<span class="input-group-addon">free</span>
+		<select class="form-control" name="F:n">
+			<option value="1">1</option><option value="2">2</option>
+		</select>
+	</div>
+</div>
+
+
+
+
+

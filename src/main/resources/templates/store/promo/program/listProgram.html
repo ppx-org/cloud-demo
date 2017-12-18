@@ -79,6 +79,21 @@ template.helper('getPolicyTypeName', function(policyType) {
 function conf(progId, policyType) {
 	open(contextPath + 'programConf/promo' + policyType + "?progId=" + progId);
 }
+
+
+function policyTypeChange(obj) {
+	var policy = $("#" + $(obj).val() + "Policy");
+	if (policy.length == 1) {
+		$("#argType").show();
+		policy.show();
+		$("[id='%:d']").show();
+	}
+	else {
+		$("#argType").hide();
+		policy.hide();
+		$("[id='%:d']").hide();
+	}
+}
 </script>
 </head>
 
@@ -153,11 +168,16 @@ function conf(progId, policyType) {
 	<div class="form-group">
 		<label class="col-sm-3 control-label"><span class="required">*</span>poli：</label>
 		<div class="col-sm-7">
-		<select class="form-control" name="policyType">
+		<select class="form-control validate[required]" name="policyType" onchange="policyTypeChange(this)">
+			<option value="">请选择</option>
 			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listPolicy}"></option>
 		</select>
 		</div>
 	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required" >*</span>poli_args：</label>
+		<div class="col-sm-7" th:include="store/promo/common/promoCommon::policyArgs"></div>
+	</div>	
 </div>
 
 <div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 360)">
