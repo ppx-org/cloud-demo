@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
+import com.ppx.cloud.common.page.Page;
+import com.ppx.cloud.common.page.PageList;
+import com.ppx.cloud.demo.module.test.TestBean;
 
 
 @Controller	
@@ -75,5 +78,61 @@ public class ThemeController {
 		int r = serv.down(id);
 		return ControllerReturn.ok(r);
 	}
+	
+	
+	
+	
+	
+	// 
+	@GetMapping
+	public ModelAndView themeProduct() {
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("listJson", listThemeProduct(new Page(), new TestBean()));
+		return mv;
+	}
+
+	@PostMapping @ResponseBody
+	public Map<String, Object> listThemeProduct(Page page, TestBean bean) {
+		//PageList<Theme> list = serv.listTheme();
+		//return ControllerReturn.ok(list);
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
 
