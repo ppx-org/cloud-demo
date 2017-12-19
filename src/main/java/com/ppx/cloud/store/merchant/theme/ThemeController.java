@@ -1,4 +1,4 @@
-package com.ppx.cloud.store.merchant.topic;
+package com.ppx.cloud.store.merchant.theme;
 
 import java.util.List;
 import java.util.Map;
@@ -15,14 +15,14 @@ import com.ppx.cloud.common.controller.ControllerReturn;
 
 
 @Controller	
-public class TopicController {
+public class ThemeController {
 	
 	@Autowired
-	private TopicService serv;
+	private ThemeService serv;
 	
 	
 	@GetMapping
-	public ModelAndView listTopic() {
+	public ModelAndView listTheme() {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("listJson", listJson());
 		return mv;
@@ -30,31 +30,31 @@ public class TopicController {
 
 	@PostMapping @ResponseBody
 	public Map<String, Object> listJson() {
-		List<Topic> list = serv.listTopic();
+		List<Theme> list = serv.listTheme();
 		return ControllerReturn.ok(list);
 	}
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> insertTopic(Topic bean) {
-		int r = serv.insertTopic(bean);
+	public Map<String, Object> insertTheme(Theme bean) {
+		int r = serv.insertTheme(bean);
 		return ControllerReturn.ok(r);
 	}
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> getTopic(@RequestParam Integer id) {
-		Topic bean = serv.getTopic(id);
+	public Map<String, Object> getTheme(@RequestParam Integer id) {
+		Theme bean = serv.getTheme(id);
 		return ControllerReturn.ok(bean);
 	}
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> updateTopic(Topic bean) {
-		int r = serv.updateTopic(bean);
+	public Map<String, Object> updateTheme(Theme bean) {
+		int r = serv.updateTheme(bean);
 		return ControllerReturn.ok(r);
 	}
     
 	@PostMapping @ResponseBody
-	public Map<String, Object> deleteTopic(@RequestParam Integer id) {
-		int r = serv.deleteTopic(id);
+	public Map<String, Object> deleteTheme(@RequestParam Integer id) {
+		int r = serv.deleteTheme(id);
 		return ControllerReturn.ok(r);
 	}
 	

@@ -19,7 +19,7 @@ $(function() {
 
 function query() {
 	showLoading();
-	$.post([[@{/topic/listJson}]], $("#queryForm").serialize(), function(r) {
+	$.post([[@{/theme/listJson}]], $("#queryForm").serialize(), function(r) {
 		refreshData(r);
 		hideLoading();
 	});
@@ -32,7 +32,7 @@ function add() {
 	action = function() {
 		if (!$("#addForm").validationEngine('validate')) return;
 		showLoading();
-		$.post([[@{/topic/insertTopic}]], $("#addForm").serialize(), function(r) {
+		$.post([[@{/theme/insertTheme}]], $("#addForm").serialize(), function(r) {
 			if (r.result == 1) {
 				$('#add').modal('hide');
 				query(1);
@@ -43,7 +43,7 @@ function add() {
 
 function edit(id) {
 	showLoading();
-	$.post([[@{/topic/getTopic}]], "id=" + id, function(r) {
+	$.post([[@{/theme/getTheme}]], "id=" + id, function(r) {
 		hideLoading();
 		$('#edit').modal('show');
 		$("#editTemplate").nextAll().remove();
@@ -53,7 +53,7 @@ function edit(id) {
 	action = function() {
 		if (!$("#editForm").validationEngine('validate')) return;
 		showLoading();
-		$.post([[@{/topic/updateTopic}]], $("#editForm").serialize(), function(r) {
+		$.post([[@{/theme/updateTheme}]], $("#editForm").serialize(), function(r) {
 			if (r.result == 1) {
 				$('#edit').modal('hide');
 				query();
@@ -65,7 +65,7 @@ function edit(id) {
 function remove(id) {
 	var callback = function () {
 		showLoading();
-		$.post([[@{/topic/deleteTopic}]], "id=" + id, function(r) {
+		$.post([[@{/theme/deleteTheme}]], "id=" + id, function(r) {
 			if (r.result == 1) {
 				query();
 			}
@@ -77,21 +77,21 @@ function remove(id) {
 
 var move = {};
 move.top = function(id) {
-	$.post([[@{/topic/top}]], "id=" + id, function(r) {
+	$.post([[@{/theme/top}]], "id=" + id, function(r) {
 		if (r.result == 1) {
 			query();
 		}
 	});	
 }
 move.up = function(id) {
-	$.post([[@{/topic/up}]], "id=" + id, function(r) {
+	$.post([[@{/theme/up}]], "id=" + id, function(r) {
 		if (r.result == 1) {
 			query();
 		}
 	});
 }
 move.down = function(id) {
-	$.post([[@{/topic/down}]], "id=" + id, function(r) {
+	$.post([[@{/theme/down}]], "id=" + id, function(r) {
 		if (r.result == 1) {
 			query();
 		}
@@ -116,21 +116,21 @@ move.down = function(id) {
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
 	<tr>
-		<td class="w-id">{{v.topicId}}</td>
-		<td class="w-title-s">{{v.topicName}}</td>
+		<td class="w-id">{{v.themeId}}</td>
+		<td class="w-title-s">{{v.themeName}}</td>
 		<td class="w-action">
 			{{if arrayList.length != 1 && i !== 0}}
-			<a href="#" onclick="move.top({{v.topicId}})" title="置顶" class="glyphicon glyphicon-step-backward" style="transform: rotate(90deg);"></a>
-			<a href="#" onclick="move.up({{v.topicId}})" title="上移" class="glyphicon glyphicon-arrow-up"></a>
+			<a href="#" onclick="move.top({{v.themeId}})" title="置顶" class="glyphicon glyphicon-step-backward" style="transform: rotate(90deg);"></a>
+			<a href="#" onclick="move.up({{v.themeId}})" title="上移" class="glyphicon glyphicon-arrow-up"></a>
 			{{/if}}
 			
 			{{if arrayList.length != 1 && i != arrayList.length - 1}}
-			<a href="#" onclick="move.down({{v.topicId}})" title="下移" class="glyphicon glyphicon-arrow-down"></a>
+			<a href="#" onclick="move.down({{v.themeId}})" title="下移" class="glyphicon glyphicon-arrow-down"></a>
 			{{/if}}					
 		</td>
 		<td class="w-action">
-			<a href="#" onclick="remove({{v.topicId}})" class="glyphicon glyphicon-trash" title="删除"></a>&nbsp;&nbsp;
-			<a href="#" onclick="edit('{{v.topicId}}')" class="glyphicon glyphicon-edit" title="修改"></a>
+			<a href="#" onclick="remove({{v.themeId}})" class="glyphicon glyphicon-trash" title="删除"></a>&nbsp;&nbsp;
+			<a href="#" onclick="edit('{{v.themeId}}')" class="glyphicon glyphicon-edit" title="修改"></a>
 		</td>
 	</tr>
 	{{/each}}
@@ -141,7 +141,7 @@ move.down = function(id) {
 <div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
 	<div class="form-group">
 		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
-		<div class="col-sm-7"><input type="text" name="topicName" class="form-control validate[required]" maxlength="32"></div>
+		<div class="col-sm-7"><input type="text" name="themeName" class="form-control validate[required]" maxlength="32"></div>
 	</div>
 </div>
 
@@ -149,11 +149,11 @@ move.down = function(id) {
 	<script id="editTemplate" type="text/html">
 	<div class="form-group">
 		<label class="col-sm-3 control-label">ID：</label>
-		<div class="col-sm-7"><input type="text" name="topicId" value="{{topic.topicId}}" class="form-control" readonly></div>
+		<div class="col-sm-7"><input type="text" name="themeId" value="{{theme.themeId}}" class="form-control" readonly></div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
-		<div class="col-sm-7"><input type="text" name="topicName" value="{{topic.topicName}}" class="form-control validate[required]" maxlength="32"></div>
+		<div class="col-sm-7"><input type="text" name="themeName" value="{{theme.themeName}}" class="form-control validate[required]" maxlength="32"></div>
 	</div>
 	</script>
 </div>
