@@ -15,7 +15,7 @@ $(function() {
 function queryPage(pageNumber) {
 	showLoading();
 	$("#pageNumber").val(pageNumber);
-	$.post([[@{/programConf/listProgramProduct}]], $("#queryForm").serialize(), function(r) {
+	$.post([[@{/theme/listThemeProduct}]], $("#queryForm").serialize(), function(r) {
 		refreshPageData(r);
 		hideLoading();
 	});
@@ -32,7 +32,7 @@ function add() {
 		}
 		
 		showLoading();
-		$.post([[@{/programConf/insertProgramProduct}]], "progId=" + $("#progId").val() + "&" + r, function(r) {
+		$.post([[@{/theme/insertThemeProduct}]], "themeId=" + $("#themeId").val() + "&" + r, function(r) {
 			
 			if (r.string.indexOf("ok") == 0) {
 				alertSuccess(r.string);
@@ -66,7 +66,7 @@ function add() {
 function remove(id) {
 	var callback = function () {
 		showLoading();
-		$.post([[@{/programConf/deleteProgramProduct}]], "progId=" + $("#progId").val() + "&prodId=" + id, function(r) {
+		$.post([[@{/theme/deleteThemeProduct}]], "themeId=" + $("#themeId").val() + "&prodId=" + id, function(r) {
 			if (r.result == 1) {
 				queryPage(1);
 			}
@@ -77,8 +77,6 @@ function remove(id) {
 
 
 function validate() {
-	// rule.integer.regex
-	// rule.number.regex
 	var rule = $.validationEngineLanguage.allRules;
 
 	
@@ -128,11 +126,11 @@ function validate() {
 </head>
 
 <body>
-<div th:replace="common/fragment/common::pageList('PROD')">
+<div th:replace="common/fragment/common::pageList('theme_PROD')">
 	<div th:fragment="queryFragment">
-		<input type="hidden" id="progId" name="progId" th:value="${progId}">
+		<input type="hidden" id="themeId" name="themeId" th:value="${themeId}">
 		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
-		<input type="text" class="form-control input-sm" name="testName" placeholder="请输入PROD_ID" style="width:200px;">
+		<input type="text" class="form-control input-sm" name="prodId" placeholder="请输入PROD_ID" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	<table th:fragment="listFragment">

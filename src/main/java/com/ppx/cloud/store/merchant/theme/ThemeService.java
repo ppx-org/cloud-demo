@@ -1,18 +1,28 @@
 package com.ppx.cloud.store.merchant.theme;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
+import com.ppx.cloud.common.page.Page;
+import com.ppx.cloud.common.page.PageList;
+import com.ppx.cloud.demo.module.test.TestBean;
 import com.ppx.cloud.grant.common.GrantContext;
+import com.ppx.cloud.grant.service.MerchantService;
 
 
 @Service
 public class ThemeService extends MyDaoSupport {
 	
+	@Autowired
+	private MerchantService merchantService;
 	
 	public List<Theme> listTheme() {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
@@ -126,4 +136,114 @@ public class ThemeService extends MyDaoSupport {
 		
 		return r1 == 1 && r2 == 1 ? 1 : 0;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public PageList<ThemeProduct> listThemeProduct(Page page, ThemeProduct bean) {
+	
+		MyCriteria c = createCriteria("and").addAnd("PROD_ID = ?", bean.getProdId());
+		
+		StringBuilder cSql = new StringBuilder("select count(*) from theme_map_prod where THEME_ID = ?").append(c);
+		StringBuilder qSql = new StringBuilder("select * from theme_map_prod where THEME_ID = ?").append(c);		
+		c.addPrePara(bean.getThemeId());
+		
+		List<ThemeProduct> list = queryPage(ThemeProduct.class, page, cSql, qSql, c.getParaList());
+		return new PageList<ThemeProduct>(list, page);
+	}
+	
+	
+	@Transactional
+	public String insertThemeProduct(Integer themeId, String prodIdStr) {
+		// 加锁
+		int merchantId = merchantService.lockMerchant();
+		
+		String[] prodId = prodIdStr.split(",");
+		
+		// 清除
+		String deleteSql = "delete from import_data where MERCHANT_ID = ?";
+		getJdbcTemplate().update(deleteSql, merchantId);
+		
+		// result bit,1:产品ID不存在product,2:产品ID已经存在theme_map_prod
+		String importSql = "insert into import_data(MERCHANT_ID, ROWNUM, INT_1, RESULT) " +
+			"select " + merchantId + ", ?, ?, if ((select count(*) from product where PROD_ID = ? and REPO_ID in (select REPO_ID from repository where MERCHANT_ID = " + merchantId + ")) = 1,  0, 1) " +
+			"^ if ((select count(*) from theme_map_prod where PROD_ID = ? and THEME_ID = " + themeId + ") != 1, 0, 2) r";
+		List<Object[]> argList = new ArrayList<Object[]>();
+		for (int i = 0; i < prodId.length; i++) {
+			Object[] arg = {i+1, prodId[i], prodId[i], prodId[i]};
+			argList.add(arg);
+		}
+		getJdbcTemplate().batchUpdate(importSql, argList);
+		
+		
+		// 找出不符合条件记录
+		String errorSql = "select group_concat(concat(ROWNUM, ':', RESULT)) msg from import_data where MERCHANT_ID = ? and result != ?";
+		String msg = getJdbcTemplate().queryForObject(errorSql, String.class, merchantId, 0);
+		if (!StringUtils.isEmpty(msg)) {
+			return msg;
+		}
+		else {
+			String insertSql = "insert into theme_map_prod(THEME_ID, PROD_ID) select ?, INT_1 from import_data where MERCHANT_ID = ?";
+			int r = getJdbcTemplate().update(insertSql, themeId, merchantId);
+			return "ok:" + r;
+		}
+		
+	}
+
+	
+	public int deleteThemeProduct(Integer themeId, Integer prodId) {
+		return getJdbcTemplate().update("delete from theme_map_prod where THEME_ID = ? and PROD_ID = ?", themeId, prodId);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

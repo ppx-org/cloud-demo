@@ -97,6 +97,10 @@ move.down = function(id) {
 		}
 	});
 }
+
+function themeProduct(themeId) {
+	open(contextPath + 'theme/themeProduct?themeId=' + themeId);
+}
 </script>
 </head>
 
@@ -131,6 +135,8 @@ move.down = function(id) {
 		<td class="w-action">
 			<a href="#" onclick="remove({{v.themeId}})" class="glyphicon glyphicon-trash" title="删除"></a>&nbsp;&nbsp;
 			<a href="#" onclick="edit('{{v.themeId}}')" class="glyphicon glyphicon-edit" title="修改"></a>
+
+			<a href="#" onclick="themeProduct('{{v.themeId}}')">[PROD]</a>
 		</td>
 	</tr>
 	{{/each}}

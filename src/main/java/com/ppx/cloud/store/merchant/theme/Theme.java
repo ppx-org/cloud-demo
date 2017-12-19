@@ -5,20 +5,20 @@ import com.ppx.cloud.common.jdbc.annotation.Id;
 public class Theme {
 
 	@Id
-	private Integer ThemeId;
+	private Integer themeId;
 
 	private Integer merchantId;
 
 	private String themeName;
 
 	private Integer themePrio;
-
+	
 	public Integer getThemeId() {
-		return ThemeId;
+		return themeId;
 	}
 
 	public void setThemeId(Integer themeId) {
-		ThemeId = themeId;
+		this.themeId = themeId;
 	}
 
 	public Integer getMerchantId() {

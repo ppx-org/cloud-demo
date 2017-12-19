@@ -85,18 +85,34 @@ public class ThemeController {
 	
 	// 
 	@GetMapping
-	public ModelAndView themeProduct() {
+	public ModelAndView themeProduct(@RequestParam Integer themeId) {
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("listJson", listThemeProduct(new Page(), new TestBean()));
+		mv.addObject("themeId", themeId);
+		ThemeProduct bean = new ThemeProduct();
+		bean.setThemeId(themeId);
+		mv.addObject("listJson", listThemeProduct(new Page(), bean));
 		return mv;
 	}
 
 	@PostMapping @ResponseBody
-	public Map<String, Object> listThemeProduct(Page page, TestBean bean) {
-		//PageList<Theme> list = serv.listTheme();
-		//return ControllerReturn.ok(list);
-		return null;
+	public Map<String, Object> listThemeProduct(Page page, ThemeProduct bean) {
+		PageList<ThemeProduct> list = serv.listThemeProduct(page, bean);
+		return ControllerReturn.ok(list);
 	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> insertThemeProduct(@RequestParam Integer themeId, @RequestParam String prodIdStr) {
+		String r = serv.insertThemeProduct(themeId, prodIdStr);
+		return ControllerReturn.ok(r);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> deleteThemeProduct(@RequestParam Integer themeId, @RequestParam Integer prodId) {
+		int r = serv.deleteThemeProduct(themeId, prodId);
+		return ControllerReturn.ok(r);
+	}
+	
+	
 	
 	
 	
