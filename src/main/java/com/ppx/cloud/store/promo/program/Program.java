@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ppx.cloud.common.jdbc.annotation.Id;
 import com.ppx.cloud.common.util.DateUtils;
+import com.ppx.cloud.store.common.dictionary.Dict;
 
 public class Program {
 
@@ -34,6 +35,8 @@ public class Program {
 	private String policyArgs;
 	
 	private Date created;
+	
+	private Integer recordStatus;
 
 	public Integer getProgId() {
 		return progId;
@@ -114,6 +117,17 @@ public class Program {
 		this.created = created;
 	}
 
+	public Integer getRecordStatus() {
+		return recordStatus;
+	}
+
+	public void setRecordStatus(Integer recordStatus) {
+		this.recordStatus = recordStatus;
+	}
+
+	public String getRecordStatusDesc() {
+		return Dict.getProgramStatusDesc(this.recordStatus);
+	}
 	
 	
 

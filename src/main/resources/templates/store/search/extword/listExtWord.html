@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+<link th:replace="common/fragment/common::validation"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	refreshPageData([[${listJson}]]);
+});
+
+function queryPage(pageNumber) {
+	showLoading();
+	$("#pageNumber").val(pageNumber);
+	$.post([[@{/extWord/listJson}]], $("#queryForm").serialize(), function(r) {
+		refreshPageData(r);
+		hideLoading();
+	});
+}
+
+function add() {
+	$('#addForm')[0].reset();
+	$('#add').modal('show');
+	
+	action = function() {
+		if (!$("#addForm").validationEngine('validate')) return;
+		showLoading();
+		$.post([[@{/extWord/insertExtWord}]], $("#addForm").serialize(), function(r) {
+			if (r.result == 1) {
+				$('#add').modal('hide');
+				queryPage(1);
+			}
+			else if (r.result == 0) {
+				alertWarning("NAME已经存在！");
+				hideLoading();
+			}
+		});
+	}
+}
+
+function remove(id) {
+	var callback = function () {
+		showLoading();
+		$.post([[@{/extWord/deleteExtWord}]], "id=" + id, function(r) {
+			if (r.result == 1) {
+				queryPage(1);
+			}
+		});	
+	}
+	confirm(id, callback);
+}
+</script>
+</head>
+
+<body>
+<div th:replace="common/fragment/common::pageList('DEMO_TEST')">
+	<div th:fragment="queryFragment">
+		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
+		<input type="text" class="form-control input-sm" name="extWord" placeholder="请输入WORD" style="width:200px;">
+		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
+	</div>
+	<table th:fragment="listFragment">
+	<tr>
+		<th>WORD</th>
+		<th>操作</th>
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td class="w-title-m">{{v.extWord}}</td>
+		<td class="w-action">
+			<a href="#" onclick="remove('{{v.extWord}}')" class="glyphicon glyphicon-trash" title="删除"></a>
+		</td>
+	</tr>
+	{{/each}}
+	</script>
+	</table>
+</div>
+
+<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>WORD：</label>
+		<div class="col-sm-7"><input type="text" name="extWord" class="form-control validate[required]" maxlength="32"></div>
+	</div>
+</div>
+
+
+
+</body>
+</html>
+

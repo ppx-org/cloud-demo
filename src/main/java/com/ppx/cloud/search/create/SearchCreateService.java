@@ -3,7 +3,6 @@ package com.ppx.cloud.search.create;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +22,49 @@ public class SearchCreateService extends MyDaoSupport {
 	@Transactional
 	public int init() {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		
+		// ext
+		String extSql = "select group_concat(EXT_WORD) from search_ext_word where MERCHANT_ID = ?";
+		String extWords = getJdbcTemplate().queryForObject(extSql, String.class);
+		WordUtils.setExtWord(extWords);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		String sql = "select PROD_ID, PROD_TITLE from product where MERCHANT_ID = ?";
 		List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql, merchantId);

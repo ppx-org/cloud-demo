@@ -15,16 +15,25 @@ import org.wltea.analyzer.lucene.IKAnalyzer;
 
 public class WordUtils {
 	
-	public static String splitWord(String w) {
-		// TODO
-		List<String> listExtWord = new ArrayList<String>();
-		listExtWord.add("猎聘网");
-		listExtWord.add("xxxx");
+	private static List<String> extWordList = new ArrayList<String>();
+	
+	public static void setExtWord(String extWords) {
+		if (StringUtils.isEmpty(extWords)) {
+			return;
+		}
 		
+		extWordList = new ArrayList<String>();
+		String[] extWord = extWords.split(",");
+		for (String w : extWord) {
+			extWordList.add(w);
+		}
+	}
+	
+	public static String splitWord(String w) {
 		
 		Configuration cfg = DefaultConfig.getInstance();
 		Dictionary dict = Dictionary.initial(cfg);
-		dict.addWords(listExtWord);
+		dict.addWords(extWordList);
 		
 		
 		IKAnalyzer analyzer = new IKAnalyzer();

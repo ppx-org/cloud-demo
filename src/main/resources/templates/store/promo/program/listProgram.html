@@ -109,6 +109,25 @@ function policyTypeChange(obj) {
 		$("[id='%:d']").show();
 	}
 }
+
+
+
+
+function start(progId, obj) {
+	showLoading();
+	$.post([[@{/program/deleteProgram}]], "id=" + id, function(r) {
+		hideLoading();
+		
+	});	
+}
+
+function pause(progId, obj) {
+	
+}
+
+function stop(progId, obj) {
+	
+}
 </script>
 </head>
 
@@ -140,6 +159,7 @@ function policyTypeChange(obj) {
 		<th>TYPE</th>
 		<th>args</th>
 		<th>TIME</th>
+		<th>STATUS</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
@@ -153,11 +173,17 @@ function policyTypeChange(obj) {
 		<td class="w-id">{{getPolicyTypeName(v.policyType)}}</td>
 		<td class="w-id">{{v.policyArgs}}</td>
 		<td class="w-time">{{v.created}}</td>
+		<td class="w-id"><span class="desc">{{v.recordStatusDesc}}<span>
+			{{if v.recordStatus == 1}}<a href="#" onclick="start({{v.progId}}, this)">[启动]</a>{{/if}}
+			{{if v.recordStatus == 2}}<a href="#" onclick="pause({{v.progId}}, this)">[暂停]</a><a href="#" onclick="stop({{v.progId}}, this)">[停止]</a>{{/if}}
+			{{if v.recordStatus == 3}}<a href="#" onclick="start({{v.progId}}, this)">[启动]</a>{{/if}}
+			{{if v.recordStatus == 4}}<a href="#" onclick="start({{v.progId}}, this)">[启动]</a>{{/if}}
+		</td>
 		<td class="w-action-m">
 			<a href="#" onclick="remove({{v.progId}})">[删除]</a>&nbsp;&nbsp;
 			<a href="#" onclick="edit({{v.progId}})">[修改]</a>&nbsp;&nbsp;
-		
 			<a href="#" onclick="conf({{v.progId}}, '{{v.policyType}}')">[配置]</a>
+
 		</td>
 	</tr>
 	{{/each}}
