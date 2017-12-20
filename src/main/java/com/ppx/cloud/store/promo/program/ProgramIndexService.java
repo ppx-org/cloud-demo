@@ -7,23 +7,29 @@ import org.springframework.util.StringUtils;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.grant.common.GrantContext;
+import com.ppx.cloud.store.common.dictionary.Dict;
 
 @Service
-public class ProgramIndexService extends MyDaoSupport {
+public class ProgramIndexService extends MyDaoSupport { 
+	private final int START_STATUS = 2;
+	private final int PAUSE_STATUS = 3;
+	private final int STOP_STATUS = 4;
+	
+	private int getStatusForUpdate(Integer progId) {
+		String sql = "select RECORD_STATUS from  program where PROG_ID = ? for update";
+		return getJdbcTemplate().queryForObject(sql, Integer.class, progId);
+	}
 	
 	
-	
-	
-	
-	
-	
-	
-	// 0:删除1:未开始2:进行中3:暂停(4):结束
-	
-	
+	private int updateStatus(Integer prodId, Integer status) {
+		String sql = "update program set RECORD_STATUS = ? where PROG_ID = ?";
+		return getJdbcTemplate().update(sql, status, prodId);
+	}
 	
 	@Transactional
-	public int start(Integer progId) {
+	public String start(Integer progId) {
+		if (getStatusForUpdate(progId) == START_STATUS) return "-1";
+		
 		Program prog = getJdbcTemplate().queryForObject("select * from program where PROG_ID = ?",
 				BeanPropertyRowMapper.newInstance(Program.class), progId);	
 		
@@ -39,33 +45,37 @@ public class ProgramIndexService extends MyDaoSupport {
 			case "Special":startSpecial(prog);break;
 			case "Change":startChange(prog);break;
 			case "Dependence":startDependence(prog);break;
-			default:return -1;
+			default:return "-2";
 		}
 		
-		
-		
-		return 1;
-	}
-	
-	
-	@Transactional
-	public int stop(Integer progId) {
-	
-		return 1;
+		updateStatus(progId, START_STATUS);
+		return progId + "," + START_STATUS + "," + Dict.getProgramStatusDesc(START_STATUS);
 	}
 	
 	@Transactional
-	public int pause(Integer progId) {
+	public String pause(Integer progId) {
+		if (getStatusForUpdate(progId) != START_STATUS) return "-1";
+		
+		updateStatus(progId, PAUSE_STATUS);
+		return progId + "," + PAUSE_STATUS + "," + Dict.getProgramStatusDesc(PAUSE_STATUS);
+	}
 	
-		return 1;
+	@Transactional
+	public String stop(Integer progId) {
+		if (getStatusForUpdate(progId) != START_STATUS) return "-1";
+		
+		// 删除
+		String deleteSql = "delete from program_index where PROG_ID = ?";
+		getJdbcTemplate().update(deleteSql, progId);
+		
+		updateStatus(progId, STOP_STATUS);
+		return progId + "," + STOP_STATUS + "," + Dict.getProgramStatusDesc(STOP_STATUS);
 	}
 	
 	
-	private int updateStatus(Integer prodId, Integer status) {
-		String sql = "update program set RECORD_STATUS = ? where PROD_ID = ?";
-		getJdbcTemplate().update(sql, status, prodId);
-		return 1;
-	}
+	
+	
+	
 	
 	
 	

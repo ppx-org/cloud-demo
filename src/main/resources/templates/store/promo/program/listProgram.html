@@ -115,19 +115,108 @@ function policyTypeChange(obj) {
 
 function start(progId, obj) {
 	showLoading();
-	$.post([[@{/program/deleteProgram}]], "id=" + id, function(r) {
+	$.post([[@{/program/start}]], "progId=" + progId, function(r) {
 		hideLoading();
-		
-	});	
+		if (r.string == -1) {
+			alertWarning("状态已被更改，请刷新页面");
+		}
+		else {
+			alertSuccess();
+			$(obj).parent().html(getStatusDescByStr(r.string));
+		}
+	});
 }
 
 function pause(progId, obj) {
-	
+	showLoading();
+	$.post([[@{/program/pause}]], "progId=" + progId, function(r) {
+		hideLoading();
+		if (r.string == -1) {
+			alertWarning("状态已被更改，请刷新页面");
+		}
+		else {
+			alertSuccess();
+			$(obj).parent().html(getStatusDescByStr(r.string));
+		}
+	});
 }
 
 function stop(progId, obj) {
-	
+	showLoading();
+	$.post([[@{/program/stop}]], "progId=" + progId, function(r) {
+		hideLoading();
+		if (r.string == -1) {
+			alertWarning("状态已被更改，请刷新页面");
+		}
+		else {
+			alertSuccess();
+			$(obj).parent().html(getStatusDescByStr(r.string));
+		}
+	});
 }
+
+template.config("escape", false);
+template.helper('getStatusDesc', function(progId, recordStatus, recordStatusDesc) {
+	return getStatusDesc(progId, recordStatus, recordStatusDesc);
+})
+
+function getStatusDesc(progId, recordStatus, recordStatusDesc) {
+	var start = '<a href="#" onclick="start(' + progId + ', this)">[启动]</a>';
+	var pause = '<a href="#" onclick="pause(' + progId + ', this)">[暂停]</a>';
+	var stop = '<a href="#" onclick="stop(' + progId + ', this)">[停止]</a>';
+	
+	if (recordStatus == 1) return recordStatusDesc + start;
+	if (recordStatus == 2) return recordStatusDesc + pause + stop;
+	if (recordStatus == 3) return recordStatusDesc + start;
+	if (recordStatus == 4) return recordStatusDesc + start;
+}
+
+function getStatusDescByStr(string) {
+	var s = string.split(",");
+	return getStatusDesc(s[0], s[1], s[2]);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 </head>
 
@@ -173,12 +262,7 @@ function stop(progId, obj) {
 		<td class="w-id">{{getPolicyTypeName(v.policyType)}}</td>
 		<td class="w-id">{{v.policyArgs}}</td>
 		<td class="w-time">{{v.created}}</td>
-		<td class="w-id"><span class="desc">{{v.recordStatusDesc}}<span>
-			{{if v.recordStatus == 1}}<a href="#" onclick="start({{v.progId}}, this)">[启动]</a>{{/if}}
-			{{if v.recordStatus == 2}}<a href="#" onclick="pause({{v.progId}}, this)">[暂停]</a><a href="#" onclick="stop({{v.progId}}, this)">[停止]</a>{{/if}}
-			{{if v.recordStatus == 3}}<a href="#" onclick="start({{v.progId}}, this)">[启动]</a>{{/if}}
-			{{if v.recordStatus == 4}}<a href="#" onclick="start({{v.progId}}, this)">[启动]</a>{{/if}}
-		</td>
+		<td class="w-action">{{getStatusDesc(v.progId, v.recordStatus, v.recordStatusDesc)}}</td>
 		<td class="w-action-m">
 			<a href="#" onclick="remove({{v.progId}})">[删除]</a>&nbsp;&nbsp;
 			<a href="#" onclick="edit({{v.progId}})">[修改]</a>&nbsp;&nbsp;

@@ -17,13 +17,12 @@ public class ProgramService extends MyDaoSupport {
 	
 	public PageList<Program> listProgram(Page page, Program bean) {
 		
-		// 分页排序查询
 		MyCriteria c = createCriteria("where")
 				.addAnd("POLICY_TYPE like ?", bean.getPolicyType())
 				.addAnd("PROG_NAME like ?", "%", bean.getProgName(), "%");
 		
-		StringBuilder cSql = new StringBuilder("select count(*) from program where RECORD_STATUS = ?").append(c);
-		StringBuilder qSql = new StringBuilder("select * from program where RECORD_STATUS = ?").append(c);
+		StringBuilder cSql = new StringBuilder("select count(*) from program where RECORD_STATUS >= ?").append(c);
+		StringBuilder qSql = new StringBuilder("select * from program where RECORD_STATUS >= ?").append(c);
 		c.addPrePara(1);
 		
 		List<Program> list = queryPage(Program.class, page, cSql, qSql, c.getParaList());

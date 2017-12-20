@@ -24,6 +24,9 @@ public class ProgramController {
 	@Autowired
 	private ProgramService serv;
 	
+	@Autowired
+	private ProgramIndexService indexServ;
+	
 	
 	@GetMapping
 	public ModelAndView listProgram() {
@@ -71,7 +74,75 @@ public class ProgramController {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> start(@RequestParam Integer progId) {
+		String r = indexServ.start(progId);
+		return ControllerReturn.ok(r);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> pause(@RequestParam Integer progId) {
+		String r = indexServ.pause(progId);
+		return ControllerReturn.ok(r);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> stop(@RequestParam Integer progId) {
+		String r = indexServ.stop(progId);
+		return ControllerReturn.ok(r);
+	}
+	
+	
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
