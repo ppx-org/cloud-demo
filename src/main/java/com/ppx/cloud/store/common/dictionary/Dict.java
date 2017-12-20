@@ -1,7 +1,10 @@
 package com.ppx.cloud.store.common.dictionary;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Dict {
 	
@@ -18,5 +21,74 @@ public class Dict {
 		return programStatusMap.get(status);
 	}
 
+	
+	private static Map<Integer, String> productStatusMap = new HashMap<Integer, String>();
+	static {
+		// 
+		productStatusMap.put(1, "-");
+		productStatusMap.put(2, "上");
+		productStatusMap.put(3, "下");
+	}
+	
+	public static String getProductStatusDesc(Integer status) {
+		return productStatusMap.get(status);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static List<DictBean> listProductStatus() {
+		List<DictBean> returnList = new ArrayList<DictBean>();
+		
+		Set<Integer> set = productStatusMap.keySet();
+		for (Integer v : set) {
+			returnList.add(new DictBean(v, productStatusMap.get(v)));
+		}
+		return returnList;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

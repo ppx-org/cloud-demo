@@ -22,11 +22,10 @@ public class Program {
 
 	private Integer progPrio;
 
-	@JsonFormat(pattern=DateUtils.DATE_PATTERN)
+	@JsonFormat(pattern=DateUtils.DATE_PATTERN, timezone="GMT+8")
 	@DateTimeFormat(pattern=DateUtils.DATE_PATTERN)
 	private Date progBegin;
 
-	@JsonFormat(pattern=DateUtils.DATE_PATTERN)
 	@DateTimeFormat(pattern=DateUtils.DATE_PATTERN)
 	private Date progEnd;
 
@@ -80,6 +79,10 @@ public class Program {
 
 	public Date getProgEnd() {
 		return progEnd;
+	}
+	
+	public String getProgEndDesc() {
+		return DateUtils.getMaxDateDesc(progEnd);
 	}
 
 	public void setProgEnd(Date progEnd) {

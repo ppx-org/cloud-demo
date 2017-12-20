@@ -15,6 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
+import com.ppx.cloud.store.common.dictionary.Dict;
+import com.ppx.cloud.store.common.dictionary.DictBean;
 import com.ppx.cloud.store.merchant.category.Category;
 import com.ppx.cloud.store.merchant.category.CategoryService;
 import com.ppx.cloud.store.merchant.repo.RepositoryService;
@@ -37,6 +39,9 @@ public class ProductController {
 	public ModelAndView listProduct() {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("listJson", listJson(new Page(), new Product()));
+		
+		mv.addObject("productStatusList", Dict.listProductStatus());
+		
 		return mv;
 	}
 
