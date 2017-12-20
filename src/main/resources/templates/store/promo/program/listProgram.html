@@ -28,15 +28,15 @@ function add() {
 	$('#add').modal('show');
 	
 	action = function() {
-		if (!$("#addForm").validationEngine('validate')) return;
+		if (!$("#addForm,#policyArgsForm").validationEngine('validate')) return;
 		
+		$("#policyArgs").val(getPolicyArgs($("#policyType").val()));
 		//
-		var para = "progName=" + $("#progName").val() + "&progPrio=" + $("#progPrio").val() + "&progBegin=" + $("#progBegin").val()
-			 + "&progEnd=" + $("#progEnd").val() + "&policyType=" + $("#policyType").val() + "&policyArgs=" + getPolicyArgs($("#policyType").val());
-		
+		//var para = "progName=" + $("#progName").val() + "&progPrio=" + $("#progPrio").val() + "&progBegin=" + $("#progBegin").val()
+		//	 + "&progEnd=" + $("#progEnd").val() + "&policyType=" + $("#policyType").val() + "&policyArgs=" + getPolicyArgs($("#policyType").val());
 		
 		showLoading();
-		$.post([[@{/program/insertProgram}]], para, function(r) {
+		$.post([[@{/program/insertProgram}]], $("#addForm").serialize(), function(r) {
 			if (r.result == 1) {
 				$('#add').modal('hide');
 				queryPage(1);
@@ -297,6 +297,9 @@ function getStatusDescByStr(string) {
 		</select>
 		</div>
 	</div>
+	<input type="hidden" id="policyArgs" name="policyArgs">
+	</form>
+	<form id="policyArgsForm" class="form-horizontal">
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required" >*</span>poli_args：</label>
 		<div class="col-sm-8 form-inline" th:include="store/promo/common/promoCommon::policyArgs"></div>
