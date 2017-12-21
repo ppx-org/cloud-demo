@@ -211,7 +211,7 @@ public class ProgramIndexService extends MyDaoSupport {
 	
 	private int startChange(Program prog) {
 		String changeSql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY) " + 
-				"select ?, c.PROG_ID, c.PROD_ID, ?, ?, ?, concat('E:', p.POLICY_ARGS,',S:', c.CHANGE_PRICE) " + 
+				"select ?, c.PROG_ID, c.PROD_ID, ?, ?, ?, concat('E:', p.POLICY_ARGS,',C:', c.CHANGE_PRICE) " + 
 				"from program_change c join program p on c.PROG_ID = p.PROG_ID and p.PROG_ID = ?";
 		int r = getJdbcTemplate().update(changeSql, prog.getMerchantId(), prog.getProgBegin(), prog.getProgEnd(),
 				prog.getProgPrio(), prog.getProgId());

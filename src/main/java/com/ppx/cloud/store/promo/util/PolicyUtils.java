@@ -101,6 +101,8 @@ public class PolicyUtils {
 	
 
 	static {
+		// S:y D:pId,P:y E:y,C:y
+		
 		// type
 		policyTypeList.add(new Policy("Category", "CAT_N"));
 		policyTypeList.add(new Policy("Brand", "BRAND_N"));
