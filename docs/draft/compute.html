@@ -128,8 +128,8 @@ var newR = r.map(function(v) {
 		v.itemP = p * v.n;
 	}
 	else if (poli.indexOf("A") == 0) {
-		var y = new Number(poli_1.split(":")[1]);
-		v.itemP = y * v.n;
+		var p = new Number(poli_1.split(":")[1]);
+		v.itemP = p * v.n;
 	}
 	else if (poli.indexOf("%") == 0) {
 		if (poli_2 == "" || gN == 1) {
@@ -152,8 +152,7 @@ var newR = r.map(function(v) {
 				v.itemP = v.p * batch2D;
 			}
 			else {
-				alert(batch2D)
-				v.itemP = v.p * batch1D * batch1N + v.p * batch2D * (v.n - batch1N);
+				v.itemP = v.p * batch1N * batch1D + v.p * (v.n - batch1N) * batch2D;
 			}
 		}
 	}

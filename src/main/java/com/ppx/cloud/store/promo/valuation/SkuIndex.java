@@ -13,6 +13,8 @@ public class SkuIndex {
 	
 	private Integer progId;
 	
+	private Float itemPrice;
+	
 	public SkuIndex() {
 		
 	}
@@ -68,6 +70,14 @@ public class SkuIndex {
 
 	public void setProgId(Integer progId) {
 		this.progId = progId;
+	}
+
+	public Float getItemPrice() {
+		return itemPrice;
+	}
+
+	public void setItemPrice(Float itemPrice) {
+		this.itemPrice = itemPrice;
 	}
 
 	
