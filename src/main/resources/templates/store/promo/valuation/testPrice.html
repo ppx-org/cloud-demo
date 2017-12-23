@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+<link th:replace="common/fragment/common::date"/>
+
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	
+});
+
+
+function query() {
+	if ($("#date").val() == "") {
+		alertWarning("日期不能为空!");
+		return;
+	}
+	if ($("#stuIdStr").val() == "") {
+		alertWarning("skuId不能为空!");
+		return;
+	}
+	
+	showLoading();
+	$.post([[@{/valuation/listSku}]], $("#queryForm").serialize(), function(r) {
+		refreshPageData(r);
+		hideLoading();
+	});
+	
+}
+
+function plus(obj) {
+	var numJObj = $(obj).parent().find(".num");
+	var num = new Number(numJObj.text());
+	numJObj.text(++num);
+}
+
+function minus(obj) {
+	var numJObj = $(obj).parent().find(".num");
+	var num = new Number(numJObj.text());
+	numJObj.text(--num);
+}
+</script>
+</head>
+
+<body>
+<div class="page-list-body">
+	<div class="page-list-query">
+		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span>TEST_P</div>
+		
+		<form id="queryForm" class="form-inline">
+		<label>日期:</label>
+		<input type="text" class="form-control input-sm" style="width:90px" id="date" name="date" th:value="${today}" onclick="WdatePicker()">
+		<label>Id(,):</label>
+		<input type="text" class="form-control input-sm" id="stuIdStr" name="skuIdStr" placeholder="Id(,)" style="width:300px;">
+		
+		<button type="button" class="btn btn-default btn-sm" onclick="query();"><span class="glyphicon glyphicon-plus-sign"></span>添加</button>
+		</form>
+	</div>
+	<table class="page-list-table table table-bordered table-condensed" >
+	
+	<!--<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}-->
+	<tr>
+		<td><img src="" style="width:120px; height:120px"></td>
+		<td>
+		<table>
+			<tr><td>我是一个标题,我还是一个标题</td></tr>
+			<tr><td>颜色:红色</td></tr>
+			<tr><td>七天包退</td></tr>
+			<tr>
+				<td>¥50.00
+				<a href="#" onclick="plus(this)" class="glyphicon glyphicon-plus-sign"></a>
+				<span class="num">1</span>
+				<a href="#" onclick="minus(this)" class="glyphicon glyphicon-minus-sign"></a>
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<!--{{/each}}
+	</script>-->
+	
+	
+	</table>
+	<table>
+		<tr><td>共1件商品  合计:¥324.24</td><td><button type="button" class="btn btn-success btn-sm" onclick="add()">测试后端</button></td></tr>
+	</table>
+</div>
+
+
+
+
+</body>
+</html>
+

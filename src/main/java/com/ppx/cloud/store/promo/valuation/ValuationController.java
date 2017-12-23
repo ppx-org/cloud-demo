@@ -6,11 +6,15 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.Page;
+import com.ppx.cloud.common.page.PageList;
+import com.ppx.cloud.common.util.DateUtils;
 import com.ppx.cloud.demo.module.test.TestBean;
 
 
@@ -24,7 +28,17 @@ public class ValuationController {
 	@GetMapping
 	public ModelAndView testPrice() {
 		ModelAndView mv = new ModelAndView();
+		mv.addObject("today", DateUtils.today());
+		
 		return mv;
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> listSku(@RequestParam String date, @RequestParam String skuIdStr) {
+		//serv.count(skuIndexMap)
+		
+		
+		return ControllerReturn.ok();
 	}
 	
 	
