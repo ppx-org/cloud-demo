@@ -1,8 +1,10 @@
 package com.ppx.cloud.store.promo.valuation;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
-import com.ppx.cloud.common.page.Page;
-import com.ppx.cloud.common.page.PageList;
 import com.ppx.cloud.common.util.DateUtils;
-import com.ppx.cloud.demo.module.test.TestBean;
 
 
 @Controller	
@@ -26,7 +25,7 @@ public class ValuationController {
 	
 	
 	@GetMapping
-	public ModelAndView testPrice() {
+	public ModelAndView test() {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("today", DateUtils.today());
 		
@@ -35,31 +34,37 @@ public class ValuationController {
 	
 	@PostMapping @ResponseBody
 	public Map<String, Object> listSku(@RequestParam String date, @RequestParam String skuIdStr) {
-		//serv.count(skuIndexMap)
-		
-		
-		return ControllerReturn.ok();
-	}
-	
-	
-	@GetMapping @ResponseBody
-	public Map<String, Object> test2() {
-		
-	
-		
 		Map<Integer, SkuIndex> skuIndexMap = new HashMap<Integer, SkuIndex>();
 		
-		SkuIndex s1 = new SkuIndex(1, 3);
-		SkuIndex s2 = new SkuIndex(3, 5);
-		skuIndexMap.put(1, s1);
-		skuIndexMap.put(3, s2);
+		String[] skuIdArray = skuIdStr.split(",");
+		if (skuIdArray.length == 0) {
+			return ControllerReturn.ok(-1);
+		}
+			
+		for (String id : skuIdArray) {
+			if (StringUtils.isEmpty(id)) {
+				return ControllerReturn.ok(-1);
+			}
+			Integer skuId;
+			try {
+				skuId = Integer.parseInt(id);
+			} catch (Exception e) {
+				return ControllerReturn.ok(-1);
+			}
+			SkuIndex index = new SkuIndex(skuId, 1);
+			skuIndexMap.put(skuId, index);
+		}
 		
-		int r = serv.count(skuIndexMap);
-		
-		System.out.println("==============r:" + r);
-		
-		return ControllerReturn.ok();
+		Map<String, List<SkuIndex>> returnMap = serv.count(skuIndexMap);
+		if (returnMap.containsKey("-2")) {
+			return ControllerReturn.ok(-2, returnMap.get("-2"));
+		}
+		else {
+			return ControllerReturn.ok(1, returnMap.get("1"));
+		}
 	}
+	
+	
 	
 	
 	

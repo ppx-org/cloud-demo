@@ -10,6 +10,7 @@ import java.util.Set;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
@@ -17,9 +18,61 @@ import com.ppx.cloud.common.jdbc.MyDaoSupport;
 
 @Service
 public class ValuationService extends MyDaoSupport {
+	
+	
+	private Map<String, List<SkuIndex>> getNoExist(List<SkuIndex> dbSkuList, Map<Integer, SkuIndex> skuIndexMap) {
+		Map<String, List<SkuIndex>> returnMap = new HashMap<String, List<SkuIndex>>();
+		
+		List<Integer> dbSkuIdList = new ArrayList<Integer>();
+		for (SkuIndex skuIndex : dbSkuList) {
+			dbSkuIdList.add(skuIndex.getSkuId());
+		}
+		
+		
+		List<SkuIndex> list = new ArrayList<SkuIndex>();
+		for (Integer id : skuIndexMap.keySet()) {
+			
+			if (!dbSkuIdList.contains(id)) {
+				SkuIndex index = new SkuIndex(id, 0);
+				list.add(index);
+			}
+		}
+		returnMap.put("-2", list);
+		
+		return returnMap;
+	}
 
 	
-	public int count(Map<Integer, SkuIndex> skuIndexMap) {
+	public Map<String, List<SkuIndex>> count(Map<Integer, SkuIndex> skuIndexMap) {
+		Map<String, List<SkuIndex>> returnMap = new HashMap<String, List<SkuIndex>>();
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 	
@@ -37,15 +90,15 @@ public class ValuationService extends MyDaoSupport {
 		skuParamMap.put("skuIdList", skuIdList);		
 		
 		NamedParameterJdbcTemplate jdbc = new NamedParameterJdbcTemplate(getJdbcTemplate());
-		List<SkuIndex> skuList = jdbc.query(sSql, skuParamMap, BeanPropertyRowMapper.newInstance(SkuIndex.class));
+		List<SkuIndex> dbSkuList = jdbc.query(sSql, skuParamMap, BeanPropertyRowMapper.newInstance(SkuIndex.class));
 		
-		if (skuList.size() != skuIndexMap.size()) {
+		if (dbSkuList.size() != skuIndexMap.size()) {
 			// skuId不存在
-			return -1;
+			return getNoExist(dbSkuList, skuIndexMap);
 		}
 		
 		List<Integer> prodIdList = new ArrayList<Integer>();
-		for (SkuIndex index : skuList) {
+		for (SkuIndex index : dbSkuList) {
 			SkuIndex newIndex = skuIndexMap.get(index.getSkuId());
 			newIndex.setProdId(index.getProdId());
 			newIndex.setPrice(index.getPrice());
@@ -73,13 +126,48 @@ public class ValuationService extends MyDaoSupport {
 		Map<Integer, Float> enoughYen = new HashMap<Integer, Float>();
 		Set<Integer> prodId = new HashSet<Integer>();
 		
-		skuIndexMap.values().forEach(item -> {
-			if (item.getProgId() == null) return;
-			groupNum.put(item.getProgId(), groupNum.get(item.getProgId()) == null ? 0 : groupNum.get(item.getProgId()) +  item.getNum());
-			enoughYen.put(item.getProgId(), enoughYen.get(item.getProgId()) == null ? 0 : 
-				enoughYen.get(item.getProgId()) + item.getPrice() * item.getNum());
-			prodId.add(item.getProdId());
+		// 预处理数据
+		skuIndexMap.values().forEach(index -> {
+			if (index.getProgId() == null) {
+				index.setProgId(999999);
+			}
+			
+			
+			
+			groupNum.put(index.getProgId(), groupNum.get(index.getProgId()) == null ? 0 : groupNum.get(index.getProgId()) +  index.getNum());
+			enoughYen.put(index.getProgId(), enoughYen.get(index.getProgId()) == null ? 0 : 
+				enoughYen.get(index.getProgId()) + index.getPrice() * index.getNum());
+			prodId.add(index.getProdId());
+			
+			
+			
+			String poli = index.getPolicy();
+			String poli_1 = "";
+			String poli_2 = "";
+			if (poli != null) {
+				String[] item = poli.split(",");
+				poli_1 = item[0];
+				if (item.length == 2) {
+					poli_2 = item[1];
+				}
+			}
+			
+			if (poli_1.startsWith("D")) {
+				index.setProgId(800000);
+			}
+			else if (poli_1.startsWith("E") && poli_2.startsWith("C")) {
+				index.setProgId(900000);
+			}
 		});
+		
+		try {
+			String s = new ObjectMapper().writeValueAsString(skuIndexMap);
+			System.out.println("xxxxxxskuIndexMap:" + s);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
 		
 		// 排序 按progId分组，同级价格低在下面，为了价低者折，价低者减
 		List<SkuIndex> skuIndexList = new ArrayList<SkuIndex>();
@@ -100,7 +188,7 @@ public class ValuationService extends MyDaoSupport {
 				String[] item = poli.split(",");
 				poli_1 = item[0];
 				if (item.length == 2) {
-					poli_1 = item[1];
+					poli_2 = item[1];
 				}
 			}
 			
@@ -234,16 +322,25 @@ public class ValuationService extends MyDaoSupport {
 		
 		
 		
-		// print
-//		skuIndexMap.values().forEach(item ->{
-//			System.out.println(item.getPrice());
-//		});
+
 		
 		
-	
 		
 		
-		return 1;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		returnMap.put("1", skuIndexList);
+		
+		
+		return returnMap;
 	}
 	
 	

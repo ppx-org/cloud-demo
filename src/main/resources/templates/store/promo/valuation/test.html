@@ -25,7 +25,20 @@ function query() {
 	
 	showLoading();
 	$.post([[@{/valuation/listSku}]], $("#queryForm").serialize(), function(r) {
-		refreshPageData(r);
+		if (r.result == -1) {
+			alertWarning("输入参数错误");
+		}
+		else if(r.result == -2) {
+			var skuId = [];
+			 r.arrayList.forEach(function(v){
+				 skuId.push(v.skuId); 
+			 });
+			 alertWarning("id不存在:" + skuId);
+		}
+		else if (r.result == 1) {			
+			$("#listTemplate").parent().find("tr:gt(0)").remove();
+			$("#listTemplate").parent().append(template("listTemplate", r));
+		}
 		hideLoading();
 	});
 	
@@ -56,22 +69,22 @@ function minus(obj) {
 		<label>Id(,):</label>
 		<input type="text" class="form-control input-sm" id="stuIdStr" name="skuIdStr" placeholder="Id(,)" style="width:300px;">
 		
-		<button type="button" class="btn btn-default btn-sm" onclick="query();"><span class="glyphicon glyphicon-plus-sign"></span>添加</button>
+		<button type="button" class="btn btn-default btn-sm" onclick="query();"><span class="glyphicon glyphicon-plus-sign"></span>测试</button>
 		</form>
 	</div>
-	<table class="page-list-table table table-bordered table-condensed" >
-	
-	<!--<script id="pageTemplate" type="text/html">
-	{{each arrayList as v i}}-->
+	<table class="page-list-table table table-bordered table-condensed">
+	<tr style="display:none"><th></th></tr>
+	<script id="listTemplate" type="text/html">
+	{{each arrayList as v i}}
 	<tr>
-		<td><img src="" style="width:120px; height:120px"></td>
+		<td><img src="" style="width:80px; height:80px" alt="ppppp"></td>
 		<td>
 		<table>
 			<tr><td>我是一个标题,我还是一个标题</td></tr>
-			<tr><td>颜色:红色</td></tr>
-			<tr><td>七天包退</td></tr>
+			<tr><td>color</td></tr>
+			<tr><td>program</td></tr>
 			<tr>
-				<td>¥50.00
+				<td><!--¥-->50.00
 				<a href="#" onclick="plus(this)" class="glyphicon glyphicon-plus-sign"></a>
 				<span class="num">1</span>
 				<a href="#" onclick="minus(this)" class="glyphicon glyphicon-minus-sign"></a>
@@ -80,13 +93,11 @@ function minus(obj) {
 		</table>
 		</td>
 	</tr>
-	<!--{{/each}}
-	</script>-->
-	
-	
+	{{/each}}
+	</script>
 	</table>
 	<table>
-		<tr><td>共1件商品  合计:¥324.24</td><td><button type="button" class="btn btn-success btn-sm" onclick="add()">测试后端</button></td></tr>
+		<tr><td>共1条记录  合计:<!--¥-->324.24</td><td><button type="button" class="btn btn-success btn-sm" onclick="add()">测试后端</button></td></tr>
 	</table>
 </div>
 
