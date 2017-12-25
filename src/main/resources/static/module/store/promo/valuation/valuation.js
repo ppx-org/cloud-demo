@@ -104,7 +104,7 @@ valu.count = function(r) {
 		else if (poli_1.split(":")[1] == 'Y') {
 			var y = new Number(poli_1.split(":")[0]);
 			var n = new Number(poli_2.split(":")[0]);
-			if (n < gN) {
+			if (n <= gN) {
 				var avgP = y/n;
 				v.itemPrice = avgP * v.num;
 			}

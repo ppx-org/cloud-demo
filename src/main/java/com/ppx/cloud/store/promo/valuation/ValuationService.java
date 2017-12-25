@@ -191,9 +191,7 @@ public class ValuationService extends MyDaoSupport {
 			if (poli != null) {
 				String[] item = poli.split(",");
 				poli_1 = item[0];
-				if (item.length == 2) {
-					poli_2 = item[1];
-				}
+				poli_2 = item.length == 2 ? item[1] : "";
 			}
 			
 			if (poli == null) {
@@ -208,7 +206,6 @@ public class ValuationService extends MyDaoSupport {
 				index.setItemPrice(p * index.getNum());
 			}
 			else if (poli.startsWith("%")) {
-				System.out.println("xxxxxxxxxxxx--d:" + gN);
 				if ("".equals(poli_2) || gN == 1) {
 					float d = Float.parseFloat(poli_1.split(":")[1]);
 					
@@ -256,7 +253,7 @@ public class ValuationService extends MyDaoSupport {
 			else if (poli_1.endsWith("Y")) {
 				float y = Float.parseFloat(poli_1.split(":")[0]);
 				int n = Integer.parseInt(poli_2.split(":")[0]);
-				if (n < gN) {
+				if (n <= gN) {
 					float avgP = y / n;
 					index.setItemPrice(avgP * index.getNum());
 				}
@@ -317,20 +314,67 @@ public class ValuationService extends MyDaoSupport {
 			// TODO: handle exception
 		}
 		
+		/*
+		 var excludeChangeTotalPrice = 0;
+	newR.forEach(function(v) {
+		excludeChangeTotalPrice += v.itemPrice;
+	})
+
+
+	var resulltR = r.map(function(v) {
+		var poli_1 = "";
+		var poli_2 = "";
 		
+		if (v.policy) {
+			var item = v.policy.split(",");
+			poli_1 = item[0];
+			poli_2 = item.length == 2 ? item[1] : "";
+		}
 		
+		if (poli_1.split(":")[0] == 'E' && poli_2.split(":")[0] == 'C') {
+			var e = new Number(poli_1.split(":")[1]);
+			var c = new Number(poli_2.split(":")[1]);
+			if (excludeChangeTotalPrice >= e) {
+				v.itemPrice = c * v.num;
+			}
+			else {
+				v.itemPrice = v.price * v.num;
+			}
+		}
+	});
+		 
+		 */
 		
-		
-		
-		
+		float excludeChangeTotalPrice = 0;
+		for (SkuIndex index : skuIndexList) {
+			excludeChangeTotalPrice += index.getItemPrice();
+		}
+		for (SkuIndex index : skuIndexList) {
+			String poli = index.getPolicy();
+			String poli_1 = "";
+			String poli_2 = "";
+			if (poli != null) {
+				String[] item = poli.split(",");
+				poli_1 = item[0];
+				poli_2 = item.length == 2 ? item[1] : "";
+			}
+			if (poli_1.startsWith("E") && poli_2.startsWith("C")) {
+				float e = Float.parseFloat(poli_1.split(":")[1]);
+				float c = Float.parseFloat(poli_2.split(":")[1]);
+				if (excludeChangeTotalPrice >= e) {
+					index.setItemPrice(c * index.getNum());
+				}
+				else {
+					index.setItemPrice(index.getPrice() * index.getNum());
+				}
+			}
+		}
 		
 		
 		
 		
 		
 
-		
-		
 		
 		
 		

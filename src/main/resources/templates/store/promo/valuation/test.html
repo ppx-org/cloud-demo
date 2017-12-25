@@ -55,6 +55,17 @@ function query() {
 function refreshSkuList(skuList) {
 	$("#listTemplate").parent().find("tr:gt(0)").remove();
 	$("#listTemplate").parent().append(template("listTemplate", skuList));
+	
+	
+	var totalNum = 0;
+	var totalPrice = 0;
+	skuList.forEach(function(v) {
+		totalNum += v.num;
+		totalPrice += new Number(v.itemPrice);
+	})
+	
+	$("#totalNum").text(totalNum);
+	$("#totalPrice").text(new Number(totalPrice).toFixed(2));
 }
 
 function plus(obj, skuId) {	
@@ -62,9 +73,7 @@ function plus(obj, skuId) {
 	var num = new Number(numJObj.text()) + 1;
 	skuMap[skuId].num = num;
 	
-	skuList = valu.count(skuList);
-	//alert(JSON.stringify(skuList));
-	
+	skuList = valu.count(skuList);	
 	refreshSkuList(skuList);
 }
 
@@ -73,23 +82,44 @@ function minus(obj, skuId) {
 	var num = new Number(numJObj.text()) - 1;
 	
 	if (num == 0) {
-		var index = skuList.indexOf(skuMap[skuId]);
-		if (index > -1) {
-			skuList.splice(index, 1);
+		
+		var callback = function () {
+			var index = skuList.indexOf(skuMap[skuId]);
+			if (index > -1) {
+				skuList.splice(index, 1);
+				skuList = valu.count(skuList);
+				refreshSkuList(skuList);
+			}	
 		}
+		confirm(skuId, callback);
 	}
 	else {
 		skuMap[skuId].num = num;
+		skuList = valu.count(skuList);
+		refreshSkuList(skuList);
 	}
 	
-	skuList = valu.count(skuList);
-	refreshSkuList(skuList);
+	
 }
 
 template.helper('formatPrice', function(price) {
 	return new Number(price).toFixed(2);
 })
+
+var lastProgId = "";
+var lastBackground = "";
+template.helper('getGroupBackground', function(progId) {
+	if (lastProgId != progId) {
+		lastProgId = progId;
+		return lastBackground = lastBackground == "" ? "groupBackground" : "";
+	}
+	return lastBackground;
+})
 </script>
+
+<style>
+.groupBackground {background-color:#EEEEEE;}
+</style>
 </head>
 
 <body>
@@ -101,16 +131,16 @@ template.helper('formatPrice', function(price) {
 		<label>日期:</label>
 		<input type="text" class="form-control input-sm" style="width:90px" id="date" name="date" th:value="${today}" onclick="WdatePicker()">
 		<label>Id(,):</label>
-		<input type="text" class="form-control input-sm" id="stuIdStr" name="skuIdStr" placeholder="Id(,)" style="width:300px;">
+		<input type="text" class="form-control input-sm" id="stuIdStr" name="skuIdStr" placeholder="Id(,)" value="1,2,4" style="width:300px;">
 		
 		<button type="button" class="btn btn-default btn-sm" onclick="query();"><span class="glyphicon glyphicon-plus-sign"></span>测试</button>
 		</form>
 	</div>
-	<table class="page-list-table table table-bordered table-condensed">
+	<table class="table table-bordered table-condensed">
 	<tr style="display:none"><th></th></tr>
 	<script id="listTemplate" type="text/html">
 	{{each}}
-	<tr>
+	<tr class="{{getGroupBackground($value.progId)}}">
 		<td class="w-id"><img src="" style="width:80px; height:80px" alt="ppppp"></td>
 		<td class="w-title-s">
 		<table>
@@ -132,7 +162,7 @@ template.helper('formatPrice', function(price) {
 	</script>
 	</table>
 	<table>
-		<tr><td>共1条记录  合计:<!--¥-->324.24</td><td><button type="button" class="btn btn-success btn-sm" onclick="add()">测试后端</button></td></tr>
+		<tr><td>共<span id="totalNum"></span>条记录  合计:<!--¥--><span id="totalPrice"></span></td><td><button type="button" class="btn btn-success btn-sm" onclick="add()">测试后端</button></td></tr>
 	</table>
 </div>
 

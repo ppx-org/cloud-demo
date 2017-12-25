@@ -60,6 +60,18 @@ public class ValuationController {
 			return ControllerReturn.ok(-2, returnMap.get("-2"));
 		}
 		else {
+
+//			int totalNum = 0;
+//			float totalPrice = 0f;
+//			for (SkuIndex index : returnMap.get("1")) {
+//				totalNum += index.getNum();
+//				totalPrice += index.getItemPrice();
+//			}
+//			
+//			Map<String, Object> statMap = new HashMap<String, Object>();
+//			statMap.put("totalNum", totalNum);
+//			statMap.put("totalPrice", totalPrice);
+			
 			return ControllerReturn.ok(1, returnMap.get("1"));
 		}
 	}
