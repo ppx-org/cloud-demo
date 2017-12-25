@@ -6,6 +6,8 @@ import static io.webfolder.cdp.type.constant.MouseEventType.MouseReleased;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,8 +36,10 @@ public class ChromeController {
 		
 		Launcher launcher = new Launcher();
 		try {
+			List<String> arguments = new ArrayList<String>();
+			//arguments.add("--headless");
 			
-			SessionFactory factory = launcher.launch();
+			SessionFactory factory = launcher.launch(arguments);
 			staticSession = factory.create();
 			staticSession.navigate("https://passport.zhaopin.com/org/login");
 			staticSession.waitDocumentReady();

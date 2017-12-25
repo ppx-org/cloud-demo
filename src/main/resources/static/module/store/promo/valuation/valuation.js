@@ -6,75 +6,58 @@ valu.count = function(r) {
 	var enoughYen = {};
 	r.forEach(function(v) {
 		prodIdMap[v.prodId] = true;
-		
 		if (!v.progId) return;
 
-		if (!groupN[v.progId]) {
-			groupN[v.progId] = v.num;
-			enoughYen[v.progId] = v.price * v.n;
-		}
-		else {
-			groupN[v.progId] += v.num;
-			enoughYen[v.progId] += v.price * v.n;
-		}
+		groupN[v.progId] = groupN[v.progId] ? groupN[v.progId] + v.num : v.num;
+		enoughYen[v.progId] = enoughYen[v.progId] ? enoughYen[v.progId] + v.price * v.num : v.price * v.num;
 	});
 
-	var compare = function(obj1, obj2) {
-	    var val1 = obj1.progId;
-	    var val2 = obj2.progId;
-	    if (val1 < val2) {
+	var compare = function(sku1, sku2) {
+	    if (sku1.progId < sku2.progId) {
 	        return -1;
-	    } else if (val1 > val2) {
+	    } else if (sku1.progId > sku2.progId) {
 	        return 1;
 	    } else {
-			var p1 = obj1.price;
-			var p2 = obj2.price;
-			if (p1 > p2) {
+			if (sku1.price > sku2.price) {
 				return -1;
-			} else if (p1 < p2) {
+			} else if (sku1.price < sku2.price) {
 				return 1;
 			}
 	        return 0;
 	    }            
 	}
 	r.sort(compare);
-
 	
+	// console.log(JSON.stringify(r));	
 	var count2discount = 0;
 	var countMoreAdd = 0;
 	var countBuyFree = 0;
 
 	var newR = r.map(function(v) {
-		var poli = v.policy;
 		var poli_1 = "";
 		var poli_2 = "";
 		var gN = groupN[v.progId];
 		var eYen = enoughYen[v.progId];
 		
-		if (poli) {
-			var item = poli.split(",");
-			if (item.length == 1) {
-				poli_1 = poli;
-			}
-			else if (item.length == 2) {
-				poli_1 = item[0];
-				poli_2 = item[1];
-			}
+		if (v.policy) {
+			var item = v.policy.split(",");
+			poli_1 = item[0];
+			poli_2 = item.length == 2 ? item[1] : "";
 		}
 		
 		
-		if (poli == undefined) {
+		if (v.policy == undefined) {
 			v.itemPrice = v.price * v.num;
 		}
-		else if (poli.indexOf("S") == 0) {
+		else if (v.policy.indexOf("S") == 0) {
 			var p = new Number(poli_1.split(":")[1]);
 			v.itemPrice = p * v.num;
 		}
-		else if (poli.indexOf("A") == 0) {
+		else if (v.policy.indexOf("A") == 0) {
 			var p = new Number(poli_1.split(":")[1]);
 			v.itemPrice = p * v.num;
 		}
-		else if (poli.indexOf("%") == 0) {
+		else if (v.policy.indexOf("%") == 0) {
 			if (poli_2 == "" || gN == 1) {
 				var d = new Number(poli_1.split(":")[1]);
 				v.itemPrice = v.price * d * v.num;
@@ -99,7 +82,7 @@ valu.count = function(r) {
 				}
 			}
 		}
-		else if (poli.indexOf("+") == 0) {
+		else if (v.policy.indexOf("+") == 0) {
 			if (gN == 1) {
 				v.itemPrice = v.price;
 			}
@@ -176,12 +159,8 @@ valu.count = function(r) {
 		}
 		
 		if (!v.itemPrice) v.itemPrice = 0;
-		//v.itemPrice = new Number(v.itemPrice);
 		return v;
 	});
-
-
-
 
 	var excludeChangeTotalPrice = 0;
 	newR.forEach(function(v) {
@@ -190,19 +169,13 @@ valu.count = function(r) {
 
 
 	var resulltR = r.map(function(v) {
-		var poli = v.policy;
 		var poli_1 = "";
 		var poli_2 = "";
 		
-		if (poli) {
-			var item = poli.split(",");
-			if (item.length == 1) {
-				poli_1 = poli;
-			}
-			else if (item.length == 2) {
-				poli_1 = item[0];
-				poli_2 = item[1];
-			}
+		if (v.policy) {
+			var item = v.policy.split(",");
+			poli_1 = item[0];
+			poli_2 = item.length == 2 ? item[1] : "";
 		}
 		
 		if (poli_1.split(":")[0] == 'E' && poli_2.split(":")[0] == 'C') {
