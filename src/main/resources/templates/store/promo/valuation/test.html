@@ -5,6 +5,8 @@
 
 <link th:replace="common/fragment/common::common"/>
 <link th:replace="common/fragment/common::date"/>
+<script type="text/javascript" th:src="@{/static/module/store/promo/valuation/valuation.js}"></script>
+
 
 
 <script type="text/javascript" th:inline="javascript">
@@ -12,6 +14,8 @@ $(function() {
 	
 });
 
+var skuList = [];
+var skuMap = {};
 
 function query() {
 	if ($("#date").val() == "") {
@@ -35,26 +39,56 @@ function query() {
 			 });
 			 alertWarning("id不存在:" + skuId);
 		}
-		else if (r.result == 1) {			
-			$("#listTemplate").parent().find("tr:gt(0)").remove();
-			$("#listTemplate").parent().append(template("listTemplate", r));
+		else if (r.result == 1) {
+			skuList = r.arrayList;
+			skuList.forEach(function(v){
+				skuMap[v.skuId] = v;
+			})
+			
+			refreshSkuList(skuList);
 		}
 		hideLoading();
 	});
 	
 }
 
-function plus(obj) {
-	var numJObj = $(obj).parent().find(".num");
-	var num = new Number(numJObj.text());
-	numJObj.text(++num);
+function refreshSkuList(skuList) {
+	$("#listTemplate").parent().find("tr:gt(0)").remove();
+	$("#listTemplate").parent().append(template("listTemplate", skuList));
 }
 
-function minus(obj) {
+function plus(obj, skuId) {	
 	var numJObj = $(obj).parent().find(".num");
-	var num = new Number(numJObj.text());
-	numJObj.text(--num);
+	var num = new Number(numJObj.text()) + 1;
+	skuMap[skuId].num = num;
+	
+	skuList = valu.count(skuList);
+	//alert(JSON.stringify(skuList));
+	
+	refreshSkuList(skuList);
 }
+
+function minus(obj, skuId) {
+	var numJObj = $(obj).parent().find(".num");
+	var num = new Number(numJObj.text()) - 1;
+	
+	if (num == 0) {
+		var index = skuList.indexOf(skuMap[skuId]);
+		if (index > -1) {
+			skuList.splice(index, 1);
+		}
+	}
+	else {
+		skuMap[skuId].num = num;
+	}
+	
+	skuList = valu.count(skuList);
+	refreshSkuList(skuList);
+}
+
+template.helper('formatPrice', function(price) {
+	return new Number(price).toFixed(2);
+})
 </script>
 </head>
 
@@ -75,19 +109,20 @@ function minus(obj) {
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr style="display:none"><th></th></tr>
 	<script id="listTemplate" type="text/html">
-	{{each arrayList as v i}}
+	{{each}}
 	<tr>
-		<td><img src="" style="width:80px; height:80px" alt="ppppp"></td>
-		<td>
+		<td class="w-id"><img src="" style="width:80px; height:80px" alt="ppppp"></td>
+		<td class="w-title-s">
 		<table>
-			<tr><td>我是一个标题,我还是一个标题</td></tr>
-			<tr><td>color</td></tr>
-			<tr><td>program</td></tr>
+			<tr><td>{{$value.prodTitle}}</td></tr>
+			<tr><td>{{$value.skuName}}</td></tr>
+			<tr><td>{{$value.policy}}</td></tr>
 			<tr>
-				<td><!--¥-->50.00
-				<a href="#" onclick="plus(this)" class="glyphicon glyphicon-plus-sign"></a>
-				<span class="num">1</span>
-				<a href="#" onclick="minus(this)" class="glyphicon glyphicon-minus-sign"></a>
+				<td><!--¥-->{{formatPrice($value.price)}}
+				<a href="#" onclick="plus(this, {{$value.skuId}})" class="glyphicon glyphicon-plus-sign"></a>
+				<span class="num">{{$value.num}}</span>
+				<a href="#" onclick="minus(this, {{$value.skuId}})" class="glyphicon glyphicon-minus-sign"></a>
+				{{formatPrice($value.itemPrice)}}
 				</td>
 			</tr>
 		</table>

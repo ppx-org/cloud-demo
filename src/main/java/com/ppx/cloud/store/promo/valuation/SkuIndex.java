@@ -15,6 +15,14 @@ public class SkuIndex {
 	
 	private Float itemPrice;
 	
+	// display
+	private String prodTitle;
+	
+	private String skuName;
+	
+	private String skuImgSrc;
+	
+	
 	public SkuIndex() {
 		
 	}
@@ -80,6 +88,33 @@ public class SkuIndex {
 		this.itemPrice = itemPrice;
 	}
 
+	public String getProdTitle() {
+		return prodTitle;
+	}
+
+	public void setProdTitle(String prodTitle) {
+		this.prodTitle = prodTitle;
+	}
+
+	public String getSkuName() {
+		return skuName;
+	}
+
+	public void setSkuName(String skuName) {
+		this.skuName = skuName;
+	}
+
+	public String getSkuImgSrc() {
+		return skuImgSrc;
+	}
+
+	public void setSkuImgSrc(String skuImgSrc) {
+		this.skuImgSrc = skuImgSrc;
+	}
+
+	
+	
+	
 	
 	
 }

@@ -77,7 +77,7 @@ public class ValuationService extends MyDaoSupport {
 		
 	
 		
-		String sSql = "select SKU_ID, PROD_ID, PRICE from sku where SKU_ID in (:skuIdList)";
+		String sSql = "select s.SKU_ID, s.PROD_ID, s.PRICE, s.SKU_NAME, p.PROD_TITLE from sku s join product p on s.PROD_ID = p.PROD_ID where SKU_ID in (:skuIdList)";
 	
 
 		List<Integer> skuIdList = new ArrayList<Integer>();
@@ -102,6 +102,9 @@ public class ValuationService extends MyDaoSupport {
 			SkuIndex newIndex = skuIndexMap.get(index.getSkuId());
 			newIndex.setProdId(index.getProdId());
 			newIndex.setPrice(index.getPrice());
+			newIndex.setProdTitle(index.getProdTitle());
+			newIndex.setSkuName(index.getSkuName());
+			newIndex.setSkuImgSrc(index.getSkuImgSrc());
 			prodIdList.add(index.getProdId());
 		}
 		
@@ -115,6 +118,7 @@ public class ValuationService extends MyDaoSupport {
 			SkuIndex newIndex = skuIndexMap.get(index.getSkuId());
 			newIndex.setProgId(index.getProgId());
 			newIndex.setPolicy(index.getPolicy());
+			
 		}
 		
 		
@@ -134,8 +138,8 @@ public class ValuationService extends MyDaoSupport {
 			
 			
 			
-			groupNum.put(index.getProgId(), groupNum.get(index.getProgId()) == null ? 0 : groupNum.get(index.getProgId()) +  index.getNum());
-			enoughYen.put(index.getProgId(), enoughYen.get(index.getProgId()) == null ? 0 : 
+			groupNum.put(index.getProgId(), groupNum.get(index.getProgId()) == null ? index.getNum() : groupNum.get(index.getProgId()) +  index.getNum());
+			enoughYen.put(index.getProgId(), enoughYen.get(index.getProgId()) == null ? index.getPrice() * index.getNum() : 
 				enoughYen.get(index.getProgId()) + index.getPrice() * index.getNum());
 			prodId.add(index.getProdId());
 			
@@ -204,8 +208,10 @@ public class ValuationService extends MyDaoSupport {
 				index.setItemPrice(p * index.getNum());
 			}
 			else if (poli.startsWith("%")) {
+				System.out.println("xxxxxxxxxxxx--d:" + gN);
 				if ("".equals(poli_2) || gN == 1) {
 					float d = Float.parseFloat(poli_1.split(":")[1]);
+					
 					index.setItemPrice(index.getPrice() * index.getNum() * d);
 				}
 				else if (poli_2.startsWith("2+")) {
