@@ -1,6 +1,7 @@
 package com.ppx.cloud.store.promo.valuation;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -10,7 +11,6 @@ import java.util.Set;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
@@ -43,7 +43,7 @@ public class ValuationService extends MyDaoSupport {
 	}
 
 	
-	public Map<String, List<SkuIndex>> count(Map<Integer, SkuIndex> skuIndexMap) {
+	public Map<String, List<SkuIndex>> count(Date date, Map<Integer, SkuIndex> skuIndexMap) {
 		Map<String, List<SkuIndex>> returnMap = new HashMap<String, List<SkuIndex>>();
 		
 		
@@ -110,9 +110,10 @@ public class ValuationService extends MyDaoSupport {
 		
 		// index >>>>>>>>>>>>>>>>>>>>>>>
 		Map<String, Object> prodParamMap = new HashMap<String, Object>();
-		prodParamMap.put("prodIdList", prodIdList);	
+		prodParamMap.put("prodIdList", prodIdList);
+		prodParamMap.put("date", date);	
 		String indexSql = "select (select SKU_ID from sku where PROD_ID = t.PROD_ID) SKU_ID, t.PROD_ID, t.PROG_ID, t.INDEX_POLICY POLICY from"
-				+ " (select * from program_index where PROD_ID in (:prodIdList) order by INDEX_PRIO desc) t group by t.PROD_ID";
+				+ " (select * from program_index where PROD_ID in (:prodIdList) and :date between INDEX_BEGIN and INDEX_END order by INDEX_PRIO desc) t group by t.PROD_ID";
 		List<SkuIndex> indexList = jdbc.query(indexSql, prodParamMap, BeanPropertyRowMapper.newInstance(SkuIndex.class));
 		for (SkuIndex index : indexList) {
 			SkuIndex newIndex = skuIndexMap.get(index.getSkuId());

@@ -1,11 +1,13 @@
 package com.ppx.cloud.store.promo.valuation;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +35,10 @@ public class ValuationController {
 	}
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> listSku(@RequestParam String date, @RequestParam String skuIdStr) {
+	public Map<String, Object> listSku(@RequestParam @DateTimeFormat(pattern=DateUtils.DATE_PATTERN) Date date, @RequestParam String skuIdStr) {
+		
+		System.out.println("ddddddd:" + date);
+		
 		Map<Integer, SkuIndex> skuIndexMap = new HashMap<Integer, SkuIndex>();
 		
 		String[] skuIdArray = skuIdStr.split(",");
@@ -55,7 +60,7 @@ public class ValuationController {
 			skuIndexMap.put(skuId, index);
 		}
 		
-		Map<String, List<SkuIndex>> returnMap = serv.count(skuIndexMap);
+		Map<String, List<SkuIndex>> returnMap = serv.count(date, skuIndexMap);
 		if (returnMap.containsKey("-2")) {
 			return ControllerReturn.ok(-2, returnMap.get("-2"));
 		}
