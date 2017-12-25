@@ -115,6 +115,41 @@ template.helper('getGroupBackground', function(progId) {
 	}
 	return lastBackground;
 })
+
+
+// ------------------------------testService-----------------------------
+function testService() {
+	var skuId = [];
+	var num = [];
+	skuList.forEach(function(v){
+		skuId.push(v.skuId);
+		num.push(v.num);
+	});
+	if (skuId.length == 0) {
+		alertWarning("没有数据");
+		return;
+	}
+	var para = "date=" + $("#date").val() + "&skuIdStr=" + skuId + "&numStr=" + num;
+	$.post([[@{/valuation/testSubmit}]], para, function(r) {
+		if (r.result == 1) {
+			//skuList = r.arrayList;
+			//alert(JSON.stringify(r));
+			//console.log(r);
+			
+			refreshBackSkuList(r.arrayList, r.totalNum, r.totalPrice);
+		}
+	})
+	
+	// testSubmit(Date date, String skuIdStr, String numStr
+}
+
+function refreshBackSkuList(skuList, totalNum, totalPrice) {
+	$("#backListTemplate").parent().find("tr:gt(0)").remove();
+	$("#backListTemplate").parent().append(template("backListTemplate", skuList));
+	
+	$("#backTotalNum").text(totalNum);
+	$("#backTotalPrice").text(totalPrice);
+}
 </script>
 
 <style>
@@ -162,7 +197,39 @@ template.helper('getGroupBackground', function(progId) {
 	</script>
 	</table>
 	<table>
-		<tr><td>共<span id="totalNum"></span>条记录  合计:<!--¥--><span id="totalPrice"></span></td><td><button type="button" class="btn btn-success btn-sm" onclick="add()">测试后端</button></td></tr>
+		<tr><td>共<span id="totalNum"></span>条记录  合计:<!--¥--><span id="totalPrice"></span></td><td><button type="button" class="btn btn-success btn-sm" onclick="testService()">测试后端</button></td></tr>
+	</table>
+	
+	
+	
+	<!-- 后端 -->
+	<table class="table table-bordered table-condensed">
+	<tr>
+		<th>sId</th>
+		<th>title</th>
+		<th>sName</th>
+		<th>n</th>
+		<th>poli</th>
+		<th>p</th>
+		<th>itemp</th>
+	</tr>
+	<script id="backListTemplate" type="text/html">
+	{{each}}
+	<tr class="{{getGroupBackground($value.progId)}}">
+		<td>{{$value.skuId}}</td>
+		<td>{{$value.prodTitle}}</td>
+		<td>{{$value.skuName}}</td>	
+		<td>{{$value.num}}</td>	
+		<td>{{$value.policy}}</td>	
+		<td>{{$value.price}}</td>
+		<td>{{$value.itemPrice}}</td>
+	</tr>
+	{{/each}}
+	</script>
+	</table>
+	
+	<table>
+		<tr><td>共<span id="backTotalNum"></span>条记录  合计:<!--¥--><span id="backTotalPrice"></span></td></tr>
 	</table>
 </div>
 

@@ -30,6 +30,63 @@ public class ChromeController {
 	private static Session staticSession = null;
 	
 	@GetMapping @ResponseBody
+	public Map<String, Object> test(HttpServletRequest request) {
+		System.out.println("xxxxxxxxxxxxxxx----------test");
+	
+		
+		Launcher launcher = new Launcher();
+		try {
+			List<String> arguments = new ArrayList<String>();
+			//arguments.add("--headless");
+			
+		
+			
+			//if (staticSession == null) {
+			SessionFactory factory = launcher.launch(arguments);
+			
+			
+			//List<String> list = factory.listBrowserContextIds();
+			System.out.println("xxxxxxxxlen:" + factory.list().size() + "||" + staticSession.isConnected());
+			
+			// 只打开一个窗口
+			if (staticSession == null || !staticSession.isConnected()) {
+				staticSession = factory.create();
+			}
+				
+
+			
+			
+			
+			staticSession.navigate("https://passport.zhaopin.com/org/login");
+			staticSession.waitDocumentReady();
+			staticSession.activate();
+						
+		    
+			staticSession.wait(100);
+		  
+	        
+	        
+	        
+		    byte[] data = staticSession.captureScreenshot();
+		    
+		    try {
+		    	FileOutputStream out = new FileOutputStream(new File("E:/U/png/test.png")); 
+		    	out.write(data);
+		    	out.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		    request.getSession().setAttribute("chromeSession", staticSession);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ControllerReturn.ok();
+		    
+	}
+	
+	
+	
+	@GetMapping @ResponseBody
 	public Map<String, Object> init(HttpServletRequest request) {
 		System.out.println("xxxxxxxxxxxxxxx----------init");
 	
@@ -150,62 +207,62 @@ public class ChromeController {
 	
 	
 	
-	@GetMapping @ResponseBody
-	public Map<String, Object> test() {
-		System.out.println("xxxxxxxxxxxxxxx----------test");
-		
-		
-	
-		Launcher launcher = new Launcher();
-		try (SessionFactory factory = launcher.launch();
-		                    Session session = factory.create()) {
-		    session.navigate("https://passport.zhaopin.com/org/login");
-		    session.waitDocumentReady();
-		 
-		    
-		    //String content = (String) session.getProperty("//body", "outerText");
-		    //System.out.println(session.getContent());
-		    
-		    // activate the tab/session before capturing the screenshot
-		    session.activate();
-		    session.wait(1000);
-		    
-		    //session.click("#CheckCodeCapt");
-		    
-		    Input input = session.getCommand().getInput();
-	        input.dispatchMouseEvent(MousePressed, 666d, 334d, null, null, Left, 1, null, null);
-	        input.dispatchMouseEvent(MouseReleased, 666d, 334d, null, null, Left, 1, null, null);
-	        
-	        session.wait(1200);
-	        
-	        input.dispatchMouseEvent(MousePressed, 646d, 488d, null, null, Left, 1, null, null);
-	        input.dispatchMouseEvent(MouseReleased, 646d, 488d, null, null, Left, 1, null, null);
-	        
-		    
-		    //session.evaluate("$('#CheckCodeCapt').click()");
-		    
-		    
-		    session.wait(100);
-		    
-		    
-		    byte[] data = session.captureScreenshot();
-		    
-		    
-		    try {
-		    	FileOutputStream out = new FileOutputStream(new File("E:/U/png/1.png")); 
-		    	out.write(data);
-		    	out.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		    
-		    //System.out.println("xxxxxxxout," + session.getContent());
-		    
-		    
-		}
-		
-		return ControllerReturn.ok();
-	}
+//	@GetMapping @ResponseBody
+//	public Map<String, Object> test() {
+//		System.out.println("xxxxxxxxxxxxxxx----------test");
+//		
+//		
+//	
+//		Launcher launcher = new Launcher();
+//		try (SessionFactory factory = launcher.launch();
+//		                    Session session = factory.create()) {
+//		    session.navigate("https://passport.zhaopin.com/org/login");
+//		    session.waitDocumentReady();
+//		 
+//		    
+//		    //String content = (String) session.getProperty("//body", "outerText");
+//		    //System.out.println(session.getContent());
+//		    
+//		    // activate the tab/session before capturing the screenshot
+//		    session.activate();
+//		    session.wait(1000);
+//		    
+//		    //session.click("#CheckCodeCapt");
+//		    
+//		    Input input = session.getCommand().getInput();
+//	        input.dispatchMouseEvent(MousePressed, 666d, 334d, null, null, Left, 1, null, null);
+//	        input.dispatchMouseEvent(MouseReleased, 666d, 334d, null, null, Left, 1, null, null);
+//	        
+//	        session.wait(1200);
+//	        
+//	        input.dispatchMouseEvent(MousePressed, 646d, 488d, null, null, Left, 1, null, null);
+//	        input.dispatchMouseEvent(MouseReleased, 646d, 488d, null, null, Left, 1, null, null);
+//	        
+//		    
+//		    //session.evaluate("$('#CheckCodeCapt').click()");
+//		    
+//		    
+//		    session.wait(100);
+//		    
+//		    
+//		    byte[] data = session.captureScreenshot();
+//		    
+//		    
+//		    try {
+//		    	FileOutputStream out = new FileOutputStream(new File("E:/U/png/1.png")); 
+//		    	out.write(data);
+//		    	out.close();
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		    
+//		    //System.out.println("xxxxxxxout," + session.getContent());
+//		    
+//		    
+//		}
+//		
+//		return ControllerReturn.ok();
+//	}
 	
 	
 	

@@ -25,6 +25,7 @@ public class ValuationController {
 	@Autowired
 	private ValuationService serv;
 	
+	private final int NO_EXIST_SKU = -2;
 	
 	@GetMapping
 	public ModelAndView test() {
@@ -37,7 +38,6 @@ public class ValuationController {
 	@PostMapping @ResponseBody
 	public Map<String, Object> listSku(@RequestParam @DateTimeFormat(pattern=DateUtils.DATE_PATTERN) Date date, @RequestParam String skuIdStr) {
 		
-		System.out.println("ddddddd:" + date);
 		
 		Map<Integer, SkuIndex> skuIndexMap = new HashMap<Integer, SkuIndex>();
 		
@@ -60,28 +60,66 @@ public class ValuationController {
 			skuIndexMap.put(skuId, index);
 		}
 		
-		Map<String, List<SkuIndex>> returnMap = serv.count(date, skuIndexMap);
-		if (returnMap.containsKey("-2")) {
-			return ControllerReturn.ok(-2, returnMap.get("-2"));
+		Map<Integer, List<SkuIndex>> returnMap = serv.count(date, skuIndexMap);
+		if (returnMap.containsKey(NO_EXIST_SKU)) {
+			return ControllerReturn.ok(NO_EXIST_SKU, returnMap.get(NO_EXIST_SKU));
 		}
 		else {
-
-//			int totalNum = 0;
-//			float totalPrice = 0f;
-//			for (SkuIndex index : returnMap.get("1")) {
-//				totalNum += index.getNum();
-//				totalPrice += index.getItemPrice();
-//			}
-//			
-//			Map<String, Object> statMap = new HashMap<String, Object>();
-//			statMap.put("totalNum", totalNum);
-//			statMap.put("totalPrice", totalPrice);
-			
-			return ControllerReturn.ok(1, returnMap.get("1"));
+			return ControllerReturn.ok(1, returnMap.get(1));
 		}
 	}
 	
 	
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> testSubmit(@RequestParam @DateTimeFormat(pattern=DateUtils.DATE_PATTERN) Date date, 
+			@RequestParam String skuIdStr, @RequestParam String numStr) {
+		
+		// 传参
+		Map<Integer, SkuIndex> skuIndexMap = new HashMap<Integer, SkuIndex>();
+		
+		String[] skuIdArray = skuIdStr.split(",");
+		String[] numArray = numStr.split(",");
+		if (skuIdArray.length == 0 || skuIdArray.length != numArray.length) {
+			return ControllerReturn.ok(-1);
+		}
+		for (String id : skuIdArray) {
+			if (StringUtils.isEmpty(id)) {
+				return ControllerReturn.ok(-1);
+			}
+			Integer skuId;
+			try {
+				skuId = Integer.parseInt(id);
+			} catch (Exception e) {
+				return ControllerReturn.ok(-1);
+			}
+			SkuIndex index = new SkuIndex(skuId, 1);
+			skuIndexMap.put(skuId, index);
+		}
+		
+		Map<Integer, List<SkuIndex>> returnMap = serv.count(date, skuIndexMap);
+		
+		if (returnMap.containsKey(NO_EXIST_SKU)) {
+			return ControllerReturn.ok(NO_EXIST_SKU, returnMap.get(NO_EXIST_SKU));
+		}
+		else {
+			// stat
+			int totalNum = 0;
+			float totalPrice = 0f;
+			List<SkuIndex> skuList = returnMap.get(1);
+			for (SkuIndex skuIndex : skuList) {
+				totalNum += skuIndex.getNum();
+				totalPrice += skuIndex.getItemPrice();
+			}
+			
+			Map<String, Object> statMap = new HashMap<String, Object>();
+			statMap.put("totalNum", totalNum);
+			statMap.put("totalPrice", totalPrice);
+			
+			
+			return ControllerReturn.ok(1, statMap, skuList);
+		}
+	}
 	
 	
 	

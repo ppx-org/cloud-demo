@@ -20,8 +20,8 @@ import com.ppx.cloud.common.jdbc.MyDaoSupport;
 public class ValuationService extends MyDaoSupport {
 	
 	
-	private Map<String, List<SkuIndex>> getNoExist(List<SkuIndex> dbSkuList, Map<Integer, SkuIndex> skuIndexMap) {
-		Map<String, List<SkuIndex>> returnMap = new HashMap<String, List<SkuIndex>>();
+	private Map<Integer, List<SkuIndex>> getNoExist(List<SkuIndex> dbSkuList, Map<Integer, SkuIndex> skuIndexMap) {
+		Map<Integer, List<SkuIndex>> returnMap = new HashMap<Integer, List<SkuIndex>>();
 		
 		List<Integer> dbSkuIdList = new ArrayList<Integer>();
 		for (SkuIndex skuIndex : dbSkuList) {
@@ -37,14 +37,14 @@ public class ValuationService extends MyDaoSupport {
 				list.add(index);
 			}
 		}
-		returnMap.put("-2", list);
+		returnMap.put(-2, list);
 		
 		return returnMap;
 	}
 
 	
-	public Map<String, List<SkuIndex>> count(Date date, Map<Integer, SkuIndex> skuIndexMap) {
-		Map<String, List<SkuIndex>> returnMap = new HashMap<String, List<SkuIndex>>();
+	public Map<Integer, List<SkuIndex>> count(Date date, Map<Integer, SkuIndex> skuIndexMap) {
+		Map<Integer, List<SkuIndex>> returnMap = new HashMap<Integer, List<SkuIndex>>();
 		
 		
 		
@@ -315,36 +315,6 @@ public class ValuationService extends MyDaoSupport {
 			// TODO: handle exception
 		}
 		
-		/*
-		 var excludeChangeTotalPrice = 0;
-	newR.forEach(function(v) {
-		excludeChangeTotalPrice += v.itemPrice;
-	})
-
-
-	var resulltR = r.map(function(v) {
-		var poli_1 = "";
-		var poli_2 = "";
-		
-		if (v.policy) {
-			var item = v.policy.split(",");
-			poli_1 = item[0];
-			poli_2 = item.length == 2 ? item[1] : "";
-		}
-		
-		if (poli_1.split(":")[0] == 'E' && poli_2.split(":")[0] == 'C') {
-			var e = new Number(poli_1.split(":")[1]);
-			var c = new Number(poli_2.split(":")[1]);
-			if (excludeChangeTotalPrice >= e) {
-				v.itemPrice = c * v.num;
-			}
-			else {
-				v.itemPrice = v.price * v.num;
-			}
-		}
-	});
-		 
-		 */
 		
 		float excludeChangeTotalPrice = 0;
 		for (SkuIndex index : skuIndexList) {
@@ -388,7 +358,7 @@ public class ValuationService extends MyDaoSupport {
 		
 		
 		
-		returnMap.put("1", skuIndexList);
+		returnMap.put(1, skuIndexList);
 		
 		
 		return returnMap;
