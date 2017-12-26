@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+
+
+
+<style>
+.captcha-coordinate {
+	position: absolute;width: 20px;height: 24px;line-height: 20px;
+	background: url(http://localhost:9000/demo/static/test/coordinate.png) 0 0 no-repeat;
+	color: #fff;
+	font-weight: 700;
+    text-align: center;
+    z-index: 2;
+    cursor: pointer;
+    font-size: 18px
+}
+</style>
+
+
+<script>
+
+function validate() {
+	
+}
+
+</script>
+
+</head>
+<body>
+
+
+<div style="text-align: center;">
+<img style="border:1px solid black" src="http://localhost:9000/demo/static/test/clip01.png" width="378" height="239">
+</div>
+<div style="text-align: center;"><button class="btn" onclick="validate()">验证</button></div>
+
+
+<b class="captcha-coordinate" style="left: 501.4px; top: 92.8px;">1</b>
+
+
+</body>
+
+</html>

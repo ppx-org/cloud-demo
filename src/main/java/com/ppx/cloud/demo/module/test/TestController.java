@@ -38,32 +38,10 @@ public class TestController {
 		
 		
 		
-		
-		
-		
-		
 		//serv.test();
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+	
+	
 		
 		
 		

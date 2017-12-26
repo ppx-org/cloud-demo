@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+<link th:replace="common/fragment/common::validation"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	refreshPageData([[${listJson}]]);
+});
+
+function query() {
+	var word = $("#word").val();
+	if (word == "") {
+		alertWarning("不能为空！");
+		return;
+	}
+	
+	showLoading();
+	$.post([[@{/preSearch/search}]], $("#queryForm").serialize(), function(r) {
+		
+		hideLoading();
+	});
+}
+
+
+</script>
+</head>
+
+<body>
+<div class="page-list-body">
+	<div class="page-list-query">
+		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>DEMO_TEST</span></div>
+		<form id="queryForm" class="form-inline">
+		<input type="text" class="form-control input-sm" id="word" name="word" placeholder="请输入WORD" style="width:200px;">
+		<button type="button" class="btn btn-default btn-sm" onclick="query();"><span class="glyphicon glyphicon-search"></span>搜索</button>
+		</form>
+	</div>
+	
+	
+	
+	
+</div>
+
+
+
+
+
+</body>
+</html>
+

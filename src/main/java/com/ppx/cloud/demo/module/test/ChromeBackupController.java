@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
 
@@ -31,20 +30,9 @@ import io.webfolder.cdp.type.page.Viewport;
 
 
 @Controller	
-public class ChromeController {
+public class ChromeBackupController {
 	
 	private static Session staticSession = null;
-	
-	
-	@GetMapping
-	public ModelAndView chrome(HttpServletRequest request) {
-		
-		ModelAndView mv = new ModelAndView();
-		
-		
-		return mv;
-	}
-	
 	
 	@GetMapping @ResponseBody
 	public Map<String, Object> test(HttpServletRequest request) {
@@ -80,7 +68,7 @@ public class ChromeController {
 		    Viewport clip = new Viewport();
 		    clip.setScale(1d);
 		    clip.setX(boxModel.getContent().get(0));
-		    clip.setY(boxModel.getContent().get(1));
+		    clip.setY(boxModel.getContent().get(5) - 50d);
 		    clip.setWidth(boxModel.getWidth().doubleValue());
 		    clip.setHeight(boxModel.getHeight().doubleValue() - 50d);
 		    
@@ -88,9 +76,7 @@ public class ChromeController {
 		    
 		    
 		    try {
-		    	//FileOutputStream out = new FileOutputStream(new File("E:/U/png/clip01.png")); 
-		    	FileOutputStream out = new FileOutputStream(new File("E:/Git/ppx-org/cloud-demo/target/classes/static/test/clip01.png"));
-		    	
+		    	FileOutputStream out = new FileOutputStream(new File("E:/U/png/clip01.png")); 
 		    	out.write(data);
 		    	out.close();
 			} catch (Exception e) {
@@ -141,9 +127,7 @@ public class ChromeController {
 		    byte[] data = staticSession.captureScreenshot();
 		    
 		    try {
-		    	//FileOutputStream out = new FileOutputStream(new File("E:/U/png/1.png"));
-		    	FileOutputStream out = new FileOutputStream(new File("E:/Git/ppx-org/cloud-demo/src/main/resources/static/test/clip01.png"));
-		    	//
+		    	FileOutputStream out = new FileOutputStream(new File("E:/U/png/1.png")); 
 		    	out.write(data);
 		    	out.close();
 			} catch (Exception e) {
