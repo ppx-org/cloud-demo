@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -20,10 +20,11 @@ public class QueryController {
 	
 	
 
-	@PostMapping @ResponseBody
+	@RequestMapping @ResponseBody
 	public Map<String, Object> q(@RequestParam String w) {
-		int[] prodId = serv.findProdId(w);
-		List<QueryProduct> list = serv.listProduct(prodId);
+		
+		List<Integer> prodIdList = serv.findProdId(w);
+		List<QueryProduct> list = serv.listProduct(prodIdList);
 		
 		return ControllerReturn.ok(list);
 	}

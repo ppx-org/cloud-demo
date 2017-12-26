@@ -36,6 +36,7 @@ public class ChromeController {
 	private static Session staticSession = null;
 	
 	
+	
 	@GetMapping
 	public ModelAndView chrome(HttpServletRequest request) {
 		
@@ -55,11 +56,12 @@ public class ChromeController {
 			//arguments.add("--disable-gpu");
 		
 			SessionFactory factory = launcher.launch(arguments);
+			//launcher.getProcessManager().kill();
 			
 			// 只打开一个窗口
-			if (staticSession == null || !staticSession.isConnected()) {
+			//if (staticSession == null || !staticSession.isConnected()) {
 				staticSession = factory.create();
-			}
+			//}
 			
 			staticSession.navigate("https://passport.zhaopin.com/org/login");
 			staticSession.waitDocumentReady();
@@ -71,18 +73,17 @@ public class ChromeController {
 		    // byte[] data = staticSession.captureScreenshot();
 			DOM dom = staticSession.getCommand().getDOM();
 			Integer nodeId = staticSession.getNodeId("#captcha");
-			
 			BoxModel boxModel = dom.getBoxModel(nodeId, null, null);
 			System.out.println("xxxxxxxxx...........w:" + boxModel.getWidth());
 			System.out.println("xxxxxxxxx...........w:" + boxModel.getHeight());			
 			System.out.println("xxxxxxxxx...........w:" + boxModel.getContent());
 		    // 
 		    Viewport clip = new Viewport();
-		    clip.setScale(1d);
-		    clip.setX(boxModel.getContent().get(0));
-		    clip.setY(boxModel.getContent().get(1));
-		    clip.setWidth(boxModel.getWidth().doubleValue());
-		    clip.setHeight(boxModel.getHeight().doubleValue() - 50d);
+		    clip.setScale(0d);
+		    clip.setX(66d);
+		    clip.setY(439d);
+		    clip.setWidth(290d);
+		    clip.setHeight(500d);
 		    
 		    byte[] data = staticSession.getCommand().getPage().captureScreenshot(ImageFormat.Png, 100, clip, true);
 		    
@@ -115,9 +116,11 @@ public class ChromeController {
 		try {
 			List<String> arguments = new ArrayList<String>();
 			//arguments.add("--headless");
+			//arguments.add("--disable-gpu");
 			
 			SessionFactory factory = launcher.launch(arguments);
 			staticSession = factory.create();
+			
 			staticSession.navigate("https://passport.zhaopin.com/org/login");
 			staticSession.waitDocumentReady();
 			staticSession.activate();
@@ -157,30 +160,45 @@ public class ChromeController {
 		    
 	}
 	
+	private void click(double x, double y) {
+		Input input = staticSession.getCommand().getInput();
+		input.dispatchMouseEvent(MousePressed, x, y, null, null, Left, 1, null, null);
+        input.dispatchMouseEvent(MouseReleased, x, y, null, null, Left, 1, null, null);
+	}
+	
 	// click736,377;816,379;760,376;813,478
 	@GetMapping @ResponseBody
 	public Map<String, Object> click(HttpServletRequest request, String points) {
+		// 601.0, 448.0,
+		double offsetX = 477;
+		double offsetY = 337;
+		
+		
 		String[] point = points.split(";");
-		Input input = staticSession.getCommand().getInput();
-		double x = 190;
-        input.dispatchMouseEvent(MousePressed, Double.parseDouble(point[0].split(",")[0]) - x, Double.parseDouble(point[0].split(",")[1]), null, null, Left, 1, null, null);
-        input.dispatchMouseEvent(MouseReleased, Double.parseDouble(point[0].split(",")[0]) - x, Double.parseDouble(point[0].split(",")[1]), null, null, Left, 1, null, null);
-        staticSession.wait(100);
-        input.dispatchMouseEvent(MousePressed, Double.parseDouble(point[1].split(",")[0]) - x, Double.parseDouble(point[1].split(",")[1]), null, null, Left, 1, null, null);
-        input.dispatchMouseEvent(MouseReleased, Double.parseDouble(point[1].split(",")[0]) - x, Double.parseDouble(point[1].split(",")[1]), null, null, Left, 1, null, null);
-        staticSession.wait(100);
-        input.dispatchMouseEvent(MousePressed, Double.parseDouble(point[2].split(",")[0]) - x, Double.parseDouble(point[2].split(",")[1]), null, null, Left, 1, null, null);
-        input.dispatchMouseEvent(MouseReleased, Double.parseDouble(point[2].split(",")[0]) - x, Double.parseDouble(point[2].split(",")[1]), null, null, Left, 1, null, null);
-        staticSession.wait(100);
+		double x1 = Double.parseDouble(point[0].split(",")[0]) + offsetX;
+		double y1 = Double.parseDouble(point[0].split(",")[1]) + offsetY;
+		double x2 = Double.parseDouble(point[1].split(",")[0]) + offsetX;
+		double y2 = Double.parseDouble(point[1].split(",")[1]) + offsetY;
+		double x3 = Double.parseDouble(point[2].split(",")[0]) + offsetX;
+		double y3 = Double.parseDouble(point[2].split(",")[1]) + offsetY;
+		
+		
+		click(x1, y1);
+		staticSession.wait(100);
+		click(x2, y2);
+		staticSession.wait(100);
+		click(x3, y3);
+		
+
         
         // 1034,569
-        input.dispatchMouseEvent(MousePressed, 1036d - x, 568d, null, null, Left, 1, null, null);
-        input.dispatchMouseEvent(MouseReleased, 1036d - x, 568d, null, null, Left, 1, null, null);
+        //input.dispatchMouseEvent(MousePressed, 1036d - x, 568d, null, null, Left, 1, null, null);
+        // input.dispatchMouseEvent(MouseReleased, 1036d - x, 568d, null, null, Left, 1, null, null);
         staticSession.wait(1000);
         
         // 登录
-        staticSession.evaluate("$('#loginbutton').click();");  
-        staticSession.wait(3000);
+        //staticSession.evaluate("$('#loginbutton').click();");  
+        //staticSession.wait(3000);
         
 		
         byte[] data = staticSession.captureScreenshot();
