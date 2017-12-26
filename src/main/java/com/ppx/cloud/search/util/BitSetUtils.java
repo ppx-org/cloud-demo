@@ -22,7 +22,12 @@ public class BitSetUtils {
 	
 	// type  招聘 1,
 	
+	
+	// TODO 按merchantId分
+	
 	private static String version = "V1";
+	
+	
 	
 	
 	//  file.searchPath

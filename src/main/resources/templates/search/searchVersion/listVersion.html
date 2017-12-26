@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+<link th:replace="common/fragment/common::validation"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+
+});
+
+
+
+
+function createIndex(versionName) {
+	alert(versionName)
+}
+
+</script>
+</head>
+
+<body>
+<div class="page-list-body">
+	<div class="page-list-query">
+		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>DEMO_TEST</span></div>
+	</div>
+	<table class="page-list-table table table-bordered table-condensed">
+	<tr>
+		<th>version</th>
+		<th>BEGIN</th>
+		<th>END</th>
+		<th>SSSS</th>
+		<th>操作</th>
+	</tr>
+	
+	<tr th:each="v:${list}">
+		<td class="w-id" th:text="${v.versionName}"></td>
+		<td class="w-time" th:text="${v.createBegin}"></td>
+		<td class="w-time" th:text="${v.createEnd}"></td>
+		<td class="w-id" th:text="${v.versionStatus}"></td>
+		<td class="w-action">
+			<a th:href="'javascript:createIndex(\'' + ${v.versionName} + '\')'" th:if="${v.versionStatus == 1}">KKKK</a>		
+		</td>
+	</tr>
+	</table>
+</div>
+
+
+
+</body>
+</html>
+

@@ -25,7 +25,7 @@ public class SearchCreateService extends MyDaoSupport {
 		
 		// ext
 		String extSql = "select group_concat(EXT_WORD) from search_ext_word where MERCHANT_ID = ?";
-		String extWords = getJdbcTemplate().queryForObject(extSql, String.class);
+		String extWords = getJdbcTemplate().queryForObject(extSql, String.class, merchantId);
 		WordUtils.setExtWord(extWords);
 		
 		
