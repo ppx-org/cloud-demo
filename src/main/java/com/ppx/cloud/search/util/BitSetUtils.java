@@ -25,7 +25,7 @@ public class BitSetUtils {
 	
 	// TODO 按merchantId分
 	
-	private static String version = "V1";
+	// private static String version = "V1";
 	
 	
 	
@@ -35,30 +35,56 @@ public class BitSetUtils {
 		return System.getProperty("file.searchPath");
 	}
 	
-	private static String getRealPath(String path) {
+	private static String getRealPath(String versionName, String path) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		return getSearchPath() + "/" + merchantId + "/" + version + "/" + path + "/";
+		return getSearchPath() + "/" + merchantId + "/" + versionName + "/" + path + "/";
 	}
 	
-	public static int initPath(String path) {
-		String realPath = getRealPath(path);
+	
+	public static Map<String, Integer> removeVersionPath(String versionName) {
+		Map<String, Integer> countMap = new HashMap<String, Integer>();
+		countMap.put("file", 0);
+		countMap.put("folder", 0);
+		
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		String path = getSearchPath() + "/" + merchantId + "/" + versionName;
+		File pathFile = new File(path);
+		if (pathFile.exists()) {
+			deleteAllFilesOfDir(pathFile, countMap);
+		}
+		return countMap;
+	}
+	
+	private static void deleteAllFilesOfDir(File path, Map<String, Integer> countMap) {  
+	    if (!path.exists())  
+	        return;  
+	    if (path.isFile()) {  
+	        path.delete();
+	        countMap.put("file", countMap.get("file") + 1);
+	        return;  
+	    }  
+	    File[] files = path.listFiles();  
+	    for (int i = 0; i < files.length; i++) {  
+	    	deleteAllFilesOfDir(files[i], countMap);  
+	    }  
+	    
+	    path.delete();
+	    countMap.put("folder", countMap.get("folder") + 1);
+	} 
+	
+	public static int initPath(String version, String path) {
+		String realPath = getRealPath(version, path);
 		
 		// 不存目录就创建
 		File pathFile = new File(realPath);
 		if (!pathFile.exists()) {
 			if (!pathFile.mkdirs()) return -1;
 		}
-		
-		// 删除原来的索引
-		File[] f = pathFile.listFiles();
-		for (File file : f) {
-			file.delete();
-		}
 		return 1;
 	}
 	
-	public static int writeBitSet(String path, String w, BitSet bs) {	
-		String realPath = getRealPath(path);
+	public static int writeBitSet(String versionName, String path, String w, BitSet bs) {	
+		String realPath = getRealPath(versionName, path);
 		
 		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(realPath + "_" + w))) {
 			out.writeObject(bs);	
@@ -69,8 +95,8 @@ public class BitSetUtils {
 		return 1;
 	}
 	
-	public static BitSet readBitSet(String path, String w) {
-		String realPath = getRealPath(path);
+	public static BitSet readBitSet(String versionName, String path, String w) {
+		String realPath = getRealPath(versionName, path);
 	
 		File f = new File(realPath + "_" + w);
 		if (!f.exists()) return null;
@@ -81,26 +107,5 @@ public class BitSetUtils {
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	
-	public static void main(String[] args) {
-//		BitSet bs = new BitSet();
-//		bs.set(10000);
-//		writeBitSet("E:/ppx-file/search/", "test", bs);
-		
-		
-		
-		// 1.3K * 1000 条
-		// 招聘 : blob
-		/*
-		  招聘:xxx
-		 51job:www
-		 1.3K * 3000条 = 3M
-		 
-		 */
-		
-		
-		System.out.println("-------1");
 	}
 }

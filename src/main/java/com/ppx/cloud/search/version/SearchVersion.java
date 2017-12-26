@@ -2,6 +2,8 @@ package com.ppx.cloud.search.version;
 
 import java.util.Date;
 
+import com.ppx.cloud.search.util.SearchDict;
+
 public class SearchVersion {
 	
 	private Integer merchantId;
@@ -16,7 +18,7 @@ public class SearchVersion {
 	
 	private String createInfo;
 	
-	
+	private Date updated;
 
 	public Integer getMerchantId() {
 		return merchantId;
@@ -65,6 +67,19 @@ public class SearchVersion {
 	public void setCreateInfo(String createInfo) {
 		this.createInfo = createInfo;
 	}
+
+	public String getVersionStatusDesc() {
+		return SearchDict.getVersionStatusDesc(versionStatus);
+	}
+
+	public Date getUpdated() {
+		return updated;
+	}
+
+	public void setUpdated(Date updated) {
+		this.updated = updated;
+	}
+
 	
 	
 	

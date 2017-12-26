@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,20 +26,22 @@ public class SearchCreateController {
 	@Autowired
 	private SearchCreateService serv;
 	
-	@GetMapping
-	public ModelAndView listVersion(HttpServletRequest request) {
+	@PostMapping @ResponseBody
+	public Map<String, Object> createIndex(@RequestParam String versionName) {
 		
-		ModelAndView mv = new ModelAndView();
+		int r = serv.createIndex(versionName);
 		
 		
-		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("version", "V1");
-		map.put("time", "2017-01-09 12:44:22");
-		list.add(map);
-		mv.addObject("list", list);
+		return ControllerReturn.ok(r);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> useIndex(String versionName) {
+
+		int r = serv.useIndex(versionName);
 		
-		return mv;
+		
+		return ControllerReturn.ok(r);
 	}
 	
 	

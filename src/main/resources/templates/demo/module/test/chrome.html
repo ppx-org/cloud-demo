@@ -7,18 +7,7 @@
 
 
 
-<style>
-.captcha-coordinate {
-	position: absolute;width: 20px;height: 24px;line-height: 20px;
-	background: url(http://localhost:9000/demo/static/test/coordinate.png) 0 0 no-repeat;
-	color: #fff;
-	font-weight: 700;
-    text-align: center;
-    z-index: 2;
-    cursor: pointer;
-    font-size: 18px
-}
-</style>
+
 
 
 <script>
@@ -62,6 +51,25 @@ $(window).resize(function() {
 	lastImgLeft = $("#validateImg").position().left;
 });
 </script>
+
+<style>
+.captcha-coordinate {
+	position: absolute;width: 20px;height: 24px;line-height: 20px;
+	background: url(http://localhost:9000/demo/static/test/coordinate.png) 0 0 no-repeat;
+	color: #fff;
+	font-weight: 700;
+    text-align: center;
+    z-index: 2;
+    cursor: pointer;
+    font-size: 18px
+}
+
+
+#validateImg {
+	
+}
+</style>
+
 
 </head>
 <body>

@@ -3,11 +3,11 @@ package com.ppx.cloud.demo.module.test;
 import static io.webfolder.cdp.type.constant.MouseButtonType.Left;
 import static io.webfolder.cdp.type.constant.MouseEventType.MousePressed;
 import static io.webfolder.cdp.type.constant.MouseEventType.MouseReleased;
-import static java.lang.String.format;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
 import java.util.Map;
 
@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
+import com.ppx.cloud.common.util.DateUtils;
 
 import io.webfolder.cdp.Launcher;
 import io.webfolder.cdp.command.DOM;
 import io.webfolder.cdp.command.Input;
 import io.webfolder.cdp.session.Session;
 import io.webfolder.cdp.session.SessionFactory;
-import io.webfolder.cdp.type.constant.ImageFormat;
 import io.webfolder.cdp.type.dom.BoxModel;
 import io.webfolder.cdp.type.page.Viewport;
 
@@ -39,7 +39,6 @@ public class ChromeController {
 	
 	@GetMapping
 	public ModelAndView chrome(HttpServletRequest request) {
-		
 		ModelAndView mv = new ModelAndView();
 		
 		
@@ -59,25 +58,30 @@ public class ChromeController {
 			//launcher.getProcessManager().kill();
 			
 			// 只打开一个窗口
-			//if (staticSession == null || !staticSession.isConnected()) {
+			if (staticSession == null || !staticSession.isConnected()) {
 				staticSession = factory.create();
-			//}
+			}
+			
 			
 			staticSession.navigate("https://passport.zhaopin.com/org/login");
 			staticSession.waitDocumentReady();
 			staticSession.activate();
-					
-			staticSession.evaluate("$('#CheckCodeCapt').click();");
-			staticSession.wait(1000);
+			
+			staticSession.wait(200);
+			click(666, 334);
+			//staticSession.evaluate("$('#CheckCodeCapt').click();");
+			staticSession.wait(1200);
 	        
-		    // byte[] data = staticSession.captureScreenshot();
+//		    // byte[] data = staticSession.captureScreenshot();
+			
+			
 			DOM dom = staticSession.getCommand().getDOM();
 			Integer nodeId = staticSession.getNodeId("#captcha");
 			BoxModel boxModel = dom.getBoxModel(nodeId, null, null);
 			System.out.println("xxxxxxxxx...........w:" + boxModel.getWidth());
 			System.out.println("xxxxxxxxx...........w:" + boxModel.getHeight());			
 			System.out.println("xxxxxxxxx...........w:" + boxModel.getContent());
-		    // 
+//		    // 
 		    Viewport clip = new Viewport();
 		    clip.setScale(0d);
 		    clip.setX(66d);
@@ -85,8 +89,11 @@ public class ChromeController {
 		    clip.setWidth(290d);
 		    clip.setHeight(500d);
 		    
-		    byte[] data = staticSession.getCommand().getPage().captureScreenshot(ImageFormat.Png, 100, clip, true);
 		    
+		    
+		    byte[] data = staticSession.captureScreenshot();
+		    //byte[] data = staticSession.getCommand().getPage().captureScreenshot(ImageFormat.Png, 100, clip, true);
+		    //byte[] data = tmpPage.captureScreenshot(ImageFormat.Png, 100, clip, true);
 		    
 		    try {
 		    	//FileOutputStream out = new FileOutputStream(new File("E:/U/png/clip01.png")); 
@@ -97,7 +104,7 @@ public class ChromeController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		    request.getSession().setAttribute("chromeSession", staticSession);
+		    //request.getSession().setAttribute("chromeSession", staticSession);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
