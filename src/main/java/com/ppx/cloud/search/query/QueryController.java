@@ -24,9 +24,9 @@ public class QueryController {
 	public Map<String, Object> q(@RequestParam String w) {
 		
 		List<Integer> prodIdList = serv.findProdId(w);
-		List<QueryProduct> list = serv.listProduct(prodIdList);
+		//List<QueryProduct> list = serv.listProduct(prodIdList);
 		
-		return ControllerReturn.ok(list);
+		return ControllerReturn.ok(prodIdList);
 	}
 	
 }

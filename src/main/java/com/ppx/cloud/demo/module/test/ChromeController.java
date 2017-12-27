@@ -41,6 +41,10 @@ public class ChromeController {
 	public ModelAndView chrome(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView();
 		
+		BitSet bs = new BitSet();
+		bs.set(1);
+		bs.set(9);
+		bs.set(18);
 		
 		return mv;
 	}
@@ -51,7 +55,7 @@ public class ChromeController {
 		Launcher launcher = new Launcher();
 		try {
 			List<String> arguments = new ArrayList<String>();
-			//arguments.add("--headless");
+			arguments.add("--headless");
 			//arguments.add("--disable-gpu");
 		
 			SessionFactory factory = launcher.launch(arguments);
@@ -68,8 +72,8 @@ public class ChromeController {
 			staticSession.activate();
 			
 			staticSession.wait(200);
-			click(666, 334);
-			//staticSession.evaluate("$('#CheckCodeCapt').click();");
+			//click(666, 334);
+			staticSession.evaluate("$('#CheckCodeCapt').click();");
 			staticSession.wait(1200);
 	        
 //		    // byte[] data = staticSession.captureScreenshot();
@@ -177,8 +181,9 @@ public class ChromeController {
 	@GetMapping @ResponseBody
 	public Map<String, Object> click(HttpServletRequest request, String points) {
 		// 601.0, 448.0,
-		double offsetX = 477;
-		double offsetY = 337;
+		// double offsetX = 477 + 15; // 有头
+		double offsetX = 477 + 15 + 43; // 无头
+		double offsetY = 337 + 25;
 		
 		
 		String[] point = points.split(";");
@@ -195,17 +200,20 @@ public class ChromeController {
 		click(x2, y2);
 		staticSession.wait(100);
 		click(x3, y3);
+		staticSession.wait(100);
 		
-
-        
-        // 1034,569
-        //input.dispatchMouseEvent(MousePressed, 1036d - x, 568d, null, null, Left, 1, null, null);
-        // input.dispatchMouseEvent(MouseReleased, 1036d - x, 568d, null, null, Left, 1, null, null);
-        staticSession.wait(1000);
-        
-        // 登录
-        //staticSession.evaluate("$('#loginbutton').click();");  
-        //staticSession.wait(3000);
+//		// 输入用户名和密码
+//        staticSession.evaluate("$('#LoginName').val('honghai020');");
+//        staticSession.evaluate("$('#Password').val('Test13800');");
+//		staticSession.evaluate("$('#captcha-submitCode').click();"); 
+//        // 1034,569
+//        // input.dispatchMouseEvent(MousePressed, 1036d - x, 568d, null, null, Left, 1, null, null);
+//        // input.dispatchMouseEvent(MouseReleased, 1036d - x, 568d, null, null, Left, 1, null, null);
+//        staticSession.wait(1000);
+//        
+//        // 登录
+//        staticSession.evaluate("$('#loginbutton').click();");  
+//        staticSession.wait(3000);
         
 		
         byte[] data = staticSession.captureScreenshot();

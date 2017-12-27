@@ -108,4 +108,58 @@ public class BitSetUtils {
 		}
 		return null;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static String bsToPage(BitSet bs, int begin, int len) {
+		int c = 0;
+        StringBuilder b = new StringBuilder();
+        int i = bs.nextSetBit(0);
+        if (i != -1) {
+            if (begin == 0) b.append(i);
+            while (true) {
+                if (++i < 0) break;
+                if ((i = bs.nextSetBit(i)) < 0) break;
+                int endOfRun = bs.nextClearBit(i);
+                
+                boolean isEnd = false;
+                do { 
+                	c++;
+                	if (c >= begin) {
+                		if (c == begin && begin != 0) b.append(i); 
+                		else b.append(",").append(i);
+                	}
+                	if (c >= begin + len - 1) {
+                		isEnd = true;
+                		break;
+                	}
+                }
+                while (++i != endOfRun);
+                if (isEnd) break;
+            }
+        }
+        return b.toString();
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

@@ -29,7 +29,6 @@ function onImg() {
 	var x = event.x;
 	var y = event.y;
 	$("body").append('<b class="captcha-coordinate" style="left:' + (x - 10) + 'px; top:' + (y - 10) + 'px;">' + times + '</b>');
-	
 	point.push((x - imgLeft) + "," + (y - imgTop));
 	
 	if (times == 3) {
@@ -66,7 +65,14 @@ $(window).resize(function() {
 
 
 #validateImg {
-	
+	display:inline-block;
+	margin:0 auto;
+	width:300px;
+	height:195px;
+	background: url(http://localhost:9000/demo/static/test/clip01.png) no-repeat;
+	/* background-position:-650px -360px; 有头*/
+	background-position:-535px -360px;
+	border:1px solid black;
 }
 </style>
 
@@ -76,7 +82,7 @@ $(window).resize(function() {
 
 
 <div style="text-align: center;">
-<img id="validateImg" onmousedown="onImg()" style="border:1px solid black" src="http://localhost:9000/demo/static/test/clip01.png" width="378" height="239">
+	<div id="validateImg" onmousedown="onImg()"></div>
 </div>
 <div style="text-align: center;"><button class="btn " id="validate" onclick="validate()" disabled="disabled" style="width:120px">验证</button></div>
 
