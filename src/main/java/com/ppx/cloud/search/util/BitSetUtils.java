@@ -110,19 +110,17 @@ public class BitSetUtils {
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	public static String bsToPage(BitSet bs, int begin, int len) {
+	// 从BitSet toString改造
+	public static List<Integer> bsToPage(BitSet bs, int begin, int len) {
+		List<Integer> returnList = new ArrayList<Integer>();
+		int maxOffset = begin + len;
 		int c = 0;
         StringBuilder b = new StringBuilder();
         int i = bs.nextSetBit(0);
         if (i != -1) {
-            if (begin == 0) b.append(i);
+            if (begin == 0) {
+            	returnList.add(i);
+            }
             while (true) {
                 if (++i < 0) break;
                 if ((i = bs.nextSetBit(i)) < 0) break;
@@ -131,21 +129,54 @@ public class BitSetUtils {
                 boolean isEnd = false;
                 do { 
                 	c++;
-                	if (c >= begin) {
-                		if (c == begin && begin != 0) b.append(i); 
-                		else b.append(",").append(i);
-                	}
-                	if (c >= begin + len - 1) {
+                	if (c >= maxOffset) {
                 		isEnd = true;
                 		break;
+                	}
+                	if (c >= begin) {
+                		returnList.add(i);
                 	}
                 }
                 while (++i != endOfRun);
                 if (isEnd) break;
             }
         }
-        return b.toString();
+        return returnList;
     }
+	
+//	// 从BitSet toString改造
+//	public static String bsToPage(BitSet bs, int begin, int len) {
+//		int maxOffset = begin + len;
+//		int c = 0;
+//        StringBuilder b = new StringBuilder();
+//        int i = bs.nextSetBit(0);
+//        if (i != -1) {
+//            if (begin == 0) {
+//            	b.append(i);
+//            }
+//            while (true) {
+//                if (++i < 0) break;
+//                if ((i = bs.nextSetBit(i)) < 0) break;
+//                int endOfRun = bs.nextClearBit(i);
+//                
+//                boolean isEnd = false;
+//                do { 
+//                	c++;
+//                	if (c >= maxOffset) {
+//                		isEnd = true;
+//                		break;
+//                	}
+//                	if (c >= begin) {
+//                		if (c == begin && begin != 0) b.append(i); 
+//                		else b.append(",").append(i);
+//                	}
+//                }
+//                while (++i != endOfRun);
+//                if (isEnd) break;
+//            }
+//        }
+//        return b.toString();
+//    }
 	
 	
 	

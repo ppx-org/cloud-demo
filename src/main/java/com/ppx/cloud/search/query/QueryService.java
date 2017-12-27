@@ -1,6 +1,5 @@
 package com.ppx.cloud.search.query;
 
-import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
+import com.ppx.cloud.search.query.bean.QueryPage;
+import com.ppx.cloud.search.query.bean.QueryPageList;
+import com.ppx.cloud.search.query.bean.QueryProduct;
 import com.ppx.cloud.search.util.BitSetUtils;
 import com.ppx.cloud.search.util.WordUtils;
 
@@ -19,18 +21,30 @@ import com.ppx.cloud.search.util.WordUtils;
 @Service
 public class QueryService extends MyDaoSupport {
 	
-	public List<Integer> findProdId(String w) {
+	
+	public QueryPageList query(String w) {
+		
+		
+		QueryPage p = new QueryPage();
+		List<Integer> prodIdList = findProdId(w, p);
+		List<QueryProduct> prodList = listProduct(prodIdList);
+		
+		return new QueryPageList(prodList, p);
+	}
+	
+	private List<Integer> findProdId(String w, QueryPage p) {
 		if (StringUtils.isEmpty(w)) {
 			return null;
 		}
 		
+		// TODO 自己的st
 		// title
 		String versionName = "V1";
 		
 		BitSet titleBs = BitSetUtils.readBitSet(versionName, "title", w);
 		
 		if (titleBs == null && w.length() > 1) {
-			// 分词搜索
+			// split
 			BitSet splitBs = new BitSet();
 			String[] word = WordUtils.splitWord(w).split(",");
 			for (String s : word) {
@@ -41,57 +55,25 @@ public class QueryService extends MyDaoSupport {
 			}
 			titleBs = splitBs;
 		}
+	
 		
 		
-		System.out.println("out......:" + titleBs);
-		
-		
-		
-		//titleBs.
-		
+		p.setTotalRows(titleBs.cardinality());
+		List<Integer> prodIdList = BitSetUtils.bsToPage(titleBs, (p.getPageNumber() - 1) * p.getPageSize(), p.getPageSize());
 		
 		
 		
 		
 		
+		System.out.println("out......list:" + prodIdList);
+		System.out.println("out......size:" + p.getTotalRows());
+		
+		
+	
 		
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		List<Integer> prodIdList = new ArrayList<Integer>();
-//		prodIdList.add(1);
-//		prodIdList.add(3);
-//		prodIdList.add(5);
 		
 		return prodIdList;
 	}
@@ -106,35 +88,7 @@ public class QueryService extends MyDaoSupport {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	public List<QueryProduct> listProduct(List<Integer> prodIdList) {
+	private List<QueryProduct> listProduct(List<Integer> prodIdList) {
 		
 		
 		NamedParameterJdbcTemplate jdbc = new NamedParameterJdbcTemplate(getJdbcTemplate());

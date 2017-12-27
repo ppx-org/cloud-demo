@@ -1,4 +1,4 @@
-package com.ppx.cloud.search.query;
+package com.ppx.cloud.search.query.bean;
 
 public class QueryProduct {
 	

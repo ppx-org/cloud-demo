@@ -1,6 +1,5 @@
 package com.ppx.cloud.search.query;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
+import com.ppx.cloud.search.query.bean.QueryPageList;
 
 
 @Controller	
@@ -23,10 +23,11 @@ public class QueryController {
 	@RequestMapping @ResponseBody
 	public Map<String, Object> q(@RequestParam String w) {
 		
-		List<Integer> prodIdList = serv.findProdId(w);
-		//List<QueryProduct> list = serv.listProduct(prodIdList);
+		QueryPageList list = serv.query(w);
 		
-		return ControllerReturn.ok(prodIdList);
+		
+		
+		return ControllerReturn.ok(list);
 	}
 	
 }

@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.bag.SynchronizedSortedBag;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.util.DateUtils;
+import com.ppx.cloud.search.util.BitSetUtils;
 
 import io.webfolder.cdp.Launcher;
 import io.webfolder.cdp.command.DOM;
@@ -41,10 +43,8 @@ public class ChromeController {
 	public ModelAndView chrome(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView();
 		
-		BitSet bs = new BitSet();
-		bs.set(1);
-		bs.set(9);
-		bs.set(18);
+		
+
 		
 		return mv;
 	}
