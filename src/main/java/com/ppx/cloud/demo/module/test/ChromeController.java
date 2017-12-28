@@ -7,21 +7,22 @@ import static io.webfolder.cdp.type.constant.MouseEventType.MouseReleased;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.collections.bag.SynchronizedSortedBag;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
-import com.ppx.cloud.common.util.DateUtils;
-import com.ppx.cloud.search.util.BitSetUtils;
 
 import io.webfolder.cdp.Launcher;
 import io.webfolder.cdp.command.DOM;
@@ -29,6 +30,7 @@ import io.webfolder.cdp.command.Input;
 import io.webfolder.cdp.session.Session;
 import io.webfolder.cdp.session.SessionFactory;
 import io.webfolder.cdp.type.dom.BoxModel;
+import io.webfolder.cdp.type.network.Cookie;
 import io.webfolder.cdp.type.page.Viewport;
 
 
@@ -42,9 +44,6 @@ public class ChromeController {
 	@GetMapping
 	public ModelAndView chrome(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView();
-		
-		
-
 		
 		return mv;
 	}
@@ -113,62 +112,6 @@ public class ChromeController {
 			e.printStackTrace();
 		}
 		return ControllerReturn.ok();
-		    
-	}
-	
-	
-	
-	@GetMapping @ResponseBody
-	public Map<String, Object> init(HttpServletRequest request) {
-		System.out.println("xxxxxxxxxxxxxxx----------init");
-	
-		
-		Launcher launcher = new Launcher();
-		try {
-			List<String> arguments = new ArrayList<String>();
-			//arguments.add("--headless");
-			//arguments.add("--disable-gpu");
-			
-			SessionFactory factory = launcher.launch(arguments);
-			staticSession = factory.create();
-			
-			staticSession.navigate("https://passport.zhaopin.com/org/login");
-			staticSession.waitDocumentReady();
-			staticSession.activate();
-						
-		    
-			staticSession.wait(200);
-		    Input input = staticSession.getCommand().getInput();
-		    
-	        input.dispatchMouseEvent(MousePressed, 666d, 334d, null, null, Left, 1, null, null);
-	        input.dispatchMouseEvent(MouseReleased, 666d, 334d, null, null, Left, 1, null, null);
-	        
-	        
-	        // 输入用户名和密码
-	        staticSession.evaluate("$('#LoginName').val('honghai020');");
-	        staticSession.evaluate("$('#Password').val('Test13800');");
-	        
-	        staticSession.wait(1500);
-	        
-	        
-	        
-		    byte[] data = staticSession.captureScreenshot();
-		    
-		    try {
-		    	//FileOutputStream out = new FileOutputStream(new File("E:/U/png/1.png"));
-		    	FileOutputStream out = new FileOutputStream(new File("E:/Git/ppx-org/cloud-demo/src/main/resources/static/test/clip01.png"));
-		    	//
-		    	out.write(data);
-		    	out.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		    request.getSession().setAttribute("chromeSession", staticSession);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ControllerReturn.ok();
-		    
 	}
 	
 	private void click(double x, double y) {
@@ -177,13 +120,12 @@ public class ChromeController {
         input.dispatchMouseEvent(MouseReleased, x, y, null, null, Left, 1, null, null);
 	}
 	
-	// click736,377;816,379;760,376;813,478
 	@GetMapping @ResponseBody
 	public Map<String, Object> click(HttpServletRequest request, String points) {
 		// 601.0, 448.0,
 		// double offsetX = 477 + 15; // 有头
 		double offsetX = 477 + 15 + 43; // 无头
-		double offsetY = 337 + 25;
+		double offsetY = 337 + 25 - 2;
 		
 		
 		String[] point = points.split(";");
@@ -202,18 +144,17 @@ public class ChromeController {
 		click(x3, y3);
 		staticSession.wait(100);
 		
-//		// 输入用户名和密码
-//        staticSession.evaluate("$('#LoginName').val('honghai020');");
-//        staticSession.evaluate("$('#Password').val('Test13800');");
-//		staticSession.evaluate("$('#captcha-submitCode').click();"); 
-//        // 1034,569
-//        // input.dispatchMouseEvent(MousePressed, 1036d - x, 568d, null, null, Left, 1, null, null);
-//        // input.dispatchMouseEvent(MouseReleased, 1036d - x, 568d, null, null, Left, 1, null, null);
-//        staticSession.wait(1000);
-//        
-//        // 登录
-//        staticSession.evaluate("$('#loginbutton').click();");  
-//        staticSession.wait(3000);
+		// 输入用户名和密码
+		staticSession.evaluate("$('#LoginName').val('honghai020');");
+		staticSession.evaluate("$('#Password').val('Test13800');");
+		staticSession.evaluate("$('#captcha-submitCode').click();");
+        staticSession.wait(1000);
+        
+        // 登录
+        staticSession.evaluate("$('#loginbutton').click();");  
+        staticSession.wait(3000);
+        
+        
         
 		
         byte[] data = staticSession.captureScreenshot();
@@ -226,98 +167,51 @@ public class ChromeController {
 			e.printStackTrace();
 		}
         
+	    List<Cookie> cookieList = staticSession.getCommand().getPage().getCookies();
+	    for (Cookie cookie : cookieList) {
+			System.out.println("........cookie:" + cookie.getName() + ":" + cookie.getValue());
+		}
 		
 		return ControllerReturn.ok();
 	}
 	
 	
 	@GetMapping @ResponseBody
-	public Map<String, Object> login(HttpServletRequest request) {
-        // 登录894,446
-		double x = 190;
-		Input input = staticSession.getCommand().getInput();
-        //input.dispatchMouseEvent(MousePressed, 894d - x, 684d, null, null, Left, 1, null, null);
-        //input.dispatchMouseEvent(MouseReleased, 894d - x, 684d, null, null, Left, 1, null, null);
-        
-        staticSession.evaluate("$('#loginbutton').submit();");        
-        staticSession.wait(3000);
-        
-        staticSession.getCommand().getPage().getCookies();
-   
+	public Map<String, Object> cookie(HttpServletRequest request) {
+		List<Cookie> cookieList = staticSession.getCommand().getPage().getCookies();
 		
-        byte[] data = staticSession.captureScreenshot();
-	    
-	    try {
-	    	FileOutputStream out = new FileOutputStream(new File("E:/U/png/3.png")); 
-	    	out.write(data);
-	    	out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+		StringBuilder sendCookie = new StringBuilder();
+	    for (Cookie cookie : cookieList) {
+			System.out.println("........cookie:" + cookie.getName() + ":" + cookie.getValue());
+			sendCookie.append(cookie.getName() + "=" + cookie.getValue() + ";");
 		}
         
+	    //https://jobads.zhaopin.com/Position/PositionAdd
+	    String addUrl = "https://jobads.zhaopin.com/Position/PositionAdd";
+	    RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();        
+        headers.add("Accept", "application/xml, text/xml, */*");
+        headers.add("Content-Type", "application/x-www-form-urlencoded");
+        headers.add("Origin", "https://ehire.51job.com");
+        headers.add("Referer", "https://ehire.51job.com/");
+        headers.add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
+        headers.add("X-Requested-With", "XMLHttpRequest");
+        headers.add("Cookie", sendCookie.toString());
+        
+        
+               
+        HttpEntity<String> formEntity = new HttpEntity<String>("", headers);
+        ResponseEntity<String> r = restTemplate.exchange(addUrl, HttpMethod.GET, formEntity, String.class, "");
+		
+        
+		String str = r.getBody();
+		System.out.println("xxxxxxxxxxxxxxxxx:body:" + str);
+	    
 		
 		return ControllerReturn.ok();
 	}
 	
 	
-	
-	
-//	@GetMapping @ResponseBody
-//	public Map<String, Object> test() {
-//		System.out.println("xxxxxxxxxxxxxxx----------test");
-//		
-//		
-//	
-//		Launcher launcher = new Launcher();
-//		try (SessionFactory factory = launcher.launch();
-//		                    Session session = factory.create()) {
-//		    session.navigate("https://passport.zhaopin.com/org/login");
-//		    session.waitDocumentReady();
-//		 
-//		    
-//		    //String content = (String) session.getProperty("//body", "outerText");
-//		    //System.out.println(session.getContent());
-//		    
-//		    // activate the tab/session before capturing the screenshot
-//		    session.activate();
-//		    session.wait(1000);
-//		    
-//		    //session.click("#CheckCodeCapt");
-//		    
-//		    Input input = session.getCommand().getInput();
-//	        input.dispatchMouseEvent(MousePressed, 666d, 334d, null, null, Left, 1, null, null);
-//	        input.dispatchMouseEvent(MouseReleased, 666d, 334d, null, null, Left, 1, null, null);
-//	        
-//	        session.wait(1200);
-//	        
-//	        input.dispatchMouseEvent(MousePressed, 646d, 488d, null, null, Left, 1, null, null);
-//	        input.dispatchMouseEvent(MouseReleased, 646d, 488d, null, null, Left, 1, null, null);
-//	        
-//		    
-//		    //session.evaluate("$('#CheckCodeCapt').click()");
-//		    
-//		    
-//		    session.wait(100);
-//		    
-//		    
-//		    byte[] data = session.captureScreenshot();
-//		    
-//		    
-//		    try {
-//		    	FileOutputStream out = new FileOutputStream(new File("E:/U/png/1.png")); 
-//		    	out.write(data);
-//		    	out.close();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		    
-//		    //System.out.println("xxxxxxxout," + session.getContent());
-//		    
-//		    
-//		}
-//		
-//		return ControllerReturn.ok();
-//	}
 	
 	
 	
