@@ -8,42 +8,81 @@
 
 <script type="text/javascript" th:inline="javascript">
 $(function() {
-	refreshPageData([[${listJson}]]);
+	
 });
 
-function query() {
-	var word = $("#word").val();
-	if (word == "") {
+
+function queryPage(pageNumber) {
+	var w = $("#w").val();
+	if (w == "") {
 		alertWarning("不能为空！");
 		return;
 	}
-	
+	$("#pageNumber").val(pageNumber);
 	showLoading();
-	$.post([[@{/preSearch/search}]], $("#queryForm").serialize(), function(r) {
+	
+	
+	
+	$.get([[@{/query/q}]], $("#queryForm").serialize(), function(r) {
+		refreshPageData(r);
+		
+		// cat	
+		$("#catView").empty();
+		for (var i = 0; i < r.catList.length; i++) {
+			$("#catView").append('<a href="javascript:onCat(' + r.catList[i].cid + ')">' + r.catList[i].cn + '(' + r.catList[i].n + ')</a>');
+		}
+		if (r.catList.length > 0 && $("#cId").val() != "") {
+			$("#catView").append('<a href="javascript:onCat(\'\')">cancel</a>');
+		}
 		
 		hideLoading();
 	});
 }
 
+function onCat(cId) {
+	$("#cId").val(cId);
+	queryPage(1);
+}
+
 
 </script>
+
+<style>
+#catView a {
+	padding-left:10px
+}
+</style>
+
 </head>
 
 <body>
-<div class="page-list-body">
-	<div class="page-list-query">
-		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>DEMO_TEST</span></div>
-		<form id="queryForm" class="form-inline">
-		<input type="text" class="form-control input-sm" id="word" name="word" placeholder="请输入WORD" style="width:200px;">
-		<button type="button" class="btn btn-default btn-sm" onclick="query();"><span class="glyphicon glyphicon-search"></span>搜索</button>
-		</form>
+
+
+
+<div th:replace="common/fragment/common::pageList('DEMO_TEST')">
+	<div th:fragment="queryFragment">
+		<input type="hidden" id="cId" name="cId">
+		<input type="text" class="form-control input-sm" id="w" name="w" placeholder="请输入WORD" style="width:200px;">
+		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	
-	
-	
-	
+	<table th:fragment="listFragment">
+	<tr>
+		<td colspan="2" style="text-align: left;margin-left:10px">relateC<span id="catView"></span></td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: left;margin-left:10px">PPPPP</td>
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td class="w-id">{{v.src}}</td>
+		<td class="w-id">{{v.t}}</td>
+	</tr>
+	{{/each}}
+	</script>
+	</table>
 </div>
-
 
 
 

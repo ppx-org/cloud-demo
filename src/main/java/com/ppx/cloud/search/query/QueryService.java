@@ -25,11 +25,9 @@ import com.ppx.cloud.search.util.WordUtils;
 public class QueryService extends MyDaoSupport {
 	
 	
-	public QueryPageList query(String w) {
+	public QueryPageList query(String w, QueryPage p, Integer cId) {
 		
-		
-		QueryPage p = new QueryPage();
-		Map<String, Object> findMap = findProdId(w, p);
+		Map<String, Object> findMap = findProdId(w, p, cId);
 		
 		
 		if (p.getTotalRows() == 0) {
@@ -49,7 +47,7 @@ public class QueryService extends MyDaoSupport {
 		}
 	}
 	
-	private Map<String, Object> findProdId(String w, QueryPage p) {
+	private Map<String, Object> findProdId(String w, QueryPage p, Integer cId) {
 		
 		int storeId = 1;
 		String versionName = "V1";
@@ -80,6 +78,13 @@ public class QueryService extends MyDaoSupport {
 			return returnMap;
 		}
 		
+		// 查catId
+		if (cId != null) {
+			BitSet catBs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_CAT, cId + "");
+			resultBs.and(catBs);
+		}
+		
+		
 		
 		p.setTotalRows(resultBs.cardinality());
 		List<Integer> prodIdList = BitSetUtils.bsToPage(resultBs, (p.getPageNumber() - 1) * p.getPageSize(), p.getPageSize());
@@ -97,6 +102,17 @@ public class QueryService extends MyDaoSupport {
 		}
 		returnMap.put("catList", catList);
 		
+		// promo statistic
+		List<QueryCategory> progList = new ArrayList<QueryCategory>();
+		List<Integer> progIdList = listCatId(versionName);		
+		for (Integer progId : progIdList) {			
+			BitSet bs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_PROMO, progId + "");
+			bs.and(resultBs);
+			int n = bs.cardinality();
+			if (n != 0) progList.add(new QueryCategory(progId, n));
+		}
+		System.out.println("xxxxxxxxxout:" + progList);
+		returnMap.put("progList", progList);
 		
 		
 		
@@ -205,6 +221,16 @@ public class QueryService extends MyDaoSupport {
 		List<Integer> returnList = new ArrayList<Integer>();
 		String[] fileName = new File(BitSetUtils.getRealPath(versionName, BitSetUtils.PATH_CAT)).list();
 		for (String catIdName : fileName) {		
+			catIdName = catIdName.replace("_", "");
+			returnList.add(Integer.parseInt(catIdName));
+		}
+		return returnList;
+	}
+	
+	private List<Integer> listProgId(String versionName) {
+		List<Integer> returnList = new ArrayList<Integer>();
+		String[] fileName = new File(BitSetUtils.getRealPath(versionName, BitSetUtils.PATH_PROMO)).list();
+		for (String catIdName : fileName) {	
 			catIdName = catIdName.replace("_", "");
 			returnList.add(Integer.parseInt(catIdName));
 		}
