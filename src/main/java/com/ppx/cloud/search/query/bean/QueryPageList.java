@@ -11,7 +11,9 @@ import java.util.List;
  */
 public class QueryPageList {
 
-	private List<QueryProduct> list = new ArrayList<QueryProduct>();
+	private List<QueryProduct> prodList = new ArrayList<QueryProduct>();
+	
+	private List<QueryCategory> catList = new ArrayList<QueryCategory>();
 	
 	private QueryPage queryPage = new QueryPage();
 	
@@ -19,17 +21,26 @@ public class QueryPageList {
 		
 	}
 	
-	public QueryPageList(List<QueryProduct> list, QueryPage queryPage) {
-		this.list = list;
+	public QueryPageList(List<QueryProduct> prodList, List<QueryCategory> catList, QueryPage queryPage) {
+		this.prodList = prodList;
+		this.catList = catList;
 		this.queryPage = queryPage;
 	}
 
-	public List<QueryProduct> getList() {
-		return list;
+	public List<QueryProduct> getProdList() {
+		return prodList;
 	}
 
-	public void setList(List<QueryProduct> list) {
-		this.list = list;
+	public void setProdList(List<QueryProduct> prodList) {
+		this.prodList = prodList;
+	}
+
+	public List<QueryCategory> getCatList() {
+		return catList;
+	}
+
+	public void setCatList(List<QueryCategory> catList) {
+		this.catList = catList;
 	}
 
 	public QueryPage getQueryPage() {
@@ -39,6 +50,10 @@ public class QueryPageList {
 	public void setQueryPage(QueryPage queryPage) {
 		this.queryPage = queryPage;
 	}
+
+	
+	
+	
 
 	
 	

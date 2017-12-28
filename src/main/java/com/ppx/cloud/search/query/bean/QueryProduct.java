@@ -2,66 +2,68 @@ package com.ppx.cloud.search.query.bean;
 
 public class QueryProduct {
 	
-	private Integer prodId;
+	private Integer pid;
 	
-	private Float price;
+	private Float p;
 
-	private String policy;
+	private String arg;
 	
-	private Integer progId;
+	private Integer gid;
 	
-	private String prodTitle;
+	private String t;
 	
-	private String prodImgSrc;
+	private String src;
 
-	public Integer getProdId() {
-		return prodId;
+	public Integer getPid() {
+		return pid;
 	}
 
-	public void setProdId(Integer prodId) {
-		this.prodId = prodId;
+	public void setPid(Integer pid) {
+		this.pid = pid;
 	}
 
-	public Float getPrice() {
-		return price;
+	public Float getP() {
+		return p;
 	}
 
-	public void setPrice(Float price) {
-		this.price = price;
+	public void setP(Float p) {
+		this.p = p;
 	}
 
-	public String getPolicy() {
-		return policy;
+	public String getArg() {
+		return arg;
 	}
 
-	public void setPolicy(String policy) {
-		this.policy = policy;
+	public void setArg(String arg) {
+		this.arg = arg;
 	}
 
-	public Integer getProgId() {
-		return progId;
+	public Integer getGid() {
+		return gid;
 	}
 
-	public void setProgId(Integer progId) {
-		this.progId = progId;
+	public void setGid(Integer gid) {
+		this.gid = gid;
 	}
 
-	public String getProdTitle() {
-		return prodTitle;
+	public String getT() {
+		return t;
 	}
 
-	public void setProdTitle(String prodTitle) {
-		this.prodTitle = prodTitle;
+	public void setT(String t) {
+		this.t = t;
 	}
 
-	public String getProdImgSrc() {
-		return prodImgSrc;
+	public String getSrc() {
+		return src;
 	}
 
-	public void setProdImgSrc(String prodImgSrc) {
-		this.prodImgSrc = prodImgSrc;
+	public void setSrc(String src) {
+		this.src = src;
 	}
 
+
+	
 }
 
 

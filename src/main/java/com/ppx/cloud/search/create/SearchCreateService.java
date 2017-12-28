@@ -194,7 +194,7 @@ public class SearchCreateService extends MyDaoSupport {
 	public Map<String, Integer> createStoreIndex(String versionName) {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
-		String path = "store";
+		String path = BitSetUtils.PATH_STORE;
 		BitSetUtils.initPath(versionName, path);
 		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
@@ -236,7 +236,7 @@ public class SearchCreateService extends MyDaoSupport {
 	public Map<String, Integer> createTitleIndex(String versionName) {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
-		String path = "title";
+		String path = BitSetUtils.PATH_TITLE;
 		BitSetUtils.initPath(versionName, path);
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
@@ -272,7 +272,7 @@ public class SearchCreateService extends MyDaoSupport {
 	public Map<String, Integer> createCatIndex(String versionName) {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
-		String path = "cat";
+		String path = BitSetUtils.PATH_CAT;
 		BitSetUtils.initPath(versionName, path);
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
@@ -319,7 +319,7 @@ public class SearchCreateService extends MyDaoSupport {
 	public Map<String, Integer> createBrandIndex(String versionName) {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
-		String path = "brand";
+		String path = BitSetUtils.PATH_BRAND;
 		BitSetUtils.initPath(versionName, path);
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
@@ -451,7 +451,7 @@ public class SearchCreateService extends MyDaoSupport {
 	
 	
 	private void createDateProme(String date, String versionName, List<Map<String, Object>> indexList) {
-		String path = "promo/" + date;
+		String path = BitSetUtils.PATH_PROMO + "/" + date;
 		BitSetUtils.initPath(versionName, path);
 		
 		Map<Integer, BitSet> bitSetMap = new HashMap<Integer, BitSet>();

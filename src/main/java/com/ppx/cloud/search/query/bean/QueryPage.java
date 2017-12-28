@@ -6,7 +6,7 @@ public class QueryPage {
 
 	private int pageNumber = 1;
 
-	private int totalRows;
+	private int totalRows = 0;
 
 	public int getPageSize() {
 		return pageSize;

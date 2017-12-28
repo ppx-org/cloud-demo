@@ -19,8 +19,43 @@ import com.ppx.cloud.grant.common.GrantContext;
  * @date 2017年12月7日
  */
 public class BitSetUtils {
+
+	public static final String PATH_STORE = "store";
 	
-	// type  招聘 1,
+	public static final String PATH_TITLE = "title";
+	
+	public static final String PATH_CAT = "cat";
+	
+	public static final String PATH_BRAND = "brand";
+
+	public static final String PATH_THEME = "theme";
+	
+	public static final String PATH_PROMO = "promo";
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	// TODO 按merchantId分
@@ -35,7 +70,7 @@ public class BitSetUtils {
 		return System.getProperty("file.searchPath");
 	}
 	
-	private static String getRealPath(String versionName, String path) {
+	public static String getRealPath(String versionName, String path) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		return getSearchPath() + "/" + merchantId + "/" + versionName + "/" + path + "/";
 	}
@@ -99,14 +134,14 @@ public class BitSetUtils {
 		String realPath = getRealPath(versionName, path);
 	
 		File f = new File(realPath + "_" + w);
-		if (!f.exists()) return null;
+		if (!f.exists()) return new BitSet();
 		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(realPath + "_" + w))){			
 			BitSet rBs = (BitSet)in.readObject();
 			return rBs;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return new BitSet();
 	}
 	
 	
@@ -144,51 +179,9 @@ public class BitSetUtils {
         return returnList;
     }
 	
-//	// 从BitSet toString改造
-//	public static String bsToPage(BitSet bs, int begin, int len) {
-//		int maxOffset = begin + len;
-//		int c = 0;
-//        StringBuilder b = new StringBuilder();
-//        int i = bs.nextSetBit(0);
-//        if (i != -1) {
-//            if (begin == 0) {
-//            	b.append(i);
-//            }
-//            while (true) {
-//                if (++i < 0) break;
-//                if ((i = bs.nextSetBit(i)) < 0) break;
-//                int endOfRun = bs.nextClearBit(i);
-//                
-//                boolean isEnd = false;
-//                do { 
-//                	c++;
-//                	if (c >= maxOffset) {
-//                		isEnd = true;
-//                		break;
-//                	}
-//                	if (c >= begin) {
-//                		if (c == begin && begin != 0) b.append(i); 
-//                		else b.append(",").append(i);
-//                	}
-//                }
-//                while (++i != endOfRun);
-//                if (isEnd) break;
-//            }
-//        }
-//        return b.toString();
-//    }
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
 	
 	
 	

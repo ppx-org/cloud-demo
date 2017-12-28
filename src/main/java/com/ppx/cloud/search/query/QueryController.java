@@ -25,6 +25,11 @@ public class QueryController {
 		
 		QueryPageList list = serv.query(w);
 		
+	
+		
+//		List<Integer> list = serv.listCatId("V1");
+//		System.out.println("xxxxxxxxxxxxxxlist:" + list);
+		
 		
 		
 		return ControllerReturn.ok(list);

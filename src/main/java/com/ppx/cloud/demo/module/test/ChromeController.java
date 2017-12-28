@@ -45,6 +45,8 @@ public class ChromeController {
 	public ModelAndView chrome(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView();
 		
+		
+		
 		return mv;
 	}
 	
@@ -71,7 +73,6 @@ public class ChromeController {
 			staticSession.activate();
 			
 			staticSession.wait(200);
-			//click(666, 334);
 			staticSession.evaluate("$('#CheckCodeCapt').click();");
 			staticSession.wait(1200);
 	        
@@ -182,9 +183,10 @@ public class ChromeController {
 		
 		StringBuilder sendCookie = new StringBuilder();
 	    for (Cookie cookie : cookieList) {
-			System.out.println("........cookie:" + cookie.getName() + ":" + cookie.getValue());
 			sendCookie.append(cookie.getName() + "=" + cookie.getValue() + ";");
 		}
+	    
+	    System.out.println("........cookie:" + sendCookie);
         
 	    //https://jobads.zhaopin.com/Position/PositionAdd
 	    String addUrl = "https://jobads.zhaopin.com/Position/PositionAdd";
@@ -192,8 +194,6 @@ public class ChromeController {
         HttpHeaders headers = new HttpHeaders();        
         headers.add("Accept", "application/xml, text/xml, */*");
         headers.add("Content-Type", "application/x-www-form-urlencoded");
-        headers.add("Origin", "https://ehire.51job.com");
-        headers.add("Referer", "https://ehire.51job.com/");
         headers.add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
         headers.add("X-Requested-With", "XMLHttpRequest");
         headers.add("Cookie", sendCookie.toString());
