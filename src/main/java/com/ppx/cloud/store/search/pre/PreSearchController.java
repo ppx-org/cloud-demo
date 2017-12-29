@@ -23,9 +23,38 @@ public class PreSearchController {
 		return mv;
 	}
 
+	
+	@GetMapping
+	public ModelAndView promo(Integer pId) {
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("pId", pId);
+		return mv;
+	}
+	
+	@GetMapping
+	public ModelAndView cat(Integer cId) {
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("cId", cId);
+		return mv;
+	}
+	
+	@GetMapping
+	public ModelAndView brand(Integer bId) {
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("bId", bId);
+		return mv;
+	}
+	
+	@GetMapping
+	public ModelAndView theme(Integer tId) {
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("tId", tId);
+		return mv;
+	}
+	
+	
 	@PostMapping @ResponseBody
 	public Map<String, Object> search(@RequestParam String word) {
-		
 		return ControllerReturn.ok();
 	}
 	

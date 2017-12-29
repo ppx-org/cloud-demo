@@ -13,34 +13,13 @@ $(function() {
 
 
 function queryPage(pageNumber) {
-	var w = $("#w").val();
-	if (w == "") {
-		alertWarning("不能为空！");
-		return;
-	}
 	$("#pageNumber").val(pageNumber);
 	showLoading();
 	
 	
 	
-	$.get([[@{/query/q}]], $("#queryForm").serialize(), function(r) {
+	$.get([[@{/query/promo}]], $("#queryForm").serialize(), function(r) {
 		refreshPageData(r);
-		
-		// fast
-		$("#fastView").empty();
-		$("#fastView").append('<a href="javascript:onFast(1)">fast(' + r.fastN + ')</a>');
-		$("#fastView").append('<a href="javascript:onFast(\'\')">cancel</a>');
-		
-		
-		// cat	
-		$("#catView").empty();
-		for (var i = 0; i < r.catList.length; i++) {
-			$("#catView").append('<a href="javascript:onCat(' + r.catList[i].cid + ')">' + r.catList[i].cn + '(' + r.catList[i].n + ')</a>');
-		}
-		if (r.catList.length > 0 && $("#cId").val() != "") {
-			$("#catView").append('<a href="javascript:onCat(\'\')">cancel</a>');
-		}
-		
 		// promo
 		$("#promoView").empty();
 		for (var i = 0; i < r.promoList.length; i++) {
@@ -50,29 +29,17 @@ function queryPage(pageNumber) {
 			$("#promoView").append('<a href="javascript:onPromo(\'\')">cancel</a>');
 		}
 		
-		
 		hideLoading();
 	});
 }
 
-function onFast(fast) {
-	$("#fast").val(fast);
-	queryPage(1);
-}
-
-function onCat(cId) {
-	$("#cId").val(cId);
+function query() {
+	$("#gId").val("");
 	queryPage(1);
 }
 
 function onPromo(gId) {
 	$("#gId").val(gId);
-	queryPage(1);
-}
-
-function query() {
-	$("#cId").val("");
-	$("#gId").val("");
 	queryPage(1);
 }
 
@@ -92,10 +59,7 @@ function query() {
 
 <div th:replace="common/fragment/common::pageList('DEMO_TEST')">
 	<div th:fragment="queryFragment">
-		<input type="hidden" id="fast" name="fast">
-		<input type="hidden" id="cId" name="cId">
 		<input type="hidden" id="gId" name="gId">
-		<input type="text" class="form-control input-sm" id="w" name="w" placeholder="请输入WORD" style="width:200px;" value="招聘">
 		<button type="button" class="btn btn-default btn-sm" onclick="query();"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	
@@ -103,8 +67,6 @@ function query() {
 	<tr>
 	<td colspan="2">
 		<table>
-			<tr><td style="text-align: left;margin-left:10px">fast<span id="fastView"></span></td></tr>
-			<tr><td style="text-align: left;margin-left:10px">cccc<span id="catView"></span></td></tr>
 			<tr><td style="text-align: left;margin-left:10px">PPPPP<span id="promoView"></span></td></tr>
 		</table>
 	</td>

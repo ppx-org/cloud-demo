@@ -11,9 +11,17 @@ import java.util.List;
  */
 public class QueryPageList {
 
-	private List<QueryProduct> prodList = new ArrayList<QueryProduct>();
+	private List<QueryProduct> prodList;
 	
-	private List<QueryCategory> catList = new ArrayList<QueryCategory>();
+	private List<QueryCategory> catList;
+	
+	private List<QueryPromo> promoList;
+	
+	private List<QueryBrand> brandList;
+	
+	private List<QueryTheme> themeList;
+	
+	private Integer fastN = 0;
 	
 	private QueryPage queryPage = new QueryPage();
 	
@@ -21,11 +29,21 @@ public class QueryPageList {
 		
 	}
 	
-	public QueryPageList(List<QueryProduct> prodList, List<QueryCategory> catList, QueryPage queryPage) {
+	public QueryPageList(QueryPage queryPage, List<QueryProduct> prodList, List<QueryCategory> catList, List<QueryPromo> promoList, Integer fastN) {
+		this.queryPage = queryPage;
 		this.prodList = prodList;
 		this.catList = catList;
-		this.queryPage = queryPage;
+		this.promoList = promoList;
+		this.fastN = fastN;
 	}
+	
+	
+	public QueryPageList(QueryPage queryPage, List<QueryProduct> prodList) {
+		this.queryPage = queryPage;
+		this.prodList = prodList;
+	}
+	
+	
 
 	public List<QueryProduct> getProdList() {
 		return prodList;
@@ -49,6 +67,39 @@ public class QueryPageList {
 
 	public void setQueryPage(QueryPage queryPage) {
 		this.queryPage = queryPage;
+	}
+
+	public List<QueryPromo> getPromoList() {
+		return promoList;
+	}
+
+	public void setPromoList(List<QueryPromo> promoList) {
+		this.promoList = promoList;
+	}
+	
+
+	public List<QueryBrand> getBrandList() {
+		return brandList;
+	}
+
+	public void setBrandList(List<QueryBrand> brandList) {
+		this.brandList = brandList;
+	}
+
+	public List<QueryTheme> getThemeList() {
+		return themeList;
+	}
+
+	public void setThemeList(List<QueryTheme> themeList) {
+		this.themeList = themeList;
+	}
+
+	public int getFastN() {
+		return fastN;
+	}
+
+	public void setFastN(int fastN) {
+		this.fastN = fastN;
 	}
 
 	

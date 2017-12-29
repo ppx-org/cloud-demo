@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+<link th:replace="common/fragment/common::validation"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	
+});
+
+
+function queryPage(pageNumber) {
+	$("#pageNumber").val(pageNumber);
+	showLoading();
+	
+	
+	
+	$.get([[@{/query/brand}]], $("#queryForm").serialize(), function(r) {
+		refreshPageData(r);
+		// brand	
+		$("#brandView").empty();
+		for (var i = 0; i < r.brandList.length; i++) {
+			$("#brandView").append('<a href="javascript:onBrand(' + r.brandList[i].bid + ')">' + r.brandList[i].bn + '(' + r.brandList[i].n + ')</a>');
+		}
+		if (r.brandList.length > 0 && $("#bId").val() != "") {
+			$("#brandView").append('<a href="javascript:onBrand(\'\')">cancel</a>');
+		}
+		
+		hideLoading();
+	});
+}
+
+function query() {
+	$("#bId").val("");
+	queryPage(1);
+}
+
+function onBrand(bId) {
+	$("#bId").val(bId);
+	queryPage(1);
+}
+
+</script>
+
+<style>
+#catView a {
+	padding-left:10px
+}
+</style>
+
+</head>
+
+<body>
+
+
+
+<div th:replace="common/fragment/common::pageList('DEMO_TEST')">
+	<div th:fragment="queryFragment">
+		<input type="hidden" id="bId" name="bId">
+		<button type="button" class="btn btn-default btn-sm" onclick="query();"><span class="glyphicon glyphicon-search"></span>搜索</button>
+	</div>
+	
+	<table th:fragment="listFragment">
+	<tr>
+	<td colspan="2">
+		<table>
+			<tr><td style="text-align: left;margin-left:10px">BBB<span id="brandView"></span></td></tr>
+		</table>
+	</td>
+	</tr>
+	
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td class="w-id">{{v.src}}</td>
+		<td class="w-id">
+			<div>{{v.t}}</div>
+			<a href="/preSearch/promo?progId={{v.gid}}" target="_blank">{{v.arg}}</a>
+		</td>
+	</tr>
+	{{/each}}
+	</script>
+	</table>
+</div>
+
+
+
+
+</body>
+</html>
+
