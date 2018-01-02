@@ -49,13 +49,16 @@ function onBrand(bId) {
 #catView a {
 	padding-left:10px
 }
+
+.page-list-title {display: none;}
 </style>
 
 </head>
 
 <body>
 
-
+<ul id="myTab" class="nav nav-tabs" th:include="store/search/pre/preHead"></ul>
+<script th:inline="javascript">$("#brand").tab('show')</script>
 
 <div th:replace="common/fragment/common::pageList('DEMO_TEST')">
 	<div th:fragment="queryFragment">

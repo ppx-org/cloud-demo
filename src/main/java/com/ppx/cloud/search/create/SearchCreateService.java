@@ -9,7 +9,6 @@ import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.util.DateUtils;
@@ -39,36 +38,37 @@ public class SearchCreateService extends MyDaoSupport {
 		getJdbcTemplate().update(beginUpdateSql, merchantId, versionName);
 		
 		
+		BitSetUtils.setVersionMap(merchantId, versionName);
 		// 1.初始化
 		Map<String, Integer> map1 = initSearchWords();
 		System.out.println("..............1:" + map1);
 		
 		// 2.删除index
-		Map<String, Integer> map2 = BitSetUtils.removeVersionPath(versionName);
+		Map<String, Integer> map2 = BitSetUtils.removeVersionPath();
 		System.out.println("..............2:" + map2);
 		
 		// 3.st index
-		Map<String, Integer> map3 = createStoreIndex(versionName);
+		Map<String, Integer> map3 = createStoreIndex();
 		System.out.println("..............3:" + map3);
 		
 		// 4.title index
-		Map<String, Integer> map4 = createTitleIndex(versionName);
+		Map<String, Integer> map4 = createTitleIndex();
 		System.out.println("..............4:" + map4);
 		
 		// 5.cat index
-		Map<String, Integer> map5 = createCatIndex(versionName);
+		Map<String, Integer> map5 = createCatIndex();
 		System.out.println("..............5:" + map5);
 		
 		// 6.brand index
-		Map<String, Integer> map6 = createBrandIndex(versionName);
+		Map<String, Integer> map6 = createBrandIndex();
 		System.out.println("..............6:" + map6);
 		
 		// 7.theme index
-		Map<String, Integer> map7 = createThemeIndex(versionName);
+		Map<String, Integer> map7 = createThemeIndex();
 		System.out.println("..............7:" + map7);
 		
 		// 8.theme index
-		Map<String, Integer> map8 = createPromoIndex(versionName);
+		Map<String, Integer> map8 = createPromoIndex();
 		System.out.println("..............8:" + map8);
 		
 		
@@ -191,11 +191,11 @@ public class SearchCreateService extends MyDaoSupport {
 
 	
 	
-	public Map<String, Integer> createStoreIndex(String versionName) {
+	public Map<String, Integer> createStoreIndex() {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
 		String path = BitSetUtils.PATH_STORE;
-		BitSetUtils.initPath(versionName, path);
+		BitSetUtils.initPath(path);
 		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
@@ -209,7 +209,7 @@ public class SearchCreateService extends MyDaoSupport {
 			for (Integer prodId : prodIdList) {
 				storeBs.set(prodId);
 			}
-			BitSetUtils.writeBitSet(versionName, path, storeId + "", storeBs);
+			BitSetUtils.writeBitSet(path, storeId + "", storeBs);
 			
 			returnMap.put("store_" + storeId, storeBs.cardinality());
 		}
@@ -223,7 +223,7 @@ public class SearchCreateService extends MyDaoSupport {
 			for (Integer prodId : prodIdList) {
 				fastBs.set(prodId);
 			}
-			BitSetUtils.writeBitSet(versionName, path, "local" + storeId, fastBs);
+			BitSetUtils.writeBitSet(path, "local" + storeId, fastBs);
 			returnMap.put("local_store_" + storeId, fastBs.cardinality());
 		}
 		
@@ -233,11 +233,11 @@ public class SearchCreateService extends MyDaoSupport {
 	
 	
 	
-	public Map<String, Integer> createTitleIndex(String versionName) {
+	public Map<String, Integer> createTitleIndex() {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
 		String path = BitSetUtils.PATH_TITLE;
-		BitSetUtils.initPath(versionName, path);
+		BitSetUtils.initPath(path);
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
 		Map<String, BitSet> wordMap = new HashMap<String, BitSet>();		
@@ -260,7 +260,7 @@ public class SearchCreateService extends MyDaoSupport {
 		Set<String> set =  wordMap.keySet();
 		for (String key : set) {
 			BitSet bs = wordMap.get(key);			
-			BitSetUtils.writeBitSet(versionName, path, key, bs);
+			BitSetUtils.writeBitSet(path, key, bs);
 		}
 		
 		returnMap.put("prodNum", list.size());
@@ -269,11 +269,11 @@ public class SearchCreateService extends MyDaoSupport {
 	}
 	
 	
-	public Map<String, Integer> createCatIndex(String versionName) {
+	public Map<String, Integer> createCatIndex() {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
 		String path = BitSetUtils.PATH_CAT;
-		BitSetUtils.initPath(versionName, path);
+		BitSetUtils.initPath(path);
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
 		// 创建子类索引
@@ -286,7 +286,7 @@ public class SearchCreateService extends MyDaoSupport {
 			for (Integer prodId : prodIdList) {
 				bs.set(prodId);
 			}
-			BitSetUtils.writeBitSet(versionName, path, catId + "", bs);
+			BitSetUtils.writeBitSet(path, catId + "", bs);
 		}
 		
 		// 创建父类索引
@@ -301,12 +301,12 @@ public class SearchCreateService extends MyDaoSupport {
 				String[] subId = subIds.split(",");
 				BitSet mainBs = null;
 				for (int i = 0; i < subId.length; i++) {
-					BitSet bs = BitSetUtils.readBitSet(versionName, path, subId[i] + "");
+					BitSet bs = BitSetUtils.readBitSet(path, subId[i] + "");
 					if (bs == null) continue; // 如果是删除的catId，则bs就是null
 					if (mainBs == null) mainBs = bs;
 					else mainBs.or(bs);
 				}
-				BitSetUtils.writeBitSet(versionName, path, mainCatId + "", mainBs);
+				BitSetUtils.writeBitSet(path, mainCatId + "", mainBs);
 			}
 		}
 		
@@ -316,11 +316,11 @@ public class SearchCreateService extends MyDaoSupport {
 	}
 	
 	
-	public Map<String, Integer> createBrandIndex(String versionName) {
+	public Map<String, Integer> createBrandIndex() {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
 		String path = BitSetUtils.PATH_BRAND;
-		BitSetUtils.initPath(versionName, path);
+		BitSetUtils.initPath(path);
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
 		String brandSql =  "select BRAND_ID from brand where MERCHANT_ID = ? and RECORD_STATUS = ?";	
@@ -333,7 +333,7 @@ public class SearchCreateService extends MyDaoSupport {
 				bs.set(prodId);
 			}
 			if (bs.cardinality() != 0) {
-				BitSetUtils.writeBitSet(versionName, path, brandId + "", bs);
+				BitSetUtils.writeBitSet(path, brandId + "", bs);
 			}
 		}
 		
@@ -342,11 +342,11 @@ public class SearchCreateService extends MyDaoSupport {
 	}
 	
 	
-	public Map<String, Integer> createThemeIndex(String versionName) {
+	public Map<String, Integer> createThemeIndex() {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
 		String path = "theme";
-		BitSetUtils.initPath(versionName, path);
+		BitSetUtils.initPath(path);
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
 		String themeSql =  "select THEME_ID from theme where MERCHANT_ID = ? and RECORD_STATUS = ?";	
@@ -359,7 +359,7 @@ public class SearchCreateService extends MyDaoSupport {
 				bs.set(prodId);
 			}
 			if (bs.cardinality() != 0) {
-				BitSetUtils.writeBitSet(versionName, path, themeId + "", bs);
+				BitSetUtils.writeBitSet(path, themeId + "", bs);
 			}
 		}
 		
@@ -386,7 +386,7 @@ public class SearchCreateService extends MyDaoSupport {
 	
 	/////////////////////////////////////////////promo生成今天和明天的
 	
-	public Map<String, Integer> createPromoIndex(String versionName) {
+	public Map<String, Integer> createPromoIndex() {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
 		// 处理promo索引
@@ -399,13 +399,13 @@ public class SearchCreateService extends MyDaoSupport {
 		String todaySql = "select t.PROD_ID, t.PROG_ID from (select * from program_index where " + 
 				"MERCHANT_ID = ? and curdate() between INDEX_BEGIN and INDEX_END order by INDEX_PRIO desc) t group by t.PROD_ID";
 		List<Map<String, Object>> todayList = getJdbcTemplate().queryForList(todaySql, merchantId);
-		createDateProme(DateUtils.today(), versionName, todayList);
+		createDateProme(DateUtils.today(), todayList);
 		
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>tomorrow
 		String tomorrowSql = "select t.PROD_ID, t.PROG_ID from (select * from program_index where " + 
 				"MERCHANT_ID = ? and DATE_SUB(curdate(),INTERVAL -1 DAY) between INDEX_BEGIN and INDEX_END order by INDEX_PRIO desc) t group by t.PROD_ID";
 		List<Map<String, Object>> tomorrowList = getJdbcTemplate().queryForList(tomorrowSql, merchantId);
-		createDateProme(DateUtils.tomorrow(), versionName, tomorrowList);
+		createDateProme(DateUtils.tomorrow(), tomorrowList);
 		
 		
 		
@@ -450,9 +450,9 @@ public class SearchCreateService extends MyDaoSupport {
 	
 	
 	
-	private void createDateProme(String date, String versionName, List<Map<String, Object>> indexList) {
+	private void createDateProme(String date, List<Map<String, Object>> indexList) {
 		String path = BitSetUtils.PATH_PROMO + "/" + date;
-		BitSetUtils.initPath(versionName, path);
+		BitSetUtils.initPath(path);
 		
 		Map<Integer, BitSet> bitSetMap = new HashMap<Integer, BitSet>();
 		
@@ -472,7 +472,7 @@ public class SearchCreateService extends MyDaoSupport {
 		}
 		
 		for (Integer progId : bitSetMap.keySet()) {
-			BitSetUtils.writeBitSet(versionName, path, progId + "", bitSetMap.get(progId));
+			BitSetUtils.writeBitSet(path, progId + "", bitSetMap.get(progId));
 		}
 	}
 	

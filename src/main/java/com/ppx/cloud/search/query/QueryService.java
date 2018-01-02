@@ -60,7 +60,6 @@ public class QueryService extends MyDaoSupport {
 	private Map<String, Object> findProdId(String w, QueryPage p, String date, Integer cId, Integer gId, Integer fast) {
 		
 		int storeId = 1;
-		String versionName = "V1";
 		
 		if (StringUtils.isEmpty(w)) {
 			return null;
@@ -68,20 +67,20 @@ public class QueryService extends MyDaoSupport {
 		
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
-		BitSet resultBs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_TITLE, w);
+		BitSet resultBs = BitSetUtils.readBitSet(BitSetUtils.PATH_TITLE, w);
 		
 		if (resultBs.cardinality() == 0 && w.length() > 1) {
 			BitSet splitBs = new BitSet();
 			String[] word = WordUtils.splitWord(w).split(",");
 			for (String s : word) {
-				BitSet bs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_TITLE, s);
+				BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_TITLE, s);
 				splitBs.or(bs);
 			}
 			resultBs = splitBs;
 		}
 		
 		if (resultBs.cardinality() != 0) {
-			BitSet storeBs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_STORE, storeId + "");
+			BitSet storeBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, storeId + "");
 			resultBs.and(storeBs);
 		}
 		else {
@@ -91,19 +90,19 @@ public class QueryService extends MyDaoSupport {
 		BitSet fastBs = null;
 		// 查fast
 		if (fast != null) {
-			fastBs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_STORE, "local" + storeId);
+			fastBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, "local" + storeId);
 			resultBs.and(fastBs);
 		}
 		
 		// 查catId
 		if (cId != null) {
-			BitSet catBs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_CAT, cId + "");
+			BitSet catBs = BitSetUtils.readBitSet(BitSetUtils.PATH_CAT, cId + "");
 			resultBs.and(catBs);
 		}
 		
 		// 查gId
 		if (gId != null) {
-			BitSet promoBs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_PROMO + "/" + date, gId + "");
+			BitSet promoBs = BitSetUtils.readBitSet(BitSetUtils.PATH_PROMO + "/" + date, gId + "");
 			resultBs.and(promoBs);
 		}
 		
@@ -115,7 +114,7 @@ public class QueryService extends MyDaoSupport {
 		
 		// fast statistic
 		if (fastBs == null) {
-			fastBs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_STORE, "local" + storeId);
+			fastBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, "local" + storeId);
 		}
 		fastBs.and(resultBs);
 		int fastN = fastBs.cardinality();
@@ -124,9 +123,9 @@ public class QueryService extends MyDaoSupport {
 		
 		// cat statistic 改成bs从上面读
 		List<QueryCategory> catList = new ArrayList<QueryCategory>();
-		List<Integer> catIdList = listCatId(versionName);		
+		List<Integer> catIdList = listCatId();		
 		for (Integer catId : catIdList) {			
-			BitSet bs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_CAT, catId + "");
+			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_CAT, catId + "");
 			bs.and(resultBs);
 			int n = bs.cardinality();
 			if (n != 0) catList.add(new QueryCategory(catId, n));
@@ -135,9 +134,9 @@ public class QueryService extends MyDaoSupport {
 		
 		// promo statistic 改成bs从上面读
 		List<QueryPromo> progList = new ArrayList<QueryPromo>();
-		List<Integer> progIdList = listProgId(versionName, date);		
+		List<Integer> progIdList = listProgId(date);		
 		for (Integer progId : progIdList) {	
-			BitSet bs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_PROMO + "/" + date, progId + "");
+			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_PROMO + "/" + date, progId + "");
 			bs.and(resultBs);
 			int n = bs.cardinality();
 			if (n != 0) progList.add(new QueryPromo(progId, n));
@@ -276,9 +275,9 @@ public class QueryService extends MyDaoSupport {
 	
 	
 	
-	private List<Integer> listCatId(String versionName) {
+	private List<Integer> listCatId() {
 		List<Integer> returnList = new ArrayList<Integer>();
-		String[] fileName = new File(BitSetUtils.getRealPath(versionName, BitSetUtils.PATH_CAT)).list();
+		String[] fileName = new File(BitSetUtils.getRealPath(BitSetUtils.PATH_CAT)).list();
 		for (String catIdName : fileName) {		
 			catIdName = catIdName.replace("_", "");
 			returnList.add(Integer.parseInt(catIdName));
@@ -286,9 +285,9 @@ public class QueryService extends MyDaoSupport {
 		return returnList;
 	}
 	
-	private List<Integer> listBrandId(String versionName) {
+	private List<Integer> listBrandId() {
 		List<Integer> returnList = new ArrayList<Integer>();
-		String[] fileName = new File(BitSetUtils.getRealPath(versionName, BitSetUtils.PATH_BRAND)).list();
+		String[] fileName = new File(BitSetUtils.getRealPath(BitSetUtils.PATH_BRAND)).list();
 		for (String brandIdName : fileName) {		
 			brandIdName = brandIdName.replace("_", "");
 			returnList.add(Integer.parseInt(brandIdName));
@@ -296,9 +295,9 @@ public class QueryService extends MyDaoSupport {
 		return returnList;
 	}
 	
-	private List<Integer> listThemeId(String versionName) {
+	private List<Integer> listThemeId() {
 		List<Integer> returnList = new ArrayList<Integer>();
-		String[] fileName = new File(BitSetUtils.getRealPath(versionName, BitSetUtils.PATH_THEME)).list();
+		String[] fileName = new File(BitSetUtils.getRealPath(BitSetUtils.PATH_THEME)).list();
 		for (String themeIdName : fileName) {		
 			themeIdName = themeIdName.replace("_", "");
 			returnList.add(Integer.parseInt(themeIdName));
@@ -306,9 +305,9 @@ public class QueryService extends MyDaoSupport {
 		return returnList;
 	}
 	
-	private List<Integer> listProgId(String versionName, String date) {
+	private List<Integer> listProgId(String date) {
 		List<Integer> returnList = new ArrayList<Integer>();
-		String[] fileName = new File(BitSetUtils.getRealPath(versionName, BitSetUtils.PATH_PROMO + "/" + date)).list();
+		String[] fileName = new File(BitSetUtils.getRealPath(BitSetUtils.PATH_PROMO + "/" + date)).list();
 		if (fileName == null) return new ArrayList<Integer>(); 
 		for (String progIdName : fileName) {	
 			progIdName = progIdName.replace("_", "");
@@ -333,19 +332,19 @@ public class QueryService extends MyDaoSupport {
 	
 	
 	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>cat
-	public QueryPageList queryCat(Integer storeId, String versionName, String date, QueryPage p, Integer cId) {
-		BitSet resultBs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_STORE, storeId + "");
+	public QueryPageList queryCat(Integer storeId, String date, QueryPage p, Integer cId) {
+		BitSet resultBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, storeId + "");
 		if (cId != null) {
-			BitSet bs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_CAT, cId + "");
+			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_CAT, cId + "");
 			resultBs.and(bs);
 		}
 		
 		
 		// statistic
 		List<QueryCategory> initCatList = new ArrayList<QueryCategory>();
-		List<Integer> catIdList = listCatId(versionName);				
+		List<Integer> catIdList = listCatId();				
 		for (Integer catId : catIdList) {	
-			BitSet bs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_CAT, catId + "");
+			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_CAT, catId + "");
 			bs.and(resultBs);
 			int n = bs.cardinality();
 			if (n != 0) initCatList.add(new QueryCategory(catId, n));
@@ -365,22 +364,22 @@ public class QueryService extends MyDaoSupport {
 	
 	
 	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>brand
-	public QueryPageList queryBrand(Integer storeId, String versionName, String date, QueryPage p, Integer bId) {
+	public QueryPageList queryBrand(Integer storeId, String date, QueryPage p, Integer bId) {
 		
-		BitSet resultBs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_STORE, storeId + "");
+		BitSet resultBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, storeId + "");
 		if (bId != null) {
-			BitSet bs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_BRAND, bId + "");
+			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_BRAND, bId + "");
 			resultBs.and(bs);
 		}
 		
 		
 		// statistic
 		List<QueryBrand> initBrandList = new ArrayList<QueryBrand>();
-		List<Integer> brandIdList = listBrandId(versionName);
+		List<Integer> brandIdList = listBrandId();
 		
 		BitSet totalBrandBs = new BitSet();
 		for (Integer brandId : brandIdList) {
-			BitSet bs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_BRAND, brandId + "");
+			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_BRAND, brandId + "");
 			totalBrandBs.or(bs);
 			bs.and(resultBs);
 			int n = bs.cardinality();
@@ -401,22 +400,22 @@ public class QueryService extends MyDaoSupport {
 	}
 
 	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>theme
-	public QueryPageList queryTheme(Integer storeId, String versionName, String date, QueryPage p, Integer tId) {
+	public QueryPageList queryTheme(Integer storeId, String date, QueryPage p, Integer tId) {
 		
-		BitSet resultBs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_STORE, storeId + "");
+		BitSet resultBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, storeId + "");
 		if (tId != null) {
-			BitSet bs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_THEME, tId + "");
+			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_THEME, tId + "");
 			resultBs.and(bs);
 		}
 		
 		
 		// statistic
 		List<QueryTheme> themeList = new ArrayList<QueryTheme>();
-		List<Integer> themeIdList = listThemeId(versionName);
+		List<Integer> themeIdList = listThemeId();
 		
 		BitSet totalBrandBs = new BitSet();
 		for (Integer themeId : themeIdList) {
-			BitSet bs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_THEME, themeId + "");
+			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_THEME, themeId + "");
 			totalBrandBs.or(bs);
 			bs.and(resultBs);
 			int n = bs.cardinality();
@@ -461,22 +460,22 @@ public class QueryService extends MyDaoSupport {
 	
 	
 	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>promo
-	public QueryPageList queryPromo(Integer storeId, String versionName, String date, QueryPage p, Integer gId) {
+	public QueryPageList queryPromo(Integer storeId, String date, QueryPage p, Integer gId) {
 		
-		BitSet resultBs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_STORE, storeId + "");
+		BitSet resultBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, storeId + "");
 		if (gId != null) {
-			BitSet bs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_PROMO + "/" + date, gId + "");
+			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_PROMO + "/" + date, gId + "");
 			resultBs.and(bs);
 		}
 		
 		
 		// statistic
 		List<QueryPromo> progList = new ArrayList<QueryPromo>();
-		List<Integer> progIdList = listProgId(versionName, date);
+		List<Integer> progIdList = listProgId(date);
 		
 		BitSet totalPromoBs = new BitSet();
 		for (Integer progId : progIdList) {	
-			BitSet bs = BitSetUtils.readBitSet(versionName, BitSetUtils.PATH_PROMO + "/" + date, progId + "");
+			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_PROMO + "/" + date, progId + "");
 			totalPromoBs.or(bs);
 			bs.and(resultBs);
 			int n = bs.cardinality();

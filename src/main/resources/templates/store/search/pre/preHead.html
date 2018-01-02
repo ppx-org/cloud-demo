@@ -1,0 +1,12 @@
+
+
+<li id="search"><a href="#" onclick="tagGo(this)" data-toggle="tab">SEARCH</a></li>
+<li id="cat"><a href="#" onclick="tagGo(this)" data-toggle="tab">cat</a></li>
+<li id="theme"><a href="#" onclick="tagGo(this)" data-toggle="tab">theme</a></li>
+<li id="brand"><a href="#" onclick="tagGo(this)" data-toggle="tab">brand</a></li>
+<li id="promo"><a href="#" onclick="tagGo(this)" data-toggle="tab">promo</a></li>
+<script>
+function tagGo(obj) {
+	location.href = $(obj).parent().attr("id");
+}
+</script>

@@ -45,24 +45,15 @@ public class BitSetUtils {
 	
 	
 	
+	private static Map<Integer, String> versionMap = new HashMap<Integer, String>();
 	
+	public static void setVersionMap(int merchantId, String versionName) {
+		versionMap.put(merchantId, versionName);
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	// TODO 按merchantId分
-	
-	// private static String version = "V1";
-	
-	
+	public static String getVersionName(int merchantId) {
+		return versionMap.get(merchantId);
+	}
 	
 	
 	//  file.searchPath
@@ -70,19 +61,19 @@ public class BitSetUtils {
 		return System.getProperty("file.searchPath");
 	}
 	
-	public static String getRealPath(String versionName, String path) {
+	public static String getRealPath(String path) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		return getSearchPath() + "/" + merchantId + "/" + versionName + "/" + path + "/";
+		return getSearchPath() + "/" + merchantId + "/" + getVersionName(-1) + "/" + path + "/";
 	}
 	
 	
-	public static Map<String, Integer> removeVersionPath(String versionName) {
+	public static Map<String, Integer> removeVersionPath() {
 		Map<String, Integer> countMap = new HashMap<String, Integer>();
 		countMap.put("file", 0);
 		countMap.put("folder", 0);
 		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		String path = getSearchPath() + "/" + merchantId + "/" + versionName;
+		String path = getSearchPath() + "/" + merchantId + "/" + getVersionName(merchantId);
 		File pathFile = new File(path);
 		if (pathFile.exists()) {
 			deleteAllFilesOfDir(pathFile, countMap);
@@ -107,8 +98,8 @@ public class BitSetUtils {
 	    countMap.put("folder", countMap.get("folder") + 1);
 	} 
 	
-	public static int initPath(String version, String path) {
-		String realPath = getRealPath(version, path);
+	public static int initPath(String path) {
+		String realPath = getRealPath(path);
 		
 		// 不存目录就创建
 		File pathFile = new File(realPath);
@@ -118,8 +109,8 @@ public class BitSetUtils {
 		return 1;
 	}
 	
-	public static int writeBitSet(String versionName, String path, String w, BitSet bs) {	
-		String realPath = getRealPath(versionName, path);
+	public static int writeBitSet(String path, String w, BitSet bs) {	
+		String realPath = getRealPath(path);
 		
 		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(realPath + "_" + w))) {
 			out.writeObject(bs);	
@@ -130,8 +121,8 @@ public class BitSetUtils {
 		return 1;
 	}
 	
-	public static BitSet readBitSet(String versionName, String path, String w) {
-		String realPath = getRealPath(versionName, path);
+	public static BitSet readBitSet(String path, String w) {
+		String realPath = getRealPath(path);
 	
 		File f = new File(realPath + "_" + w);
 		if (!f.exists()) return new BitSet();
@@ -150,7 +141,6 @@ public class BitSetUtils {
 		List<Integer> returnList = new ArrayList<Integer>();
 		int maxOffset = begin + len;
 		int c = 0;
-        StringBuilder b = new StringBuilder();
         int i = bs.nextSetBit(0);
         if (i != -1) {
             if (begin == 0) {

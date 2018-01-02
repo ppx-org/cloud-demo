@@ -82,15 +82,17 @@ function query() {
 #catView a {
 	padding-left:10px
 }
+.page-list-title {display: none;}
 </style>
 
 </head>
 
 <body>
 
+<ul id="myTab" class="nav nav-tabs" th:include="store/search/pre/preHead"></ul>
+<script th:inline="javascript">$("#search").tab('show')</script>
 
-
-<div th:replace="common/fragment/common::pageList('DEMO_TEST')">
+<div th:replace="common/fragment/common::pageList('')">
 	<div th:fragment="queryFragment">
 		<input type="hidden" id="fast" name="fast">
 		<input type="hidden" id="cId" name="cId">
@@ -110,17 +112,9 @@ function query() {
 	</td>
 	</tr>
 	
-	<script id="pageTemplate" type="text/html">
-	{{each arrayList as v i}}
-	<tr>
-		<td class="w-id">{{v.src}}</td>
-		<td class="w-id">
-			<div>{{v.t}}</div>
-			<a href="/preSearch/promo?progId={{v.gid}}" target="_blank">{{v.arg}}</a>
-		</td>
-	</tr>
-	{{/each}}
-	</script>
+	<tr th:replace="store/search/pre/viewProduct::prod"></tr>
+	
+	
 	</table>
 </div>
 

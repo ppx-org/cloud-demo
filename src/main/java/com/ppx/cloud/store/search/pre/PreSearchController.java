@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
+import com.ppx.cloud.search.util.BitSetUtils;
 
 
 @Controller	
@@ -18,7 +19,7 @@ public class PreSearchController {
 	
 	
 	@GetMapping
-	public ModelAndView pre() {
+	public ModelAndView search() {
 		ModelAndView mv = new ModelAndView();
 		return mv;
 	}
@@ -47,6 +48,8 @@ public class PreSearchController {
 	
 	@GetMapping
 	public ModelAndView theme(Integer tId) {
+		System.out.println("xxxxxxxxxxxxx001:" + BitSetUtils.getVersionName(-1));
+		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("tId", tId);
 		return mv;
