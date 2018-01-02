@@ -57,8 +57,8 @@ function onCat(cId) {
 
 <body>
 
-<ul id="myTab" class="nav nav-tabs" th:include="store/search/pre/preHead"></ul>
-<script th:inline="javascript">$("#cat").tab('show')</script>
+<ul th:replace="store/search/pre/preCommon::head"></ul>
+<script type="text/javascript">$("#cat").tab('show')</script>
 
 <div th:replace="common/fragment/common::pageList('')">
 	<div th:fragment="queryFragment">
@@ -75,17 +75,8 @@ function onCat(cId) {
 	</td>
 	</tr>
 	
-	<script id="pageTemplate" type="text/html">
-	{{each arrayList as v i}}
-	<tr>
-		<td class="w-id">{{v.src}}</td>
-		<td class="w-id">
-			<div>{{v.t}}</div>
-			<a href="/preSearch/promo?progId={{v.gid}}" target="_blank">{{v.arg}}</a>
-		</td>
-	</tr>
-	{{/each}}
-	</script>
+	<tr th:replace="store/search/pre/preCommon::prod"></tr>
+	
 	</table>
 </div>
 

@@ -89,8 +89,11 @@ function query() {
 
 <body>
 
-<ul id="myTab" class="nav nav-tabs" th:include="store/search/pre/preHead"></ul>
-<script th:inline="javascript">$("#search").tab('show')</script>
+
+
+
+<ul th:replace="store/search/pre/preCommon::head"></ul>
+<script type="text/javascript">$("#search").tab('show')</script>
 
 <div th:replace="common/fragment/common::pageList('')">
 	<div th:fragment="queryFragment">
@@ -112,12 +115,11 @@ function query() {
 	</td>
 	</tr>
 	
-	<tr th:replace="store/search/pre/viewProduct::prod"></tr>
+	<tr th:replace="store/search/pre/preCommon::prod"></tr>
 	
 	
 	</table>
 </div>
-
 
 
 
