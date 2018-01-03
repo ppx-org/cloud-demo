@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
@@ -16,13 +17,12 @@ import com.ppx.cloud.common.page.PageList;
 public class ProductService extends MyDaoSupport {
 	
 	
-	public PageList<Product> listTest(Page page, Product bean) {
+	public PageList<Product> listProduct(Page page, Product bean) {
 		
-		// 分页排序查询
-		MyCriteria c = createCriteria("where").addAnd("PROD_TITLE like ?", "%", bean.getProdTitle(), "%");
+		MyCriteria c = createCriteria("where")
+			.addAnd("PROD_TITLE like ?", "%", bean.getProdTitle(), "%")
+			.addAnd("RECORD_STATUS = ?", bean.getRecordStatus());
 		
-		
-		// 分开两条sql，mysql在count还会执行子查询
 		StringBuilder cSql = new StringBuilder("select count(*) from product p").append(c);
 		StringBuilder qSql = new StringBuilder("select p.* from product p").append(c);
 		
@@ -33,14 +33,6 @@ public class ProductService extends MyDaoSupport {
 	public int insertProduct(Product bean) {
 		return insert(bean);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -79,5 +71,28 @@ public class ProductService extends MyDaoSupport {
 		}
 		return returnList;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// action 
+	public int onShelves(Integer prodId) {
+		String sql = "update product set RECORD_STATUS = ? where PROD_ID = ?";
+		getJdbcTemplate().update(sql, 2, prodId);
+		return 2;
+	}
+	
+	public int offShelves(Integer prodId) {
+		String sql = "update product set RECORD_STATUS = ? where PROD_ID = ?";
+		getJdbcTemplate().update(sql, 3, prodId);
+		return 3;
+	}
+	
 	
 }

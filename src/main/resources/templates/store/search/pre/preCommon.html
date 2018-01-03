@@ -14,6 +14,30 @@
 function tagGo(obj) {
 	location.href = $(obj).parent().attr("id");
 }
+
+$(function() {
+	if  (localStorage.defaultStoreId) {
+		$("#sId option[value=" + localStorage.defaultStoreId + "]").attr("selected", true);
+	}
+	else {
+		localStorage.defaultStoreId = $("#sId").val();
+	}
+	
+	if  (localStorage.defaultDate) {
+		$("#d option[value=" + localStorage.defaultDate + "]").attr("selected", true);
+	}
+	else {
+		localStorage.defaultDate = $("#d").val();
+	}
+});
+
+function storeChange(obj) {
+	localStorage.defaultStoreId = $(obj).val();
+}
+
+function dateChange(obj) {
+	localStorage.defaultDate = $(obj).val();
+}
 </script>
 </ul>
 
@@ -22,7 +46,7 @@ function tagGo(obj) {
 <tr>
 	<td class="w-id">{{v.src}}</td>
 	<td class="w-id">
-		<div>{{v.t}}</div>
+		<div>{{v.t}}|fast:{{v.f}}</div>
 		<a href="/preSearch/promo?progId={{v.gid}}" target="_blank">{{v.arg}}</a>
 	</td>
 </tr>

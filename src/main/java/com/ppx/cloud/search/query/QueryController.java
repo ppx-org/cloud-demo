@@ -24,11 +24,11 @@ public class QueryController {
 	
 
 	@RequestMapping @ResponseBody
-	public Map<String, Object> q(@RequestParam String w, QueryPage p, Integer cId, Integer gId, Integer fast) {
+	public Map<String, Object> q(@RequestParam Integer sId,  @RequestParam Integer d,
+			@RequestParam String w, QueryPage p, Integer cId, Integer gId, Integer fast) {
 		
-		
-		String date = DateUtils.today();
-		QueryPageList bean = serv.query(w, p, date, cId, gId, fast);
+		String date = (d == 1 ? DateUtils.today() : DateUtils.tomorrow());
+		QueryPageList bean = serv.query(sId, w, p, date, cId, gId, fast);
 		
 	
 		
@@ -43,10 +43,8 @@ public class QueryController {
 	}
 	
 	@RequestMapping @ResponseBody
-	public Map<String, Object> cat(QueryPage p, Integer cId) {
-		Integer storeId = 1;
-		String date = DateUtils.today();
-		QueryPageList bean = serv.queryCat(storeId, date, p, cId);
+	public Map<String, Object> cat(@RequestParam Integer sId, QueryPage p, Integer cId) {
+		QueryPageList bean = serv.queryCat(sId, p, cId);
 	
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		returnMap.put("arrayList", bean.getProdList());
@@ -57,10 +55,8 @@ public class QueryController {
 	}
 	
 	@RequestMapping @ResponseBody
-	public Map<String, Object> brand(QueryPage p, Integer bId) {
-		Integer storeId = 1;
-		String date = DateUtils.today();
-		QueryPageList bean = serv.queryBrand(storeId, date, p, bId);
+	public Map<String, Object> brand(@RequestParam Integer sId, QueryPage p, Integer bId) {
+		QueryPageList bean = serv.queryBrand(sId, p, bId);
 	
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		returnMap.put("arrayList", bean.getProdList());
@@ -71,10 +67,8 @@ public class QueryController {
 	}
 	
 	@RequestMapping @ResponseBody
-	public Map<String, Object> theme(QueryPage p, Integer tId) {
-		Integer storeId = 1;
-		String date = DateUtils.today();
-		QueryPageList bean = serv.queryTheme(storeId, date, p, tId);
+	public Map<String, Object> theme(@RequestParam Integer sId, QueryPage p, Integer tId) {
+		QueryPageList bean = serv.queryTheme(sId, p, tId);
 	
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		returnMap.put("arrayList", bean.getProdList());
@@ -86,10 +80,9 @@ public class QueryController {
 
 	
 	@RequestMapping @ResponseBody
-	public Map<String, Object> promo(QueryPage p, Integer gId) {
-		Integer storeId = 1;
-		String date = DateUtils.today();
-		QueryPageList bean = serv.queryPromo(storeId, date, p, gId);
+	public Map<String, Object> promo(@RequestParam Integer sId, @RequestParam Integer d, QueryPage p, Integer gId) {
+		String date = (d == 1 ? DateUtils.today() : DateUtils.tomorrow());
+		QueryPageList bean = serv.queryPromo(sId, date, p, gId);
 	
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		returnMap.put("arrayList", bean.getProdList());

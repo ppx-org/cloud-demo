@@ -47,10 +47,9 @@ public class ProductController {
 
 	@PostMapping @ResponseBody
 	public Map<String, Object> listJson(Page page, Product bean) {
-		PageList<Product> list = serv.listTest(page, bean);
+		PageList<Product> list = serv.listProduct(page, bean);
 		return ControllerReturn.ok(list);
 	}
-	
 	
 	
 	@GetMapping
@@ -112,6 +111,26 @@ public class ProductController {
 		return mv;
 	}
 
+	
+	
+	// >>>>>>>>>>>>>>>>>>>>action
+	@PostMapping @ResponseBody
+	public Map<String, Object> onShelves(@RequestParam Integer prodId) {
+		int r = serv.onShelves(prodId);
+		String statusDesc = Dict.getProductStatusDesc(r);
+		return ControllerReturn.ok(r, statusDesc);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> offShelves(@RequestParam Integer prodId) {
+		int r = serv.offShelves(prodId);
+		String statusDesc = Dict.getProductStatusDesc(r);
+		return ControllerReturn.ok(r, statusDesc);
+	}
+	
+	
+	
+	
 	
 	
 }

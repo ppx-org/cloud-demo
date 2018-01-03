@@ -71,7 +71,58 @@ public class StoreService extends MyDaoSupport {
 		for (Integer rId : repoId) {
 			getJdbcTemplate().update(insertSql, rId, id);
 		}
-		
 		return 1;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// >>>>>>>>>>>>其它地方调用
+	public List<Store> listStore() {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+	
+		String sql = "select STORE_ID, STORE_NAME from store where MERCHANT_ID = ?";
+		
+		List<Store> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Store.class), merchantId);
+		
+		return list;
+	}
+	
+	
+	
 }

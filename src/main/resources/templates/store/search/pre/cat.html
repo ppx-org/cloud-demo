@@ -7,9 +7,7 @@
 <link th:replace="common/fragment/common::validation"/>
 
 <script type="text/javascript" th:inline="javascript">
-$(function() {
-	
-});
+
 
 
 function queryPage(pageNumber) {
@@ -43,6 +41,8 @@ function onCat(cId) {
 	queryPage(1);
 }
 
+
+
 </script>
 
 <style>
@@ -63,6 +63,9 @@ function onCat(cId) {
 <div th:replace="common/fragment/common::pageList('')">
 	<div th:fragment="queryFragment">
 		<input type="hidden" id="cId" name="cId">
+		<select class="form-control input-sm" id="sId" name="sId" onchange="storeChange(this)">
+			<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
+		</select>
 		<button type="button" class="btn btn-default btn-sm" onclick="query();"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	

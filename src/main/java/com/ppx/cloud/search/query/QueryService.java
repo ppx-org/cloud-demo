@@ -28,9 +28,9 @@ import com.ppx.cloud.search.util.WordUtils;
 public class QueryService extends MyDaoSupport {
 	
 	
-	public QueryPageList query(String w, QueryPage p, String date, Integer cId, Integer gId, Integer fast) {
+	public QueryPageList query(Integer sId, String w, QueryPage p, String date, Integer cId, Integer gId, Integer fast) {
 		
-		Map<String, Object> findMap = findProdId(w, p, date, cId, gId, fast);
+		Map<String, Object> findMap = findProdId(sId, w, p, date, cId, gId, fast);
 		
 		
 		if (p.getTotalRows() == 0) {
@@ -39,7 +39,7 @@ public class QueryService extends MyDaoSupport {
 		else {
 			@SuppressWarnings("unchecked")
 			List<Integer> prodIdList = (List<Integer>)findMap.get("prodIdList");
-			List<QueryProduct> prodList = listProduct(prodIdList);
+			List<QueryProduct> prodList = listProduct(prodIdList, sId);
 			
 			// cat
 			@SuppressWarnings("unchecked")
@@ -57,9 +57,7 @@ public class QueryService extends MyDaoSupport {
 		}
 	}
 	
-	private Map<String, Object> findProdId(String w, QueryPage p, String date, Integer cId, Integer gId, Integer fast) {
-		
-		int storeId = 1;
+	private Map<String, Object> findProdId(Integer sId, String w, QueryPage p, String date, Integer cId, Integer gId, Integer fast) {
 		
 		if (StringUtils.isEmpty(w)) {
 			return null;
@@ -80,7 +78,7 @@ public class QueryService extends MyDaoSupport {
 		}
 		
 		if (resultBs.cardinality() != 0) {
-			BitSet storeBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, storeId + "");
+			BitSet storeBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, sId + "");
 			resultBs.and(storeBs);
 		}
 		else {
@@ -90,7 +88,7 @@ public class QueryService extends MyDaoSupport {
 		BitSet fastBs = null;
 		// 查fast
 		if (fast != null) {
-			fastBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, "local" + storeId);
+			fastBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, "local" + sId);
 			resultBs.and(fastBs);
 		}
 		
@@ -114,7 +112,7 @@ public class QueryService extends MyDaoSupport {
 		
 		// fast statistic
 		if (fastBs == null) {
-			fastBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, "local" + storeId);
+			fastBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, "local" + sId);
 		}
 		fastBs.and(resultBs);
 		int fastN = fastBs.cardinality();
@@ -152,16 +150,17 @@ public class QueryService extends MyDaoSupport {
 	}
 
 	
-	private List<QueryProduct> listProduct(List<Integer> prodIdList) {
+	private List<QueryProduct> listProduct(List<Integer> prodIdList, Integer storeId) {
 		if (prodIdList.size() == 0) {
 			return new ArrayList<QueryProduct>();
 		}
 		
 		NamedParameterJdbcTemplate jdbc = new NamedParameterJdbcTemplate(getJdbcTemplate());
 		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("storeId", storeId);
 		paramMap.put("prodIdList", prodIdList);	
 		
-		String prodSql = "select p.PROD_ID PID, p.PROD_TITLE T, s.PRICE P, img.SKU_IMG_SRC SRC, idx.PROG_ID GID, idx.POLICY ARG from product p join sku s on p.PROD_ID = s.PROD_ID left join " +
+		String prodSql = "select p.PROD_ID PID, p.PROD_TITLE T, s.PRICE P, img.SKU_IMG_SRC SRC, idx.PROG_ID GID, idx.POLICY ARG, if(p.REPO_ID = :storeId, 1, 0) F from product p join sku s on p.PROD_ID = s.PROD_ID left join " +
 			"(select t.SKU_ID, t.SKU_IMG_SRC from (select * from sku_img order by SKU_IMG_PRIO desc) t group by t.SKU_ID) img on s.SKU_ID = img.SKU_ID left join " +
 			"(select t.PROD_ID, t.PROG_ID, t.INDEX_POLICY POLICY from (select * from program_index i where curdate() between INDEX_BEGIN and INDEX_END order by INDEX_PRIO desc) t group by t.PROD_ID) idx on p.PROD_ID = idx.PROD_ID " + 
 			"where p.PROD_ID in (:prodIdList)";
@@ -332,7 +331,7 @@ public class QueryService extends MyDaoSupport {
 	
 	
 	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>cat
-	public QueryPageList queryCat(Integer storeId, String date, QueryPage p, Integer cId) {
+	public QueryPageList queryCat(Integer storeId, QueryPage p, Integer cId) {
 		BitSet resultBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, storeId + "");
 		if (cId != null) {
 			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_CAT, cId + "");
@@ -352,7 +351,7 @@ public class QueryService extends MyDaoSupport {
 		
 		p.setTotalRows(resultBs.cardinality());
 		List<Integer> prodIdList = BitSetUtils.bsToPage(resultBs, (p.getPageNumber() - 1) * p.getPageSize(), p.getPageSize());
-		List<QueryProduct> prodList = listProduct(prodIdList);
+		List<QueryProduct> prodList = listProduct(prodIdList, storeId);
 		
 		List<QueryCategory> catList = listCategory(initCatList);
 		QueryPageList queryPageList = new QueryPageList(p, prodList);
@@ -364,7 +363,7 @@ public class QueryService extends MyDaoSupport {
 	
 	
 	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>brand
-	public QueryPageList queryBrand(Integer storeId, String date, QueryPage p, Integer bId) {
+	public QueryPageList queryBrand(Integer storeId, QueryPage p, Integer bId) {
 		
 		BitSet resultBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, storeId + "");
 		if (bId != null) {
@@ -390,7 +389,7 @@ public class QueryService extends MyDaoSupport {
 		
 		p.setTotalRows(resultBs.cardinality());
 		List<Integer> prodIdList = BitSetUtils.bsToPage(resultBs, (p.getPageNumber() - 1) * p.getPageSize(), p.getPageSize());
-		List<QueryProduct> prodList = listProduct(prodIdList);
+		List<QueryProduct> prodList = listProduct(prodIdList, storeId);
 		
 		List<QueryBrand> brandList = listBrand(initBrandList);
 		QueryPageList queryPageList = new QueryPageList(p, prodList);
@@ -400,7 +399,7 @@ public class QueryService extends MyDaoSupport {
 	}
 
 	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>theme
-	public QueryPageList queryTheme(Integer storeId, String date, QueryPage p, Integer tId) {
+	public QueryPageList queryTheme(Integer storeId, QueryPage p, Integer tId) {
 		
 		BitSet resultBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, storeId + "");
 		if (tId != null) {
@@ -426,7 +425,7 @@ public class QueryService extends MyDaoSupport {
 		
 		p.setTotalRows(resultBs.cardinality());
 		List<Integer> prodIdList = BitSetUtils.bsToPage(resultBs, (p.getPageNumber() - 1) * p.getPageSize(), p.getPageSize());
-		List<QueryProduct> prodList = listProduct(prodIdList);
+		List<QueryProduct> prodList = listProduct(prodIdList, storeId);
 		
 		List<QueryTheme> promoList = listTheme(themeList);
 		QueryPageList queryPageList = new QueryPageList(p, prodList);
@@ -488,7 +487,7 @@ public class QueryService extends MyDaoSupport {
 		
 		p.setTotalRows(resultBs.cardinality());
 		List<Integer> prodIdList = BitSetUtils.bsToPage(resultBs, (p.getPageNumber() - 1) * p.getPageSize(), p.getPageSize());
-		List<QueryProduct> prodList = listProduct(prodIdList);
+		List<QueryProduct> prodList = listProduct(prodIdList, storeId);
 		
 		List<QueryPromo> promoList = listPromo(progList);
 		QueryPageList queryPageList = new QueryPageList(p, prodList);

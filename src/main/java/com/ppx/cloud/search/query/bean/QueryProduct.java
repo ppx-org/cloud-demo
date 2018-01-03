@@ -13,6 +13,8 @@ public class QueryProduct {
 	private String t;
 	
 	private String src;
+	
+	private Integer f;
 
 	public Integer getPid() {
 		return pid;
@@ -62,6 +64,15 @@ public class QueryProduct {
 		this.src = src;
 	}
 
+	public Integer getF() {
+		return f;
+	}
+
+	public void setF(Integer f) {
+		this.f = f;
+	}
+	
+	
 
 	
 }

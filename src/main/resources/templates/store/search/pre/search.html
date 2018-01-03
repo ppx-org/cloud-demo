@@ -7,9 +7,7 @@
 <link th:replace="common/fragment/common::validation"/>
 
 <script type="text/javascript" th:inline="javascript">
-$(function() {
-	
-});
+
 
 
 function queryPage(pageNumber) {
@@ -76,6 +74,19 @@ function query() {
 	queryPage(1);
 }
 
+
+$(function() {
+	if  (localStorage.defaultStoreId) {
+		$("#sId option[value=" + localStorage.defaultStoreId + "]").attr("selected", true);
+	}
+	else {
+		localStorage.defaultStoreId = $("#sId").val();
+	}
+});
+
+function storeChange(obj) {
+	localStorage.defaultStoreId = $(obj).val();
+}
 </script>
 
 <style>
@@ -100,6 +111,15 @@ function query() {
 		<input type="hidden" id="fast" name="fast">
 		<input type="hidden" id="cId" name="cId">
 		<input type="hidden" id="gId" name="gId">
+		
+		<select class="form-control input-sm" id="d" name="d" onchange="dateChange(this)">
+			<option value="1">tod</option>
+			<option value="2">tom</option>
+		</select>
+		
+		<select class="form-control input-sm" id="sId" name="sId" onchange="storeChange(this)">
+			<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
+		</select>
 		<input type="text" class="form-control input-sm" id="w" name="w" placeholder="请输入WORD" style="width:200px;" value="招聘">
 		<button type="button" class="btn btn-default btn-sm" onclick="query();"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>

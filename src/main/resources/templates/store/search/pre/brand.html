@@ -63,6 +63,9 @@ function onBrand(bId) {
 <div th:replace="common/fragment/common::pageList('DEMO_TEST')">
 	<div th:fragment="queryFragment">
 		<input type="hidden" id="bId" name="bId">
+		<select class="form-control input-sm" id="sId" name="sId" onchange="storeChange(this)">
+			<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
+		</select>
 		<button type="button" class="btn btn-default btn-sm" onclick="query();"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	

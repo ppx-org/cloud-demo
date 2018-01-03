@@ -32,6 +32,37 @@ function edit() {
 
 
 
+
+function onShelves(prodId) {
+	$.post([[@{/product/onShelves}]], "prodId=" + prodId, function(r) {
+		var html = actionHtml(prodId, r.result);
+		$("#action" + prodId).html(html);
+		$("#status" + prodId).html(r.string);
+	});
+}
+
+function offShelves(prodId) {
+	$.post([[@{/product/offShelves}]], "prodId=" + prodId, function(r) {
+		var html = actionHtml(prodId, r.result);
+		$("#action" + prodId).html(html);
+		$("#status" + prodId).html(r.string);
+	});
+}
+
+
+template.config("escape", false);
+template.helper('actionHtml', function(v) {	
+	return actionHtml(v.prodId, v.recordStatus);
+})
+
+function actionHtml(prodId, status) {
+	var edit = '<a href="#" onclick="edit(' + prodId + ')">[修改]</a>';
+	var onShelves = '<a href="#" onclick="onShelves(' + prodId + ')">[onShe]</a>';
+	var offShelves = '<a href="#" onclick="offShelves(' + prodId + ')">[offShe]</a>';
+	if (status == 1 || status == 3) return edit + onShelves;
+	if (status == 2) return edit + offShelves;
+}
+
 </script>
 </head>
 
@@ -62,10 +93,8 @@ function edit() {
 	<tr>
 		<td class="w-id">{{v.prodId}}</td>
 		<td class="w-title-s">{{v.prodTitle}}</td>
-		<td class="w-id">{{v.recordStatusDesc}}</td>
-		<td class="w-action">
-			<a href="#" onclick="edit('{{v.prodId}}')" class="glyphicon glyphicon-edit" title="修改"></a>
-		</td>
+		<td class="w-id" id="status{{v.prodId}}">{{v.recordStatusDesc}}</td>
+		<td class="w-action" id="action{{v.prodId}}">{{actionHtml(v)}}</td>
 	</tr>
 	{{/each}}
 	</script>

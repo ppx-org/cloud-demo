@@ -166,16 +166,15 @@ public class SearchCreateService extends MyDaoSupport {
 		WordUtils.setExtWord(extWords);
 		
 		String sql = "select PROD_ID, PROD_TITLE from product where MERCHANT_ID = ?";
-		List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql, merchantId);
+		List<Map<String, Object>> prodList = getJdbcTemplate().queryForList(sql, merchantId);
 		
-		String delSql = "delete from search_words where MERCHANT_ID = ?";
-		getJdbcTemplate().update(delSql, merchantId);
+		getJdbcTemplate().update("delete from search_words where MERCHANT_ID = ?", merchantId);
 		
 		String insertSql = "insert into search_words(PROD_ID, WORDS, MERCHANT_ID) values(?, ?, " + merchantId + ")";
 		
 		List<Object[]> argsList = new ArrayList<Object[]>();
 		
-		for (Map<String, Object> map : list) {
+		for (Map<String, Object> map : prodList) {
 			int prodId = (Integer)map.get("PROD_ID");
 			String prodTitle = (String)map.get("PROD_TITLE");			
 			String words = WordUtils.splitWord(prodTitle);
@@ -185,7 +184,7 @@ public class SearchCreateService extends MyDaoSupport {
 		
 		int r[] = getJdbcTemplate().batchUpdate(insertSql, argsList);
 		
-		returnMap.put("prodSize", list.size());
+		returnMap.put("productSize", prodList.size());
 		return returnMap;
 	}
 

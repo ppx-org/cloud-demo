@@ -168,10 +168,10 @@ public class ChromeController {
 			e.printStackTrace();
 		}
         
-	    List<Cookie> cookieList = staticSession.getCommand().getPage().getCookies();
-	    for (Cookie cookie : cookieList) {
-			System.out.println("........cookie:" + cookie.getName() + ":" + cookie.getValue());
-		}
+//	    List<Cookie> cookieList = staticSession.getCommand().getPage().getCookies();
+//	    for (Cookie cookie : cookieList) {
+//			System.out.println("........cookie:" + cookie.getName() + ":" + cookie.getValue());
+//		}
 		
 		return ControllerReturn.ok();
 	}
@@ -206,6 +206,13 @@ public class ChromeController {
         
 		String str = r.getBody();
 		System.out.println("xxxxxxxxxxxxxxxxx:body:" + str);
+		
+		List<Cookie> lastCookieList = staticSession.getCommand().getPage().getCookies();
+		StringBuilder lastCookie = new StringBuilder();
+	    for (Cookie cookie : lastCookieList) {
+	    	lastCookie.append(cookie.getName() + "=" + cookie.getValue() + ";");
+		}
+	    System.out.println("xxxxxxxxxxxxxxxxx:lastCookie:" + lastCookie);
 	    
 		
 		return ControllerReturn.ok();
