@@ -4,7 +4,7 @@
 <title></title>
 
 <link th:replace="common/fragment/common::common"/>
-<link th:replace="common/fragment/common::validation"/>
+<link th:replace="common/fragment/common::formatter"/>
 
 <script type="text/javascript" th:inline="javascript">
 function refreshData(data) {
@@ -25,11 +25,9 @@ function query() {
 	});
 }
 
-
 function createIndex(versionName) {
 	showLoading();
 	$.post([[@{/searchCreate/createIndex}]], "versionName=" + versionName, function(r) {
-		//refreshData(r);
 		query();
 	});
 }
@@ -37,9 +35,14 @@ function createIndex(versionName) {
 function useIndex(versionName) {
 	showLoading();
 	$.post([[@{/searchCreate/useIndex}]], "versionName=" + versionName, function(r) {
-		//refreshData(r);
 		query();
 	});
+}
+
+function viewDetail(obj) {
+	var json = $(obj).attr("data-content");
+	$("#viewDetailJson").text(formatJson(json));
+	$("#viewDetail").modal("show");
 }
 
 </script>
@@ -72,6 +75,8 @@ function useIndex(versionName) {
 			{{if v.versionStatus == 2}}
 				<a href="javascript:createIndex('{{v.versionName}}')">reCCC</a>&nbsp;&nbsp;
 				<a href="javascript:useIndex('{{v.versionName}}')">UUUU</a>
+
+				<a href="#" data-content="{{v.createInfo}}" onclick="viewDetail(this)">[详情]</a></td>
 			{{/if}}
 		</td>
 	</tr>
@@ -82,7 +87,7 @@ function useIndex(versionName) {
 	</table>
 </div>
 
-
+<div th:replace="common/fragment/common::viewDetail"></div>
 
 </body>
 </html>

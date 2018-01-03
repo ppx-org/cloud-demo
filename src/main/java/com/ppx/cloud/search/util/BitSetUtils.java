@@ -69,8 +69,8 @@ public class BitSetUtils {
 	
 	public static Map<String, Integer> removeVersionPath() {
 		Map<String, Integer> countMap = new HashMap<String, Integer>();
-		countMap.put("file", 0);
-		countMap.put("folder", 0);
+		countMap.put("removeFile", 0);
+		countMap.put("removeFolder", 0);
 		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		String path = getSearchPath() + "/" + merchantId + "/" + getVersionName(merchantId);
@@ -86,7 +86,7 @@ public class BitSetUtils {
 	        return;  
 	    if (path.isFile()) {  
 	        path.delete();
-	        countMap.put("file", countMap.get("file") + 1);
+	        countMap.put("removeFile", countMap.get("removeFile") + 1);
 	        return;  
 	    }  
 	    File[] files = path.listFiles();  
@@ -95,7 +95,7 @@ public class BitSetUtils {
 	    }  
 	    
 	    path.delete();
-	    countMap.put("folder", countMap.get("folder") + 1);
+	    countMap.put("removeFolder", countMap.get("removeFolder") + 1);
 	} 
 	
 	public static int initPath(String path) {

@@ -3,6 +3,7 @@ package com.ppx.cloud.search.create;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,6 +11,7 @@ import java.util.Set;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.util.DateUtils;
 import com.ppx.cloud.grant.common.GrantContext;
@@ -37,52 +39,92 @@ public class SearchCreateService extends MyDaoSupport {
 		String beginUpdateSql = "update search_version set CREATE_BEGIN = now() where MERCHANT_ID = ? and VERSION_NAME = ?";
 		getJdbcTemplate().update(beginUpdateSql, merchantId, versionName);
 		
+		long t = System.currentTimeMillis();
+		Map<String, Integer> spendMap = new LinkedHashMap<String, Integer>();
+		
 		
 		BitSetUtils.setVersionMap(merchantId, versionName);
 		// 1.初始化
 		Map<String, Integer> map1 = initSearchWords();
-		System.out.println("..............1:" + map1);
+		spendMap.put("spendTime1", (int)(System.currentTimeMillis() - t));
+		t = System.currentTimeMillis();
 		
 		// 2.删除index
 		Map<String, Integer> map2 = BitSetUtils.removeVersionPath();
-		System.out.println("..............2:" + map2);
+		spendMap.put("spendTime2", (int)(System.currentTimeMillis() - t));
+		t = System.currentTimeMillis();
 		
 		// 3.st index
 		Map<String, Integer> map3 = createStoreIndex();
-		System.out.println("..............3:" + map3);
+		spendMap.put("spendTime3", (int)(System.currentTimeMillis() - t));
+		t = System.currentTimeMillis();
 		
 		// 4.title index
 		Map<String, Integer> map4 = createTitleIndex();
-		System.out.println("..............4:" + map4);
+		spendMap.put("spendTime4", (int)(System.currentTimeMillis() - t));
+		t = System.currentTimeMillis();
 		
 		// 5.cat index
 		Map<String, Integer> map5 = createCatIndex();
-		System.out.println("..............5:" + map5);
+		spendMap.put("spendTime5", (int)(System.currentTimeMillis() - t));
+		t = System.currentTimeMillis();
 		
 		// 6.brand index
 		Map<String, Integer> map6 = createBrandIndex();
-		System.out.println("..............6:" + map6);
+		spendMap.put("spendTime6", (int)(System.currentTimeMillis() - t));
+		t = System.currentTimeMillis();
 		
 		// 7.theme index
 		Map<String, Integer> map7 = createThemeIndex();
-		System.out.println("..............7:" + map7);
+		spendMap.put("spendTime7", (int)(System.currentTimeMillis() - t));
+		t = System.currentTimeMillis();
 		
 		// 8.theme index
 		Map<String, Integer> map8 = createPromoIndex();
-		System.out.println("..............8:" + map8);
+		spendMap.put("spendTime8", (int)(System.currentTimeMillis() - t));
+		t = System.currentTimeMillis();
 		
 		
 		
+		
+		
+		
+		Map<String, Integer> resultMap = new LinkedHashMap<String, Integer>();
+		
+		
+		resultMap.putAll(map1);
+		resultMap.putAll(map2);
+		resultMap.putAll(map3);
+		resultMap.putAll(map4);
+		resultMap.putAll(map5);
+		resultMap.putAll(map6);
+		resultMap.putAll(map7);
+		resultMap.putAll(map8);
+		resultMap.putAll(spendMap);
+		
+		
+		String createInfo = "";
+		try {
+			createInfo = new ObjectMapper().writeValueAsString(resultMap);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		System.out.println("out:" + createInfo);
 		
 		
 				
-				
-				
 		
 		
 		
 		
-				
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -113,8 +155,8 @@ public class SearchCreateService extends MyDaoSupport {
 		// 2, "已生成"; 3, "使用中"
 		String endUpdateSql = "update search_version join (select if (count(*) >= 1, 2, 3) STATUS from search_version " +
 			"where MERCHANT_ID = ? and VERSION_STATUS = ?) t set CREATE_END = now(), UPDATED = now()," +
-			"VERSION_STATUS = t.STATUS where MERCHANT_ID = ? and VERSION_NAME = ?";
-		getJdbcTemplate().update(endUpdateSql, merchantId, 3, merchantId, versionName);
+			"VERSION_STATUS = t.STATUS, CREATE_INFO = ? where MERCHANT_ID = ? and VERSION_NAME = ?";
+		getJdbcTemplate().update(endUpdateSql, merchantId, 3, createInfo, merchantId, versionName);
 		
 		return 1;
 	}
@@ -159,8 +201,7 @@ public class SearchCreateService extends MyDaoSupport {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		
-		// ext
+	
 		String extSql = "select group_concat(EXT_WORD) from search_ext_word where MERCHANT_ID = ?";
 		String extWords = getJdbcTemplate().queryForObject(extSql, String.class, merchantId);
 		WordUtils.setExtWord(extWords);
@@ -262,8 +303,8 @@ public class SearchCreateService extends MyDaoSupport {
 			BitSetUtils.writeBitSet(path, key, bs);
 		}
 		
-		returnMap.put("prodNum", list.size());
-		returnMap.put("wordNum", set.size());
+		returnMap.put("titleProductSize", list.size());
+		returnMap.put("wordSize", set.size());
 		return returnMap;
 	}
 	
@@ -309,8 +350,8 @@ public class SearchCreateService extends MyDaoSupport {
 			}
 		}
 		
-		returnMap.put("subCatNum", catIdList.size());
-		returnMap.put("mainCatNum", mainCatIdList.size());
+		returnMap.put("subCatSize", catIdList.size());
+		returnMap.put("mainCatSize", mainCatIdList.size());
 		return returnMap;
 	}
 	
@@ -336,7 +377,7 @@ public class SearchCreateService extends MyDaoSupport {
 			}
 		}
 		
-		returnMap.put("brandNum", brandList.size());
+		returnMap.put("brandSize", brandList.size());
 		return returnMap;
 	}
 	
@@ -362,7 +403,7 @@ public class SearchCreateService extends MyDaoSupport {
 			}
 		}
 		
-		returnMap.put("themeNum", themeList.size());
+		returnMap.put("themeSize", themeList.size());
 		return returnMap;
 	}
 	
@@ -442,8 +483,8 @@ public class SearchCreateService extends MyDaoSupport {
 		
 		
 		
-		returnMap.put("todayListSize", todayList.size());
-		returnMap.put("tomorrowListSize", tomorrowList.size());
+		returnMap.put("todayProductSize", todayList.size());
+		returnMap.put("tomorrowProductSize", tomorrowList.size());
 		return returnMap;
 	}
 	
