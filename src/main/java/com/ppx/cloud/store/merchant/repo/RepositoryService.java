@@ -37,8 +37,9 @@ public class RepositoryService extends MyDaoSupport {
 	}
 	
 	public List<Repository> listStoreRepo(Integer storeId) {
-		String sql = "select REPO_ID, REPO_NAME from repository where RECORD_STATUS = ?";
-		List<Repository> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Repository.class), 1);
+		String sql = "select r.REPO_ID, r.REPO_NAME from repository r join store_map_repo m on r.REPO_ID = m.REPO_ID "
+				+ "where m.STORE_ID = ? and RECORD_STATUS = ? order by r.REPO_ID";
+		List<Repository> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Repository.class), storeId, 1);
 		return list;
 	}
 	

@@ -32,6 +32,10 @@ function add() {
 				$('#add').modal('hide');
 				queryPage(1);
 			}
+			else if (r.result == 0) {
+				hideLoading();
+				alertWarning("已经存在！");
+			}
 		});
 	}
 }
@@ -76,14 +80,15 @@ function repo(id) {
 		$('#repo').modal('show');
 		$("#selectedRepo").empty();
 		for (var i = 0; r.arrayList && i < r.arrayList.length; i++) {
-			$("#selectedRepo").append('<option value=' + r.arrayList[i].repoId + '>' + r.arrayList[i].repoName + '</option>');
+			var disabled = (r.arrayList[i].repoId == id ? "disabled style='color:red'" : "");
+			$("#selectedRepo").append('<option value="' + r.arrayList[i].repoId + '" ' + disabled + '>' + r.arrayList[i].repoName + '</option>');
 		}
 	});
 	
 	action = function() {
 		var val = [];
 		$("#selectedRepo>option").each(function() {
-			val.push("repo=" + $(this).val());
+			val.push("repoId=" + $(this).val());
 		})
 		
 		showLoading();
@@ -94,6 +99,18 @@ function repo(id) {
 			}
 		});
 	}
+}
+
+function storeAddRepo(obj) {
+	if ($("#selectedRepo").find("[value=" + obj.value + "]").length == 0) {
+		var value = obj.value;
+		var name = $(obj).find("[value=" + obj.value + "]").text();
+		$("#selectedRepo").append('<option value="' + value + '">' + name + '</option>');
+	}
+}
+
+function storeDeleteRepo(obj) {
+	$(obj).find("[value=" + obj.value + "]").remove();
 }
 </script>
 </head>
@@ -171,11 +188,13 @@ function repo(id) {
 <div th:fragment="repo" th:replace="common/fragment/common::modal('repo', 'repo', 400)">
 	<div class="form-group">
 		<div class="col-sm-5">
-			<select id="selectedRepo" class="form-control" style="width:150px" size="10">
+			<label>can't repo</label>
+			<select id="selectedRepo" class="form-control" style="width:150px" size="10" ondblclick="storeDeleteRepo(this)">
 			</select>
 		</div>
 		<div class="col-sm-5">
-			<select class="form-control" style="width:150px" size="10">
+			<label>double</label>
+			<select class="form-control" style="width:150px" size="10" ondblclick="storeAddRepo(this)">
 				<option th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${listRepo}"></option>
 			</select>
 		</div>

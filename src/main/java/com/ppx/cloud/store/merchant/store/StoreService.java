@@ -38,7 +38,8 @@ public class StoreService extends MyDaoSupport {
 	public int insertStore(Store bean) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		bean.setMerchantId(merchantId);
-		insert(bean);
+		int insertR = insert(bean, "STORE_ID");
+		if (insertR == 0) return 0;
 		
 		int id = getLastInsertId();
 		// 插入数据到关系表
