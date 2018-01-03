@@ -101,7 +101,7 @@ function repo(id) {
 <body>
 <div th:replace="common/fragment/common::pageList('STxxx')">
 	<div th:fragment="queryFragment">
-		<button type="button" class="btn btn-success btn-sm" onclick="repo(1)">新增</button>
+		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
 		<input type="text" class="form-control input-sm" name="storeName" placeholder="请输入stxxx" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>

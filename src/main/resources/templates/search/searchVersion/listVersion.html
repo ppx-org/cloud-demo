@@ -60,6 +60,7 @@ function viewDetail(obj) {
 		<th>e</th>
 		<th>SSSS</th>
 		<th>UPxxx</th>
+		<th>spendT</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
@@ -70,14 +71,16 @@ function viewDetail(obj) {
 		<td class="w-time">{{v.createEnd}}</td>
 		<td class="w-id">{{v.versionStatus}}</td>
 		<td class="w-id">{{v.updated}}</td>
+		<td class="w-id">{{v.spendTime}}s</td>
 		<td class="w-action">
 			{{if v.versionStatus == 1}}<a href="javascript:createIndex('{{v.versionName}}')">CCCCC</a>{{/if}}
 			{{if v.versionStatus == 2}}
 				<a href="javascript:createIndex('{{v.versionName}}')">reCCC</a>&nbsp;&nbsp;
 				<a href="javascript:useIndex('{{v.versionName}}')">UUUU</a>
 
-				<a href="#" data-content="{{v.createInfo}}" onclick="viewDetail(this)">[详情]</a></td>
+				
 			{{/if}}
+			<a href="#" data-content="{{v.createInfo}}" onclick="viewDetail(this)">[详情]</a>
 		</td>
 	</tr>
 	{{/each}}

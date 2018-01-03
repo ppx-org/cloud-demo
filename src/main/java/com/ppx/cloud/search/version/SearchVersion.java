@@ -80,7 +80,11 @@ public class SearchVersion {
 		this.updated = updated;
 	}
 
-	
-	
+	public Long getSpendTime() {
+		if (createEnd != null && createBegin != null) {
+			return (createEnd.getTime() - createBegin.getTime()) / 1000;
+		}
+		return null;
+	}
 	
 }

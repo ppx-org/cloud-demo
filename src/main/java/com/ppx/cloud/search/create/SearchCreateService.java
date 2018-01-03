@@ -110,7 +110,6 @@ public class SearchCreateService extends MyDaoSupport {
 			e.printStackTrace();
 		}
 		
-		
 		System.out.println("out:" + createInfo);
 		
 		
