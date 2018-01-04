@@ -23,6 +23,13 @@ public class GrantInterceptor implements HandlerInterceptor {
 		String contextPath = request.getContextPath();
 		String uri = request.getRequestURI().replace(contextPath, "");
 
+		System.out.println("xxxxxxxxxxxxxxxxxxxx..........uri:" + uri);
+		// small
+		if (uri.startsWith("/S")) {
+			return true;
+		}
+		
+		
 		// 不拦截登录页
 		if (uri.startsWith("/login/")) {
 			return true;
