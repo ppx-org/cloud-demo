@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	//refreshPageData([[${listJson}]]);
+});
+
+function queryPage(pageNumber) {
+	showLoading();
+	$("#pageNumber").val(pageNumber);
+	$.post([[@{/repoOrder/listJson}]], $("#queryForm").serialize(), function(r) {
+		refreshPageData(r);
+		hideLoading();
+	});
+}
+
+
+</script>
+</head>
+
+<body>
+<div th:replace="common/fragment/common::pageList('DEMO_TEST')">
+	<div th:fragment="queryFragment">
+		<select class="form-control input-sm" name="repoId">
+			<option th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${repoList}"></option>
+		</select>
+		<input type="text" class="form-control input-sm" name="itemId" placeholder="请输入NAME" style="width:200px;">
+		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
+	</div>
+	<table th:fragment="listFragment">
+	<tr>
+		<th>O_ID</th>
+		<th>操作</th>
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td class="w-id">{{v.itemId}}</td>
+		<td class="w-action">
+		</td>
+	</tr>
+	{{/each}}
+	</script>
+	</table>
+</div>
+
+
+</body>
+</html>
+
