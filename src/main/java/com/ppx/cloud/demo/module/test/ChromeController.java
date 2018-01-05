@@ -39,7 +39,7 @@ public class ChromeController {
 	
 	private static Session staticSession = null;
 	
-	
+	private static SessionFactory factory = null;
 	
 	@GetMapping
 	public ModelAndView chrome(HttpServletRequest request) {
@@ -52,45 +52,63 @@ public class ChromeController {
 	
 	@GetMapping @ResponseBody
 	public Map<String, Object> test(HttpServletRequest request) {
-		Launcher launcher = new Launcher();
+		
 		try {
 			List<String> arguments = new ArrayList<String>();
 			arguments.add("--headless");
-			//arguments.add("--disable-gpu");
+			arguments.add("--window-size=1920,1080");
+			arguments.add("--disable-gpu");
 		
-			SessionFactory factory = launcher.launch(arguments);
-			//launcher.getProcessManager().kill();
+			System.out.println("...............staticSession:" + staticSession);
+			
+			if (staticSession != null) {
+				System.out.println("...............staticSession2:" + staticSession.isConnected());
+				//System.out.println("...............staticSession2:" + staticSession.isDomReady());
+			}
+		
+			
+			// launcher.getProcessManager().kill();
+			// launcher = new Launcher();
+			if (staticSession != null) {
+				//staticSession.cl
+			}
 			
 			// 只打开一个窗口
 			if (staticSession == null || !staticSession.isConnected()) {
+				System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxnew Launcher():");
+				Launcher launcher = new Launcher();
+				//if (factory == null) {
+					factory = launcher.launch(arguments);
+				//}
+				
 				staticSession = factory.create();
 			}
-			
 			
 			staticSession.navigate("https://passport.zhaopin.com/org/login");
 			staticSession.waitDocumentReady();
 			staticSession.activate();
 			
 			staticSession.wait(200);
-			staticSession.evaluate("$('#CheckCodeCapt').click();");
+			staticSession.evaluate("$('#checkCodeCapt').click();");
+			//click(666, 334);
 			staticSession.wait(1200);
 	        
 //		    // byte[] data = staticSession.captureScreenshot();
 			
 			
-			DOM dom = staticSession.getCommand().getDOM();
-			Integer nodeId = staticSession.getNodeId("#captcha");
-			BoxModel boxModel = dom.getBoxModel(nodeId, null, null);
-			System.out.println("xxxxxxxxx...........w:" + boxModel.getWidth());
-			System.out.println("xxxxxxxxx...........w:" + boxModel.getHeight());			
-			System.out.println("xxxxxxxxx...........w:" + boxModel.getContent());
+//			DOM dom = staticSession.getCommand().getDOM();
+//			Integer nodeId = staticSession.getNodeId("#captcha");
+//			BoxModel boxModel = dom.getBoxModel(nodeId, null, null);
+//			System.out.println("xxxxxxxxx...........w:" + boxModel.getWidth());
+//			System.out.println("xxxxxxxxx...........w:" + boxModel.getHeight());			
+//			System.out.println("xxxxxxxxx...........w:" + boxModel.getContent());
 //		    // 
-		    Viewport clip = new Viewport();
-		    clip.setScale(0d);
-		    clip.setX(66d);
-		    clip.setY(439d);
-		    clip.setWidth(290d);
-		    clip.setHeight(500d);
+//		    Viewport clip = new Viewport();
+//		    clip.setScale(0d);
+//		    clip.setX(66d);
+//		    clip.setY(439d);
+//		    clip.setWidth(290d);
+//		    clip.setHeight(500d);
 		    
 		    
 		    
@@ -123,9 +141,14 @@ public class ChromeController {
 	@GetMapping @ResponseBody
 	public Map<String, Object> click(HttpServletRequest request, String points) {
 		// 601.0, 448.0,
-		// double offsetX = 477 + 15; // 有头
-		double offsetX = 477 + 15 + 43; // 无头
+		
+//		
+//		double offsetX = 477 + 15; // 有头
+//		//double offsetX = 477 + 15 + 43; // 无头
 		double offsetY = 337 + 25 - 2;
+		double offsetX = 377 + 5; // 有头 OK
+		
+		offsetX = 477 + 15 + 43; // 无头 OK
 		
 		
 		String[] point = points.split(";");
@@ -145,8 +168,8 @@ public class ChromeController {
 		staticSession.wait(100);
 		
 		// 输入用户名和密码
-		staticSession.evaluate("$('#LoginName').val('honghai020');");
-		staticSession.evaluate("$('#Password').val('Test13800');");
+		staticSession.evaluate("$('#loginName').val('honghai020');");
+		staticSession.evaluate("$('#password').val('Test13800');");
 		staticSession.evaluate("$('#captcha-submitCode').click();");
         staticSession.wait(1000);
         
