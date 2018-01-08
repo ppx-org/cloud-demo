@@ -9,11 +9,11 @@ public class MGrantContext {
 	
 	public static ThreadLocal<WxUser> threadLocalUser = new ThreadLocal<WxUser>();
 
-	public static void setLoginUser(WxUser u) {
+	public static void setWxUser(WxUser u) {
 		threadLocalUser.set(u);
 	}
 	
-	public static WxUser getLoginUser() {
+	public static WxUser getWxUser() {
 		return threadLocalUser.get();
 	}
 	

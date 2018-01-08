@@ -9,6 +9,8 @@ public class MGrantFilterUtils {
 		WxUser u = new WxUser();
 		u.setOpenid("deng");
 		
+		u.setStoreId(1);
+		
 		return u;	
 	}
 }
