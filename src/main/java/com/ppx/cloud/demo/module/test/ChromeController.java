@@ -53,6 +53,7 @@ public class ChromeController {
 	@GetMapping @ResponseBody
 	public Map<String, Object> test(HttpServletRequest request) {
 		
+	
 		try {
 			List<String> arguments = new ArrayList<String>();
 			arguments.add("--headless");
