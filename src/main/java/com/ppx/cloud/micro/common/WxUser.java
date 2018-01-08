@@ -1,6 +1,6 @@
 package com.ppx.cloud.micro.common;
 
-public class LoginUser {
+public class WxUser {
 	
 	private String openid;
 

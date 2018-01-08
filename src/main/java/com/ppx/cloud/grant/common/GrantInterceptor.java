@@ -8,6 +8,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.common.controller.ControllerContext;
 import com.ppx.cloud.grant.filter.GrantFilterUtils;
+import com.ppx.cloud.micro.common.WxUser;
+import com.ppx.cloud.micro.common.MGrantFilterUtils;
 
 
 /**
@@ -23,9 +25,11 @@ public class GrantInterceptor implements HandlerInterceptor {
 		String contextPath = request.getContextPath();
 		String uri = request.getRequestURI().replace(contextPath, "");
 
-		System.out.println("xxxxxxxxxxxxxxxxxxxx..........uri:" + uri);
-		// small
+		
+		// wx micro
 		if (uri.startsWith("/S")) {
+			WxUser u = MGrantFilterUtils.getLoginUser(request);
+			
 			return true;
 		}
 		

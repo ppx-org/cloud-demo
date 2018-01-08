@@ -7,13 +7,13 @@ package com.ppx.cloud.micro.common;
  */
 public class MGrantContext {
 	
-	public static ThreadLocal<LoginUser> threadLocalUser = new ThreadLocal<LoginUser>();
+	public static ThreadLocal<WxUser> threadLocalUser = new ThreadLocal<WxUser>();
 
-	public static void setLoginUser(LoginUser u) {
+	public static void setLoginUser(WxUser u) {
 		threadLocalUser.set(u);
 	}
 	
-	public static LoginUser getLoginUser() {
+	public static WxUser getLoginUser() {
 		return threadLocalUser.get();
 	}
 	
