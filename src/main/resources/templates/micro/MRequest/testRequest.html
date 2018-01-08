@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+<script type="text/javascript" th:inline="javascript">
+
+$(function() {
+	
+});
+
+function testRequest() {
+	var PPXTOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvcGVuaWQiOiJvRDFuNjBIWkhXQmE2dWNXU2RZNTBITldQZnE0Iiwic2Vzc2lvbl9rZXkiOiJUQW5jcU1EUlRoTlpxZUVzbWIzeHJRPT0iLCJpYXQiOjE1MTU0NjgzMTd9.FYiDa1kF8mV5cBWM6YPVC5nFPow7qpwm9muEHTKDl0E";
+	var storeId = 1;
+	$.ajaxSetup({headers:{"content-type":"application/json", "storeId":storeId, "PPXTOKEN":PPXTOKEN}});
+	
+	var json = {"para":"testpara"};
+	//alert(str)
+	
+	// content-type 默认为 'application/json';
+	$.post([[@{/MRequest/test}]], JSON.stringify(json), function(r) {
+		alert(JSON.stringify(r));
+	});
+}
+
+</script>
+</head>
+
+<body>
+
+
+<button type="button" onclick="testRequest()">test</button>
+
+
+</body>
+</html>
+

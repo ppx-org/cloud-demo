@@ -4,6 +4,8 @@ public class WxUser {
 	
 	private String openid;
 	
+	private String sessionKey;
+	
 	private Integer storeId;
 
 	public String getOpenid() {
@@ -12,6 +14,14 @@ public class WxUser {
 
 	public void setOpenid(String openid) {
 		this.openid = openid;
+	}
+
+	public String getSessionKey() {
+		return sessionKey;
+	}
+
+	public void setSessionKey(String sessionKey) {
+		this.sessionKey = sessionKey;
 	}
 
 	public Integer getStoreId() {

@@ -1,12 +1,18 @@
 package com.ppx.cloud.grant.common;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ppx.cloud.common.controller.ControllerContext;
+import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.grant.filter.GrantFilterUtils;
 import com.ppx.cloud.micro.common.WxUser;
 import com.ppx.cloud.micro.common.MGrantContext;
@@ -29,7 +35,19 @@ public class GrantInterceptor implements HandlerInterceptor {
 		
 		// wx micro
 		if (uri.startsWith("/M")) {
+			if (uri.equals("/MLogin/login") || uri.equals("/MRequest/testRequest")) {
+				return true;
+			}
+			
 			WxUser u = MGrantFilterUtils.getLoginUser(request);
+			if (u == null) {
+				// 未登录
+				
+				ControllerReturn.returnErrorJson(response, -9, "no login");
+				
+				return false;
+			}
+			
 			MGrantContext.setWxUser(u);
 			return true;
 		}

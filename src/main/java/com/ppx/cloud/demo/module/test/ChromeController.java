@@ -37,22 +37,86 @@ import io.webfolder.cdp.type.page.Viewport;
 @Controller	
 public class ChromeController {
 	
-	private static Session staticSession = null;
+	//private static Session staticSession = null;
 	
 	private static SessionFactory factory = null;
+	
+	//private static String sessionId = null;
+	
+	private static Session staticSession = null;
+	
 	
 	@GetMapping
 	public ModelAndView chrome(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView();
-		
-		
 		return mv;
 	}
 	
 	
+	
+	@GetMapping @ResponseBody
+	public Map<String, Object> tmp(HttpServletRequest request) {
+		try {
+			Session firstSession = null;
+			
+			List<String> arguments = new ArrayList<String>();
+			arguments.add("--headless");
+			arguments.add("–-single-process");
+			arguments.add("--window-size=1920,1080");
+			arguments.add("--disable-gpu");
+			
+			System.out.println("----------------------001 begin-------------------");
+			Launcher launcher = new Launcher(9304);
+			
+			System.out.println("----------------------002-------------------");
+			
+			
+			//boolean kill = launcher.getProcessManager().kill();
+			//System.out.println("xxxxxxxxxxxxxxxxx:" + kill);
+			
+			boolean b = launcher.getProcessManager().kill();
+			System.out.println("----------------------003-------------------" + b);
+			factory = launcher.launch(arguments);
+			
+			
+			System.out.println("xxxxxxxxxxxxxxxout:" + factory.list().size());
+			System.out.println("xxxxxxxxxxxxxxxport:" + factory.getPort());
+			
+			if (factory.list().size() == 1) {
+				String id = factory.list().get(0).getId();
+				firstSession = factory.connect(id);
+				System.out.println("xxxxxxxxxxxxxout:" + firstSession.isConnected());
+			}
+			else {
+				firstSession = factory.create();
+			}
+			
+			
+		
+			// 
+			// https://www.baidu.com/
+			//firstSession.navigate("https://passport.zhaopin.com/org/login");
+			firstSession.navigate("https://www.baidu.com/");
+			firstSession.waitDocumentReady();
+			firstSession.activate();
+			
+			//firstSession.close();
+			//factory.close();
+			
+			
+			System.out.println("----------------------001 end-------------------");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return ControllerReturn.ok();
+			
+	}
+	
+	
+	
 	@GetMapping @ResponseBody
 	public Map<String, Object> test(HttpServletRequest request) {
-		
 	
 		try {
 			List<String> arguments = new ArrayList<String>();
@@ -60,39 +124,60 @@ public class ChromeController {
 			arguments.add("--window-size=1920,1080");
 			arguments.add("--disable-gpu");
 		
-			System.out.println("...............staticSession:" + staticSession);
+			//System.out.println("...............staticSession:" + staticSession);
 			
-			if (staticSession != null) {
-				System.out.println("...............staticSession2:" + staticSession.isConnected());
+			//if (staticSession != null) {
+			//	System.out.println("...............staticSession2:" + staticSession.isConnected());
 				//System.out.println("...............staticSession2:" + staticSession.isDomReady());
-			}
+			//}
 		
 			
 			// launcher.getProcessManager().kill();
+		
+			
 			// launcher = new Launcher();
-			if (staticSession != null) {
-				//staticSession.cl
-			}
+			SessionFactory factory = null;
+			Session firstSession = null;
 			
 			// 只打开一个窗口
-			if (staticSession == null || !staticSession.isConnected()) {
-				System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxnew Launcher():");
+			//if (factory == null) {
+				System.out.println("-----------------------factory == null");
 				Launcher launcher = new Launcher();
-				//if (factory == null) {
-					factory = launcher.launch(arguments);
-				//}
+				factory = launcher.launch(arguments);
+				firstSession = factory.create();
+				//sessionId = firstSession.getId();
+			//}
+//			else {
+////				int len = factory.listBrowserContextIds().size();
+////				rSystem.out.println("xxxxxxx....len:" + factory.list());
+//				if (factory.list().size() == 0) {
+//					factory.close();
+//					Launcher launcher = new Launcher();
+//					factory = launcher.launch(arguments);
+//					firstSession = factory.create();
+//					sessionId = firstSession.getId();
+//				}
+//				else {
+//					firstSession = factory.connect(sessionId);
+//					//firstSession = factory.getHeadlessSession();
+//				}
 				
-				staticSession = factory.create();
-			}
+				
+				
+				
+				
+				//firstSession = factory.connect(sessionId);
+				
+//			}
 			
-			staticSession.navigate("https://passport.zhaopin.com/org/login");
-			staticSession.waitDocumentReady();
-			staticSession.activate();
+			firstSession.navigate("https://passport.zhaopin.com/org/login");
+			firstSession.waitDocumentReady();
+			firstSession.activate();
 			
-			staticSession.wait(200);
-			staticSession.evaluate("$('#checkCodeCapt').click();");
+			firstSession.wait(200);
+			firstSession.evaluate("$('#checkCodeCapt').click();");
 			//click(666, 334);
-			staticSession.wait(1200);
+			firstSession.wait(1200);
 	        
 //		    // byte[] data = staticSession.captureScreenshot();
 			
@@ -113,7 +198,7 @@ public class ChromeController {
 		    
 		    
 		    
-		    byte[] data = staticSession.captureScreenshot();
+		    byte[] data = firstSession.captureScreenshot();
 		    //byte[] data = staticSession.getCommand().getPage().captureScreenshot(ImageFormat.Png, 100, clip, true);
 		    //byte[] data = tmpPage.captureScreenshot(ImageFormat.Png, 100, clip, true);
 		    
