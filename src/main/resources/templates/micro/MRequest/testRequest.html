@@ -15,11 +15,14 @@ function testRequest() {
 	var storeId = 1;
 	$.ajaxSetup({headers:{"content-type":"application/json", "storeId":storeId, "PPXTOKEN":PPXTOKEN}});
 	
+	/*
 	var json = {"para":"testpara"};
-	//alert(str)
-	
-	// content-type 默认为 'application/json';
 	$.post([[@{/MRequest/test}]], JSON.stringify(json), function(r) {
+		alert(JSON.stringify(r));
+	});
+	*/
+	var json = {};
+	$.post([[@{/MSearch/listWord}]], null, function(r) {
 		alert(JSON.stringify(r));
 	});
 }

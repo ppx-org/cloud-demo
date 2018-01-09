@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
@@ -17,7 +18,7 @@ public class MSearchController {
 	@Autowired
 	private MSearchService serv;
 	
-	@GetMapping @ResponseBody
+	@PostMapping @ResponseBody
 	public Map<String, Object> listWord() {
 		List<String> lastWordList = serv.listLastWord();
 		List<String> hotWordList = serv.listHotWord();

@@ -33,7 +33,7 @@ public class MLoginController {
 		// 
 		String appid = "wxe2d27ee638a5cb7a";
 		String secret = "5a3e84b9d19c79d75db597583e3a74d5";
-		String jsCode = "003bdvtp1FCdxq0ferup1BBhtp1bdvtU";
+		String jsCode = "013wHxWi2XLk4J0HEFWi2Gx9Wi2wHxWQ";
 		
 		
 		
@@ -68,7 +68,7 @@ public class MLoginController {
 				Map<String, Object> returnMap = ControllerReturn.ok(-1);
 				returnMap.put("errcode", map.get("errcode"));
 				returnMap.put("errmsg", map.get("errmsg"));
-				//return returnMap;
+				return returnMap;
 			}
 			
 			openid = (String)map.get("openid");
