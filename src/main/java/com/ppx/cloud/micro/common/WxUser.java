@@ -7,6 +7,8 @@ public class WxUser {
 	private String sessionKey;
 	
 	private Integer storeId;
+	
+	private Integer merchantId;
 
 	public String getOpenid() {
 		return openid;
@@ -31,6 +33,15 @@ public class WxUser {
 	public void setStoreId(Integer storeId) {
 		this.storeId = storeId;
 	}
+
+	public Integer getMerchantId() {
+		return merchantId;
+	}
+
+	public void setMerchantId(Integer merchantId) {
+		this.merchantId = merchantId;
+	}
+	
 	
 	
 	

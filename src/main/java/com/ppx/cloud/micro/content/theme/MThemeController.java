@@ -1,4 +1,4 @@
-package com.ppx.cloud.micro.content.home;
+package com.ppx.cloud.micro.content.theme;
 
 import java.util.List;
 import java.util.Map;
@@ -12,23 +12,22 @@ import com.ppx.cloud.common.controller.ControllerReturn;
 
 
 @Controller	
-public class MHomeController {
+public class MThemeController {
 	
 	@Autowired
-	private MHomeService serv;
-	
-	// 合成一个
+	private MThemedService serv;
+
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> listSwiper() {
-		List<String> list = serv.listSwiper();
+	public Map<String, Object> listTheme() {
+		/**
+		 每项的数量，图片
+		 */
+		
+		List<MTheme> list = serv.listTheme();
 		
 		return ControllerReturn.ok(list);
 	}
-	
-	
-	
-	
 	
 }
 

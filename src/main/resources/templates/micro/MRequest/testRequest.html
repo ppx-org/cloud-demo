@@ -13,7 +13,8 @@ $(function() {
 function testRequest() {
 	var PPXTOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvcGVuaWQiOiJvRDFuNjBIWkhXQmE2dWNXU2RZNTBITldQZnE0Iiwic2Vzc2lvbl9rZXkiOiJUQW5jcU1EUlRoTlpxZUVzbWIzeHJRPT0iLCJpYXQiOjE1MTU0NjgzMTd9.FYiDa1kF8mV5cBWM6YPVC5nFPow7qpwm9muEHTKDl0E";
 	var storeId = 1;
-	$.ajaxSetup({headers:{"content-type":"application/json", "storeId":storeId, "PPXTOKEN":PPXTOKEN}});
+	var merchantId = -1;
+	$.ajaxSetup({headers:{"content-type":"application/json", "storeId":storeId, "merchantId":merchantId, "PPXTOKEN":PPXTOKEN}});
 	
 	/*
 	var json = {"para":"testpara"};
@@ -22,8 +23,10 @@ function testRequest() {
 	});
 	*/
 	var json = {};
-	$.post([[@{/MSearch/listWord}]], null, function(r) {
-		alert(JSON.stringify(r));
+	$.post([[@{/}]] + $("#url").val(), null, function(r) {
+		
+		$("#returnJson").text(JSON.stringify(r));
+		
 	});
 }
 
@@ -33,7 +36,16 @@ function testRequest() {
 <body>
 
 
+
+<input type="text" id="url" value="MSearch/listWord" style="width:300px">
+
 <button type="button" onclick="testRequest()">test</button>
+
+
+<div id="returnJson">
+
+</div>
+
 
 
 </body>

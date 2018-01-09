@@ -66,7 +66,7 @@ public class ChromeController {
 			arguments.add("--disable-gpu");
 			
 			System.out.println("----------------------001 begin-------------------");
-			Launcher launcher = new Launcher(9304);
+			Launcher launcher = new Launcher(9308);
 			
 			System.out.println("----------------------002-------------------");
 			

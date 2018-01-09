@@ -17,6 +17,7 @@ public class MGrantFilterUtils {
 		
 		String PPXTOKEN = request.getHeader("PPXTOKEN");
 		String storeId = request.getHeader("storeId");
+		String merchantId = request.getHeader("merchantId");
 		
 		// token为空,表示未登录
 		if (StringUtils.isEmpty(PPXTOKEN)) {
@@ -34,6 +35,7 @@ public class MGrantFilterUtils {
 			u.setOpenid(openid);
 			u.setSessionKey(session_key);
 			u.setStoreId(Integer.parseInt(storeId));
+			u.setMerchantId(Integer.parseInt(merchantId));
 			return u;
 		} catch (Exception e) {
 			
@@ -46,6 +48,7 @@ public class MGrantFilterUtils {
 		
 		u.setOpenid("oD1n60HZHWBa6ucWSdY50HNWPfq4");
 		u.setStoreId(1);
+		u.setMerchantId(-1);
 		
 		return u;	
 	}
