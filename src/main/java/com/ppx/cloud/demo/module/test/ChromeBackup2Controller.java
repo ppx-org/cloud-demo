@@ -35,7 +35,7 @@ import io.webfolder.cdp.type.network.Cookie;
 
 
 @Controller	
-public class ChromeController {
+public class ChromeBackup2Controller {
 	
 	//private static Session staticSession = null;
 	
