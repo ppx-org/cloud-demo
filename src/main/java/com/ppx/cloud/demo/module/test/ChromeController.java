@@ -1,34 +1,227 @@
 package com.ppx.cloud.demo.module.test;
 
+import static io.webfolder.cdp.type.constant.MouseButtonType.Left;
+import static io.webfolder.cdp.type.constant.MouseEventType.MousePressed;
+import static io.webfolder.cdp.type.constant.MouseEventType.MouseReleased;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
 
 import io.webfolder.cdp.Launcher;
+import io.webfolder.cdp.command.Input;
 import io.webfolder.cdp.session.Session;
 import io.webfolder.cdp.session.SessionFactory;
+import io.webfolder.cdp.type.network.Cookie;
 
 
 @Controller	
 public class ChromeController {
 	
-	@GetMapping
-	public ModelAndView chrome(HttpServletRequest request) {
+	private static Session chromeSession = null;
+	
+	private static SessionFactory sessionFactory = null;
+	
+	public static int DEFAULT_PORT = 9222;
+	
+	@GetMapping @ResponseBody
+	public ModelAndView zhaopin(HttpServletRequest request) {
+		
+		try {
+			System.out.println("----------------------zhaopin begin-------------------");
+			
+			List<String> arguments = new ArrayList<String>();
+			arguments.add("--headless");
+			arguments.add("--window-size=1920,1080");
+			arguments.add("--disable-gpu");
+			arguments.add("--start-maximized");
+			
+			
+			if (chromeSession == null) {
+				
+				boolean isPortExist = isHostConnectable("localhost", SessionFactory.DEFAULT_PORT);
+				
+				Launcher launcher = new Launcher();
+				sessionFactory = launcher.launch(arguments);
+				
+				
+				int len = sessionFactory.list().size();
+				
+				
+				if (!isPortExist) {
+					chromeSession = sessionFactory.create();
+				}
+				else if (len >= 1) {
+					chromeSession = sessionFactory.connect(sessionFactory.list().get(0).getId());
+				}
+				else {
+					chromeSession = sessionFactory.create();
+				}
+			}
+			else {
+				if (!isHostConnectable("localhost", SessionFactory.DEFAULT_PORT)) {
+					System.gc();
+					Launcher launcher = new Launcher();
+					sessionFactory = launcher.launch(arguments);
+					chromeSession = sessionFactory.create();
+					System.gc();
+				}
+			}
+			
+			
+			// https://www.baidu.com/ 
+			// https://passport.zhaopin.com/org/login
+			chromeSession.navigate("file:///C:/Users/LENOVO/Desktop/test.html");
+			chromeSession.waitDocumentReady();
+			chromeSession.activate();
+		
+			chromeSession.wait(100);
+			chromeSession.evaluate("$('#checkCodeCapt').click();");
+			chromeSession.wait(1200);
+			
+			byte[] data = chromeSession.captureScreenshot();
+		    
+			String path = "E:/Git/ppx-org/cloud-demo/target/classes/static/test/clip01.png";
+		    try {
+		    	FileOutputStream out = new FileOutputStream(new File(path));
+		    	out.write(data);
+		    	out.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			
+			System.out.println("----------------------005 end-------------------");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		ModelAndView mv = new ModelAndView();
 		return mv;
+			
 	}
+	
+	
+	@RequestMapping @ResponseBody
+	public Map<String, Object> click(HttpServletRequest request, String points) {
+		double offsetY = 360;
+		double offsetX = 535;
+		
+		//offsetX = 630; // 有头 OK
+		
+		String[] point = points.split(";");
+		double x1 = Double.parseDouble(point[0].split(",")[0]) + offsetX;
+		double y1 = Double.parseDouble(point[0].split(",")[1]) + offsetY;
+		double x2 = Double.parseDouble(point[1].split(",")[0]) + offsetX;
+		double y2 = Double.parseDouble(point[1].split(",")[1]) + offsetY;
+		double x3 = Double.parseDouble(point[2].split(",")[0]) + offsetX;
+		double y3 = Double.parseDouble(point[2].split(",")[1]) + offsetY;
+		
+		
+		click(x1, y1);
+		chromeSession.wait(100);
+		click(x2, y2);
+		chromeSession.wait(110);
+		click(x3, y3);
+		chromeSession.wait(80);
+		
+		// 输入用户名和密码
+		chromeSession.evaluate("$('#loginName').val('honghai020');");
+		chromeSession.evaluate("$('#password').val('Test13800');");
+		chromeSession.evaluate("$('#captcha-submitCode').click();");
+		chromeSession.wait(1000);
+        
+        // 登录
+		chromeSession.evaluate("$('#loginbutton').click();");  
+		chromeSession.wait(2600);
+		
+		String location = chromeSession.getLocation();
+		System.out.println("xxxxlocation:" + location);
+		
+        
+        byte[] data = chromeSession.captureScreenshot();
+	    
+	    try {
+	    	FileOutputStream out = new FileOutputStream(new File("E:/U/png/2.png")); 
+	    	out.write(data);
+	    	out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return ControllerReturn.ok();
+	}
+	
+	@GetMapping @ResponseBody
+	public Map<String, Object> cookie(HttpServletRequest request) {
+		List<Cookie> cookieList = chromeSession.getCommand().getPage().getCookies();
+		
+		StringBuilder sendCookie = new StringBuilder();
+	    for (Cookie cookie : cookieList) {
+			sendCookie.append(cookie.getName() + "=" + cookie.getValue() + ";");
+		}
+	    
+	    System.out.println("........cookie:" + sendCookie);
+        
+	    //https://jobads.zhaopin.com/Position/PositionAdd
+	    String addUrl = "https://jobads.zhaopin.com/Position/PositionAdd";
+	    RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();        
+        headers.add("Accept", "application/xml, text/xml, */*");
+        headers.add("Content-Type", "application/x-www-form-urlencoded");
+        headers.add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
+        headers.add("X-Requested-With", "XMLHttpRequest");
+        headers.add("Cookie", sendCookie.toString());
+        
+        
+               
+        HttpEntity<String> formEntity = new HttpEntity<String>("", headers);
+        ResponseEntity<String> r = restTemplate.exchange(addUrl, HttpMethod.GET, formEntity, String.class, "");
+		
+        
+		String str = r.getBody();
+		System.out.println("xxxxxxxxxxxxxxxxx:body:" + str);
+		
+		List<Cookie> lastCookieList = chromeSession.getCommand().getPage().getCookies();
+		StringBuilder lastCookie = new StringBuilder();
+	    for (Cookie cookie : lastCookieList) {
+	    	lastCookie.append(cookie.getName() + "=" + cookie.getValue() + ";");
+		}
+	    System.out.println("xxxxxxxxxxxxxxxxx:lastCookie:" + lastCookie);
+	    
+		
+		return ControllerReturn.ok();
+	}
+	
+	
+	
+	private void click(double x, double y) {
+		Input input = chromeSession.getCommand().getInput();
+		input.dispatchMouseEvent(MousePressed, x, y, null, null, Left, 1, null, null);
+        input.dispatchMouseEvent(MouseReleased, x, y, null, null, Left, 1, null, null);
+	}
+	
 	
 	public static boolean isHostConnectable(String host, int port) {
         Socket socket = new Socket();
@@ -43,101 +236,6 @@ public class ChromeController {
         }
         return true;
     }
-	
-	
-	private static Session chromeSession = null;
-	
-	private static SessionFactory sessionFactory = null;
-	
-	public static int DEFAULT_PORT = 9222;
-	
-	@GetMapping @ResponseBody
-	public Map<String, Object> zhaopin(HttpServletRequest request) {
-		
-		try {
-			System.out.println("----------------------zhaopin begin-------------------");
-			
-			List<String> arguments = new ArrayList<String>();
-			arguments.add("--headless");
-			arguments.add("--window-size=1920,1080");
-			arguments.add("--disable-gpu");
-			
-			//SessionFactory sessionFactory = null;
-			//System.gc();
-			//System.gc();
-			//chromeSession = null;
-			if (chromeSession == null) {
-				
-				boolean isPortExist = isHostConnectable("localhost", SessionFactory.DEFAULT_PORT);
-				
-				System.out.println("----------------------002-------------------new Launcher(DEFAULT_PORT)");
-				Launcher launcher = new Launcher();
-				sessionFactory = launcher.launch(arguments);
-				
-				
-				int len = sessionFactory.list().size();
-				System.out.println("xxxxxxxlen:" + len);
-				
-				
-				if (!isPortExist) {
-					System.out.println("---------------------------x001");
-					chromeSession = sessionFactory.create();
-				}
-				else if (len >= 1) {
-					System.out.println("---------------------------x002");
-					chromeSession = sessionFactory.connect(sessionFactory.list().get(0).getId());
-				}
-				else {
-					System.out.println("---------------------------x003");
-					chromeSession = sessionFactory.create();
-				}
-			}
-			else {
-				if (!isHostConnectable("localhost", SessionFactory.DEFAULT_PORT)) {
-					System.gc();
-					System.out.println("----------22222222-------------------:");
-					Launcher launcher = new Launcher();
-					sessionFactory = launcher.launch(arguments);
-					chromeSession = sessionFactory.create();
-					System.gc();
-				}
-			}
-			
-			
-//			System.out.println("...............size:" + sessionFactory.list().size());
-//			System.out.println("...............port:" + sessionFactory.getPort());
-//			
-//			
-//			if (sessionFactory.list().size() == 1) {
-//				System.out.println("----------------------003-------------------sessionFactory.list().size() == 1");
-//				String id = sessionFactory.list().get(0).getId();
-//				chromeSession = sessionFactory.connect(id);
-//			}
-//			else {
-//				System.out.println("----------------------004----------------------sessionFactory.create();");
-//				chromeSession = sessionFactory.create();
-//			}
-			
-		
-			// https://www.baidu.com/ 
-			// https://passport.zhaopin.com/org/login
-			chromeSession.navigate("https://www.baidu.com/");
-			chromeSession.waitDocumentReady();
-			chromeSession.activate();
-		
-			
-			
-			System.out.println("----------------------005 end-------------------");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return ControllerReturn.ok();
-			
-	}
-	
-	
-	
 	
 	
 	
