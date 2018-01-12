@@ -97,7 +97,8 @@ public class ChromeController {
 			chromeSession.activate();
 		
 			chromeSession.wait(100);
-			chromeSession.evaluate("$('#checkCodeCapt').click();");
+			// 会变
+			chromeSession.evaluate("$('#CheckCodeCapt').click();");
 			chromeSession.wait(1200);
 			
 			byte[] data = chromeSession.captureScreenshot();
@@ -147,8 +148,8 @@ public class ChromeController {
 		chromeSession.wait(80);
 		
 		// 输入用户名和密码
-		chromeSession.evaluate("$('#loginName').val('honghai020');");
-		chromeSession.evaluate("$('#password').val('Test13800');");
+		chromeSession.evaluate("$('#LoginName').val('honghai020');");
+		chromeSession.evaluate("$('#Password').val('Test13800');");
 		chromeSession.evaluate("$('#captcha-submitCode').click();");
 		chromeSession.wait(1000);
         

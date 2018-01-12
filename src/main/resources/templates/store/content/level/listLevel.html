@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+
+<script type="text/javascript" th:inline="javascript">
+function refreshData(data) {
+	var pageTemplateId = "pageTemplate";
+	$("#" + pageTemplateId).parent().find("tr:gt(0)").remove();
+	$("#" + pageTemplateId).parent().append(template(pageTemplateId, data));
+}
+
+$(function() {
+	//refreshData([[${listJson}]]);
+});
+
+function query() {
+	showLoading();
+	$.post([[@{/level/listJson}]], $("#queryForm").serialize(), function(r) {
+		refreshData(r);
+		hideLoading();
+	});
+}
+
+function add() {
+	$('#addForm')[0].reset();
+	$("#addStoreId").val($("#storeId").val());
+	$('#add').modal('show');
+	
+	action = function() {
+		showLoading();
+		$.post([[@{/level/insertLevel}]], $("#addForm").serialize(), function(r) {
+			if (r.result == 1) {
+				$('#add').modal('hide');
+				query(1);
+			}
+		});
+	}
+}
+
+
+
+function remove(id) {
+	var callback = function () {
+		showLoading();
+		$.post([[@{/level/deleteLevel}]], "id=" + id, function(r) {
+			if (r.result == 1) {
+				query();
+			}
+		});	
+	}
+	confirm(id, callback);
+}
+
+
+var move = {};
+move.top = function(id) {
+	$.post([[@{/level/top}]], "id=" + id + "&storeId=" + $("#storeId").val(), function(r) {
+		if (r.result == 1) {
+			query();
+		}
+	});	
+}
+move.up = function(id) {
+	$.post([[@{/level/up}]], "id=" + id + "&storeId=" + $("#storeId").val(), function(r) {
+		if (r.result == 1) {
+			query();
+		}
+	});
+}
+move.down = function(id) {
+	$.post([[@{/level/down}]], "id=" + id + "&storeId=" + $("#storeId").val(), function(r) {
+		if (r.result == 1) {
+			query();
+		}
+	});
+}
+
+function storeChange() {
+	query();
+}
+
+
+function levelProduct(levelId) {
+	var url = [[@{/level/listLevelProd}]] + "?levelId=" + levelId;
+	open(url);
+}
+</script>
+</head>
+
+<body>
+<div class="page-list-body">
+	<div class="page-list-query">
+		<form id="queryForm" class="form-inline">
+			<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>test</span></div>
+			<select class="form-control input-sm" id="storeId" name="storeId" onchange="storeChange(this)">
+				<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
+			</select>
+			<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
+		</form>
+	</div>
+	<table class="page-list-table table table-bordered table-condensed">
+	<tr>
+		<th>ID</th>
+		<th>NAME</th>
+		<th>SORT</th>
+		<th>操作</th>
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td class="w-id">{{v.levelId}}</td>
+		<td class="w-title-s">{{v.levelName}}</td>
+		<td class="w-action">
+			{{if arrayList.length != 1 && i !== 0}}
+			<a href="#" onclick="move.top({{v.levelId}})" title="置顶" class="glyphicon glyphicon-step-backward" style="transform: rotate(90deg);"></a>
+			<a href="#" onclick="move.up({{v.levelId}})" title="上移" class="glyphicon glyphicon-arrow-up"></a>
+			{{/if}}
+			
+			{{if arrayList.length != 1 && i != arrayList.length - 1}}
+			<a href="#" onclick="move.down({{v.levelId}})" title="下移" class="glyphicon glyphicon-arrow-down"></a>
+			{{/if}}					
+		</td>
+		<td class="w-action">
+			<a href="#" onclick="remove({{v.levelId}})" class="glyphicon glyphicon-trash" title="删除"></a>
+
+			<a href="#" onclick="levelProduct({{v.levelId}})">[goto]</a>
+		</td>
+	</tr>
+	{{/each}}
+	</script>
+	</table>
+</div>
+
+<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
+	<div class="form-group">
+		<input type="hidden" id="addStoreId" name="storeId">
+		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
+		<div class="col-sm-7"><input type="text" name="levelName" class="form-control" maxlength="32"></div>
+	</div>
+</div>
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
