@@ -13,7 +13,7 @@ function refreshData(data) {
 }
 
 $(function() {
-	//refreshData([[${listJson}]]);
+	refreshData([[${listJson}]]);
 });
 
 function query() {
@@ -26,12 +26,11 @@ function query() {
 
 function add() {
 	$('#addForm')[0].reset();
-	$("#addStoreId").val($("#storeId").val());
 	$('#add').modal('show');
 	
 	action = function() {
 		showLoading();
-		$.post([[@{/level/insertLevel}]], $("#addForm").serialize(), function(r) {
+		$.post([[@{/level/insertLevelProd}]], $("#addForm").serialize(), function(r) {
 			if (r.result == 1) {
 				$('#add').modal('hide');
 				query(1);
@@ -92,7 +91,7 @@ function storeChange() {
 	<div class="page-list-query">
 		<form id="queryForm" class="form-inline">
 			<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>test</span></div>
-			<input type="hidden" id="levelId" name="levelId" value="${levelId}">
+			<input type="hidden" id="levelId" name="levelId" th:value="${levelId}">
 			<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
 		</form>
 	</div>
@@ -119,9 +118,8 @@ function storeChange() {
 			{{/if}}					
 		</td>
 		<td class="w-action">
-			<a href="#" onclick="remove({{v.prodId}})" class="glyphicon glyphicon-trash" title="删除"></a>
+			<a href="#" onclick="removeProd({{v.prodId}})" class="glyphicon glyphicon-trash" title="删除"></a>
 
-			<a href="#" onclick="levelProduct({{v.prodId}})">[goto]</a>
 		</td>
 	</tr>
 	{{/each}}
@@ -131,7 +129,7 @@ function storeChange() {
 
 <div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
 	<div class="form-group">
-		<input type="hidden" name="levelId" value="${levelId}" >
+		<input type="hidden" name="levelId" th:value="${levelId}" >
 		<label class="col-sm-3 control-label"><span class="required">*</span>id：</label>
 		<div class="col-sm-7"><input type="text" name="prodId" class="form-control" maxlength="32"></div>
 	</div>

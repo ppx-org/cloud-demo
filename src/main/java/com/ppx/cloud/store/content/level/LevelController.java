@@ -84,6 +84,7 @@ public class LevelController {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("levelId", levelId);
 		
+		mv.addObject("listJson", listLevelProdJson(levelId));
 		return mv;
 	}
 	
@@ -96,6 +97,25 @@ public class LevelController {
 	@PostMapping @ResponseBody
 	public Map<String, Object> insertLevelProd(LevelProd bean) {
 		int r = serv.insertLevelProd(bean);
+		return ControllerReturn.ok(r);
+	}
+	
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> prodTop(@RequestParam Integer levelId, @RequestParam Integer id) {
+		int r = serv.prodTop(levelId, id);
+		return ControllerReturn.ok(r);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> prodUp(@RequestParam Integer levelId, @RequestParam Integer id) {
+		int r = serv.prodUp(levelId, id);
+		return ControllerReturn.ok(r);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> prodDown(@RequestParam Integer levelId, @RequestParam Integer id) {
+		int r = serv.prodDown(levelId, id);
 		return ControllerReturn.ok(r);
 	}
 	

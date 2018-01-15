@@ -151,7 +151,7 @@ public class LevelService extends MyDaoSupport {
 		String prioSql = "select ifnull(max(PROD_PRIO), 0) + 1 PRIO from home_level_product where LEVEL_ID = ?";
 		int prodPrio = getJdbcTemplate().queryForObject(prioSql, Integer.class, bean.getLevelId());
 		
-		String sql = "insert into home_level_product(LEVEL_ID, PROD_ID, PROD_RPIO) values(?, ?, ?)";
+		String sql = "insert into home_level_product(LEVEL_ID, PROD_ID, PROD_PRIO) values(?, ?, ?)";
 		
 		int r = getJdbcTemplate().update(sql, bean.getLevelId(), bean.getProdId(), prodPrio);
 		
@@ -161,14 +161,14 @@ public class LevelService extends MyDaoSupport {
 	
 	
 	@Transactional
-	public int prodTop(Integer storeId, Integer id) {
+	public int prodTop(Integer levelId, Integer id) {
 		lockMerchant();
 
-		String prioSql = "select min(LEVEL_PRIO) - 1 PRIO from home_level_product where STORE_ID = ?";
-		int prio = getJdbcTemplate().queryForObject(prioSql, Integer.class, storeId);
+		String prioSql = "select min(PROD_PRIO) - 1 PRIO from home_level_product where LEVEL_ID = ? ";
+		int prio = getJdbcTemplate().queryForObject(prioSql, Integer.class, levelId);
 		
-		String updateSql = "update home_level set LEVEL_PRIO = ? where LEVEL_ID = ?";
-		return getJdbcTemplate().update(updateSql, prio, id);
+		String updateSql = "update home_level set PROD_PRIO = ? where LEVEL_ID = ? and PROD_ID";
+		return getJdbcTemplate().update(updateSql, prio, levelId, id);
 	}
 	
 	
@@ -193,40 +193,40 @@ public class LevelService extends MyDaoSupport {
 			upPrio = b.getProdPrio();
 		}
 		
-		String updateSql = "update home_level_product set PROD_PRIO = ? where LEVEL_ID = ?";
-		int r1 = getJdbcTemplate().update(updateSql, upPrio, id);
-		int r2 = getJdbcTemplate().update(updateSql, prio, upId);
+		String updateSql = "update home_level_product set PROD_PRIO = ? where LEVEL_ID = ? and PROD_ID = ?";
+		int r1 = getJdbcTemplate().update(updateSql, upPrio, levelId, id);
+		int r2 = getJdbcTemplate().update(updateSql, prio, levelId, upId);
 		
 		return r1 == 1 && r2 == 1 ? 1 : 0;
 	}
 	
 	@Transactional
-	public int prodDown(Integer storeId, Integer id) {
+	public int prodDown(Integer levelId, Integer id) {
 		lockMerchant();
 		
 		String sql = "select * from home_level_product where LEVEL_ID = ? order by PROD_PRIO";
-		List<Level> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Level.class), storeId);
+		List<LevelProd> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(LevelProd.class), levelId);
 		
 		int prio = -1;
 		int downId = -1;
 		int downPrio = -1;
 		boolean found = false;
-		for (Level b : list) {
-			downId = b.getLevelId();
-			downPrio = b.getLevelPrio();
+		for (LevelProd b : list) {
+			downId = b.getProdId();
+			downPrio = b.getProdPrio();
 			if (found) {
 				break;
 			}
 			if (b.getLevelId() == id) {
-				prio = b.getLevelPrio();
+				prio = b.getProdPrio();
 				found = true;
 			}
 			
 		}
 		
-		String updateSql = "update home_level set LEVEL_PRIO = ? where LEVEL_ID = ?";
-		int r1 = getJdbcTemplate().update(updateSql, downPrio, id);
-		int r2 = getJdbcTemplate().update(updateSql, prio, downId);
+		String updateSql = "update home_level_product set PROD_PRIO = ? where LEVEL_ID = ? and PROD_ID = ?";
+		int r1 = getJdbcTemplate().update(updateSql, downPrio, levelId, id);
+		int r2 = getJdbcTemplate().update(updateSql, prio, levelId, downId);
 		
 		return r1 == 1 && r2 == 1 ? 1 : 0;
 	}
