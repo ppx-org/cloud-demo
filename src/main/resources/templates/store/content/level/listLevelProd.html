@@ -4,6 +4,7 @@
 <title></title>
 
 <link th:replace="common/fragment/common::common"/>
+<link th:replace="common/fragment/common::validation"/>
 
 <script type="text/javascript" th:inline="javascript">
 function refreshData(data) {
@@ -29,9 +30,18 @@ function add() {
 	$('#add').modal('show');
 	
 	action = function() {
+		if (!$("#addForm").validationEngine('validate')) return;
 		showLoading();
 		$.post([[@{/level/insertLevelProd}]], $("#addForm").serialize(), function(r) {
-			if (r.result == 1) {
+			if (r.result == 0) {
+				alertWarning("不存在prod");
+				hideLoading();
+			}
+			else if (r.result == -1) {
+				hideLoading();
+				alertWarning("已经存在列表中");
+			}
+			else if (r.result == 1) {
 				$('#add').modal('hide');
 				query(1);
 			}
@@ -41,10 +51,10 @@ function add() {
 
 
 
-function remove(id) {
+function removeProd(id) {
 	var callback = function () {
 		showLoading();
-		$.post([[@{/level/deleteLevel}]], "id=" + id, function(r) {
+		$.post([[@{/level/deleteLevelProd}]], "levelId=" + $("#levelId").val() + "&id=" + id, function(r) {
 			if (r.result == 1) {
 				query();
 			}
@@ -118,7 +128,7 @@ function storeChange() {
 			{{/if}}					
 		</td>
 		<td class="w-action">
-			<a href="#" onclick="removeProd({{v.prodId}})" class="glyphicon glyphicon-trash" title="删除"></a>
+			<a href="#" onclick="removeProd({{v.prodId}})">[删除]</a>
 
 		</td>
 	</tr>
@@ -131,7 +141,7 @@ function storeChange() {
 	<div class="form-group">
 		<input type="hidden" name="levelId" th:value="${levelId}" >
 		<label class="col-sm-3 control-label"><span class="required">*</span>id：</label>
-		<div class="col-sm-7"><input type="text" name="prodId" class="form-control" maxlength="32"></div>
+		<div class="col-sm-7"><input type="text" name="prodId" class="form-control validate[required,custom[integer]]" maxlength="32"></div>
 	</div>
 </div>
 

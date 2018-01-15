@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
+import com.ppx.cloud.store.merchant.store.Store;
 import com.ppx.cloud.store.merchant.store.StoreService;
 
 
@@ -27,8 +28,16 @@ public class LevelController {
 	@GetMapping
 	public ModelAndView listLevel() {
 		ModelAndView mv = new ModelAndView();
+		List<Store> storeList = storeServ.listStore();
+		
+		
+		if (storeList.size() > 0) {
+			mv.addObject("listJson", listJson(storeList.get(0).getStoreId()));
+		}
+		
 		
 		mv.addObject("storeList", storeServ.listStore());
+		
 		return mv;
 	}
 
@@ -97,6 +106,12 @@ public class LevelController {
 	@PostMapping @ResponseBody
 	public Map<String, Object> insertLevelProd(LevelProd bean) {
 		int r = serv.insertLevelProd(bean);
+		return ControllerReturn.ok(r);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> deleteLevelProd(@RequestParam Integer levelId, @RequestParam Integer id) {
+		int r = serv.deleteLevelProd(levelId, id);
 		return ControllerReturn.ok(r);
 	}
 	

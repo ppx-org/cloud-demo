@@ -148,6 +148,20 @@ public class LevelService extends MyDaoSupport {
 	public int insertLevelProd(LevelProd bean) {
 		lockMerchant();
 		
+		
+		String testSql = "select concat((select count(*) from product where PROD_ID = ?), " + 
+			" (select count(*) from home_level_product where LEVEL_ID = ? and PROD_ID = ?)) TEST_INFO";
+		String testInfo = getJdbcTemplate().queryForObject(testSql, String.class, bean.getProdId(), bean.getLevelId(), bean.getProdId());
+		if (testInfo.startsWith("0")) {
+			// 不存在prod
+			return 0;
+		}
+		else if (testInfo.endsWith("1")) {
+			// 已经存在
+			return -1;
+		}
+		
+		
 		String prioSql = "select ifnull(max(PROD_PRIO), 0) + 1 PRIO from home_level_product where LEVEL_ID = ?";
 		int prodPrio = getJdbcTemplate().queryForObject(prioSql, Integer.class, bean.getLevelId());
 		
@@ -160,14 +174,19 @@ public class LevelService extends MyDaoSupport {
 	}
 	
 	
+	public int deleteLevelProd(Integer levelId, Integer id) {
+		return getJdbcTemplate().update("delete from home_level_product where LEVEL_ID = ? and PROD_ID = ?", levelId, id);
+	}
+	
+	
 	@Transactional
 	public int prodTop(Integer levelId, Integer id) {
 		lockMerchant();
 
-		String prioSql = "select min(PROD_PRIO) - 1 PRIO from home_level_product where LEVEL_ID = ? ";
+		String prioSql = "select min(PROD_PRIO) - 1 PRIO from home_level_product where LEVEL_ID = ?";
 		int prio = getJdbcTemplate().queryForObject(prioSql, Integer.class, levelId);
 		
-		String updateSql = "update home_level set PROD_PRIO = ? where LEVEL_ID = ? and PROD_ID";
+		String updateSql = "update home_level_product set PROD_PRIO = ? where LEVEL_ID = ? and PROD_ID = ?";
 		return getJdbcTemplate().update(updateSql, prio, levelId, id);
 	}
 	
@@ -189,7 +208,7 @@ public class LevelService extends MyDaoSupport {
 				prio = b.getProdPrio();
 				break;
 			}
-			upId = b.getLevelId();
+			upId = b.getProdId();
 			upPrio = b.getProdPrio();
 		}
 		
@@ -217,7 +236,7 @@ public class LevelService extends MyDaoSupport {
 			if (found) {
 				break;
 			}
-			if (b.getLevelId() == id) {
+			if (b.getProdId() == id) {
 				prio = b.getProdPrio();
 				found = true;
 			}
