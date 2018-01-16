@@ -54,6 +54,23 @@ public class Dict {
 	
 	
 	
+	public static List<DictBean> listImgX() {
+		List<DictBean> returnList = new ArrayList<DictBean>();
+		for (int i = 0; i < 5; i++) {
+			returnList.add(new DictBean(i, i + ""));
+		}
+		return returnList;
+	}
+	
+	
+	public static List<DictBean> listImgY() {
+		List<DictBean> returnList = new ArrayList<DictBean>();
+		for (int i = 0; i < 10; i++) {
+			returnList.add(new DictBean(i, i + ""));
+		}
+		return returnList;
+	}
+	
 	
 	
 	

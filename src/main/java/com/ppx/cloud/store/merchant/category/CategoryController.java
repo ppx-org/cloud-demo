@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
+import com.ppx.cloud.store.common.dictionary.Dict;
 
 
 @Controller
@@ -24,6 +25,10 @@ public class CategoryController {
     public ModelAndView listCategory() {		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("listJson", listJson());
+		
+		mv.addObject("listImgX", Dict.listImgX());
+		mv.addObject("listImgY", Dict.listImgY());
+		
 		return mv;
 	}
 	

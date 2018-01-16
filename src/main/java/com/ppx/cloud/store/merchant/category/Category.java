@@ -17,13 +17,11 @@ public class Category {
 	
 	private Integer catPrio;
 	
+	private Integer catImgX;
+	
+	private Integer catImgY;
+	
 	private List<Category> children;
-	
-	// sub才有img
-	// 4个 750 - 50  120 x 4 = 480
-	
-	
-	
 	
 	public Integer getCatId() {
 		return catId;
@@ -71,6 +69,22 @@ public class Category {
 
 	public void setChildren(List<Category> children) {
 		this.children = children;
+	}
+
+	public Integer getCatImgX() {
+		return catImgX;
+	}
+
+	public void setCatImgX(Integer catImgX) {
+		this.catImgX = catImgX;
+	}
+
+	public Integer getCatImgY() {
+		return catImgY;
+	}
+
+	public void setCatImgY(Integer catImgY) {
+		this.catImgY = catImgY;
 	}
 
 	
