@@ -49,7 +49,7 @@ public class ChromeController {
 	public ModelAndView zhaopin(HttpServletRequest request) {
 		
 		try {
-			System.out.println("----------------------zhaopin begin-------------------");
+			System.out.println("-----------------------zhaopin begin-------------------");
 			
 			List<String> arguments = new ArrayList<String>();
 			arguments.add("--headless");
