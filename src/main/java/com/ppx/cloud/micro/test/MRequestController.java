@@ -19,13 +19,16 @@ import com.ppx.cloud.micro.common.WxUser;
 @Controller	
 public class MRequestController {
 	
-	
 	@GetMapping
 	public ModelAndView testRequest(HttpServletRequest request) {
+		ModelAndView mv = new ModelAndView();
+		return mv;
+	}
+	
+	@GetMapping
+	public ModelAndView testHome(HttpServletRequest request) {
 		
 		ModelAndView mv = new ModelAndView();
-		
-		
 		return mv;
 	}
 	

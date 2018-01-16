@@ -148,9 +148,9 @@ public class LevelService extends MyDaoSupport {
 	public int insertLevelProd(LevelProd bean) {
 		lockMerchant();
 		
-		
+		// 同一store，不同重复prodId,
 		String testSql = "select concat((select count(*) from product where PROD_ID = ?), " + 
-			" (select count(*) from home_level_product where LEVEL_ID = ? and PROD_ID = ?)) TEST_INFO";
+			" (select count(*) from home_level_product where LEVEL_ID in (select LEVEL_ID from home_level where STORE_ID = (select STORE_ID from home_level where LEVEL_ID = ?)) and PROD_ID = ?)) TEST_INFO";
 		String testInfo = getJdbcTemplate().queryForObject(testSql, String.class, bean.getProdId(), bean.getLevelId(), bean.getProdId());
 		if (testInfo.startsWith("0")) {
 			// 不存在prod

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -15,17 +16,21 @@ import org.springframework.util.StringUtils;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.search.query.bean.QueryBrand;
 import com.ppx.cloud.search.query.bean.QueryCategory;
-import com.ppx.cloud.search.query.bean.QueryPage;
 import com.ppx.cloud.search.query.bean.QueryPageList;
-import com.ppx.cloud.search.query.bean.QueryProduct;
 import com.ppx.cloud.search.query.bean.QueryPromo;
 import com.ppx.cloud.search.query.bean.QueryTheme;
 import com.ppx.cloud.search.util.BitSetUtils;
 import com.ppx.cloud.search.util.WordUtils;
+import com.ppx.cloud.storecommon.query.bean.QueryPage;
+import com.ppx.cloud.storecommon.query.bean.QueryProduct;
+import com.ppx.cloud.storecommon.query.service.QueryCommonService;
 
 
 @Service
 public class QueryService extends MyDaoSupport {
+	
+	@Autowired
+	private QueryCommonService commonServ;
 	
 	
 	public QueryPageList query(Integer sId, String w, QueryPage p, String date, Integer cId, Integer gId, Integer fast) {
@@ -39,7 +44,7 @@ public class QueryService extends MyDaoSupport {
 		else {
 			@SuppressWarnings("unchecked")
 			List<Integer> prodIdList = (List<Integer>)findMap.get("prodIdList");
-			List<QueryProduct> prodList = listProduct(prodIdList, sId);
+			List<QueryProduct> prodList = commonServ.listProduct(prodIdList, sId);
 			
 			// cat
 			@SuppressWarnings("unchecked")
@@ -150,24 +155,25 @@ public class QueryService extends MyDaoSupport {
 	}
 
 	
-	private List<QueryProduct> listProduct(List<Integer> prodIdList, Integer storeId) {
-		if (prodIdList.size() == 0) {
-			return new ArrayList<QueryProduct>();
-		}
-		
-		NamedParameterJdbcTemplate jdbc = new NamedParameterJdbcTemplate(getJdbcTemplate());
-		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("storeId", storeId);
-		paramMap.put("prodIdList", prodIdList);	
-		
-		String prodSql = "select p.PROD_ID PID, p.PROD_TITLE T, s.PRICE P, img.SKU_IMG_SRC SRC, idx.PROG_ID GID, idx.POLICY ARG, if(p.REPO_ID = :storeId, 1, 0) F from product p join sku s on p.PROD_ID = s.PROD_ID left join " +
-			"(select t.SKU_ID, t.SKU_IMG_SRC from (select * from sku_img order by SKU_IMG_PRIO desc) t group by t.SKU_ID) img on s.SKU_ID = img.SKU_ID left join " +
-			"(select t.PROD_ID, t.PROG_ID, t.INDEX_POLICY POLICY from (select * from program_index i where curdate() between INDEX_BEGIN and INDEX_END order by INDEX_PRIO desc) t group by t.PROD_ID) idx on p.PROD_ID = idx.PROD_ID " + 
-			"where p.PROD_ID in (:prodIdList)";
-		
-		List<QueryProduct> prodList = jdbc.query(prodSql, paramMap, BeanPropertyRowMapper.newInstance(QueryProduct.class));
-		return prodList;
-	}
+	
+//	private List<QueryProduct> listProduct(List<Integer> prodIdList, Integer storeId) {
+//		if (prodIdList.size() == 0) {
+//			return new ArrayList<QueryProduct>();
+//		}
+//		
+//		NamedParameterJdbcTemplate jdbc = new NamedParameterJdbcTemplate(getJdbcTemplate());
+//		Map<String, Object> paramMap = new HashMap<String, Object>();
+//		paramMap.put("storeId", storeId);
+//		paramMap.put("prodIdList", prodIdList);	
+//		
+//		String prodSql = "select p.PROD_ID PID, p.PROD_TITLE T, s.PRICE P, img.SKU_IMG_SRC SRC, idx.PROG_ID GID, idx.POLICY ARG, if(p.REPO_ID = :storeId, 1, 0) F from product p join sku s on p.PROD_ID = s.PROD_ID left join " +
+//			"(select t.SKU_ID, t.SKU_IMG_SRC from (select * from sku_img order by SKU_IMG_PRIO desc) t group by t.SKU_ID) img on s.SKU_ID = img.SKU_ID left join " +
+//			"(select t.PROD_ID, t.PROG_ID, t.INDEX_POLICY POLICY from (select * from program_index i where curdate() between INDEX_BEGIN and INDEX_END order by INDEX_PRIO desc) t group by t.PROD_ID) idx on p.PROD_ID = idx.PROD_ID " + 
+//			"where p.PROD_ID in (:prodIdList)";
+//		
+//		List<QueryProduct> prodList = jdbc.query(prodSql, paramMap, BeanPropertyRowMapper.newInstance(QueryProduct.class));
+//		return prodList;
+//	}
 
 	
 	private List<QueryCategory> listCategory(List<QueryCategory> catList) {
@@ -351,7 +357,7 @@ public class QueryService extends MyDaoSupport {
 		
 		p.setTotalRows(resultBs.cardinality());
 		List<Integer> prodIdList = BitSetUtils.bsToPage(resultBs, (p.getPageNumber() - 1) * p.getPageSize(), p.getPageSize());
-		List<QueryProduct> prodList = listProduct(prodIdList, storeId);
+		List<QueryProduct> prodList = commonServ.listProduct(prodIdList, storeId);
 		
 		List<QueryCategory> catList = listCategory(initCatList);
 		QueryPageList queryPageList = new QueryPageList(p, prodList);
@@ -389,7 +395,7 @@ public class QueryService extends MyDaoSupport {
 		
 		p.setTotalRows(resultBs.cardinality());
 		List<Integer> prodIdList = BitSetUtils.bsToPage(resultBs, (p.getPageNumber() - 1) * p.getPageSize(), p.getPageSize());
-		List<QueryProduct> prodList = listProduct(prodIdList, storeId);
+		List<QueryProduct> prodList = commonServ.listProduct(prodIdList, storeId);
 		
 		List<QueryBrand> brandList = listBrand(initBrandList);
 		QueryPageList queryPageList = new QueryPageList(p, prodList);
@@ -425,7 +431,7 @@ public class QueryService extends MyDaoSupport {
 		
 		p.setTotalRows(resultBs.cardinality());
 		List<Integer> prodIdList = BitSetUtils.bsToPage(resultBs, (p.getPageNumber() - 1) * p.getPageSize(), p.getPageSize());
-		List<QueryProduct> prodList = listProduct(prodIdList, storeId);
+		List<QueryProduct> prodList = commonServ.listProduct(prodIdList, storeId);
 		
 		List<QueryTheme> promoList = listTheme(themeList);
 		QueryPageList queryPageList = new QueryPageList(p, prodList);
@@ -487,7 +493,7 @@ public class QueryService extends MyDaoSupport {
 		
 		p.setTotalRows(resultBs.cardinality());
 		List<Integer> prodIdList = BitSetUtils.bsToPage(resultBs, (p.getPageNumber() - 1) * p.getPageSize(), p.getPageSize());
-		List<QueryProduct> prodList = listProduct(prodIdList, storeId);
+		List<QueryProduct> prodList = commonServ.listProduct(prodIdList, storeId);
 		
 		List<QueryPromo> promoList = listPromo(progList);
 		QueryPageList queryPageList = new QueryPageList(p, prodList);

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.util.DateUtils;
-import com.ppx.cloud.search.query.bean.QueryPage;
 import com.ppx.cloud.search.query.bean.QueryPageList;
+import com.ppx.cloud.storecommon.query.bean.QueryPage;
 
 
 @Controller	

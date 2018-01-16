@@ -1,14 +1,11 @@
 package com.ppx.cloud.search.query.bean;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import com.ppx.cloud.storecommon.query.bean.QueryPage;
+import com.ppx.cloud.storecommon.query.bean.QueryProduct;
 
-/**
- * 
- * @author dengxz
- * @date 2017年11月14日
- */
+
 public class QueryPageList {
 
 	private List<QueryProduct> prodList;
