@@ -16,7 +16,7 @@ public class MCategoryController {
 	
 	@Autowired
 	private MCategoryService serv;
-
+	
 	
 	@PostMapping @ResponseBody
 	public Map<String, Object> listCategory() {

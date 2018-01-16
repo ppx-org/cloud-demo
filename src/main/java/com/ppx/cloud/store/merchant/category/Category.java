@@ -19,7 +19,12 @@ public class Category {
 	
 	private List<Category> children;
 	
-
+	// sub才有img
+	// 4个 750 - 50  120 x 4 = 480
+	
+	
+	
+	
 	public Integer getCatId() {
 		return catId;
 	}
