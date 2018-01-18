@@ -22,7 +22,7 @@ function testRequest() {
 		alert(JSON.stringify(r));
 	});
 	*/
-	var json = {};
+	var json = {skuId:123};
 	$.post([[@{/}]] + $("#url").val(), null, function(r) {
 		
 		$("#returnJson").text(JSON.stringify(r));
@@ -37,7 +37,7 @@ function testRequest() {
 
 
 
-<input type="text" id="url" value="MSearch/listWord" style="width:300px">
+<input type="text" id="url" value="MCart/addSku?skuId=1" style="width:300px">
 
 <button type="button" onclick="testRequest()">test</button>
 

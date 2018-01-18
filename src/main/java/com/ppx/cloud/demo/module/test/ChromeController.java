@@ -52,7 +52,7 @@ public class ChromeController {
 			System.out.println("----2-1------------------zhaopin begin-------------------");
 			
 			List<String> arguments = new ArrayList<String>();
-			arguments.add("--headless");
+			//arguments.add("--headless");
 			arguments.add("--window-size=1920,1080");
 			arguments.add("--disable-gpu");
 			arguments.add("--start-maximized");
@@ -92,7 +92,8 @@ public class ChromeController {
 			
 			// https://www.baidu.com/ 
 			// https://passport.zhaopin.com/org/login
-			chromeSession.navigate("file:///C:/Users/LENOVO/Desktop/test.html");
+			// file:///C:/Users/LENOVO/Desktop/test.html
+			chromeSession.navigate("https://passport.zhaopin.com/org/login");
 			chromeSession.waitDocumentReady();
 			chromeSession.activate();
 		
@@ -129,7 +130,7 @@ public class ChromeController {
 		double offsetY = 360;
 		double offsetX = 535;
 		
-		//offsetX = 630; // 有头 OK
+		offsetX = 630; // 有头 OK
 		
 		String[] point = points.split(";");
 		double x1 = Double.parseDouble(point[0].split(",")[0]) + offsetX;

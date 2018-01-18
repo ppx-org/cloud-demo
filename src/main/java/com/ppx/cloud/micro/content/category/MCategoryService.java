@@ -18,6 +18,12 @@ public class MCategoryService extends MyDaoSupport {
 
 	
 	
+	/**
+	 * 不同store可能有不同的category
+	 * 每项的数量，图片，从搜索引擎中的读取
+	 * 
+	 * @return
+	 */
 	public List<MCategory> listCategory() {		
 		
 		int merchantId = MGrantContext.getWxUser().getMerchantId();

@@ -20,10 +20,7 @@ public class MCategoryController {
 	
 	@PostMapping @ResponseBody
 	public Map<String, Object> listCategory() {
-		/**
-		 每项的数量，图片
-		 */
-		
+	
 		List<MCategory> list = serv.listCategory();
 		
 		return ControllerReturn.ok(list);

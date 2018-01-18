@@ -17,13 +17,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.util.DateUtils;
+import com.ppx.cloud.storecommon.price.bean.SkuIndex;
+import com.ppx.cloud.storecommon.price.service.PriceCommonService;
 
 
 @Controller	
 public class ValuationController {
 	
 	@Autowired
-	private ValuationService serv;
+	private PriceCommonService priceServ;
+	
+	
 	
 	private final int NO_EXIST_SKU = -2;
 	
@@ -60,7 +64,7 @@ public class ValuationController {
 			skuIndexMap.put(skuId, index);
 		}
 		
-		Map<Integer, List<SkuIndex>> returnMap = serv.count(date, skuIndexMap);
+		Map<Integer, List<SkuIndex>> returnMap = priceServ.countPrice(date, skuIndexMap);
 		if (returnMap.containsKey(NO_EXIST_SKU)) {
 			return ControllerReturn.ok(NO_EXIST_SKU, returnMap.get(NO_EXIST_SKU));
 		}
@@ -97,7 +101,7 @@ public class ValuationController {
 			skuIndexMap.put(skuId, index);
 		}
 		
-		Map<Integer, List<SkuIndex>> returnMap = serv.count(date, skuIndexMap);
+		Map<Integer, List<SkuIndex>> returnMap = priceServ.countPrice(date, skuIndexMap);
 		
 		if (returnMap.containsKey(NO_EXIST_SKU)) {
 			return ControllerReturn.ok(NO_EXIST_SKU, returnMap.get(NO_EXIST_SKU));
