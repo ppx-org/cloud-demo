@@ -45,7 +45,7 @@ public class MCartController {
 		for (SkuIndex skuIndex : skuIndexList) {
 			skuIndexMap.put(skuIndex.getSkuId(), skuIndex);
 		}
-		
+		// TODO new Date()改一下
 		Map<Integer, List<SkuIndex>> returnMap = priceServ.countPrice(new Date(), skuIndexMap);
 		
 		

@@ -204,24 +204,6 @@ public class PolicyUtils {
 	
 	
 	
-	public static String decodePolicy(String policy) {
-		
-		return policy
-			.replace("S:", "special")
-			.replace("C:", "change")
-			.replace("A:", "avg")
-			.replace("%:", "disc")
-			.replace("2:", "第二件")
-			.replace("2+:", "第二件及以上")
-			.replace("E:", "E¥")
-			.replace("-:", "M¥")
-			.replace(":Y", "yen")
-			.replace(":N", "件")
-			.replace("+:", "加¥")
-			.replace("m:1", "多一件")
-			.replace(":", "").replace(",", "");
-			
-	}
 	
 	
 	
