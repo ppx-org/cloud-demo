@@ -1,5 +1,7 @@
 package com.ppx.cloud.micro.user.cart;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
+import com.ppx.cloud.storecommon.price.bean.SkuIndex;
 import com.ppx.cloud.storecommon.price.service.PriceCommonService;
 
 
@@ -33,10 +36,21 @@ public class MCartController {
 	
 	
 	
-	public List<Integer> listSkuId() {
+	@PostMapping @ResponseBody
+	public Map<String, Object> listSku() {
+		
+		List<SkuIndex> skuIndexList = serv.listSku();
+		
+		Map<Integer, SkuIndex> skuIndexMap = new HashMap<Integer, SkuIndex>();
+		for (SkuIndex skuIndex : skuIndexList) {
+			skuIndexMap.put(skuIndex.getSkuId(), skuIndex);
+		}
+		
+		Map<Integer, List<SkuIndex>> returnMap = priceServ.countPrice(new Date(), skuIndexMap);
 		
 		
-		return null;
+		
+		return ControllerReturn.ok(returnMap.get(1));
 	}
 	
 	

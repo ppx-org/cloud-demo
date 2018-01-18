@@ -1,17 +1,14 @@
 package com.ppx.cloud.micro.user.cart;
 
-import java.util.Date;
-import java.util.Map;
+import java.util.List;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
-import com.ppx.cloud.common.util.DateUtils;
 import com.ppx.cloud.micro.common.MGrantContext;
+import com.ppx.cloud.storecommon.price.bean.SkuIndex;
 
 
 @Service
@@ -28,11 +25,15 @@ public class MCartService extends MyDaoSupport {
 		
 	}
 	
-	@PostMapping @ResponseBody
-	public Map<String, Object> listSku() {
+	public List<SkuIndex> listSku() {
+		String openid = MGrantContext.getWxUser().getOpenid();
+		int storeId = MGrantContext.getWxUser().getStoreId();
+		
+		String sql = "select SKU_ID, SKU_NUM NUM from user_cart where OPENID = ? and STORE_ID = ?";
+		List<SkuIndex> skuIndexList = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(SkuIndex.class), openid, storeId);
 		
 		
-		return null;
+		return skuIndexList;
 	}
 	
 	
