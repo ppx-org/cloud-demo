@@ -18,7 +18,12 @@ function validate() {
 	// 
 	$("#validate").text("验证中...");
 	$.post(url, null, function(r) {
-		
+		if (r.result == 1) {
+			alert("通过:" + r.cookie);
+		}
+		else {
+			alert("失败");
+		}
 	});
 }
 

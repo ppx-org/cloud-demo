@@ -36,7 +36,7 @@ import io.webfolder.cdp.session.SessionFactory;
 import io.webfolder.cdp.type.network.Cookie;
 
 
-@Controller	
+@Controller
 public class ChromeController {
 	
 	private static Session chromeSession = null;
@@ -97,8 +97,9 @@ public class ChromeController {
 			chromeSession.waitDocumentReady();
 			chromeSession.activate();
 		
-			chromeSession.wait(100);
-			// 会变
+			chromeSession.wait(300);
+			// 会变 CheckCodeCapt CheckCodeCapt
+			chromeSession.evaluate("try{$('#checkCodeCapt').click();}catch(){};");
 			chromeSession.evaluate("$('#CheckCodeCapt').click();");
 			chromeSession.wait(1200);
 			
@@ -151,32 +152,39 @@ public class ChromeController {
 		// 输入用户名和密码
 		chromeSession.evaluate("$('#LoginName').val('honghai020');");
 		chromeSession.evaluate("$('#Password').val('Test13800');");
+		
+		chromeSession.evaluate("try{$('#captcha-submitCode').click();}catch(){};");
 		chromeSession.evaluate("$('#captcha-submitCode').click();");
-		chromeSession.wait(1000);
+		chromeSession.wait(1200);
         
-        // 登录
+        // 登录 loginbutton loginbutton
 		chromeSession.evaluate("$('#loginbutton').click();");  
-		chromeSession.wait(2600);
+		chromeSession.wait(3000);
 		
 		String location = chromeSession.getLocation();
 		System.out.println("xxxxlocation:" + location);
-		
-        
-        byte[] data = chromeSession.captureScreenshot();
-	    
-	    try {
-	    	FileOutputStream out = new FileOutputStream(new File("E:/U/png/2.png")); 
-	    	out.write(data);
-	    	out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+		https://rd2.zhaopin.com/s/homepage.asp
+		if (location.startsWith("https://rd2.zhaopin.com/s/homepage.asp")) {
+			return getCookie(request);
 		}
+		else {
+			return ControllerReturn.ok(0);
+		}
+        
+//       byte[] data = chromeSession.captureScreenshot();
+//	    
+//	    try {
+//	    	FileOutputStream out = new FileOutputStream(new File("E:/U/png/2.png")); 
+//	    	out.write(data);
+//	    	out.close();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		
-		return ControllerReturn.ok();
 	}
 	
 	@GetMapping @ResponseBody
-	public Map<String, Object> cookie(HttpServletRequest request) {
+	private Map<String, Object> getCookie(HttpServletRequest request) {
 		List<Cookie> cookieList = chromeSession.getCommand().getPage().getCookies();
 		
 		StringBuilder sendCookie = new StringBuilder();
@@ -184,9 +192,9 @@ public class ChromeController {
 			sendCookie.append(cookie.getName() + "=" + cookie.getValue() + ";");
 		}
 	    
-	    System.out.println("........cookie:" + sendCookie);
+	    // System.out.println("........cookie:" + sendCookie);
         
-	    //https://jobads.zhaopin.com/Position/PositionAdd
+	    // https://jobads.zhaopin.com/Position/PositionAdd
 	    String addUrl = "https://jobads.zhaopin.com/Position/PositionAdd";
 	    RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();        
@@ -203,17 +211,22 @@ public class ChromeController {
 		
         
 		String str = r.getBody();
-		System.out.println("xxxxxxxxxxxxxxxxx:body:" + str);
+		//System.out.println("xxxxxxxxxxxxxxxxx:body:" + str);
 		
 		List<Cookie> lastCookieList = chromeSession.getCommand().getPage().getCookies();
 		StringBuilder lastCookie = new StringBuilder();
 	    for (Cookie cookie : lastCookieList) {
 	    	lastCookie.append(cookie.getName() + "=" + cookie.getValue() + ";");
 		}
+	    
+	    
 	    System.out.println("xxxxxxxxxxxxxxxxx:lastCookie:" + lastCookie);
 	    
+	    Map<String, Object> returnMap = ControllerReturn.ok();
+	    returnMap.put("result", 1);
+	    returnMap.put("cookie", lastCookie);
 		
-		return ControllerReturn.ok();
+		return returnMap;
 	}
 	
 	
