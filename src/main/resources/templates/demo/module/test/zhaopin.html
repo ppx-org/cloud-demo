@@ -15,8 +15,9 @@
 function validate() {
 	var url = "http://localhost:9000/demo/chrome/click?points=" + point.join(";");
 	
-	// 
+	$("#validate").attr("disabled", true);
 	$("#validate").text("验证中...");
+	
 	$.post(url, null, function(r) {
 		if (r.result == 1) {
 			alert("通过:" + r.cookie);
