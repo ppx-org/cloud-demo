@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ppx.cloud.grant.common.GrantContext;
+import com.ppx.cloud.micro.common.MGrantContext;
 
 /**
  * 文件名加"_"防止命名冲突
@@ -62,8 +63,17 @@ public class BitSetUtils {
 	}
 	
 	public static String getRealPath(String path) {
-		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		return getSearchPath() + "/" + merchantId + "/" + getVersionName(-1) + "/" + path + "/";
+		// 支持电脑和移动端
+		int merchantId = -1;
+		if (GrantContext.getLoginAccount() != null) {
+			merchantId = GrantContext.getLoginAccount().getMerchantId();
+		}
+		else {
+			merchantId = MGrantContext.getWxUser().getMerchantId();
+		}
+		
+		
+		return getSearchPath() + merchantId + "/" + getVersionName(-1) + "/" + path + "/";
 	}
 	
 	

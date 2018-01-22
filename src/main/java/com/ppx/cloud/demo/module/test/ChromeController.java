@@ -191,7 +191,7 @@ public class ChromeController {
 	    for (Cookie cookie : cookieList) {
 			sendCookie.append(cookie.getName() + "=" + cookie.getValue() + ";");
 		}
-	    
+	   
 	    // System.out.println("........cookie:" + sendCookie);
         
 	    // https://jobads.zhaopin.com/Position/PositionAdd
