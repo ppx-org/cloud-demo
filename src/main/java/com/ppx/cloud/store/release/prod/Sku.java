@@ -1,8 +1,5 @@
 package com.ppx.cloud.store.release.prod;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ppx.cloud.common.jdbc.annotation.Id;
 
 public class Sku {
@@ -17,7 +14,7 @@ public class Sku {
 	
 	private Integer skuPrio;
 	
-	private List<SkuImg> skuImgList = new ArrayList<SkuImg>();
+	private String skuImgSrc;
 
 	public Integer getSkuId() {
 		return skuId;
@@ -59,15 +56,14 @@ public class Sku {
 		this.skuPrio = skuPrio;
 	}
 
-	public List<SkuImg> getSkuImgList() {
-		return skuImgList;
+	public String getSkuImgSrc() {
+		return skuImgSrc;
 	}
 
-	public void setSkuImgList(List<SkuImg> skuImgList) {
-		this.skuImgList = skuImgList;
+	public void setSkuImgSrc(String skuImgSrc) {
+		this.skuImgSrc = skuImgSrc;
 	}
 
-	
 	
 	
 }

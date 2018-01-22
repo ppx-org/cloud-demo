@@ -48,29 +48,15 @@ public class ProductService extends MyDaoSupport {
 	
 	
 	public List<Sku> listSku(int prodId) {
-		String imgSql = "select * from sku_img i where exists(select 1 from sku s where s.SKU_ID = i.SKU_ID and s.PROD_ID = 1) order by SKU_ID, SKU_IMG_PRIO";
-		List<SkuImg> imgList = getJdbcTemplate().query(imgSql, BeanPropertyRowMapper.newInstance(SkuImg.class), prodId);
+		
 		
 		String skuSql = "select * from sku where PROD_ID = ? order by SKU_PRIO";
 		List<Sku> skuList = getJdbcTemplate().query(skuSql, BeanPropertyRowMapper.newInstance(Sku.class), prodId);
 		
-		for (Sku sku : skuList) {
-			List<SkuImg> skuImgList = listSkuImg(imgList, sku.getSkuId());
-			sku.setSkuImgList(skuImgList);
-		}
-		
+	
 		return skuList;
 	}
 	
-	private List<SkuImg> listSkuImg(List<SkuImg> imgList, int skuId) {
-		List<SkuImg> returnList = new ArrayList<SkuImg>();
-		for (SkuImg skuImg : imgList) {
-			if (skuImg.getSkuId() == skuId) {
-				returnList.add(skuImg);
-			}
-		}
-		return returnList;
-	}
 	
 	
 	
