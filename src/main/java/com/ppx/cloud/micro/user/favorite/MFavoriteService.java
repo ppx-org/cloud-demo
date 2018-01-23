@@ -33,11 +33,13 @@ public class MFavoriteService extends MyDaoSupport {
 	
 	
 	public List<QueryProduct> listProduct() {
+		
+		
 		String openid = MGrantContext.getWxUser().getOpenid();
 		int storeId = MGrantContext.getWxUser().getStoreId();
 		
 		String sql = "select PROD_ID from user_favorite where OPENID = ? and STORE_ID = ?";
-		List<Integer> prodIdList = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Integer.class), openid, storeId);
+		List<Integer> prodIdList = getJdbcTemplate().queryForList(sql, Integer.class, openid, storeId);
 		
 		List<QueryProduct> list = queryServ.listProduct(prodIdList, storeId);
 		

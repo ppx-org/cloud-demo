@@ -22,8 +22,7 @@ public class MCartController {
 	@Autowired
 	private MCartService serv;
 	
-	@Autowired
-	private PriceCommonService priceServ;
+	
 	
 	
 	@PostMapping @ResponseBody
@@ -41,16 +40,9 @@ public class MCartController {
 		
 		List<SkuIndex> skuIndexList = serv.listSku();
 		
-		Map<Integer, SkuIndex> skuIndexMap = new HashMap<Integer, SkuIndex>();
-		for (SkuIndex skuIndex : skuIndexList) {
-			skuIndexMap.put(skuIndex.getSkuId(), skuIndex);
-		}
-		// TODO new Date()改一下
-		Map<Integer, List<SkuIndex>> returnMap = priceServ.countPrice(new Date(), skuIndexMap);
 		
 		
-		
-		return ControllerReturn.ok(returnMap.get(1));
+		return ControllerReturn.ok(skuIndexList);
 	}
 	
 	
