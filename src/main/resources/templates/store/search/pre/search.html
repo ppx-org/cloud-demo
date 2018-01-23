@@ -21,16 +21,26 @@ function queryPage(pageNumber) {
 	
 	
 	$.get([[@{/query/q}]], $("#queryForm").serialize(), function(r) {
+		
+		
 		refreshPageData(r);
 		
-		// fast
+		
 		$("#fastView").empty();
+		$("#catView").empty();
+		$("#promoView").empty();
+		hideLoading();
+		
+		if (r.page.totalRows == 0) {
+			return;
+		}
+		
+		// fast
 		$("#fastView").append('<a href="javascript:onFast(1)">fast(' + r.fastN + ')</a>');
 		$("#fastView").append('<a href="javascript:onFast(\'\')">cancel</a>');
 		
 		
-		// cat	
-		$("#catView").empty();
+		// cat
 		for (var i = 0; i < r.catList.length; i++) {
 			$("#catView").append('<a href="javascript:onCat(' + r.catList[i].cid + ')">' + r.catList[i].cn + '(' + r.catList[i].n + ')</a>');
 		}
@@ -39,7 +49,6 @@ function queryPage(pageNumber) {
 		}
 		
 		// promo
-		$("#promoView").empty();
 		for (var i = 0; i < r.promoList.length; i++) {
 			$("#promoView").append('<a href="javascript:onPromo(' + r.promoList[i].gid + ')">' + r.promoList[i].arg + '(' + r.promoList[i].n + ')</a>');
 		}
@@ -48,7 +57,6 @@ function queryPage(pageNumber) {
 		}
 		
 		
-		hideLoading();
 	});
 }
 
@@ -109,6 +117,8 @@ function storeChange(obj) {
 	<div th:fragment="queryFragment">
 		<input type="hidden" id="fast" name="fast">
 		<input type="hidden" id="cId" name="cId">
+		<input type="hidden" id="bId" name="bId">
+		<input type="hidden" id="tId" name="tId">
 		<input type="hidden" id="gId" name="gId">
 		
 		<select class="form-control input-sm" id="d" name="d" onchange="dateChange(this)">
@@ -129,6 +139,8 @@ function storeChange(obj) {
 		<table>
 			<tr><td style="text-align: left;margin-left:10px">fast<span id="fastView"></span></td></tr>
 			<tr><td style="text-align: left;margin-left:10px">cccc<span id="catView"></span></td></tr>
+			<tr><td style="text-align: left;margin-left:10px">bbbb<span id="brandView"></span></td></tr>
+			<tr><td style="text-align: left;margin-left:10px">bbbb<span id="themeView"></span></td></tr>
 			<tr><td style="text-align: left;margin-left:10px">PPPPP<span id="promoView"></span></td></tr>
 		</table>
 	</td>

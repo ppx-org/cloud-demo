@@ -20,6 +20,12 @@ import com.ppx.cloud.micro.common.MGrantContext;
  * @date 2017年12月7日
  */
 public class BitSetUtils {
+	
+	public static final String ORDER_NORMAL = "search_normal_";
+	
+	public static final String ORDER_NEW = "search_new_";
+	
+	
 
 	public static final String PATH_STORE = "store";
 	
@@ -50,19 +56,13 @@ public class BitSetUtils {
 	
 	public static void setVersionMap(int merchantId, String versionName) {
 		versionMap.put(merchantId, versionName);
+	}	
+	
+	public static String getCurrentVersionName() {
+		return versionMap.get(getMerchantId());
 	}
 	
-	public static String getVersionName(int merchantId) {
-		return versionMap.get(merchantId);
-	}
-	
-	
-	//  file.searchPath
-	private static String getSearchPath() {
-		return System.getProperty("file.searchPath");
-	}
-	
-	public static String getRealPath(String path) {
+	private static int getMerchantId() {
 		// 支持电脑和移动端
 		int merchantId = -1;
 		if (GrantContext.getLoginAccount() != null) {
@@ -71,9 +71,17 @@ public class BitSetUtils {
 		else {
 			merchantId = MGrantContext.getWxUser().getMerchantId();
 		}
+		return merchantId;
+	}
+	
+	//  file.searchPath
+	private static String getSearchPath() {
+		return System.getProperty("file.searchPath");
+	}
+	
+	public static String getRealPath(String path) {
 		
-		
-		return getSearchPath() + merchantId + "/" + getVersionName(-1) + "/" + path + "/";
+		return getSearchPath() + getMerchantId() + "/" + getCurrentVersionName() + "/" + path + "/";
 	}
 	
 	
@@ -83,7 +91,7 @@ public class BitSetUtils {
 		countMap.put("removeFolder", 0);
 		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		String path = getSearchPath() + "/" + merchantId + "/" + getVersionName(merchantId);
+		String path = getSearchPath() + merchantId + "/" + getCurrentVersionName();
 		File pathFile = new File(path);
 		if (pathFile.exists()) {
 			deleteAllFilesOfDir(pathFile, countMap);

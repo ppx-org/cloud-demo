@@ -33,36 +33,59 @@ public class QueryService extends MyDaoSupport {
 	private QueryCommonService commonServ;
 	
 	
-	public QueryPageList query(Integer sId, String w, QueryPage p, String date, Integer cId, Integer gId, Integer fast) {
+	private List<Integer> changeProdId(List<Integer> indexIdList, String orderType) {
 		
-		Map<String, Object> findMap = findProdId(sId, w, p, date, cId, gId, fast);
+		NamedParameterJdbcTemplate jdbc = new NamedParameterJdbcTemplate(getJdbcTemplate());
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("indexIdList", indexIdList);	
+		
+		String sql = "select PROD_ID from " + orderType + " where INDEX_ID in (:indexIdList) order by INDEX_ID";
+		
+		List<Integer> prodIdList = jdbc.queryForList(sql, paramMap, Integer.class);
+		return prodIdList;
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public QueryPageList query(Integer sId, String w, QueryPage p, String date, Integer cId, Integer bId, Integer tId, Integer gId, Integer fast
+			, String orderType) {
+		
+		Map<String, Object> findMap = findProdId(sId, w, p, date, cId, bId, tId, gId, fast, orderType);
 		
 		
 		if (p.getTotalRows() == 0) {
 			return new QueryPageList(); 
 		}
 		else {
-			@SuppressWarnings("unchecked")
-			List<Integer> prodIdList = (List<Integer>)findMap.get("prodIdList");
-			List<QueryProduct> prodList = commonServ.listProduct(prodIdList, sId);
+			// id转换 转成真实的prodId
+			List<Integer> newProdIdList = changeProdId((List<Integer>)findMap.get("prodIdList"), orderType);
+			findMap.put("prodIdList", newProdIdList);
+			
+			List<QueryProduct> prodList = commonServ.listProduct(newProdIdList, sId);
 			
 			// cat
-			@SuppressWarnings("unchecked")
 			List<QueryCategory> catInitList = (List<QueryCategory>)findMap.get("catList");
 			List<QueryCategory> catList	= listCategory(catInitList);
 			
+			// brand
+			List<QueryBrand> brandInitList = (List<QueryBrand>)findMap.get("brandList");
+			List<QueryBrand> brandList= listBrand(brandInitList);
+			
+			// theme
+			List<QueryTheme> themeInitList = (List<QueryTheme>)findMap.get("themeList");
+			List<QueryTheme> themeList = listTheme(themeInitList);
 			
 			// promo
-			@SuppressWarnings("unchecked")
 			List<QueryPromo> promoInitList = (List<QueryPromo>)findMap.get("progList");
 			List<QueryPromo> promoList = listPromo(promoInitList);
 			
 			int fastN = (Integer)findMap.get("fastN");			
-			return new QueryPageList(p, prodList, catList, promoList, fastN);
+			return new QueryPageList(p, prodList, catList, brandList, themeList, promoList, fastN);
 		}
 	}
 	
-	private Map<String, Object> findProdId(Integer sId, String w, QueryPage p, String date, Integer cId, Integer gId, Integer fast) {
+	private Map<String, Object> findProdId(Integer sId, String w, QueryPage p, String date, 
+			Integer cId, Integer bId, Integer tId, Integer gId, Integer fast, String orderType) {
 		
 		if (StringUtils.isEmpty(w)) {
 			return null;
@@ -70,20 +93,20 @@ public class QueryService extends MyDaoSupport {
 		
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
-		BitSet resultBs = BitSetUtils.readBitSet(BitSetUtils.PATH_TITLE, w);
+		BitSet resultBs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_TITLE, w);
 		
 		if (resultBs.cardinality() == 0 && w.length() > 1) {
 			BitSet splitBs = new BitSet();
 			String[] word = WordUtils.splitWord(w).split(",");
 			for (String s : word) {
-				BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_TITLE, s);
+				BitSet bs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_TITLE, s);
 				splitBs.or(bs);
 			}
 			resultBs = splitBs;
 		}
 		
 		if (resultBs.cardinality() != 0) {
-			BitSet storeBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, sId + "");
+			BitSet storeBs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_STORE, sId + "");
 			resultBs.and(storeBs);
 		}
 		else {
@@ -93,19 +116,31 @@ public class QueryService extends MyDaoSupport {
 		BitSet fastBs = null;
 		// 查fast
 		if (fast != null) {
-			fastBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, "local" + sId);
+			fastBs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_STORE, "local" + sId);
 			resultBs.and(fastBs);
 		}
 		
-		// 查catId
+		// 查cId
 		if (cId != null) {
-			BitSet catBs = BitSetUtils.readBitSet(BitSetUtils.PATH_CAT, cId + "");
+			BitSet catBs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_CAT, cId + "");
 			resultBs.and(catBs);
+		}
+		
+		// 查bId
+		if (bId != null) {
+			BitSet brandBs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_BRAND, bId + "");
+			resultBs.and(brandBs);
+		}
+		
+		// 查tId
+		if (tId != null) {
+			BitSet themeBs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_THEME, tId + "");
+			resultBs.and(themeBs);
 		}
 		
 		// 查gId
 		if (gId != null) {
-			BitSet promoBs = BitSetUtils.readBitSet(BitSetUtils.PATH_PROMO + "/" + date, gId + "");
+			BitSet promoBs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_PROMO + "/" + date, gId + "");
 			resultBs.and(promoBs);
 		}
 		
@@ -117,7 +152,7 @@ public class QueryService extends MyDaoSupport {
 		
 		// fast statistic
 		if (fastBs == null) {
-			fastBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, "local" + sId);
+			fastBs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_STORE, "local" + sId);
 		}
 		fastBs.and(resultBs);
 		int fastN = fastBs.cardinality();
@@ -126,20 +161,45 @@ public class QueryService extends MyDaoSupport {
 		
 		// cat statistic 改成bs从上面读
 		List<QueryCategory> catList = new ArrayList<QueryCategory>();
-		List<Integer> catIdList = listCatId();		
+		List<Integer> catIdList = listCatId(orderType);		
 		for (Integer catId : catIdList) {			
-			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_CAT, catId + "");
+			BitSet bs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_CAT, catId + "");
 			bs.and(resultBs);
 			int n = bs.cardinality();
 			if (n != 0) catList.add(new QueryCategory(catId, n));
 		}
 		returnMap.put("catList", catList);
 		
+		// brand statistic
+		List<QueryBrand> brandList = new ArrayList<QueryBrand>();
+		List<Integer> brandIdList = listBrandId(orderType);		
+		for (Integer brandId : brandIdList) {			
+			BitSet bs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_BRAND, brandId + "");
+			bs.and(resultBs);
+			int n = bs.cardinality();
+			if (n != 0) brandList.add(new QueryBrand(brandId, n));
+		}
+		returnMap.put("brandList", brandList);
+		
+		
+		// theme statistic
+		List<QueryTheme> themeList = new ArrayList<QueryTheme>();
+		List<Integer> themeIdList = listBrandId(orderType);		
+		for (Integer themeId : themeIdList) {			
+			BitSet bs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_THEME, themeId + "");
+			bs.and(resultBs);
+			int n = bs.cardinality();
+			if (n != 0) themeList.add(new QueryTheme(themeId, n));
+		}
+		returnMap.put("themeList", themeList);
+		
+		
+		
 		// promo statistic 改成bs从上面读
 		List<QueryPromo> progList = new ArrayList<QueryPromo>();
-		List<Integer> progIdList = listProgId(date);		
+		List<Integer> progIdList = listProgId(orderType, date);		
 		for (Integer progId : progIdList) {	
-			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_PROMO + "/" + date, progId + "");
+			BitSet bs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_PROMO + "/" + date, progId + "");
 			bs.and(resultBs);
 			int n = bs.cardinality();
 			if (n != 0) progList.add(new QueryPromo(progId, n));
@@ -240,6 +300,8 @@ public class QueryService extends MyDaoSupport {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("brandIdList", brandIdMapNum.keySet());	
 		
+		System.out.println("xxxxxxxxxxxxxxxx:" + brandIdMapNum.keySet());
+		
 		String progSql = "select BRAND_ID BID, BRAND_NAME BN from brand where BRAND_ID in (:brandIdList) order by BRAND_PRIO";
 		
 		List<QueryBrand> resultBrandList = jdbc.query(progSql, paramMap, BeanPropertyRowMapper.newInstance(QueryBrand.class));
@@ -280,9 +342,9 @@ public class QueryService extends MyDaoSupport {
 	
 	
 	
-	private List<Integer> listCatId() {
+	private List<Integer> listCatId(String orderType) {
 		List<Integer> returnList = new ArrayList<Integer>();
-		String[] fileName = new File(BitSetUtils.getRealPath(BitSetUtils.PATH_CAT)).list();
+		String[] fileName = new File(BitSetUtils.getRealPath(orderType + "/" + BitSetUtils.PATH_CAT)).list();
 		for (String catIdName : fileName) {		
 			catIdName = catIdName.replace("_", "");
 			returnList.add(Integer.parseInt(catIdName));
@@ -290,9 +352,9 @@ public class QueryService extends MyDaoSupport {
 		return returnList;
 	}
 	
-	private List<Integer> listBrandId() {
+	private List<Integer> listBrandId(String orderType) {
 		List<Integer> returnList = new ArrayList<Integer>();
-		String[] fileName = new File(BitSetUtils.getRealPath(BitSetUtils.PATH_BRAND)).list();
+		String[] fileName = new File(BitSetUtils.getRealPath(orderType + "/" + BitSetUtils.PATH_BRAND)).list();
 		for (String brandIdName : fileName) {		
 			brandIdName = brandIdName.replace("_", "");
 			returnList.add(Integer.parseInt(brandIdName));
@@ -300,9 +362,9 @@ public class QueryService extends MyDaoSupport {
 		return returnList;
 	}
 	
-	private List<Integer> listThemeId() {
+	private List<Integer> listThemeId(String orderType) {
 		List<Integer> returnList = new ArrayList<Integer>();
-		String[] fileName = new File(BitSetUtils.getRealPath(BitSetUtils.PATH_THEME)).list();
+		String[] fileName = new File(BitSetUtils.getRealPath(orderType + "/" + BitSetUtils.PATH_THEME)).list();
 		for (String themeIdName : fileName) {		
 			themeIdName = themeIdName.replace("_", "");
 			returnList.add(Integer.parseInt(themeIdName));
@@ -310,9 +372,9 @@ public class QueryService extends MyDaoSupport {
 		return returnList;
 	}
 	
-	private List<Integer> listProgId(String date) {
+	private List<Integer> listProgId(String orderType, String date) {
 		List<Integer> returnList = new ArrayList<Integer>();
-		String[] fileName = new File(BitSetUtils.getRealPath(BitSetUtils.PATH_PROMO + "/" + date)).list();
+		String[] fileName = new File(BitSetUtils.getRealPath(orderType + "/" + BitSetUtils.PATH_PROMO + "/" + date)).list();
 		if (fileName == null) return new ArrayList<Integer>(); 
 		for (String progIdName : fileName) {	
 			progIdName = progIdName.replace("_", "");
@@ -335,7 +397,8 @@ public class QueryService extends MyDaoSupport {
 	
 	
 	
-	
+	// 使用在搜索词转名称再转换成ID
+	/*
 	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>cat
 	public QueryPageList queryCat(Integer storeId, QueryPage p, Integer cId) {
 		BitSet resultBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, storeId + "");
@@ -501,7 +564,7 @@ public class QueryService extends MyDaoSupport {
 		
 		return queryPageList;
 	}
-	
+	*/
 	
 	
 	

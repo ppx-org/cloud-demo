@@ -12,11 +12,11 @@ public class QueryPageList {
 	
 	private List<QueryCategory> catList;
 	
-	private List<QueryPromo> promoList;
-	
 	private List<QueryBrand> brandList;
 	
 	private List<QueryTheme> themeList;
+	
+	private List<QueryPromo> promoList;
 	
 	private Integer fastN = 0;
 	
@@ -26,10 +26,13 @@ public class QueryPageList {
 		
 	}
 	
-	public QueryPageList(QueryPage queryPage, List<QueryProduct> prodList, List<QueryCategory> catList, List<QueryPromo> promoList, Integer fastN) {
+	public QueryPageList(QueryPage queryPage, List<QueryProduct> prodList, List<QueryCategory> catList,
+			List<QueryBrand> brandList, List<QueryTheme> themeList, List<QueryPromo> promoList, Integer fastN) {
 		this.queryPage = queryPage;
 		this.prodList = prodList;
 		this.catList = catList;
+		this.brandList = brandList;
+		this.themeList = themeList;
 		this.promoList = promoList;
 		this.fastN = fastN;
 	}

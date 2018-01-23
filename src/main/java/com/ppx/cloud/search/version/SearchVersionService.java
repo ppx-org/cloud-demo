@@ -21,8 +21,8 @@ public class SearchVersionService extends MyDaoSupport {
 		
 		if (c == 0) {
 			String insertSql = "insert into search_version(MERCHANT_ID, VERSION_NAME) values(?, ?)";
-			getJdbcTemplate().update(insertSql, merchantId, "V1");
-			getJdbcTemplate().update(insertSql, merchantId, "V2");
+			getJdbcTemplate().update(insertSql, merchantId, "v1");
+			getJdbcTemplate().update(insertSql, merchantId, "v2");
 		}
 		
 		String querySql = "select * from search_version where MERCHANT_ID = ?";

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,8 @@ public class SearchCreateService extends MyDaoSupport {
 		
 	}
 	
+	
+	
 	@Transactional
 	public int createIndex(String versionName) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
@@ -41,65 +44,69 @@ public class SearchCreateService extends MyDaoSupport {
 		
 		long t = System.currentTimeMillis();
 		Map<String, Integer> spendMap = new LinkedHashMap<String, Integer>();
-		
-		
+	
 		BitSetUtils.setVersionMap(merchantId, versionName);
-		// 1.初始化
-		Map<String, Integer> map1 = initSearchWords();
-		spendMap.put("spendTime1", (int)(System.currentTimeMillis() - t));
-		t = System.currentTimeMillis();
+		
+		
+		Map<String, Integer> resultMap = new LinkedHashMap<String, Integer>();
+		// 综合排序normal 新品优先new
+		// BitSetUtils.ORDER_NORMAL, BitSetUtils.ORDER_NEW
+		
+		String[] orderType = {BitSetUtils.ORDER_NORMAL + versionName, BitSetUtils.ORDER_NEW + versionName};
 		
 		// 2.删除index
 		Map<String, Integer> map2 = BitSetUtils.removeVersionPath();
 		spendMap.put("spendTime2", (int)(System.currentTimeMillis() - t));
 		t = System.currentTimeMillis();
 		
-		// 3.st index
-		Map<String, Integer> map3 = createStoreIndex();
-		spendMap.put("spendTime3", (int)(System.currentTimeMillis() - t));
-		t = System.currentTimeMillis();
+		for (int i = 0; i < orderType.length; i++) {
+			// 1.初始化
+			Map<String, Integer> map1 = initSearchWords(orderType[i]);
+			spendMap.put("spendTime1", (int)(System.currentTimeMillis() - t));
+			t = System.currentTimeMillis();
+			
+			// 3.store index
+			Map<String, Integer> map3 = createStoreIndex(orderType[i]);
+			spendMap.put("spendTime3", (int)(System.currentTimeMillis() - t));
+			t = System.currentTimeMillis();
+			
+			// 4.title index
+			Map<String, Integer> map4 = createTitleIndex(orderType[i]);
+			spendMap.put("spendTime4", (int)(System.currentTimeMillis() - t));
+			t = System.currentTimeMillis();
+			
+			// 5.cat index
+			Map<String, Integer> map5 = createCatIndex(orderType[i]);
+			spendMap.put("spendTime5", (int)(System.currentTimeMillis() - t));
+			t = System.currentTimeMillis();
+			
+			// 6.brand index
+			Map<String, Integer> map6 = createBrandIndex(orderType[i]);
+			spendMap.put("spendTime6", (int)(System.currentTimeMillis() - t));
+			t = System.currentTimeMillis();
+			
+			// 7.theme index
+			Map<String, Integer> map7 = createThemeIndex(orderType[i]);
+			spendMap.put("spendTime7", (int)(System.currentTimeMillis() - t));
+			t = System.currentTimeMillis();
+			
+			// 8.promo index
+			Map<String, Integer> map8 = createPromoIndex(orderType[i]);
+			spendMap.put("spendTime8", (int)(System.currentTimeMillis() - t));
+			t = System.currentTimeMillis();
+			
+			
+			// 提示信息
+			resultMap.putAll(map1);
+			resultMap.putAll(map2);
+			resultMap.putAll(map3);
+			resultMap.putAll(map4);
+			resultMap.putAll(map5);
+			resultMap.putAll(map6);
+			resultMap.putAll(map7);
+			resultMap.putAll(map8);
+		}
 		
-		// 4.title index
-		Map<String, Integer> map4 = createTitleIndex();
-		spendMap.put("spendTime4", (int)(System.currentTimeMillis() - t));
-		t = System.currentTimeMillis();
-		
-		// 5.cat index
-		Map<String, Integer> map5 = createCatIndex();
-		spendMap.put("spendTime5", (int)(System.currentTimeMillis() - t));
-		t = System.currentTimeMillis();
-		
-		// 6.brand index
-		Map<String, Integer> map6 = createBrandIndex();
-		spendMap.put("spendTime6", (int)(System.currentTimeMillis() - t));
-		t = System.currentTimeMillis();
-		
-		// 7.theme index
-		Map<String, Integer> map7 = createThemeIndex();
-		spendMap.put("spendTime7", (int)(System.currentTimeMillis() - t));
-		t = System.currentTimeMillis();
-		
-		// 8.theme index
-		Map<String, Integer> map8 = createPromoIndex();
-		spendMap.put("spendTime8", (int)(System.currentTimeMillis() - t));
-		t = System.currentTimeMillis();
-		
-		
-		
-		
-		
-		
-		Map<String, Integer> resultMap = new LinkedHashMap<String, Integer>();
-		
-		
-		resultMap.putAll(map1);
-		resultMap.putAll(map2);
-		resultMap.putAll(map3);
-		resultMap.putAll(map4);
-		resultMap.putAll(map5);
-		resultMap.putAll(map6);
-		resultMap.putAll(map7);
-		resultMap.putAll(map8);
 		resultMap.putAll(spendMap);
 		
 		
@@ -195,8 +202,8 @@ public class SearchCreateService extends MyDaoSupport {
 	
 	
 	
-	
-	private Map<String, Integer> initSearchWords() {
+	// orderType: normal new
+	public Map<String, Integer> initSearchWords(String orderType) {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
@@ -205,22 +212,35 @@ public class SearchCreateService extends MyDaoSupport {
 		String extWords = getJdbcTemplate().queryForObject(extSql, String.class, merchantId);
 		WordUtils.setExtWord(extWords);
 		
-		String sql = "select PROD_ID, PROD_TITLE from product where MERCHANT_ID = ?";
+		String sql = "select PROD_ID, PROD_TITLE from product where MERCHANT_ID = ? order by PROD_PRIO, PROD_ID";
+		if (orderType.startsWith(BitSetUtils.ORDER_NEW)) {
+			sql = "select PROD_ID, PROD_TITLE from product where MERCHANT_ID = ? order by PROD_ID desc";
+		}
+		
 		List<Map<String, Object>> prodList = getJdbcTemplate().queryForList(sql, merchantId);
 		
-		getJdbcTemplate().update("delete from search_words where MERCHANT_ID = ?", merchantId);
+		getJdbcTemplate().update("delete from " + orderType + " where MERCHANT_ID = ?", merchantId);
 		
-		String insertSql = "insert into search_words(PROD_ID, WORDS, MERCHANT_ID) values(?, ?, " + merchantId + ")";
+		String insertSql = "insert into " + orderType + "(PROD_ID, INDEX_ID, MERCHANT_ID, WORDS) values(?, ?, " + merchantId + ", ?)";
 		
 		List<Object[]> argsList = new ArrayList<Object[]>();
 		
-		for (Map<String, Object> map : prodList) {
+		for (int i = 0; i < prodList.size(); i++) {
+			Map<String, Object> map = prodList.get(i);
 			int prodId = (Integer)map.get("PROD_ID");
 			String prodTitle = (String)map.get("PROD_TITLE");			
 			String words = WordUtils.splitWord(prodTitle);
-			Object[] arg = {prodId, words};
+			Object[] arg = {prodId, i + 1, words};
 			argsList.add(arg);
 		}
+		
+//		for (Map<String, Object> map : prodList) {
+//			int prodId = (Integer)map.get("PROD_ID");
+//			String prodTitle = (String)map.get("PROD_TITLE");			
+//			String words = WordUtils.splitWord(prodTitle);
+//			Object[] arg = {prodId, words};
+//			argsList.add(arg);
+//		}
 		
 		int r[] = getJdbcTemplate().batchUpdate(insertSql, argsList);
 		
@@ -230,10 +250,10 @@ public class SearchCreateService extends MyDaoSupport {
 
 	
 	
-	public Map<String, Integer> createStoreIndex() {
+	public Map<String, Integer> createStoreIndex(String orderType) {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
-		String path = BitSetUtils.PATH_STORE;
+		String path = orderType + "/" + BitSetUtils.PATH_STORE;
 		BitSetUtils.initPath(path);
 		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
@@ -241,7 +261,7 @@ public class SearchCreateService extends MyDaoSupport {
 		String sql = "select STORE_ID from store where MERCHANT_ID = ?";
 		List<Integer> storeIdList = getJdbcTemplate().queryForList(sql, Integer.class, merchantId);
 		
-		String prodSql = "select PROD_ID from product where REPO_ID in (select REPO_ID from store_map_repo where STORE_ID = ?)";
+		String prodSql = "select (select INDEX_ID from " + orderType + " where PROD_ID = product.PROD_ID) from product where REPO_ID in (select REPO_ID from store_map_repo where STORE_ID = ?)";
 		for (Integer storeId : storeIdList) {
 			BitSet storeBs = new BitSet();
 			List<Integer> prodIdList = getJdbcTemplate().queryForList(prodSql, Integer.class, storeId);
@@ -272,18 +292,18 @@ public class SearchCreateService extends MyDaoSupport {
 	
 	
 	
-	public Map<String, Integer> createTitleIndex() {
+	public Map<String, Integer> createTitleIndex(String orderType) {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
-		String path = BitSetUtils.PATH_TITLE;
+		String path = orderType + "/" + BitSetUtils.PATH_TITLE;
 		BitSetUtils.initPath(path);
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
 		Map<String, BitSet> wordMap = new HashMap<String, BitSet>();		
-		String sql = "select PROD_ID, WORDS from search_words where MERCHANT_ID = ?";
+		String sql = "select INDEX_ID, WORDS from " + orderType + " where MERCHANT_ID = ?";
 		List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql, merchantId);
 		for (Map<String, Object> map : list) {
-			int searchProdId = (Integer)map.get("PROD_ID");
+			int searchProdId = (Integer)map.get("INDEX_ID");
 			String searchWords = (String)map.get("WORDS");
 			
 			String word[] = searchWords.split(",");
@@ -308,17 +328,17 @@ public class SearchCreateService extends MyDaoSupport {
 	}
 	
 	
-	public Map<String, Integer> createCatIndex() {
+	public Map<String, Integer> createCatIndex(String orderType) {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
-		String path = BitSetUtils.PATH_CAT;
+		String path = orderType + "/" + BitSetUtils.PATH_CAT;
 		BitSetUtils.initPath(path);
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
 		// 创建子类索引
 		String subCatSql = "select CAT_ID from category where MERCHANT_ID = ? and PARENT_ID != ? and RECORD_STATUS = ?";
 		List<Integer> catIdList =  getJdbcTemplate().queryForList(subCatSql, Integer.class, merchantId, -1, 1);
-		String prodSql = "select PROD_ID from product where CAT_ID = ?";
+		String prodSql = "select (select INDEX_ID from " + orderType + " where PROD_ID = product.PROD_ID) INDEX_ID from product where CAT_ID = ?";
 		for (Integer catId : catIdList) {
 			List<Integer> prodIdList =  getJdbcTemplate().queryForList(prodSql, Integer.class, catId);
 			BitSet bs = new BitSet();
@@ -355,10 +375,10 @@ public class SearchCreateService extends MyDaoSupport {
 	}
 	
 	
-	public Map<String, Integer> createBrandIndex() {
+	public Map<String, Integer> createBrandIndex(String orderType) {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
-		String path = BitSetUtils.PATH_BRAND;
+		String path = orderType + "/" + BitSetUtils.PATH_BRAND;
 		BitSetUtils.initPath(path);
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
@@ -366,7 +386,7 @@ public class SearchCreateService extends MyDaoSupport {
 		List<Integer> brandList =  getJdbcTemplate().queryForList(brandSql, Integer.class, merchantId, 1);
 		for (Integer brandId : brandList) {
 			BitSet bs = new BitSet();
-			String prodSql = "select PROD_ID from product where BRAND_ID = ?";		
+			String prodSql = "select (select INDEX_ID from " + orderType + " where PROD_ID = product.PROD_ID) from product where BRAND_ID = ?";		
 			List<Integer> prodList =  getJdbcTemplate().queryForList(prodSql, Integer.class, brandId);
 			for (Integer prodId : prodList) {
 				bs.set(prodId);
@@ -381,10 +401,10 @@ public class SearchCreateService extends MyDaoSupport {
 	}
 	
 	
-	public Map<String, Integer> createThemeIndex() {
+	public Map<String, Integer> createThemeIndex(String orderType) {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
-		String path = "theme";
+		String path = orderType + "/" + BitSetUtils.PATH_THEME;
 		BitSetUtils.initPath(path);
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
@@ -392,7 +412,7 @@ public class SearchCreateService extends MyDaoSupport {
 		List<Integer> themeList =  getJdbcTemplate().queryForList(themeSql, Integer.class, merchantId, 1);
 		for (Integer themeId : themeList) {
 			BitSet bs = new BitSet();
-			String prodSql = "select PROD_ID from theme_map_prod where THEME_ID = ?";
+			String prodSql = "select (select INDEX_ID from " + orderType + " where PROD_ID = theme_map_prod.PROD_ID) from theme_map_prod where THEME_ID = ?";
 			List<Integer> prodList =  getJdbcTemplate().queryForList(prodSql, Integer.class, themeId);
 			for (Integer prodId : prodList) {
 				bs.set(prodId);
@@ -425,7 +445,7 @@ public class SearchCreateService extends MyDaoSupport {
 	
 	/////////////////////////////////////////////promo生成今天和明天的
 	
-	public Map<String, Integer> createPromoIndex() {
+	public Map<String, Integer> createPromoIndex(String orderType) {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
 		// 处理promo索引
@@ -435,16 +455,16 @@ public class SearchCreateService extends MyDaoSupport {
 		
 		
 		// >>>>>>>>>>>>>>>>>>>>>>>>>today
-		String todaySql = "select t.PROD_ID, t.PROG_ID from (select * from program_index where " + 
+		String todaySql = "select (select INDEX_ID from " + orderType + " where PROD_ID = t.PROD_ID) INDEX_ID, t.PROG_ID from (select * from program_index where " + 
 				"MERCHANT_ID = ? and curdate() between INDEX_BEGIN and INDEX_END order by INDEX_PRIO desc) t group by t.PROD_ID";
 		List<Map<String, Object>> todayList = getJdbcTemplate().queryForList(todaySql, merchantId);
-		createDateProme(DateUtils.today(), todayList);
+		createDateProme(orderType, DateUtils.today(), todayList);
 		
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>tomorrow
-		String tomorrowSql = "select t.PROD_ID, t.PROG_ID from (select * from program_index where " + 
+		String tomorrowSql = "select (select INDEX_ID from " + orderType + " where PROD_ID = t.PROD_ID) INDEX_ID, t.PROG_ID from (select * from program_index where " + 
 				"MERCHANT_ID = ? and DATE_SUB(curdate(),INTERVAL -1 DAY) between INDEX_BEGIN and INDEX_END order by INDEX_PRIO desc) t group by t.PROD_ID";
 		List<Map<String, Object>> tomorrowList = getJdbcTemplate().queryForList(tomorrowSql, merchantId);
-		createDateProme(DateUtils.tomorrow(), tomorrowList);
+		createDateProme(orderType, DateUtils.tomorrow(), tomorrowList);
 		
 		
 		
@@ -489,24 +509,24 @@ public class SearchCreateService extends MyDaoSupport {
 	
 	
 	
-	private void createDateProme(String date, List<Map<String, Object>> indexList) {
-		String path = BitSetUtils.PATH_PROMO + "/" + date;
+	private void createDateProme(String orderType, String date, List<Map<String, Object>> indexList) {
+		String path = orderType + "/" + BitSetUtils.PATH_PROMO + "/" + date;
 		BitSetUtils.initPath(path);
 		
 		Map<Integer, BitSet> bitSetMap = new HashMap<Integer, BitSet>();
 		
 		for (Map<String, Object> map : indexList) {
-			Integer prodId = (Integer)map.get("PROD_ID");
+			Integer indexId = ((Long)map.get("INDEX_ID")).intValue();
 			Integer progId = (Integer)map.get("PROG_ID");
 			
 			BitSet bs = bitSetMap.get(progId);
 			if (bs == null) {
 				BitSet newBs = new BitSet();
-				newBs.set(prodId);
+				newBs.set(indexId);
 				bitSetMap.put(progId, newBs);
 			}
 			else {
-				bs.set(prodId);
+				bs.set(indexId);
 			}
 		}
 		
