@@ -21,7 +21,7 @@ import com.ppx.cloud.search.query.bean.QueryPromo;
 import com.ppx.cloud.search.query.bean.QueryTheme;
 import com.ppx.cloud.search.util.BitSetUtils;
 import com.ppx.cloud.search.util.WordUtils;
-import com.ppx.cloud.storecommon.query.bean.QueryPage;
+import com.ppx.cloud.storecommon.page.QueryPage;
 import com.ppx.cloud.storecommon.query.bean.QueryProduct;
 import com.ppx.cloud.storecommon.query.service.QueryCommonService;
 

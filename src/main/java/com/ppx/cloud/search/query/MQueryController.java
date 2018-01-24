@@ -18,7 +18,7 @@ import com.ppx.cloud.micro.common.MGrantContext;
 import com.ppx.cloud.search.query.bean.MQueryBean;
 import com.ppx.cloud.search.query.bean.QueryPageList;
 import com.ppx.cloud.search.util.BitSetUtils;
-import com.ppx.cloud.storecommon.query.bean.QueryPage;
+import com.ppx.cloud.storecommon.page.QueryPage;
 
 
 @Controller	

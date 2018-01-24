@@ -1,6 +1,6 @@
 package com.ppx.cloud.search.query.bean;
 
-import com.ppx.cloud.storecommon.query.bean.QueryPage;
+import com.ppx.cloud.storecommon.page.QueryPage;
 
 public class MQueryBean {
 	

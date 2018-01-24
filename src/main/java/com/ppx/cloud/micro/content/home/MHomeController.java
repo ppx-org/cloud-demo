@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
-import com.ppx.cloud.storecommon.query.bean.QueryPage;
+import com.ppx.cloud.storecommon.page.QueryPage;
 import com.ppx.cloud.storecommon.query.bean.QueryProduct;
 
 

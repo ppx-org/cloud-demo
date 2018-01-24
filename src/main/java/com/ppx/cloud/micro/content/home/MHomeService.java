@@ -1,6 +1,5 @@
 package com.ppx.cloud.micro.content.home;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.micro.common.MGrantContext;
-import com.ppx.cloud.storecommon.query.bean.QueryPage;
+import com.ppx.cloud.storecommon.page.QueryPage;
 import com.ppx.cloud.storecommon.query.bean.QueryProduct;
 import com.ppx.cloud.storecommon.query.service.QueryCommonService;
 

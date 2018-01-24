@@ -2,7 +2,7 @@ package com.ppx.cloud.search.query.bean;
 
 import java.util.List;
 
-import com.ppx.cloud.storecommon.query.bean.QueryPage;
+import com.ppx.cloud.storecommon.page.QueryPage;
 import com.ppx.cloud.storecommon.query.bean.QueryProduct;
 
 

@@ -8,7 +8,7 @@ import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
-import com.ppx.cloud.store.order.bean.UserOrder;
+import com.ppx.cloud.storecommon.order.bean.UserOrder;
 
 @Service
 public class StoreOrderService extends MyDaoSupport {
