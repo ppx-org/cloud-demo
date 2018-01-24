@@ -7,30 +7,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.util.DateUtils;
+import com.ppx.cloud.micro.common.MGrantContext;
+import com.ppx.cloud.search.query.bean.MQueryBean;
 import com.ppx.cloud.search.query.bean.QueryPageList;
 import com.ppx.cloud.search.util.BitSetUtils;
 import com.ppx.cloud.storecommon.query.bean.QueryPage;
 
 
 @Controller	
-public class QueryController {
+public class MQueryController {
 	
 	@Autowired
 	private QueryService serv;
 	
 	// 移动端接口
 	@PostMapping @ResponseBody
-	public Map<String, Object> q(@RequestParam(required=true) Integer sId, Integer d,
-			String w, QueryPage p, Integer cId) {
+	public Map<String, Object> q(@RequestBody MQueryBean b) {
+		Integer sId = MGrantContext.getWxUser().getStoreId();
 		
+		// 分类少的时候可以放开
+		if (StringUtils.isEmpty(b.getW()) && b.getCid() == null && b.getBid() == null
+			&& b.getTid() == null && b.getGid() == null) {
+			return null;
+		}
 		
-		return null;
+		return testQuery(sId, 0, b.getW(), b.getP(), 
+				b.getCid(), b.getBid(), b.getTid(), b.getGid(), b.getFast(), b.getO());
 	}
 	
 	

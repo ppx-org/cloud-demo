@@ -22,8 +22,8 @@ function testRequest() {
 		alert(JSON.stringify(r));
 	});
 	*/
-	var json = {skuId:123};
-	$.post([[@{/}]] + $("#url").val(), null, function(r) {
+	var json = {"w":"title"};
+	$.post([[@{/}]] + $("#url").val(), JSON.stringify(json), function(r) {
 		
 		$("#returnJson").text(JSON.stringify(r));
 		
@@ -37,7 +37,7 @@ function testRequest() {
 
 
 
-<input type="text" id="url" value="MFavorite/listProduct" style="width:300px">
+<input type="text" id="url" value="MQuery/q" style="width:300px">
 
 <button type="button" onclick="testRequest()">test</button>
 

@@ -53,6 +53,7 @@ public class QueryService extends MyDaoSupport {
 		Map<String, Object> findMap = findProdId(sId, w, p, date, cId, bId, tId, gId, fast, orderType);
 		
 		
+		
 		if (p.getTotalRows() == 0) {
 			return new QueryPageList(); 
 		}
