@@ -58,9 +58,12 @@ public class SearchCreateService extends MyDaoSupport {
 		Map<String, Integer> map2 = BitSetUtils.removeVersionPath();
 		spendMap.put("spendTime2", (int)(System.currentTimeMillis() - t));
 		t = System.currentTimeMillis();
+
 		
 		for (int i = 0; i < orderType.length; i++) {
-			// 1.初始化
+			
+			
+			// 1.初始化word
 			Map<String, Integer> map1 = initSearchWords(orderType[i]);
 			spendMap.put("spendTime1", (int)(System.currentTimeMillis() - t));
 			t = System.currentTimeMillis();
@@ -94,6 +97,7 @@ public class SearchCreateService extends MyDaoSupport {
 			Map<String, Integer> map8 = createPromoIndex(orderType[i]);
 			spendMap.put("spendTime8", (int)(System.currentTimeMillis() - t));
 			t = System.currentTimeMillis();
+			
 			
 			
 			// 提示信息
@@ -202,6 +206,9 @@ public class SearchCreateService extends MyDaoSupport {
 	
 	
 	
+	
+	
+	
 	// orderType: normal new
 	public Map<String, Integer> initSearchWords(String orderType) {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
@@ -274,7 +281,7 @@ public class SearchCreateService extends MyDaoSupport {
 		}
 		
 		// 创建local store索引
-		String fastSql = "select PROD_ID from product where REPO_ID = ?";
+		String fastSql = "select (select INDEX_ID from " + orderType + " where PROD_ID = product.PROD_ID) from product where REPO_ID = ?";
 		
 		for (Integer storeId : storeIdList) {
 			BitSet fastBs = new BitSet();

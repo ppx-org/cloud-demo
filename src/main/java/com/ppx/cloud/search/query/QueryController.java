@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,29 +24,36 @@ public class QueryController {
 	@Autowired
 	private QueryService serv;
 	
+	// 移动端接口
+	@PostMapping @ResponseBody
+	public Map<String, Object> q(@RequestParam(required=true) Integer sId, Integer d,
+			String w, QueryPage p, Integer cId) {
+		
+		
+		return null;
+	}
 	
-
+	
+	// pc端接口
 	@RequestMapping @ResponseBody
-	public Map<String, Object> q(@RequestParam Integer sId,  @RequestParam Integer d,
-			@RequestParam String w, QueryPage p, Integer cId, Integer bId, Integer tId,
+	public Map<String, Object> testQuery(@RequestParam(required=true) Integer sId, Integer d,
+			String w, QueryPage p, Integer cId, Integer bId, Integer tId,
 			Integer gId, Integer fast, Integer o) {
 		
 		
 		String orderType = StringUtils.isEmpty(o) || o == 0 ? BitSetUtils.ORDER_NORMAL + BitSetUtils.getCurrentVersionName() 
 			: BitSetUtils.ORDER_NEW + BitSetUtils.getCurrentVersionName();
 
-		String date = (d == 1 ? DateUtils.today() : DateUtils.tomorrow());
+		String date = (StringUtils.isEmpty(o) || d == 0 ? DateUtils.today() : DateUtils.tomorrow());
 		QueryPageList bean = serv.query(sId, w, p, date, cId, bId, tId, gId, fast, orderType);
 		
-	
-		
 		Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("fastN", bean.getFastN());
 		returnMap.put("arrayList", bean.getProdList());
 		returnMap.put("catList", bean.getCatList());
 		returnMap.put("brandList", bean.getBrandList());
 		returnMap.put("themeList", bean.getThemeList());
 		returnMap.put("promoList", bean.getPromoList());
-		returnMap.put("fastN", bean.getFastN());
 		returnMap.put("page", bean.getQueryPage());
 		
 		return ControllerReturn.ok(returnMap);

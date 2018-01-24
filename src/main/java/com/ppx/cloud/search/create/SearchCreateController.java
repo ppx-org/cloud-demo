@@ -39,14 +39,14 @@ public class SearchCreateController {
 	
 	
 	
-	@GetMapping @ResponseBody
-	public Map<String, Object> test() {
-		Map map = serv.createTitleIndex(BitSetUtils.ORDER_NEW);
-		System.out.println("out:" + map);
-		
-		
-		return ControllerReturn.ok(map);
-	}
+//	@GetMapping @ResponseBody
+//	public Map<String, Object> test() {
+//		Map map = serv.initSearchSpecial();
+//		System.out.println("out:" + map);
+//		
+//		
+//		return ControllerReturn.ok(map);
+//	}
 	
 	
 }

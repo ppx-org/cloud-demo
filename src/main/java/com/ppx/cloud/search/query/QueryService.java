@@ -87,31 +87,52 @@ public class QueryService extends MyDaoSupport {
 	private Map<String, Object> findProdId(Integer sId, String w, QueryPage p, String date, 
 			Integer cId, Integer bId, Integer tId, Integer gId, Integer fast, String orderType) {
 		
-		if (StringUtils.isEmpty(w)) {
-			return null;
-		}
-		
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
-		BitSet resultBs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_TITLE, w);
+		BitSet resultBs = null;
 		
-		if (resultBs.cardinality() == 0 && w.length() > 1) {
-			BitSet splitBs = new BitSet();
-			String[] word = WordUtils.splitWord(w).split(",");
-			for (String s : word) {
-				BitSet bs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_TITLE, s);
-				splitBs.or(bs);
-			}
-			resultBs = splitBs;
-		}
-		
-		if (resultBs.cardinality() != 0) {
-			BitSet storeBs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_STORE, sId + "");
-			resultBs.and(storeBs);
+		if (StringUtils.isEmpty(w)) {
+			resultBs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_STORE, sId + "");
 		}
 		else {
-			return returnMap;
+			resultBs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_TITLE, w);
+			
+			if (resultBs.cardinality() == 0 && w.length() > 1) {
+				BitSet splitBs = new BitSet();
+				String[] word = WordUtils.splitWord(w).split(",");
+				for (String s : word) {
+					BitSet bs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_TITLE, s);
+					splitBs.or(bs);
+				}
+				resultBs = splitBs;
+			}
+			
+			if (resultBs.cardinality() != 0) {
+				BitSet storeBs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_STORE, sId + "");
+				resultBs.and(storeBs);
+			}
+			else {
+				return returnMap;
+			}
 		}
+		
+		
+		
+		
+		
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		// 除了关键字的查询条件 >>>>>>>>>>>>>>>>>>>>>>>
+		
 		
 		BitSet fastBs = null;
 		// 查fast
