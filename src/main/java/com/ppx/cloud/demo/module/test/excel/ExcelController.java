@@ -46,7 +46,7 @@ public class ExcelController {
 			
 			ExcelUitl.expListDateSample(datas, os, titleList,  "花名册","");
 			os.flush();
-		
+			os.close();
 		
 		} catch (Exception e) {
 			e.printStackTrace();

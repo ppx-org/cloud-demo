@@ -22,11 +22,16 @@ function testRequest() {
 		alert(JSON.stringify(r));
 	});
 	*/
+	
+	/*
+	// search
 	var json = {"w":"title"};
 	$.post([[@{/}]] + $("#url").val(), JSON.stringify(json), function(r) {
-		
 		$("#returnJson").text(JSON.stringify(r));
-		
+	});
+	*/
+	$.post([[@{/}]] + $("#url").val(), null, function(r) {
+		$("#returnJson").text(JSON.stringify(r));
 	});
 }
 
@@ -37,7 +42,7 @@ function testRequest() {
 
 
 
-<input type="text" id="url" value="MQuery/q" style="width:300px">
+<input type="text" id="url" value="MProgram/listProgram" style="width:300px">
 
 <button type="button" onclick="testRequest()">test</button>
 

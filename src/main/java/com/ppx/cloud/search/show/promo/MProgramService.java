@@ -1,4 +1,4 @@
-package com.ppx.cloud.search.show.theme;
+package com.ppx.cloud.search.show.promo;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -8,32 +8,35 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
+import com.ppx.cloud.common.util.DateUtils;
 import com.ppx.cloud.micro.common.MGrantContext;
 import com.ppx.cloud.search.show.brand.MBrand;
 import com.ppx.cloud.search.util.BitSetUtils;
 
 
 @Service
-public class MThemedService extends MyDaoSupport {
+public class MProgramService extends MyDaoSupport {
 	
 
 	
 	
-	public List<MTheme> listTheme() {		
+	public List<MProgram> listProgram() {		
 		
 		int merchantId = MGrantContext.getWxUser().getMerchantId();
 		int storeId = MGrantContext.getWxUser().getStoreId();
 		
-		String sql = "select THEME_ID TID, THEME_NAME TN, THEME_IMG_X X, THEME_IMG_Y Y from theme where MERCHANT_ID = ? and RECORD_STATUS = ? order by THEME_PRIO";
+		String sql = "select PROG_ID GID, PROG_NAME GN, PROG_IMG_X X, PROG_IMG_Y  Y from program " +
+				" where MERCHANT_ID = ? and curdate() between PROG_BEGIN and PROG_END order by PROG_PRIO";
 		
-		List<MTheme> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(MTheme.class), merchantId, 1);
+		List<MProgram> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(MProgram.class), merchantId);
 		// 加上本店的
 		String normalPath = BitSetUtils.ORDER_NORMAL + BitSetUtils.getCurrentVersionName();
 		BitSet storeBs = BitSetUtils.readBitSet(normalPath + "/" + BitSetUtils.PATH_STORE, storeId + "");
 		
-		List<MTheme> returnList = new ArrayList<MTheme>();
-		for (MTheme t : list) {
-			BitSet bs = BitSetUtils.readBitSet(normalPath + "/" + BitSetUtils.PATH_CAT, t.getTid() + "");
+		List<MProgram> returnList = new ArrayList<MProgram>();
+		for (MProgram t : list) {
+			BitSet bs = BitSetUtils.readBitSet(normalPath + "/" + BitSetUtils.PATH_PROMO + "/" + DateUtils.today(), t.getGid() + "");
+
 			bs.and(storeBs);
 			if (bs != null && bs.cardinality() != 0) {
 				t.setN(bs.cardinality());

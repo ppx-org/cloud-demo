@@ -1,4 +1,4 @@
-package com.ppx.cloud.search.show.theme;
+package com.ppx.cloud.search.show.promo;
 
 import java.util.List;
 import java.util.Map;
@@ -12,16 +12,16 @@ import com.ppx.cloud.common.controller.ControllerReturn;
 
 
 @Controller	
-public class MThemeController {
+public class MProgramController {
 	
 	@Autowired
-	private MThemedService serv;
+	private MProgramService serv;
 
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> listTheme() {
+	public Map<String, Object> listProgram() {
 		
-		List<MTheme> list = serv.listTheme();
+		List<MProgram> list = serv.listProgram();
 		
 		return ControllerReturn.ok(list);
 	}

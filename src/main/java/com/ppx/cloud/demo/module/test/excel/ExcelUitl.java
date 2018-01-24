@@ -7,8 +7,9 @@ import java.util.Map;
 
 import jxl.Workbook;
 import jxl.WorkbookSettings;
+import jxl.format.UnderlineStyle;
+import jxl.write.Alignment;
 import jxl.write.Label;
-import jxl.write.NumberFormat;
 import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
@@ -87,7 +88,11 @@ public class ExcelUitl {
 		 WritableFont wFont = new WritableFont(   
 		            WritableFont.TIMES, 32, WritableFont.BOLD, true);  
 		// new WritableCellFormat(new NumberFormat("￥0.00"))
-		jxl.write.WritableCellFormat titleFmt = new jxl.write.WritableCellFormat(wFont);
+		 WritableFont font = new WritableFont(WritableFont.createFont("雅黑"), 20, WritableFont.BOLD, false, UnderlineStyle.NO_UNDERLINE);  
+			jxl.write.WritableCellFormat titleFmt = new jxl.write.WritableCellFormat();
+			titleFmt.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THICK,jxl.format.Colour.AQUA);
+			titleFmt.setAlignment(Alignment.CENTRE);
+			titleFmt.setFont(font);
 		
 		
 		
