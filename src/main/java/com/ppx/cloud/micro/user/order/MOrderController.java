@@ -27,6 +27,19 @@ public class MOrderController {
 	@Autowired
 	private PriceCommonService priceServ;
 	
+	
+	private List<SkuIndex> countPrice(ConfirmOrderPara para) {
+		Map<Integer, SkuIndex> skuIndexMap = new HashMap<Integer, SkuIndex>();
+		
+		for (int i = 0; i < para.getSkuId().length; i++) {
+			SkuIndex skuIndex = new SkuIndex(para.getSkuId()[i], para.getNum()[i]);
+			skuIndexMap.put(para.getSkuId()[i], skuIndex);
+		}
+		
+		Map<Integer, List<SkuIndex>> returnMap = priceServ.countPrice(skuIndexMap);
+		return returnMap.get(1);
+	}
+	
 	@PostMapping @ResponseBody
 	public Map<String, Object> confirmOrder(@RequestBody ConfirmOrderPara para) {
 		if (para.getSkuId() == null || para.getNum() == null) {
@@ -36,19 +49,11 @@ public class MOrderController {
 			return ControllerReturn.fail(1001, "no equal length");
 		}
 		
-		Map<Integer, SkuIndex> skuIndexMap = new HashMap<Integer, SkuIndex>();
-		
-		for (int i = 0; i < para.getSkuId().length; i++) {
-			SkuIndex skuIndex = new SkuIndex(para.getSkuId()[i], para.getNum()[i]);
-			skuIndexMap.put(para.getSkuId()[i], skuIndex);
-		}
-		
-		Map<Integer, List<SkuIndex>> returnMap = priceServ.countPrice(skuIndexMap);
+		List<SkuIndex> skuList = countPrice(para);
 		
 		// stat
 		int totalNum = 0;
 		float totalPrice = 0f;
-		List<SkuIndex> skuList = returnMap.get(1);
 		for (SkuIndex skuIndex : skuList) {
 			totalNum += skuIndex.getNum();
 			totalPrice += skuIndex.getItemPrice();
@@ -60,6 +65,18 @@ public class MOrderController {
 
 		return ControllerReturn.ok(statMap, skuList);
 	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> submitOrder(@RequestBody ConfirmOrderPara para) {
+		// TODO 防多次提交
+		
+		int r = serv.submitOrder(para);
+		
+		
+		return ControllerReturn.ok(r);
+	}
+	
+	
 
 	@PostMapping @ResponseBody
 	public Map<String, Object> listMyOrder(@RequestBody MPage page) {

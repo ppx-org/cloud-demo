@@ -1,6 +1,7 @@
 package com.ppx.cloud.micro.user.order;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,8 @@ import java.util.Map;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.micro.common.MGrantContext;
@@ -15,7 +18,6 @@ import com.ppx.cloud.storecommon.order.bean.OrderItem;
 import com.ppx.cloud.storecommon.order.bean.UserOrder;
 import com.ppx.cloud.storecommon.page.MPage;
 import com.ppx.cloud.storecommon.page.MPageList;
-import com.ppx.cloud.storecommon.query.bean.MQueryProduct;
 
 
 @Service
@@ -59,6 +61,36 @@ public class MOrderService extends MyDaoSupport {
 	
 	
 	
+	@Transactional
+	public int submitOrder(@RequestBody ConfirmOrderPara para) {
+		String openid = MGrantContext.getWxUser().getOpenid();
+		int storeId = MGrantContext.getWxUser().getStoreId();
+		
+		
+		
+		
+		
+		
+		float orderPrice = 0;
+		// user_order
+		UserOrder order = new UserOrder();
+		order.setOpenid(openid);
+		order.setStoreId(storeId);
+		order.setOrderTime(new Date());
+		order.setOrderStatus(0);
+		order.setOrderPrice(orderPrice);
+		order.setPayPrice(orderPrice);
+		
+		
+		
+		
+		
+		
+		super.insert(order);
+		
+		
+		return 1;
+	}
 	
 	
 	
