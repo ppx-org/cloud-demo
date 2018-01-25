@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
-import com.ppx.cloud.storecommon.page.MQueryPage;
+import com.ppx.cloud.storecommon.page.MPage;
 import com.ppx.cloud.storecommon.query.bean.MQueryProduct;
 
 
@@ -24,7 +24,7 @@ public class MHomeController {
 	public Map<String, Object> listJson() {
 		List<String> swiperList = serv.listSwiper();
 		List<MLevel> levelList = serv.listLevel();
-		MQueryPage page = new MQueryPage();
+		MPage page = new MPage();
 		List<MQueryProduct> prodList = serv.listLevelProd(page);
 		
 		Map<String, Object> returnMap = ControllerReturn.ok();
@@ -39,7 +39,7 @@ public class MHomeController {
 	
 	// 需求单独出来，下拉更多接口
 	@PostMapping @ResponseBody
-	public Map<String, Object> listLevelProd(MQueryPage page) {
+	public Map<String, Object> listLevelProd(MPage page) {
 		List<MQueryProduct> list = serv.listLevelProd(page);
 		return ControllerReturn.ok(list);
 	}

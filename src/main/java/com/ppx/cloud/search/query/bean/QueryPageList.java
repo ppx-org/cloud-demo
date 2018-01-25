@@ -2,7 +2,7 @@ package com.ppx.cloud.search.query.bean;
 
 import java.util.List;
 
-import com.ppx.cloud.storecommon.page.MQueryPage;
+import com.ppx.cloud.storecommon.page.MPage;
 import com.ppx.cloud.storecommon.query.bean.MQueryProduct;
 
 
@@ -20,13 +20,13 @@ public class QueryPageList {
 	
 	private Integer fastN = 0;
 	
-	private MQueryPage queryPage = new MQueryPage();
+	private MPage queryPage = new MPage();
 	
 	public QueryPageList() {
 		
 	}
 	
-	public QueryPageList(MQueryPage queryPage, List<MQueryProduct> prodList, List<QueryCategory> catList,
+	public QueryPageList(MPage queryPage, List<MQueryProduct> prodList, List<QueryCategory> catList,
 			List<QueryBrand> brandList, List<QueryTheme> themeList, List<QueryPromo> promoList, Integer fastN) {
 		this.queryPage = queryPage;
 		this.prodList = prodList;
@@ -38,7 +38,7 @@ public class QueryPageList {
 	}
 	
 	
-	public QueryPageList(MQueryPage queryPage, List<MQueryProduct> prodList) {
+	public QueryPageList(MPage queryPage, List<MQueryProduct> prodList) {
 		this.queryPage = queryPage;
 		this.prodList = prodList;
 	}
@@ -61,11 +61,11 @@ public class QueryPageList {
 		this.catList = catList;
 	}
 
-	public MQueryPage getQueryPage() {
+	public MPage getQueryPage() {
 		return queryPage;
 	}
 
-	public void setQueryPage(MQueryPage queryPage) {
+	public void setQueryPage(MPage queryPage) {
 		this.queryPage = queryPage;
 	}
 
