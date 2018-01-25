@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+
+
+
+
+
+
+<script>
+
+
+
+function validate() {
+	var url = "http://localhost:9000/demo/chrome/click?points=" + point.join(";");
+	
+	$("#validate").attr("disabled", true);
+	$("#validate").text("验证中...");
+	
+	$.post(url, null, function(r) {
+		if (r.result == 1) {
+			alert("通过:" + r.cookie);
+		}
+		else {
+			alert("失败");
+		}
+	});
+}
+
+var lastImgLeft = 0;
+var times = 0;
+var point = [];
+function onImg() {
+	var imgTop = $("#validateImg").position().top;
+	var imgLeft = $("#validateImg").position().left;
+	
+	if (event.y <= 70 + imgTop || times >= 4) return;
+	
+	times++;
+	var x = event.x;
+	var y = event.y;
+	$("body").append('<b class="captcha-coordinate" style="left:' + (x - 10) + 'px; top:' + (y - 10) + 'px;">' + times + '</b>');
+	point.push((x - imgLeft) + "," + (y - imgTop));
+	
+	if (times == 4) {
+		$("#validate").attr("disabled", false);
+		$("#validate").addClass("btn-success");
+	}
+}
+
+$(function() {
+	lastImgLeft = $("#validateImg").position().left;
+	
+	var t = new Date().getTime();
+	var background = "url(http://localhost:9000/demo/static/test/clip01.png?" + t + ") no-repeat";
+	$("#validateImg").css("background", background);
+	$("#validateImg").css("background-position", "-1115px -310px"); // 有头
+});
+
+$(window).resize(function() {
+	var moveLeft = ($("#validateImg").position().left - lastImgLeft);
+	$(".captcha-coordinate").each(function(){
+		var left = $(this).position().left;
+		$(this).css("left", left + moveLeft);
+	});
+	lastImgLeft = $("#validateImg").position().left;
+});
+</script>
+
+<style>
+.captcha-coordinate {
+	position: absolute;width: 20px;height: 24px;line-height: 20px;
+	background: url(http://localhost:9000/demo/static/test/coordinate.png) 0 0 no-repeat;
+	color: #fff;
+	font-weight: 700;
+    text-align: center;
+    z-index: 2;
+    cursor: pointer;
+    font-size: 18px
+}
+
+#validateImg {
+	display:inline-block;
+	margin:0 auto;
+	width:270px;
+	height:220px;
+	border:1px solid black;
+}
+</style>
+
+
+</head>
+<body>
+
+
+<div style="text-align: center;">
+	<div id="validateImg" onmousedown="onImg()"></div>
+</div>
+<div style="text-align: center;"><button class="btn" id="validate" onclick="validate()" disabled="disabled" style="width:120px">验证</button></div>
+
+</body>
+
+</html>

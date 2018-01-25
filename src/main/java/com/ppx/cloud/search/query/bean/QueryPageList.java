@@ -2,13 +2,13 @@ package com.ppx.cloud.search.query.bean;
 
 import java.util.List;
 
-import com.ppx.cloud.storecommon.page.QueryPage;
-import com.ppx.cloud.storecommon.query.bean.QueryProduct;
+import com.ppx.cloud.storecommon.page.MQueryPage;
+import com.ppx.cloud.storecommon.query.bean.MQueryProduct;
 
 
 public class QueryPageList {
 
-	private List<QueryProduct> prodList;
+	private List<MQueryProduct> prodList;
 	
 	private List<QueryCategory> catList;
 	
@@ -20,13 +20,13 @@ public class QueryPageList {
 	
 	private Integer fastN = 0;
 	
-	private QueryPage queryPage = new QueryPage();
+	private MQueryPage queryPage = new MQueryPage();
 	
 	public QueryPageList() {
 		
 	}
 	
-	public QueryPageList(QueryPage queryPage, List<QueryProduct> prodList, List<QueryCategory> catList,
+	public QueryPageList(MQueryPage queryPage, List<MQueryProduct> prodList, List<QueryCategory> catList,
 			List<QueryBrand> brandList, List<QueryTheme> themeList, List<QueryPromo> promoList, Integer fastN) {
 		this.queryPage = queryPage;
 		this.prodList = prodList;
@@ -38,18 +38,18 @@ public class QueryPageList {
 	}
 	
 	
-	public QueryPageList(QueryPage queryPage, List<QueryProduct> prodList) {
+	public QueryPageList(MQueryPage queryPage, List<MQueryProduct> prodList) {
 		this.queryPage = queryPage;
 		this.prodList = prodList;
 	}
 	
 	
 
-	public List<QueryProduct> getProdList() {
+	public List<MQueryProduct> getProdList() {
 		return prodList;
 	}
 
-	public void setProdList(List<QueryProduct> prodList) {
+	public void setProdList(List<MQueryProduct> prodList) {
 		this.prodList = prodList;
 	}
 
@@ -61,11 +61,11 @@ public class QueryPageList {
 		this.catList = catList;
 	}
 
-	public QueryPage getQueryPage() {
+	public MQueryPage getQueryPage() {
 		return queryPage;
 	}
 
-	public void setQueryPage(QueryPage queryPage) {
+	public void setQueryPage(MQueryPage queryPage) {
 		this.queryPage = queryPage;
 	}
 

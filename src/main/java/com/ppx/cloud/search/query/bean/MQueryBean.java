@@ -1,10 +1,10 @@
 package com.ppx.cloud.search.query.bean;
 
-import com.ppx.cloud.storecommon.page.QueryPage;
+import com.ppx.cloud.storecommon.page.MQueryPage;
 
 public class MQueryBean {
 	
-	private QueryPage p = new QueryPage();
+	private MQueryPage p = new MQueryPage();
 	
 	private String w;
 	
@@ -20,11 +20,11 @@ public class MQueryBean {
 	
 	private Integer o;
 
-	public QueryPage getP() {
+	public MQueryPage getP() {
 		return p;
 	}
 
-	public void setP(QueryPage p) {
+	public void setP(MQueryPage p) {
 		this.p = p;
 	}
 

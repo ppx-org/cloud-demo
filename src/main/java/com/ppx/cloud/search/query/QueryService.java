@@ -21,8 +21,8 @@ import com.ppx.cloud.search.query.bean.QueryPromo;
 import com.ppx.cloud.search.query.bean.QueryTheme;
 import com.ppx.cloud.search.util.BitSetUtils;
 import com.ppx.cloud.search.util.WordUtils;
-import com.ppx.cloud.storecommon.page.QueryPage;
-import com.ppx.cloud.storecommon.query.bean.QueryProduct;
+import com.ppx.cloud.storecommon.page.MQueryPage;
+import com.ppx.cloud.storecommon.query.bean.MQueryProduct;
 import com.ppx.cloud.storecommon.query.service.QueryCommonService;
 
 
@@ -47,7 +47,7 @@ public class QueryService extends MyDaoSupport {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public QueryPageList query(Integer sId, String w, QueryPage p, String date, Integer cId, Integer bId, Integer tId, Integer gId, Integer fast
+	public QueryPageList query(Integer sId, String w, MQueryPage p, String date, Integer cId, Integer bId, Integer tId, Integer gId, Integer fast
 			, String orderType) {
 		
 		Map<String, Object> findMap = findProdId(sId, w, p, date, cId, bId, tId, gId, fast, orderType);
@@ -62,7 +62,7 @@ public class QueryService extends MyDaoSupport {
 			List<Integer> newProdIdList = changeProdId((List<Integer>)findMap.get("prodIdList"), orderType);
 			findMap.put("prodIdList", newProdIdList);
 			
-			List<QueryProduct> prodList = commonServ.listProduct(newProdIdList, sId);
+			List<MQueryProduct> prodList = commonServ.listProduct(newProdIdList, sId);
 			
 			// cat
 			List<QueryCategory> catInitList = (List<QueryCategory>)findMap.get("catList");
@@ -85,7 +85,7 @@ public class QueryService extends MyDaoSupport {
 		}
 	}
 	
-	private Map<String, Object> findProdId(Integer sId, String w, QueryPage p, String date, 
+	private Map<String, Object> findProdId(Integer sId, String w, MQueryPage p, String date, 
 			Integer cId, Integer bId, Integer tId, Integer gId, Integer fast, String orderType) {
 		
 		Map<String, Object> returnMap = new HashMap<String, Object>();

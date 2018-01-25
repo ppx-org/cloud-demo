@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.micro.common.MGrantContext;
-import com.ppx.cloud.storecommon.page.QueryPage;
-import com.ppx.cloud.storecommon.query.bean.QueryProduct;
+import com.ppx.cloud.storecommon.page.MQueryPage;
+import com.ppx.cloud.storecommon.query.bean.MQueryProduct;
 import com.ppx.cloud.storecommon.query.service.QueryCommonService;
 
 
@@ -42,14 +42,14 @@ public class MHomeService extends MyDaoSupport {
 	
 	
 	
-	public List<QueryProduct> listLevelProd(QueryPage page) {
+	public List<MQueryProduct> listLevelProd(MQueryPage page) {
 		Integer storeId = MGrantContext.getWxUser().getStoreId();
 		StringBuilder sb = new StringBuilder("select p.PROD_ID PID from home_level_product p join home_level l on p.LEVEL_ID = l.LEVEL_ID and l.STORE_ID = ? " + 
 			"order by l.LEVEL_PRIO, p.PROD_PRIO");
 		
 		List<Integer> prodIdList = mQueryPage(Integer.class, page, sb, storeId);
 		
-		List<QueryProduct> prodList = commonServ.listProduct(prodIdList, storeId);
+		List<MQueryProduct> prodList = commonServ.listProduct(prodIdList, storeId);
 		
 		
 		return prodList;

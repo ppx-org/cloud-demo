@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.micro.common.MGrantContext;
-import com.ppx.cloud.storecommon.query.bean.QueryProduct;
+import com.ppx.cloud.storecommon.query.bean.MQueryProduct;
 import com.ppx.cloud.storecommon.query.service.QueryCommonService;
 
 
@@ -32,7 +32,7 @@ public class MFavoriteService extends MyDaoSupport {
 	
 	
 	
-	public List<QueryProduct> listProduct() {
+	public List<MQueryProduct> listProduct() {
 		
 		
 		String openid = MGrantContext.getWxUser().getOpenid();
@@ -41,7 +41,7 @@ public class MFavoriteService extends MyDaoSupport {
 		String sql = "select PROD_ID from user_favorite where OPENID = ? and STORE_ID = ? order by CREATED desc";
 		List<Integer> prodIdList = getJdbcTemplate().queryForList(sql, Integer.class, openid, storeId);
 		
-		List<QueryProduct> list = queryServ.listProduct(prodIdList, storeId);
+		List<MQueryProduct> list = queryServ.listProduct(prodIdList, storeId);
 		
 		
 		return list;

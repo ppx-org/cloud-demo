@@ -18,7 +18,7 @@ import com.ppx.cloud.micro.common.MGrantContext;
 import com.ppx.cloud.search.query.bean.MQueryBean;
 import com.ppx.cloud.search.query.bean.QueryPageList;
 import com.ppx.cloud.search.util.BitSetUtils;
-import com.ppx.cloud.storecommon.page.QueryPage;
+import com.ppx.cloud.storecommon.page.MQueryPage;
 
 
 @Controller	
@@ -46,7 +46,7 @@ public class MQueryController {
 	// pc端接口
 	@RequestMapping @ResponseBody
 	public Map<String, Object> testQuery(@RequestParam(required=true) Integer sId, Integer d,
-			String w, QueryPage p, Integer cId, Integer bId, Integer tId,
+			String w, MQueryPage p, Integer cId, Integer bId, Integer tId,
 			Integer gId, Integer fast, Integer o) {
 		
 		
