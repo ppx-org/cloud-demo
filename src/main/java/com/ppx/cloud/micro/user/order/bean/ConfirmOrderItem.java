@@ -1,4 +1,4 @@
-package com.ppx.cloud.micro.user.order;
+package com.ppx.cloud.micro.user.order.bean;
 
 import java.util.List;
 

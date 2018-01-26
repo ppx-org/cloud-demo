@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
+import com.ppx.cloud.micro.user.order.bean.ConfirmOrderItem;
+import com.ppx.cloud.micro.user.order.bean.ConfirmOrderPara;
+import com.ppx.cloud.micro.user.order.bean.ConfirmReturn;
 import com.ppx.cloud.storecommon.order.bean.UserOrder;
 import com.ppx.cloud.storecommon.page.MPage;
 import com.ppx.cloud.storecommon.page.MPageList;
@@ -81,10 +84,14 @@ public class MOrderController {
 		ConfirmOrderItem comfirmOrderItem = countPrice(para);
 		
 		
-		int r = serv.submitOrder(comfirmOrderItem, para);
+		ConfirmReturn confirmReturn = serv.submitOrder(comfirmOrderItem, para);
+		
+		Map<String, Object> returnMap = ControllerReturn.ok();
+		returnMap.put("result", confirmReturn.getResult());
+		returnMap.put("overflowList", confirmReturn.getOverflowList());
 		
 		
-		return ControllerReturn.ok(r);
+		return returnMap;
 	}
 	
 	

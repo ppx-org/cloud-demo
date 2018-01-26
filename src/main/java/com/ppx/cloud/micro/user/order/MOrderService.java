@@ -13,6 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.micro.common.MGrantContext;
+import com.ppx.cloud.micro.user.order.bean.ConfirmOrderItem;
+import com.ppx.cloud.micro.user.order.bean.ConfirmOrderPara;
+import com.ppx.cloud.micro.user.order.bean.ConfirmReturn;
+import com.ppx.cloud.micro.user.order.bean.OverflowSku;
 import com.ppx.cloud.storecommon.order.bean.OrderItem;
 import com.ppx.cloud.storecommon.order.bean.UserOrder;
 import com.ppx.cloud.storecommon.page.MPage;
@@ -62,7 +66,9 @@ public class MOrderService extends MyDaoSupport {
 	
 	
 	@Transactional
-	public int submitOrder(ConfirmOrderItem comfirmOrderItem, ConfirmOrderPara para) {
+	public ConfirmReturn submitOrder(ConfirmOrderItem comfirmOrderItem, ConfirmOrderPara para) {
+		ConfirmReturn confirmReturn = new ConfirmReturn();
+		
 		String openid = MGrantContext.getWxUser().getOpenid();
 		int storeId = MGrantContext.getWxUser().getStoreId();
 		
@@ -85,8 +91,12 @@ public class MOrderService extends MyDaoSupport {
 			Integer id = (Integer)map.get("SKU_ID");
 			Integer n = (Integer)map.get("STOCK_NUM");
 			if (stockMap.get(id) > n) {
-				System.out.println(".............overflow:" + id + "||" + n + ".......to:" + stockMap.get(id));
+				confirmReturn.addOverflowSku(new OverflowSku(id, n));
 			}
+		}
+		if (confirmReturn.getOverflowList().size() > 0) {
+			confirmReturn.setResult(1);
+			return confirmReturn;
 		}
 		
 		// user_order
@@ -116,7 +126,7 @@ public class MOrderService extends MyDaoSupport {
 		}
 		
 		// minus stock
-		String stockSql = "update sku where STOCK_NUM = STOCK_NUM - ? where SKU_ID = ?";
+		String stockSql = "update sku set STOCK_NUM = STOCK_NUM - ? where SKU_ID = ?";
 		int[] stockR = getJdbcTemplate().batchUpdate(stockSql, stockArgsList);
 		
 		
@@ -138,7 +148,7 @@ public class MOrderService extends MyDaoSupport {
 		
 		
 		
-		return 1;
+		return confirmReturn;
 	}
 	
 	
