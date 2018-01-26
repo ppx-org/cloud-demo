@@ -16,7 +16,8 @@
 
 
 function validate() {
-	var url = "http://localhost:9000/demo/chrome/click?points=" + point.join(";");
+	
+	var url = "http://localhost:9000/demo/liepin/click?points=" + point.join(";");
 	
 	$("#validate").attr("disabled", true);
 	$("#validate").text("验证中...");
@@ -38,7 +39,7 @@ function onImg() {
 	var imgTop = $("#validateImg").position().top;
 	var imgLeft = $("#validateImg").position().left;
 	
-	if (event.y <= 70 + imgTop || times >= 4) return;
+	if (event.y <= 55 + imgTop || times >= 4) return;
 	
 	times++;
 	var x = event.x;
