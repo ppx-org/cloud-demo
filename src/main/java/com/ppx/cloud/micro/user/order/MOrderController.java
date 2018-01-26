@@ -28,7 +28,7 @@ public class MOrderController {
 	private PriceCommonService priceServ;
 	
 	
-	private List<SkuIndex> countPrice(ConfirmOrderPara para) {
+	private ConfirmOrderItem countPrice(ConfirmOrderPara para) {
 		Map<Integer, SkuIndex> skuIndexMap = new HashMap<Integer, SkuIndex>();
 		
 		for (int i = 0; i < para.getSkuId().length; i++) {
@@ -37,7 +37,17 @@ public class MOrderController {
 		}
 		
 		Map<Integer, List<SkuIndex>> returnMap = priceServ.countPrice(skuIndexMap);
-		return returnMap.get(1);
+		// stat
+		List<SkuIndex> skuIndexList = returnMap.get(1);
+		
+		int totalNum = 0;
+		float totalPrice = 0f;
+		for (SkuIndex skuIndex : skuIndexList) {
+			totalNum += skuIndex.getNum();
+			totalPrice += skuIndex.getItemPrice();
+		}
+		
+		return new ConfirmOrderItem(skuIndexList, totalNum, totalPrice);
 	}
 	
 	@PostMapping @ResponseBody
@@ -49,28 +59,29 @@ public class MOrderController {
 			return ControllerReturn.fail(1001, "no equal length");
 		}
 		
-		List<SkuIndex> skuList = countPrice(para);
-		
-		// stat
-		int totalNum = 0;
-		float totalPrice = 0f;
-		for (SkuIndex skuIndex : skuList) {
-			totalNum += skuIndex.getNum();
-			totalPrice += skuIndex.getItemPrice();
-		}
+		ConfirmOrderItem comfirmOrderItem = countPrice(para);
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("totalNum", comfirmOrderItem.getTotalNum());
+		returnMap.put("totalPrice", comfirmOrderItem.getTotalPrice());
 
-		Map<String, Object> statMap = new HashMap<String, Object>();
-		statMap.put("totalNum", totalNum);
-		statMap.put("totalPrice", totalPrice);
-
-		return ControllerReturn.ok(statMap, skuList);
+		return returnMap;
 	}
 	
 	@PostMapping @ResponseBody
 	public Map<String, Object> submitOrder(@RequestBody ConfirmOrderPara para) {
 		// TODO 防多次提交
 		
-		int r = serv.submitOrder(para);
+		if (para.getSkuId() == null || para.getNum() == null) {
+			return ControllerReturn.fail(1000, "is null");
+		}
+		else if (para.getSkuId().length != para.getNum().length) {
+			return ControllerReturn.fail(1001, "no equal length");
+		}
+		
+		ConfirmOrderItem comfirmOrderItem = countPrice(para);
+		
+		
+		int r = serv.submitOrder(comfirmOrderItem, para);
 		
 		
 		return ControllerReturn.ok(r);

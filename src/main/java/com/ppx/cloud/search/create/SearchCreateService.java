@@ -240,14 +240,7 @@ public class SearchCreateService extends MyDaoSupport {
 			Object[] arg = {prodId, i + 1, words};
 			argsList.add(arg);
 		}
-		
-//		for (Map<String, Object> map : prodList) {
-//			int prodId = (Integer)map.get("PROD_ID");
-//			String prodTitle = (String)map.get("PROD_TITLE");			
-//			String words = WordUtils.splitWord(prodTitle);
-//			Object[] arg = {prodId, words};
-//			argsList.add(arg);
-//		}
+
 		
 		int r[] = getJdbcTemplate().batchUpdate(insertSql, argsList);
 		

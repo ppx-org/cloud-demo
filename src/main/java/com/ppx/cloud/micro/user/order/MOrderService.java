@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.micro.common.MGrantContext;
@@ -18,6 +17,7 @@ import com.ppx.cloud.storecommon.order.bean.OrderItem;
 import com.ppx.cloud.storecommon.order.bean.UserOrder;
 import com.ppx.cloud.storecommon.page.MPage;
 import com.ppx.cloud.storecommon.page.MPageList;
+import com.ppx.cloud.storecommon.price.bean.SkuIndex;
 
 
 @Service
@@ -62,31 +62,80 @@ public class MOrderService extends MyDaoSupport {
 	
 	
 	@Transactional
-	public int submitOrder(@RequestBody ConfirmOrderPara para) {
+	public int submitOrder(ConfirmOrderItem comfirmOrderItem, ConfirmOrderPara para) {
 		String openid = MGrantContext.getWxUser().getOpenid();
 		int storeId = MGrantContext.getWxUser().getStoreId();
 		
+		Map<Integer, Integer> stockMap = new HashMap<Integer, Integer>();
+		Integer[] skuId = para.getSkuId();
+		Integer[] num = para.getNum();
+		for (int i = 0; i < skuId.length; i++) {
+			stockMap.put(skuId[i], num[i]);
+		}
 		
 		
 		
+		// lock >>>>>>>>>>>>>>>>>>>
+		NamedParameterJdbcTemplate jdbc = new NamedParameterJdbcTemplate(getJdbcTemplate());
+		Map<String, Object> lockPara = new HashMap<String, Object>();
+		lockPara.put("skuIdArray", stockMap.keySet());
+		String lockSql = "select SKU_ID, STOCK_NUM from sku where SKU_ID in (:skuIdArray) for update";
+		List<Map<String, Object>> stockList = jdbc.queryForList(lockSql, lockPara);
+		for (Map<String, Object> map : stockList) {
+			Integer id = (Integer)map.get("SKU_ID");
+			Integer n = (Integer)map.get("STOCK_NUM");
+			if (stockMap.get(id) > n) {
+				System.out.println(".............overflow:" + id + "||" + n + ".......to:" + stockMap.get(id));
+			}
+		}
 		
-		
-		float orderPrice = 0;
 		// user_order
 		UserOrder order = new UserOrder();
 		order.setOpenid(openid);
 		order.setStoreId(storeId);
 		order.setOrderTime(new Date());
 		order.setOrderStatus(0);
-		order.setOrderPrice(orderPrice);
-		order.setPayPrice(orderPrice);
-		
-		
-		
-		
-		
+		order.setOrderPrice(comfirmOrderItem.getTotalPrice());
+		order.setPayPrice(comfirmOrderItem.getTotalPrice());
 		
 		super.insert(order);
+		int orderId = super.getLastInsertId();
+		
+		//  order_item
+		List<SkuIndex> skuIndexList = comfirmOrderItem.getSkuIndexList();
+		
+		List<Object[]> itemArgsList = new ArrayList<Object[]>();
+		List<Object[]> stockArgsList = new ArrayList<Object[]>();
+		for (SkuIndex s : skuIndexList) {
+			Object[] itemArg = {orderId, s.getSkuId(), s.getProdId(), s.getPrice(), s.getItemPrice(),
+					s.getNum(), s.getProdTitle(), s.getSkuName(), s.getSkuImgSrc(), s.getPolicy()};
+			itemArgsList.add(itemArg);
+			
+			Object[] stockArg = {s.getNum(), s.getSkuId()};
+			stockArgsList.add(stockArg);
+		}
+		
+		// minus stock
+		String stockSql = "update sku where STOCK_NUM = STOCK_NUM - ? where SKU_ID = ?";
+		int[] stockR = getJdbcTemplate().batchUpdate(stockSql, stockArgsList);
+		
+		
+		//  order item
+		List<Object[]> argsList = new ArrayList<Object[]>();
+		for (SkuIndex s : skuIndexList) {
+			Object[] arg = {orderId, s.getSkuId(), s.getProdId(), s.getPrice(), s.getItemPrice(),
+					s.getNum(), s.getProdTitle(), s.getSkuName(), s.getSkuImgSrc(), s.getPolicy()};
+			argsList.add(arg);
+		}
+		
+
+		String insertItemSql = "insert into order_item(ORDER_ID, SKU_ID, PROD_ID, ITEM_UNIT_PRICE, ITEM_PRICE, "
+				+ "ITEM_NUM, ITEM_TITLE, ITEM_SKU, ITEM_IMG, ITEM_PROMO) values(?,?,?,?,?,"
+				+ "?,?,?,?,?)";
+		
+		int itemR[] = getJdbcTemplate().batchUpdate(insertItemSql, argsList);
+		
+		
 		
 		
 		return 1;
