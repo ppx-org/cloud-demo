@@ -1,4 +1,4 @@
-package com.ppx.cloud.store.release.prod;
+package com.ppx.cloud.store.product.release;
 
 import com.ppx.cloud.common.jdbc.annotation.Id;
 

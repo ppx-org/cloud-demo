@@ -1,4 +1,4 @@
-package com.ppx.cloud.store.release.prod;
+package com.ppx.cloud.store.product.release;
 
 import java.util.ArrayList;
 import java.util.List;
