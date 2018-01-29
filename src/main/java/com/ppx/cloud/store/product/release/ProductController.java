@@ -1,7 +1,5 @@
 package com.ppx.cloud.store.product.release;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +14,6 @@ import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
 import com.ppx.cloud.store.common.dictionary.Dict;
-import com.ppx.cloud.store.common.dictionary.DictBean;
-import com.ppx.cloud.store.merchant.category.Category;
 import com.ppx.cloud.store.merchant.category.CategoryService;
 import com.ppx.cloud.store.merchant.repo.RepositoryService;
 
@@ -63,7 +59,8 @@ public class ProductController {
 	}
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> insertProduct(Product bean, @RequestParam Integer[] stockNum, @RequestParam Float[] price,
+	public Map<String, Object> insertProduct(Product bean, ProductDetail detail, @RequestParam String[] prodImgSrc,
+			@RequestParam Integer[] stockNum, @RequestParam Float[] price,
 			String[] skuName, String[] skuImgSrc) {
 		System.out.println("..........getRepoId:" + bean.getRepoId());
 		System.out.println("..........getCatId:" + bean.getCatId());

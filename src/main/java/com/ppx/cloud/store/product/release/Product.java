@@ -13,6 +13,8 @@ public class Product {
 	
 	private String prodTitle;
 	
+	private String skuDesc;
+	
 	private Integer prodStatus;
 	
 	public Integer getProdId() {
@@ -67,7 +69,16 @@ public class Product {
 		this.prodStatus = prodStatus;
 	}
 
+	public String getSkuDesc() {
+		return skuDesc;
+	}
 
+	public void setSkuDesc(String skuDesc) {
+		this.skuDesc = skuDesc;
+	}
+
+	
+	
 }
 	
 	

@@ -29,6 +29,8 @@ public class ProductService extends MyDaoSupport {
 	}
 	
 	public int insertProduct(Product bean) {
+		
+		
 		return insert(bean);
 	}
 	
@@ -63,10 +65,15 @@ public class ProductService extends MyDaoSupport {
 	
 	
 	
-	
+	// action >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	/*
+	 * onShelves和offSheles都需要判断相关活动是否停止，因为需要生成价格索引和搜索索引
+	 */
 	
 	// action 
 	public int onShelves(Integer prodId) {
+		
+		
 		String sql = "update product set PROD_STATUS = ? where PROD_ID = ?";
 		getJdbcTemplate().update(sql, 2, prodId);
 		return 2;
