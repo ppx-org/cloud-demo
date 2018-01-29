@@ -1,11 +1,9 @@
 package com.ppx.cloud.store.release.prod;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
@@ -21,7 +19,7 @@ public class ProductService extends MyDaoSupport {
 		
 		MyCriteria c = createCriteria("where")
 			.addAnd("PROD_TITLE like ?", "%", bean.getProdTitle(), "%")
-			.addAnd("RECORD_STATUS = ?", bean.getRecordStatus());
+			.addAnd("PROD_STATUS = ?", bean.getProdStatus());
 		
 		StringBuilder cSql = new StringBuilder("select count(*) from product p").append(c);
 		StringBuilder qSql = new StringBuilder("select p.* from product p").append(c);
@@ -69,13 +67,13 @@ public class ProductService extends MyDaoSupport {
 	
 	// action 
 	public int onShelves(Integer prodId) {
-		String sql = "update product set RECORD_STATUS = ? where PROD_ID = ?";
+		String sql = "update product set PROD_STATUS = ? where PROD_ID = ?";
 		getJdbcTemplate().update(sql, 2, prodId);
 		return 2;
 	}
 	
 	public int offShelves(Integer prodId) {
-		String sql = "update product set RECORD_STATUS = ? where PROD_ID = ?";
+		String sql = "update product set PROD_STATUS = ? where PROD_ID = ?";
 		getJdbcTemplate().update(sql, 3, prodId);
 		return 3;
 	}

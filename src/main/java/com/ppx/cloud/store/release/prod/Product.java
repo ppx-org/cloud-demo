@@ -13,7 +13,7 @@ public class Product {
 	
 	private String prodTitle;
 	
-	private Integer recordStatus;
+	private Integer prodStatus;
 	
 	public Integer getProdId() {
 		return prodId;
@@ -54,19 +54,22 @@ public class Product {
 	public void setProdTitle(String prodTitle) {
 		this.prodTitle = prodTitle;
 	}
-
-	public Integer getRecordStatus() {
-		return recordStatus;
-	}
 	
 	public String getRecordStatusDesc() {
-		return Dict.getProductStatusDesc(recordStatus);
+		return Dict.getProductStatusDesc(prodStatus);
 	}
 
-	public void setRecordStatus(Integer recordStatus) {
-		this.recordStatus = recordStatus;
+	public Integer getProdStatus() {
+		return prodStatus;
 	}
-	
-	
-	
+
+	public void setProdStatus(Integer prodStatus) {
+		this.prodStatus = prodStatus;
+	}
+
+
 }
+	
+	
+	
+
