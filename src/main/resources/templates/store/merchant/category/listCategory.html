@@ -162,9 +162,18 @@ move.down = function(catId) {
 
 
 function addImgChange() {
-	
+	// #addCatImg #addCatImgX #addCatImgY
 }
 </script>
+
+<style th:inline="text">
+
+.catImgUrl {background-image: url("[[#{imgUrl}]][[${merchantId}]]/show/cat.png?[[${random}]]");}
+.catImgList {background-size:250px 250px;width:50px;height:50px;margin:0 auto;}
+.catImg {width:100px;height:100px;margin:0 auto;}
+
+</style>
+
 </head>
 
 <body>
@@ -179,6 +188,7 @@ function addImgChange() {
 	<tr>
 		<th>ID</th>
 		<th>NAME</th>
+		<th>PNG</th>
 		<th>ACTION</th>
 	</tr>
 	
@@ -187,6 +197,7 @@ function addImgChange() {
 	<tr data-parent-id="{{v.parentId}}">
 		<td class="w-id">{{v.catId}}</td>
 		<td class="w-title-s" style="text-align:left">{{v.catName}}{{if v.children}}<a href="#" onclick="javascript:toggleMain(this, {{v.catId}})">[折叠]</a>{{/if}}</td>
+		<td></td>
 		<td class="w-action">
 			<a href="#" onclick="remove({{v.catId}})">[删除]</a>
 
@@ -203,6 +214,7 @@ function addImgChange() {
 	<tr data-parent-id="{{c.parentId}}">
 		<td class="w-id">{{c.catId}}</td>
 		<td class="w-title-s">{{c.catName}}</td>
+		<td class="w-id"><div class="catImgUrl catImgList" style="background-position: -{{c.catImgX * 50}}px -{{c.catImgY * 50}}px;"></div></td>
 		<td class="w-action">
 			<a href="#" onclick="remove({{c.catId}})">[删除]</a>
 			<a href="#" onclick="edit(this, {{c.catId}})" data-catName="{{c.catName}}">[修改]</a>
@@ -242,7 +254,7 @@ function addImgChange() {
 	</div>
 	
 	<div class="form-group">
-		<div style="width:100px;height:100px;background: url('http://localhost:9000/demo/static/test/cat.png') -100px -100px;" ></div>
+		<div class="catImgUrl catImg" id="addCatImg"></div>
 	</div>
 	
 </div>

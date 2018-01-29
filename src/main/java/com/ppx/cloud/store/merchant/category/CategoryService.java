@@ -31,7 +31,7 @@ public class CategoryService extends MyDaoSupport {
 	public List<Category> listCategory() {		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
-		String sql = "select CAT_ID, PARENT_ID, CAT_NAME from category where MERCHANT_ID = ? and RECORD_STATUS = ? order by CAT_PRIO"; 
+		String sql = "select CAT_ID, PARENT_ID, CAT_NAME, CAT_IMG_X, CAT_IMG_Y from category where MERCHANT_ID = ? and RECORD_STATUS = ? order by CAT_PRIO"; 
 		List<Category> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Category.class), merchantId, 1);	
 		
 		List<Category> returnList = new ArrayList<Category>();
