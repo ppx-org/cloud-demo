@@ -33,4 +33,11 @@ public class UploadService extends MyDaoSupport {
 		return list;
 	}
 	
+	public int updateImgUrl(String type, String url) {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		String sql = "update img set IMG_URL = ? where MERCHANT_ID = ? and IMG_TYPE = ?";
+		int r = getJdbcTemplate().update(sql, url, merchantId, type);
+		return 1;
+	}
+	
 }
