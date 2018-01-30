@@ -2,6 +2,7 @@ package com.ppx.cloud.store.merchant.brand;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
+import com.ppx.cloud.grant.common.GrantContext;
+import com.ppx.cloud.store.common.dictionary.Dict;
 
 
 @Controller	
@@ -26,6 +29,13 @@ public class BrandController {
 		ModelAndView mv = new ModelAndView();
 		// 默认显示RECORD_STATUS=1
 		mv.addObject("listJson", listJson(1));
+		
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		mv.addObject("merchantId", merchantId);
+		mv.addObject("random", new Random().nextInt(100000));
+		mv.addObject("listImgX", Dict.listImgX());
+		mv.addObject("listImgY", Dict.listImgY());
+		
 		return mv;
 	}
 

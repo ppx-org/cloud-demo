@@ -41,7 +41,12 @@ function add() {
 	}
 }
 
-function edit(id) {
+function edit(id, x, y) {
+	$("#imgDiv").show();
+	$("#editThemeImgX option[value=" + x + "]").attr("selected", true);
+	$("#editThemeImgY option[value=" + y + "]").attr("selected", true);
+	editImgChange();
+	
 	showLoading();
 	$.post([[@{/theme/getTheme}]], "id=" + id, function(r) {
 		hideLoading();
@@ -113,7 +118,26 @@ move.down = function(id) {
 function themeProduct(themeId) {
 	open(contextPath + 'theme/themeProduct?themeId=' + themeId);
 }
+
+
+function addImgChange() {
+	var x = new Number($("#addThemeImgX").val());
+	var y = new Number($("#addThemeImgY").val());
+	$("#addCatImg").css("background-position", "-" + 100*x + "px -" + 100*y +"px")
+}
+
+function editImgChange() {
+	var x = new Number($("#editThemeImgX").val());
+	var y = new Number($("#editThemeImgY").val());
+	$("#editThemesImg").css("background-position", "-" + 100*x + "px -" + 100*y +"px")
+}
+
 </script>
+<style th:inline="text">
+.catImgUrl {background-image: url("[[#{imgUrl}]][[${merchantId}]]/show/theme.png?[[${random}]]");}
+.catImgList {background-size:250px 250px;width:50px;height:50px;margin:0 auto;}
+.catImg {width:100px;height:100px;margin:0 auto;}
+</style>
 </head>
 
 <body>
@@ -130,6 +154,7 @@ function themeProduct(themeId) {
 		<th>ID</th>
 		<th>NAME</th>
 		<th>SORT</th>
+		<th>png</th>
 		<th>status</th>
 		<th>操作</th>
 	</tr>
@@ -138,6 +163,7 @@ function themeProduct(themeId) {
 	<tr>
 		<td class="w-id">{{v.themeId}}</td>
 		<td class="w-title-s">{{v.themeName}}</td>
+		<td class="w-id"><div class="catImgUrl catImgList" style="background-position: -{{v.themeImgX * 50}}px -{{c.themeImgY * 50}}px;"></div></td>
 		<td class="w-id">{{v.recordStatus}}</td>
 		<td class="w-action">
 			{{if arrayList.length != 1 && i !== 0}}
@@ -178,6 +204,28 @@ function themeProduct(themeId) {
 	<div class="form-group">
 		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
 		<div class="col-sm-7"><input type="text" name="themeName" value="{{theme.themeName}}" class="form-control validate[required]" maxlength="32"></div>
+	</div>
+
+	<div id="imgDiv">
+	<div class="form-group">
+		<label class="col-sm-4 control-label"><span class="required">*</span>theme_X：</label>
+		<div class="col-sm-6">
+			<select class="form-control" id="editThemeImgX" name="themeImgX" onchange="editImgChange()">
+				<option th:each="item:${listImgX}" th:value="${item.value}" th:text="${item.name}"></option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-4 control-label"><span class="required">*</span>theme_Y：</label>
+		<div class="col-sm-6">
+			<select class="form-control" id="editThemeImgY" name="themeImgY" onchange="editImgChange()">
+				<option th:each="item:${listImgY}" th:value="${item.value}" th:text="${item.name}"></option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="catImgUrl catImg" id="editCatImg"></div>
+	</div>
 	</div>
 	</script>
 </div>

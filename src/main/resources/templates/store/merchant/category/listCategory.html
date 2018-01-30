@@ -96,7 +96,19 @@ function addChild(parentId) {
 	}
 }
 
-function edit(obj, catId) {	
+function edit(obj, catId, x, y) {
+	if (x && y) {
+		$("#imgDiv").show();
+		$("#editCatImgX option[value=" + x + "]").attr("selected", true);
+		$("#editCatImgY option[value=" + y + "]").attr("selected", true);
+		editImgChange();
+	}
+	else {
+		$("#imgDiv").hide();
+		$("#editCatImgX option[value=0]").attr("selected", true);
+		$("#editCatImgY option[value=0]").attr("selected", true);
+	}
+	
 	$("#editCatId").val(catId);
 	$("#editCatName").val($(obj).attr("data-catName"));
 	$('#edit').modal('show');
@@ -175,16 +187,22 @@ move.down = function(catId) {
 
 
 function addImgChange() {
-	// #addCatImg #addCatImgX #addCatImgY
+	var x = new Number($("#addCatImgX").val());
+	var y = new Number($("#addCatImgY").val());
+	$("#addCatImg").css("background-position", "-" + 100*x + "px -" + 100*y +"px")
+}
+
+function editImgChange() {
+	var x = new Number($("#editCatImgX").val());
+	var y = new Number($("#editCatImgY").val());
+	$("#editCatImg").css("background-position", "-" + 100*x + "px -" + 100*y +"px")
 }
 </script>
 
 <style th:inline="text">
-
 .catImgUrl {background-image: url("[[#{imgUrl}]][[${merchantId}]]/show/cat.png?[[${random}]]");}
 .catImgList {background-size:250px 250px;width:50px;height:50px;margin:0 auto;}
 .catImg {width:100px;height:100px;margin:0 auto;}
-
 </style>
 
 </head>
@@ -193,7 +211,7 @@ function addImgChange() {
 
 <div class="page-list-body">
 	<div class="page-list-query">
-		<div class="page-list-title" style="height:100px;"><span class="glyphicon glyphicon-th-list"></span><span>CAT</span></div>
+		<div class="page-list-title" style="height:1000px;"><span class="glyphicon glyphicon-th-list"></span><span>CAT</span></div>
 		
 		<div class="form-inline">
 		
@@ -201,10 +219,7 @@ function addImgChange() {
 			
 			<input type="radio" onchange="queryData()" value="1" name="status" id="normal" style="vertical-align:sub;width:25px" checked="checked"><label class="control-label" for="normal">正常</label>
 			<input type="radio" onchange="queryData()" value="" name="status" id="all" style="vertical-align:sub;width:25px"><label class="control-label" for="all">全部</label>
-			<!--  
-			<input type="radio" class="form-control" name="status"><label class="control-label">正常</label>
-			<input type="radio" class="form-control" name="status"><label class="control-label">全部</label>
-			-->
+			
 			
 		</div>
 		
@@ -248,7 +263,7 @@ function addImgChange() {
 		<td class="w-id">{{c.recordStatus}}</td>
 		<td class="w-action">
 			<a href="#" onclick="remove({{c.catId}})">[删除]</a>
-			<a href="#" onclick="edit(this, {{c.catId}})" data-catName="{{c.catName}}">[修改]</a>
+			<a href="#" onclick="edit(this, {{c.catId}}, {{c.catImgX}}, {{c.catImgY}})" data-catName="{{c.catName}}">[修改]</a>
 			{{if v.len > 1}}
 				{{if !c.isLast}}<a href="javascript:move.down({{c.catId}})">down</a>,<a href="javascript:move.last({{c.catId}})">last</a>{{/if}}
 				{{if !c.isFirst}}<a href="javascript:move.up({{c.catId}})">up</a>,<a href="javascript:move.top({{c.catId}})">top</a>{{/if}}
@@ -261,40 +276,61 @@ function addImgChange() {
 	</table>
 </div>
 
-<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
+<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 370)">
 	<input type="hidden" id="parentId" name="parentId">
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>CAT_NAME：</label>
-		<div class="col-sm-7"><input type="text" name="catName" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-4 control-label"><span class="required">*</span>CAT_NAME：</label>
+		<div class="col-sm-6"><input type="text" name="catName" class="form-control validate[required]" maxlength="32"></div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>CAT_X：</label>
-		<div class="col-sm-7">
-			<select id="addCatImgX" name="catImgX" onchange="addImgChange()">
+		<label class="col-sm-4 control-label"><span class="required">*</span>CAT_X：</label>
+		<div class="col-sm-6">
+			<select class="form-control" id="addCatImgX" name="catImgX" onchange="addImgChange()">
 				<option th:each="item:${listImgX}" th:value="${item.value}" th:text="${item.name}"></option>
 			</select>
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>CAT_Y：</label>
-		<div class="col-sm-7">
-			<select id="addCatImgY" name="catImgY" onchange="addImgChange()">
+		<label class="col-sm-4 control-label"><span class="required">*</span>CAT_Y：</label>
+		<div class="col-sm-6">
+			<select class="form-control" id="addCatImgY" name="catImgY" onchange="addImgChange()">
 				<option th:each="item:${listImgY}" th:value="${item.value}" th:text="${item.name}"></option>
 			</select>
 		</div>
 	</div>
-	
 	<div class="form-group">
 		<div class="catImgUrl catImg" id="addCatImg"></div>
 	</div>
 	
 </div>
 
-<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 360)">
+<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 370)">
 	<input type="hidden" id="editCatId" name="catId">
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>类名：</label>
-		<div class="col-sm-7"><input type="text" id="editCatName" name="catName" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-4 control-label"><span class="required">*</span>类名：</label>
+		<div class="col-sm-6"><input type="text" id="editCatName" name="catName" class="form-control validate[required]" maxlength="32"></div>
+	</div>
+	
+	<div id="imgDiv">
+	<div class="form-group">
+		<label class="col-sm-4 control-label"><span class="required">*</span>CAT_X：</label>
+		<div class="col-sm-6">
+			<select class="form-control" id="editCatImgX" name="catImgX" onchange="editImgChange()">
+				<option th:each="item:${listImgX}" th:value="${item.value}" th:text="${item.name}"></option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-4 control-label"><span class="required">*</span>CAT_Y：</label>
+		<div class="col-sm-6">
+			<select class="form-control" id="editCatImgY" name="catImgY" onchange="editImgChange()">
+				<option th:each="item:${listImgY}" th:value="${item.value}" th:text="${item.name}"></option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="catImgUrl catImg" id="editCatImg"></div>
+	</div>
 	</div>
 </div>
 

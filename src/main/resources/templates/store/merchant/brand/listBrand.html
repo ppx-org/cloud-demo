@@ -41,7 +41,12 @@ function add() {
 	}
 }
 
-function edit(id) {
+function edit(id, x, y) {
+	$("#imgDiv").show();
+	$("#editBrandImgX option[value=" + x + "]").attr("selected", true);
+	$("#editBrandImgY option[value=" + y + "]").attr("selected", true);
+	editImgChange();
+	
 	showLoading();
 	$.post([[@{/brand/getBrand}]], "id=" + id, function(r) {
 		hideLoading();
@@ -109,7 +114,26 @@ move.down = function(id) {
 		}
 	});
 }
+
+
+function addImgChange() {
+	var x = new Number($("#addBrandImgX").val());
+	var y = new Number($("#addBrandImgY").val());
+	$("#addBrandImg").css("background-position", "-" + 100*x + "px -" + 100*y +"px")
+}
+
+function editImgChange() {
+	var x = new Number($("#editBrandImgX").val());
+	var y = new Number($("#editBrandImgY").val());
+	$("#editBrandImg").css("background-position", "-" + 100*x + "px -" + 100*y +"px")
+}
 </script>
+
+<style th:inline="text">
+.catImgUrl {background-image: url("[[#{imgUrl}]][[${merchantId}]]/show/brand.png?[[${random}]]");}
+.catImgList {background-size:250px 250px;width:50px;height:50px;margin:0 auto;}
+.catImg {width:100px;height:100px;margin:0 auto;}
+</style>
 </head>
 
 <body>
@@ -125,6 +149,7 @@ move.down = function(id) {
 		<th>ID</th>
 		<th>NAME</th>
 		<th>SORT</th>
+		<th>png</th>
 		<th>status</th>
 		<th>操作</th>
 	</tr>
@@ -144,10 +169,11 @@ move.down = function(id) {
 			{{/if}}					
 		</td>
 		<td class="w-id">{{v.recordStatus}}</td>
+		<td class="w-id"><div class="catImgUrl catImgList" style="background-position: -{{v.brandImgX * 50}}px -{{v.brandImgY * 50}}px;"></div></td>
 		<td class="w-action">
 			<a href="#" onclick="restore({{v.brandId}})">[恢复]</a>&nbsp;&nbsp;
 			<a href="#" onclick="remove({{v.brandId}})" class="glyphicon glyphicon-trash" title="删除"></a>&nbsp;&nbsp;
-			<a href="#" onclick="edit('{{v.brandId}}')" class="glyphicon glyphicon-edit" title="修改"></a>
+			<a href="#" onclick="edit('{{v.brandId}}', {{v.brandImgX}}, {{v.brandImgY}})" class="glyphicon glyphicon-edit" title="修改"></a>
 		</td>
 	</tr>
 	{{/each}}
@@ -160,6 +186,25 @@ move.down = function(id) {
 		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
 		<div class="col-sm-7"><input type="text" name="brandName" class="form-control validate[required]" maxlength="32"></div>
 	</div>
+	<div class="form-group">
+		<label class="col-sm-4 control-label"><span class="required">*</span>Bxxx_X：</label>
+		<div class="col-sm-6">
+			<select class="form-control" id="addBrandImgX" name="brandImgX" onchange="addImgChange()">
+				<option th:each="item:${listImgX}" th:value="${item.value}" th:text="${item.name}"></option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-4 control-label"><span class="required">*</span>Bxxxx_Y：</label>
+		<div class="col-sm-6">
+			<select class="form-control" id="addBrandImgY" name="brandImgY" onchange="addImgChange()">
+				<option th:each="item:${listImgY}" th:value="${item.value}" th:text="${item.name}"></option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="catImgUrl catImg" id="addCatImg"></div>
+	</div>
 </div>
 
 <div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 360)">
@@ -171,6 +216,29 @@ move.down = function(id) {
 	<div class="form-group">
 		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
 		<div class="col-sm-7"><input type="text" name="brandName" value="{{brand.brandName}}" class="form-control validate[required]" maxlength="32"></div>
+	</div>
+
+
+	<div id="imgDiv">
+	<div class="form-group">
+		<label class="col-sm-4 control-label"><span class="required">*</span>Brand_X：</label>
+		<div class="col-sm-6">
+			<select class="form-control" id="editBrandImgX" name="brandImgX" onchange="editImgChange()">
+				<option th:each="item:${listImgX}" th:value="${item.value}" th:text="${item.name}"></option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-4 control-label"><span class="required">*</span>Brand_Y：</label>
+		<div class="col-sm-6">
+			<select class="form-control" id="editBrandImgY" name="brandImgY" onchange="editImgChange()">
+				<option th:each="item:${listImgY}" th:value="${item.value}" th:text="${item.name}"></option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="catImgUrl catImg" id="editCatImg"></div>
+	</div>
 	</div>
 	</script>
 </div>

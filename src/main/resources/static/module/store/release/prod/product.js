@@ -78,7 +78,7 @@ img.click = function(obj) {
 		$(obj).css({zIndex:++img.zIndex,width:$(obj).data("data-init-width"),height:$(obj).data("data-init-height")});
 	}
 	else {
-		$(obj).css({position:"",left:left,top:top});
+		$(obj).css({position:""});
 		$(obj).css({zIndex:1000,width:80,height:80});
 	}
 }

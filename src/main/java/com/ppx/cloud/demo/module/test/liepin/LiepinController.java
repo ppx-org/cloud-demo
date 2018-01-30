@@ -60,7 +60,6 @@ public class LiepinController {
 			
 			
 			if (chromeSession == null) {
-				
 				boolean isPortExist = isHostConnectable("localhost", SessionFactory.DEFAULT_PORT);
 				
 				Launcher launcher = new Launcher();

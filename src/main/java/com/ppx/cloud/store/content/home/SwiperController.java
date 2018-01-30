@@ -29,6 +29,8 @@ public class SwiperController {
 		ModelAndView mv = new ModelAndView();
 		
 		mv.addObject("storeList", storeServ.listStore());
+		
+		
 		return mv;
 	}
 

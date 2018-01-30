@@ -24,7 +24,7 @@ import com.ppx.cloud.grant.common.GrantContext;
 public class ImgUploadController {
 
 	/**
-	 * 路经=merchantId\yyyyMMdd\UUID.ext
+	 * 路经=merchantId/yyyyMMdd/UUID.ext
 	 * 
 	 * @param file
 	 * @return
@@ -62,6 +62,8 @@ public class ImgUploadController {
 		return ControllerReturn.ok(returnList);
 	}
 	
+	
+	
 	private String getImgPath(String fileName) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		String path = merchantId + "/" + new SimpleDateFormat("yyyyMMdd").format(new Date());
@@ -75,4 +77,62 @@ public class ImgUploadController {
 		return path + "/" + imgFileName;
 	}
 
+	
+	
+	
+	
+	
+	
+	// 其它图片上传
+	/**
+	 * 路经=merchantId/show/name.ext
+	 * 
+	 * @param file
+	 * @return
+	 */
+	@PostMapping @ResponseBody
+	public Map<String, Object> showSave(@RequestParam("file") MultipartFile[] file, @RequestParam("file") String[] saveFileName) {
+		List<String> returnList = new ArrayList<String>();
+		
+		if (file == null || file.length == 0 || file.length != saveFileName.length) {
+			return ControllerReturn.ok(returnList);
+		}
+		
+		for (int i = 0; i < file.length; i++) {				
+			BufferedOutputStream buffStream = null;
+			try {
+				String fileName = file[i].getOriginalFilename();
+				if (StringUtils.isEmpty(fileName)) {
+					continue;
+				}
+				byte[] bytes = file[i].getBytes();
+				String path = getShowPath(fileName, saveFileName[i]);
+				buffStream = new BufferedOutputStream(new FileOutputStream(new File(System.getProperty("file.imgFilePath") + path)));
+				buffStream.write(bytes);
+				returnList.add(path);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (buffStream != null) {
+					try {
+						buffStream.close();
+					} catch (Exception e) {}
+				}
+			}
+		}
+		return ControllerReturn.ok(returnList);
+	}
+	
+	private String getShowPath(String fileName, String saveFileName) {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		String path = merchantId + "/show";
+		File pathFile = new File(System.getProperty("file.imgFilePath") + path);
+		if (!pathFile.exists()) {
+			pathFile.mkdirs();
+		}
+		
+		String ext = fileName.substring(fileName.lastIndexOf("."));
+		String imgFileName = saveFileName + ext;
+		return path + "/" + imgFileName;
+	}
 }

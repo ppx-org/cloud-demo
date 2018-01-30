@@ -30,12 +30,13 @@ public class CategoryController {
 		// 默认为有效的RECORD_STATUS=1
 		mv.addObject("listJson", listJson(1));
 		
-		mv.addObject("listImgX", Dict.listImgX());
-		mv.addObject("listImgY", Dict.listImgY());
+		
 		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		mv.addObject("merchantId", merchantId);
 		mv.addObject("random", new Random().nextInt(100000));
+		mv.addObject("listImgX", Dict.listImgX());
+		mv.addObject("listImgY", Dict.listImgY());
 		
 		return mv;
 	}
