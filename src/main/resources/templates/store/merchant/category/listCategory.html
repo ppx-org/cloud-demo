@@ -72,7 +72,7 @@ $(function() {
 
 function queryData() {
 	showLoading();
-	$.post([[@{/category/listJson}]], null, function(r) {
+	$.post([[@{/category/listJson}]], "status=" + $("[name=status]:checked").val(), function(r) {
 		refreshData(r);
 		hideLoading();
 	});
@@ -125,6 +125,18 @@ function remove(id) {
 	confirm(id, callback);
 }
 
+function restore(id) {
+	var callback = function () {
+		showLoading();
+		$.post([[@{/category/restoreCategory}]], "id=" + id, function(r) {
+			if (r.result == 1) {
+				queryData();
+			}
+		});	
+	}
+	confirm("是不是要恢复" + id, callback);
+}
+
 
 var move = {};
 move.top = function(catId) {
@@ -161,6 +173,7 @@ move.down = function(catId) {
 }
 
 
+
 function addImgChange() {
 	// #addCatImg #addCatImgX #addCatImgY
 }
@@ -180,8 +193,22 @@ function addImgChange() {
 
 <div class="page-list-body">
 	<div class="page-list-query">
-		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>CAT</span></div>
-		<button type="button" class="btn btn-success btn-sm" onclick="addChild(-1)">新增</button>
+		<div class="page-list-title" style="height:100px;"><span class="glyphicon glyphicon-th-list"></span><span>CAT</span></div>
+		
+		<div class="form-inline">
+		
+			<button type="button" class=" btn btn-success btn-sm" onclick="addChild(-1)">新增</button>
+			
+			<input type="radio" onchange="queryData()" value="1" name="status" id="normal" style="vertical-align:sub;width:25px" checked="checked"><label class="control-label" for="normal">正常</label>
+			<input type="radio" onchange="queryData()" value="" name="status" id="all" style="vertical-align:sub;width:25px"><label class="control-label" for="all">全部</label>
+			<!--  
+			<input type="radio" class="form-control" name="status"><label class="control-label">正常</label>
+			<input type="radio" class="form-control" name="status"><label class="control-label">全部</label>
+			-->
+			
+		</div>
+		
+		
 	</div>
 	
 	<table class="page-list-table table table-bordered table-condensed">	
@@ -189,6 +216,7 @@ function addImgChange() {
 		<th>ID</th>
 		<th>NAME</th>
 		<th>PNG</th>
+		<th>STATUS</th>
 		<th>ACTION</th>
 	</tr>
 	
@@ -197,8 +225,10 @@ function addImgChange() {
 	<tr data-parent-id="{{v.parentId}}">
 		<td class="w-id">{{v.catId}}</td>
 		<td class="w-title-s" style="text-align:left">{{v.catName}}{{if v.children}}<a href="#" onclick="javascript:toggleMain(this, {{v.catId}})">[折叠]</a>{{/if}}</td>
-		<td></td>
+		<td class="w-id"></td>
+		<td class="w-id">{{v.recordStatus}}</td>
 		<td class="w-action">
+			<a href="#" onclick="restore({{v.catId}})">[恢复]</a>
 			<a href="#" onclick="remove({{v.catId}})">[删除]</a>
 
 			<a href="javascript:addChild({{v.catId}})">[addChild]</a>
@@ -215,6 +245,7 @@ function addImgChange() {
 		<td class="w-id">{{c.catId}}</td>
 		<td class="w-title-s">{{c.catName}}</td>
 		<td class="w-id"><div class="catImgUrl catImgList" style="background-position: -{{c.catImgX * 50}}px -{{c.catImgY * 50}}px;"></div></td>
+		<td class="w-id">{{c.recordStatus}}</td>
 		<td class="w-action">
 			<a href="#" onclick="remove({{c.catId}})">[删除]</a>
 			<a href="#" onclick="edit(this, {{c.catId}})" data-catName="{{c.catName}}">[修改]</a>

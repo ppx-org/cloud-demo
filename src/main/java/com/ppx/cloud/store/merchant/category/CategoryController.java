@@ -26,7 +26,9 @@ public class CategoryController {
 	@GetMapping
     public ModelAndView listCategory() {		
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("listJson", listJson());
+		
+		// 默认为有效的RECORD_STATUS=1
+		mv.addObject("listJson", listJson(1));
 		
 		mv.addObject("listImgX", Dict.listImgX());
 		mv.addObject("listImgY", Dict.listImgY());
@@ -39,8 +41,8 @@ public class CategoryController {
 	}
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> listJson() {
-		List<Category> list = serv.listCategory();
+	public Map<String, Object> listJson(Integer status) {
+		List<Category> list = serv.listCategory(status);
 		return ControllerReturn.ok(list);
 	}
 	
@@ -62,6 +64,13 @@ public class CategoryController {
 		int r = serv.deleteCategory(id);
 		return ControllerReturn.ok(r);
 	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> restoreCategory(@RequestParam Integer id) {
+		int r = serv.restoreCategory(id);
+		return ControllerReturn.ok(r);
+	}
+	
 
 	@PostMapping @ResponseBody
 	public Map<String, Object> top(@RequestParam Integer id) {

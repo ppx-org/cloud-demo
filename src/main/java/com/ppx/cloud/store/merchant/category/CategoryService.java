@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.grant.common.GrantContext;
 import com.ppx.cloud.grant.service.MerchantService;
@@ -28,25 +29,33 @@ public class CategoryService extends MyDaoSupport {
 		return returnList;
 	}
 	
-	public List<Category> listCategory() {		
+	public List<Category> listCategory(Integer status) {		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
-		String sql = "select CAT_ID, PARENT_ID, CAT_NAME, CAT_IMG_X, CAT_IMG_Y from category where MERCHANT_ID = ? and RECORD_STATUS = ? order by CAT_PRIO"; 
-		List<Category> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Category.class), merchantId, 1);	
+		MyCriteria c = createCriteria("where").addAnd("MERCHANT_ID = ?", merchantId)
+				.addAnd("RECORD_STATUS = ?", status);
+		
+		String sql = "select CAT_ID, PARENT_ID, CAT_NAME, CAT_IMG_X, CAT_IMG_Y, RECORD_STATUS from category" + c + " order by CAT_PRIO"; 
+		
+		
+		
+		List<Category> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Category.class), c.getParaList().toArray());	
+		
+		
 		
 		List<Category> returnList = new ArrayList<Category>();
-		for (Category c : list) {
-			if (c.getParentId() == -1) {
-				List<Category> listChild = getChildren(list, c.getCatId());
-				c.setChildren(listChild.size() == 0 ? null : listChild);
-				returnList.add(c);
+		for (Category cat : list) {
+			if (cat.getParentId() == -1) {
+				List<Category> listChild = getChildren(list, cat.getCatId());
+				cat.setChildren(listChild.size() == 0 ? null : listChild);
+				returnList.add(cat);
 			}
 		}
 		return returnList;
 	}
 	
 	public List<Category> displaySubCat() {
-		List<Category> catList = listCategory();
+		List<Category> catList = listCategory(1);
 		List<Category> returnList = new ArrayList<Category>();
 		for (Category category : catList) {
 			if (category.getChildren() == null) continue;
@@ -61,7 +70,7 @@ public class CategoryService extends MyDaoSupport {
 	}
 	
 	public List<Category> displayAllCat() {
-		List<Category> catList = listCategory();
+		List<Category> catList = listCategory(1);
 		List<Category> returnList = new ArrayList<Category>();
 		for (Category category : catList) {
 			Category mainC = new Category();
@@ -143,9 +152,24 @@ public class CategoryService extends MyDaoSupport {
 	
 	@Transactional
 	public int deleteCategory(Integer id) {
+		int r = getJdbcTemplate().update("update category set RECORD_STATUS = ? where CAT_ID = ?", 0, id);
+		// 子类也删除
+		int cR = getJdbcTemplate().update("update category set RECORD_STATUS = ? where PARENT_ID = ?", 0, id);
 		
-		return getJdbcTemplate().update("update category set RECORD_STATUS = ? where CAT_ID = ?", 0, id);
+		return r;
 	}
+	
+	@Transactional
+	public int restoreCategory(Integer id) {
+		int r = getJdbcTemplate().update("update category set RECORD_STATUS = ? where CAT_ID = ?", 1, id);
+		// 子类也恢复
+		int cR = getJdbcTemplate().update("update category set RECORD_STATUS = ? where PARENT_ID = ?", 1, id);
+		
+		return r;
+	}
+	
+	
+	
 	
 	@Transactional
 	public int top(Integer id) {
@@ -188,7 +212,6 @@ public class CategoryService extends MyDaoSupport {
 		int upId = -1;
 		int upPrio = -1;
 		for (Category c : list) {
-			
 			if (c.getCatId() == id) {
 				prio = c.getCatPrio();
 				break;

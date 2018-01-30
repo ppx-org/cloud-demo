@@ -21,6 +21,8 @@ public class Category {
 	
 	private Integer catImgY;
 	
+	private Integer recordStatus;
+	
 	private List<Category> children;
 	
 	public Integer getCatId() {
@@ -85,6 +87,14 @@ public class Category {
 
 	public void setCatImgY(Integer catImgY) {
 		this.catImgY = catImgY;
+	}
+
+	public Integer getRecordStatus() {
+		return recordStatus;
+	}
+
+	public void setRecordStatus(Integer recordStatus) {
+		this.recordStatus = recordStatus;
 	}
 
 	

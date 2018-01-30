@@ -161,20 +161,22 @@ public class LiepinController {
 		move(x4, y4);
 		click(x4 , y4);
 		chromeSession.wait(70);
-//		
-		// 输入用户名和密码
-//		chromeSession.evaluate("$('#LoginName').val('honghai020');");
-//		chromeSession.evaluate("$('#Password').val('Test13800');");
+		
+		
 //		chromeSession.evaluate("$('#verify-submit').click();");
 		
 		click(220 + offsetX, 250 + offsetY);
 		chromeSession.wait(1200);
+		
+		// 输入用户名和密码
+		chromeSession.evaluate("$('[name=user_login]').val('honghai020');");
+		chromeSession.evaluate("$('[name=user_pwd]').val('Test13800');");
         
         // 登录 loginbutton loginbutton
-		chromeSession.evaluate("$('#loginbutton').click();");  
-		chromeSession.wait(3000);
-		String location = chromeSession.getLocation();
-		System.out.println("xxxxlocation:" + location);
+		//chromeSession.evaluate("$('#loginbutton').click();");  
+		//chromeSession.wait(3000);
+		//String location = chromeSession.getLocation();
+		//System.out.println("xxxxlocation:" + location);
 		
 		
 			
