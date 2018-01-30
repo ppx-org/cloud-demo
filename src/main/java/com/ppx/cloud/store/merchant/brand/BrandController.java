@@ -24,13 +24,14 @@ public class BrandController {
 	@GetMapping
 	public ModelAndView listBrand() {
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("listJson", listJson());
+		// 默认显示RECORD_STATUS=1
+		mv.addObject("listJson", listJson(1));
 		return mv;
 	}
 
 	@PostMapping @ResponseBody
-	public Map<String, Object> listJson() {
-		List<Brand> list = serv.listBrand();
+	public Map<String, Object> listJson(Integer status) {
+		List<Brand> list = serv.listBrand(status);
 		return ControllerReturn.ok(list);
 	}
 	
@@ -55,6 +56,12 @@ public class BrandController {
 	@PostMapping @ResponseBody
 	public Map<String, Object> deleteBrand(@RequestParam Integer id) {
 		int r = serv.deleteBrand(id);
+		return ControllerReturn.ok(r);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> restoreBrand(@RequestParam Integer id) {
+		int r = serv.restoreBrand(id);
 		return ControllerReturn.ok(r);
 	}
 	

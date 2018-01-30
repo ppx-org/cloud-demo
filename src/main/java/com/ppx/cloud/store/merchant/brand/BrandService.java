@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.grant.common.GrantContext;
 
@@ -14,11 +15,15 @@ import com.ppx.cloud.grant.common.GrantContext;
 public class BrandService extends MyDaoSupport {
 	
 	
-	public List<Brand> listBrand() {
+	public List<Brand> listBrand(Integer status) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		String sql = "select * from brand where MERCHANT_ID = ? and RECORD_STATUS = ? order by BRAND_PRIO";
 		
-		List<Brand> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Brand.class), merchantId, 1);
+		MyCriteria c = createCriteria("where").addAnd("MERCHANT_ID = ?", merchantId)
+				.addAnd("RECORD_STATUS = ?", status);
+		
+		String sql = "select * from brand" + c + " order by BRAND_PRIO";
+		
+		List<Brand> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Brand.class), c.getParaList().toArray());
 		
 		return list;
 	}
@@ -45,6 +50,10 @@ public class BrandService extends MyDaoSupport {
 	
 	public int deleteBrand(Integer id) {
 		return getJdbcTemplate().update("update brand set RECORD_STATUS = ? where BRAND_ID = ?", 0, id);
+	}
+	
+	public int restoreBrand(Integer id) {
+		return getJdbcTemplate().update("update brand set RECORD_STATUS = ? where BRAND_ID = ?", 1, id);
 	}
 	
 	private void lockMerchant() {

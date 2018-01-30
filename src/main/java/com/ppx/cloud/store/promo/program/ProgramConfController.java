@@ -76,7 +76,7 @@ public class ProgramConfController {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("progId", progId);
 		mv.addObject("listJson", listProgramBrand(progId));
-		mv.addObject("listBrand", brandServ.listBrand());
+		mv.addObject("listBrand", brandServ.listBrand(1));
 		return mv;
 	}
 	

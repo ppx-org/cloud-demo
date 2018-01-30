@@ -13,6 +13,12 @@ public class Theme {
 
 	private Integer themePrio;
 	
+	private Integer recordStatus;
+	
+	private Integer themeImgX;
+	
+	private Integer themeImgY;
+	
 	public Integer getThemeId() {
 		return themeId;
 	}
@@ -45,7 +51,28 @@ public class Theme {
 		this.themePrio = themePrio;
 	}
 
-	
+	public Integer getRecordStatus() {
+		return recordStatus;
+	}
 
+	public void setRecordStatus(Integer recordStatus) {
+		this.recordStatus = recordStatus;
+	}
+
+	public Integer getThemeImgX() {
+		return themeImgX;
+	}
+
+	public void setThemeImgX(Integer themeImgX) {
+		this.themeImgX = themeImgX;
+	}
+
+	public Integer getThemeImgY() {
+		return themeImgY;
+	}
+
+	public void setThemeImgY(Integer themeImgY) {
+		this.themeImgY = themeImgY;
+	}
 	
 }

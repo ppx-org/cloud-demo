@@ -24,11 +24,14 @@ public class ThemeService extends MyDaoSupport {
 	@Autowired
 	private MerchantService merchantService;
 	
-	public List<Theme> listTheme() {
+	public List<Theme> listTheme(Integer status) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		String sql = "select * from theme where MERCHANT_ID = ? and RECORD_STATUS = ? order by THEME_PRIO";
+		MyCriteria c = createCriteria("where").addAnd("MERCHANT_ID = ?", merchantId)
+				.addAnd("RECORD_STATUS = ?", status);
 		
-		List<Theme> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Theme.class), merchantId, 1);
+		String sql = "select * from theme" + c + " order by THEME_PRIO";
+		
+		List<Theme> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Theme.class), c.getParaList().toArray());
 		
 		return list;
 	}
@@ -55,6 +58,10 @@ public class ThemeService extends MyDaoSupport {
 	
 	public int deleteTheme(Integer id) {
 		return getJdbcTemplate().update("update theme set RECORD_STATUS = ? where THEME_ID = ?", 0, id);
+	}
+	
+	public int restoreTheme(Integer id) {
+		return getJdbcTemplate().update("update theme set RECORD_STATUS = ? where THEME_ID = ?", 1, id);
 	}
 	
 	private void lockMerchant() {
@@ -200,6 +207,7 @@ public class ThemeService extends MyDaoSupport {
 	public int deleteThemeProduct(Integer themeId, Integer prodId) {
 		return getJdbcTemplate().update("delete from theme_map_prod where THEME_ID = ? and PROD_ID = ?", themeId, prodId);
 	}
+	
 	
 	
 	

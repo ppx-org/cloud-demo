@@ -27,13 +27,14 @@ public class ThemeController {
 	@GetMapping
 	public ModelAndView listTheme() {
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("listJson", listJson());
+		// 默认显示RECORD_STATUS=1
+		mv.addObject("listJson", listJson(1));
 		return mv;
 	}
 
 	@PostMapping @ResponseBody
-	public Map<String, Object> listJson() {
-		List<Theme> list = serv.listTheme();
+	public Map<String, Object> listJson(Integer status) {
+		List<Theme> list = serv.listTheme(status);
 		return ControllerReturn.ok(list);
 	}
 	
@@ -58,6 +59,12 @@ public class ThemeController {
 	@PostMapping @ResponseBody
 	public Map<String, Object> deleteTheme(@RequestParam Integer id) {
 		int r = serv.deleteTheme(id);
+		return ControllerReturn.ok(r);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> restoreTheme(@RequestParam Integer id) {
+		int r = serv.restoreTheme(id);
 		return ControllerReturn.ok(r);
 	}
 	

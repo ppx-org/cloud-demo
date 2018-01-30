@@ -13,6 +13,12 @@ public class Brand {
 	private String brandName;
 	
 	private Integer brandPrio;
+	
+	private Integer recordStatus;
+	
+	private Integer brandImgX;
+	
+	private Integer brandImgY;
 
 	public Integer getBrandId() {
 		return brandId;
@@ -44,6 +50,30 @@ public class Brand {
 
 	public void setBrandPrio(Integer brandPrio) {
 		this.brandPrio = brandPrio;
+	}
+
+	public Integer getRecordStatus() {
+		return recordStatus;
+	}
+
+	public void setRecordStatus(Integer recordStatus) {
+		this.recordStatus = recordStatus;
+	}
+
+	public Integer getBrandImgX() {
+		return brandImgX;
+	}
+
+	public void setBrandImgX(Integer brandImgX) {
+		this.brandImgX = brandImgX;
+	}
+
+	public Integer getBrandImgY() {
+		return brandImgY;
+	}
+
+	public void setBrandImgY(Integer brandImgY) {
+		this.brandImgY = brandImgY;
 	}
 	
 	

@@ -74,6 +74,18 @@ function remove(id) {
 	confirm(id, callback);
 }
 
+function restore(id) {
+	var callback = function () {
+		showLoading();
+		$.post([[@{/brand/restoreBrand}]], "id=" + id, function(r) {
+			if (r.result == 1) {
+				queryData();
+			}
+		});	
+	}
+	confirm("是不是要恢复" + id, callback);
+}
+
 
 var move = {};
 move.top = function(id) {
@@ -105,12 +117,16 @@ move.down = function(id) {
 	<div class="page-list-query">
 		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>test</span></div>
 		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
+		<input type="radio" onchange="query()" value="1" name="status" id="normal" style="vertical-align:sub;width:25px" checked="checked"><label class="control-label" for="normal">正常</label>
+		<input type="radio" onchange="query()" value="" name="status" id="all" style="vertical-align:sub;width:25px"><label class="control-label" for="all">全部</label>
+		
 	</div>
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
 		<th>ID</th>
 		<th>NAME</th>
 		<th>SORT</th>
+		<th>status</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
@@ -128,7 +144,9 @@ move.down = function(id) {
 			<a href="#" onclick="move.down({{v.brandId}})" title="下移" class="glyphicon glyphicon-arrow-down"></a>
 			{{/if}}					
 		</td>
+		<td class="w-id">{{v.recordStatus}}</td>
 		<td class="w-action">
+			<a href="#" onclick="restore({{v.brandId}})">[恢复]</a>&nbsp;&nbsp;
 			<a href="#" onclick="remove({{v.brandId}})" class="glyphicon glyphicon-trash" title="删除"></a>&nbsp;&nbsp;
 			<a href="#" onclick="edit('{{v.brandId}}')" class="glyphicon glyphicon-edit" title="修改"></a>
 		</td>
