@@ -91,10 +91,10 @@ public class ImgUploadController {
 	 * @return
 	 */
 	@PostMapping @ResponseBody
-	public Map<String, Object> showSave(@RequestParam("file") MultipartFile[] file, @RequestParam("file") String[] saveFileName) {
+	public Map<String, Object> showSave(@RequestParam("file") MultipartFile[] file, @RequestParam("type") String[] type) {
 		List<String> returnList = new ArrayList<String>();
 		
-		if (file == null || file.length == 0 || file.length != saveFileName.length) {
+		if (file == null || file.length == 0 || file.length != type.length) {
 			return ControllerReturn.ok(returnList);
 		}
 		
@@ -106,7 +106,7 @@ public class ImgUploadController {
 					continue;
 				}
 				byte[] bytes = file[i].getBytes();
-				String path = getShowPath(fileName, saveFileName[i]);
+				String path = getShowPath(fileName, type[i]);
 				buffStream = new BufferedOutputStream(new FileOutputStream(new File(System.getProperty("file.imgFilePath") + path)));
 				buffStream.write(bytes);
 				returnList.add(path);
@@ -123,7 +123,7 @@ public class ImgUploadController {
 		return ControllerReturn.ok(returnList);
 	}
 	
-	private String getShowPath(String fileName, String saveFileName) {
+	private String getShowPath(String fileName, String type) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		String path = merchantId + "/show";
 		File pathFile = new File(System.getProperty("file.imgFilePath") + path);
@@ -132,7 +132,7 @@ public class ImgUploadController {
 		}
 		
 		String ext = fileName.substring(fileName.lastIndexOf("."));
-		String imgFileName = saveFileName + ext;
+		String imgFileName = type + ext;
 		return path + "/" + imgFileName;
 	}
 }

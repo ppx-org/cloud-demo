@@ -113,7 +113,18 @@ function uploadImg(callback) {
 
 
 function upload(obj) {
+	var type = $(obj).attr("data-type");
+	var file = $(obj).parents(".imgTr").find("img").data("file");
+	var formData = new FormData();
+	formData.append("file", file);
+	formData.append("type", type);
 	
+	$.ajax({url:[[@{/imgUpload/showSave}]], type:"POST", contentType:false, data:formData ,processData:false,
+		success:function(r){
+			//var len = r.arrayList.length;
+			alert(JSON.stringify(r))
+		}
+	});
 }
 </script>
 </head>
@@ -142,7 +153,7 @@ function upload(obj) {
 			<tr class="imgTr">
 			<td>
 				<input type="file" accept=".jpg,.png" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
-				<a href="#" onclick="$(this).prev().click()">[+]</a><a href="#" onclick="upload(this)">上传</a>
+				<a href="#" onclick="$(this).prev().click()">[+]</a><a href="#" onclick="upload(this)" th:attr="data-type=${img.imgType}">上传</a>
 			</td>			
 			</tr>
 			</table>
