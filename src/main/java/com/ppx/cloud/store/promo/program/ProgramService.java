@@ -1,7 +1,10 @@
 package com.ppx.cloud.store.promo.program;
 
+import java.beans.PropertyDescriptor;
 import java.util.List;
 
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,8 @@ public class ProgramService extends MyDaoSupport {
 	
 	
 	public PageList<Program> listProgram(Page page, Program bean) {
+		
+		
 		
 		MyCriteria c = createCriteria("where")
 				.addAnd("POLICY_TYPE like ?", bean.getPolicyType())

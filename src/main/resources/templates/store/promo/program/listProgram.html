@@ -278,20 +278,20 @@ function getStatusDescByStr(string) {
 <div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 760)">
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>NAME：</label>
-		<div class="col-sm-4"><input type="text" id="progName" class="form-control validate[required]" maxlength="32"></div>
+		<div class="col-sm-4"><input type="text" name="progName" class="form-control validate[required]" maxlength="32"></div>
 		<label class="col-sm-2 control-label"><span class="required">*</span>PRIO：</label>
-		<div class="col-sm-4"><input type="text" id="progPrio" class="form-control validate[required,custom[integer]]" maxlength="32"></div>
+		<div class="col-sm-4"><input type="text" name="progPrio" class="form-control validate[required,custom[integer]]" maxlength="32"></div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>begin：</label>
-		<div class="col-sm-4"><input type="text" id="progBegin" th:value="${today}" class="form-control validate[required]" onclick="WdatePicker()"></div>
+		<div class="col-sm-4"><input type="text" name="progBegin" th:value="${today}" class="form-control validate[required]" onclick="WdatePicker()"></div>
 		<label class="col-sm-2 control-label"><span class="required"></span>end：</label>
-		<div class="col-sm-4"><input type="text" id="progEnd" class="form-control" onclick="WdatePicker()" placeholder="空表示没有结束"></div>
+		<div class="col-sm-4"><input type="text" name="progEnd" class="form-control" onclick="WdatePicker()" placeholder="空表示没有结束"></div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>poli：</label>
 		<div class="col-sm-8">
-		<select class="form-control validate[required]" id="policyType" onchange="policyTypeChange(this)">
+		<select class="form-control validate[required]" id="policyType" name="policyType" onchange="policyTypeChange(this)">
 			<option value="">请选择</option>
 			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listPolicy}"></option>
 		</select>
