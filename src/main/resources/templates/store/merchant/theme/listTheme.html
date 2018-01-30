@@ -19,7 +19,7 @@ $(function() {
 
 function query() {
 	showLoading();
-	$.post([[@{/theme/listJson}]], $("#queryForm").serialize(), function(r) {
+	$.post([[@{/theme/listJson}]], "status=" + $("[name=status]:checked").val(), function(r) {
 		refreshData(r);
 		hideLoading();
 	});
@@ -79,7 +79,7 @@ function restore(id) {
 		showLoading();
 		$.post([[@{/category/restoreTheme}]], "id=" + id, function(r) {
 			if (r.result == 1) {
-				queryData();
+				query();
 			}
 		});	
 	}

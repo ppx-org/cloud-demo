@@ -19,7 +19,7 @@ $(function() {
 
 function query() {
 	showLoading();
-	$.post([[@{/brand/listJson}]], $("#queryForm").serialize(), function(r) {
+	$.post([[@{/brand/listJson}]], "status=" + $("[name=status]:checked").val(), function(r) {
 		refreshData(r);
 		hideLoading();
 	});
@@ -79,7 +79,7 @@ function restore(id) {
 		showLoading();
 		$.post([[@{/brand/restoreBrand}]], "id=" + id, function(r) {
 			if (r.result == 1) {
-				queryData();
+				query();
 			}
 		});	
 	}
@@ -119,7 +119,6 @@ move.down = function(id) {
 		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
 		<input type="radio" onchange="query()" value="1" name="status" id="normal" style="vertical-align:sub;width:25px" checked="checked"><label class="control-label" for="normal">正常</label>
 		<input type="radio" onchange="query()" value="" name="status" id="all" style="vertical-align:sub;width:25px"><label class="control-label" for="all">全部</label>
-		
 	</div>
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
