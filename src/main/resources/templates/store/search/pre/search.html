@@ -16,7 +16,7 @@ function queryPage(pageNumber) {
 	
 	
 	
-	$.get([[@{/MQuery/pcQuery}]], $("#queryForm").serialize(), function(r) {
+	$.get([[@{/query/pcQuery}]], $("#queryForm").serialize(), function(r) {
 		refreshPageData(r);
 		
 		$("#fastView").empty();

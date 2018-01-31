@@ -43,9 +43,8 @@ public class MQueryController {
 	}
 	
 	
-	// pc端接口
-	@RequestMapping @ResponseBody
-	public Map<String, Object> pcQuery(@RequestParam(required=true) Integer sId, Integer d,
+	
+	private Map<String, Object> pcQuery(@RequestParam(required=true) Integer sId, Integer d,
 			String w, MPage p, Integer cId, Integer bId, Integer tId,
 			Integer gId, Integer fast, Integer o) {
 		

@@ -35,7 +35,7 @@ public class GrantInterceptor implements HandlerInterceptor {
 		
 		// wx micro
 		if (uri.startsWith("/M")) {
-			if (uri.equals("/MLogin/login") || uri.startsWith("/MRequest/") || uri.startsWith("/MQuery/pcQuery")) {
+			if (uri.equals("/MLogin/login") || uri.startsWith("/MRequest/")) {
 				return true;
 			}
 			
