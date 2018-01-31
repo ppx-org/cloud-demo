@@ -38,14 +38,14 @@ public class MQueryController {
 			return null;
 		}
 		
-		return testQuery(sId, 0, b.getW(), b.getP(), 
+		return pcQuery(sId, 0, b.getW(), b.getP(), 
 				b.getCid(), b.getBid(), b.getTid(), b.getGid(), b.getFast(), b.getO());
 	}
 	
 	
 	// pc端接口
 	@RequestMapping @ResponseBody
-	public Map<String, Object> testQuery(@RequestParam(required=true) Integer sId, Integer d,
+	public Map<String, Object> pcQuery(@RequestParam(required=true) Integer sId, Integer d,
 			String w, MPage p, Integer cId, Integer bId, Integer tId,
 			Integer gId, Integer fast, Integer o) {
 		
