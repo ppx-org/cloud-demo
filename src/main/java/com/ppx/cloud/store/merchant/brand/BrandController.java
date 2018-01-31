@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.grant.common.GrantContext;
 import com.ppx.cloud.store.common.dictionary.Dict;
+import com.ppx.cloud.store.content.img.ImgService;
 
 
 @Controller	
@@ -23,6 +24,8 @@ public class BrandController {
 	@Autowired
 	private BrandService serv;
 	
+	@Autowired
+	private ImgService imgServ;
 	
 	@GetMapping
 	public ModelAndView listBrand() {
@@ -30,9 +33,7 @@ public class BrandController {
 		// 默认显示RECORD_STATUS=1
 		mv.addObject("listJson", listJson(1));
 		
-		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		mv.addObject("merchantId", merchantId);
-		mv.addObject("random", new Random().nextInt(100000));
+		mv.addObject("imgSrc", imgServ.getImgUrl("brand"));
 		mv.addObject("listImgX", Dict.listImgX());
 		mv.addObject("listImgY", Dict.listImgY());
 		

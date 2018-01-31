@@ -104,7 +104,7 @@ function upload(obj) {
 }
 
 function updateImgUrl(type, url) {
-	$.post([[@{/upload/updateImgUrl}]], "type=" + type + "&url=" + url, function(r) {
+	$.post([[@{/img/updateImgUrl}]], "type=" + type + "&url=" + url, function(r) {
 		if (r.result == 1) {
 			alertSuccess("成功");
 			hideLoading();

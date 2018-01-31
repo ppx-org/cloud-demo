@@ -1,4 +1,4 @@
-package com.ppx.cloud.store.content.upload;
+package com.ppx.cloud.store.content.img;
 
 public class Img {
 	private Integer merchantId;

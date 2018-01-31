@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.grant.common.GrantContext;
 import com.ppx.cloud.store.common.dictionary.Dict;
+import com.ppx.cloud.store.content.img.ImgService;
 
 
 @Controller
@@ -22,6 +23,9 @@ public class CategoryController {
 
 	@Autowired
 	private CategoryService serv;
+	
+	@Autowired
+	private ImgService imgServ;
 	
 	@GetMapping
     public ModelAndView listCategory() {		
@@ -32,9 +36,7 @@ public class CategoryController {
 		
 		
 		
-		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		mv.addObject("merchantId", merchantId);
-		mv.addObject("random", new Random().nextInt(100000));
+		mv.addObject("imgSrc", imgServ.getImgUrl("cat"));
 		mv.addObject("listImgX", Dict.listImgX());
 		mv.addObject("listImgY", Dict.listImgY());
 		

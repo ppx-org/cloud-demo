@@ -1,4 +1,4 @@
-package com.ppx.cloud.store.content.upload;
+package com.ppx.cloud.store.content.img;
 
 import java.util.Map;
 
@@ -18,10 +18,10 @@ import com.ppx.cloud.grant.common.GrantContext;
 
 
 @Controller	
-public class UploadController {
+public class ImgController {
 	
 	@Autowired
-	private UploadService serv;
+	private ImgService serv;
 	
 	@GetMapping
 	public ModelAndView img() {

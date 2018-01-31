@@ -18,6 +18,7 @@ import com.ppx.cloud.common.page.PageList;
 import com.ppx.cloud.demo.module.test.TestBean;
 import com.ppx.cloud.grant.common.GrantContext;
 import com.ppx.cloud.store.common.dictionary.Dict;
+import com.ppx.cloud.store.content.img.ImgService;
 
 
 @Controller	
@@ -27,15 +28,16 @@ public class ThemeController {
 	private ThemeService serv;
 	
 	
+	@Autowired
+	private ImgService imgServ;
+	
 	@GetMapping
 	public ModelAndView listTheme() {
 		ModelAndView mv = new ModelAndView();
 		// 默认显示RECORD_STATUS=1
 		mv.addObject("listJson", listJson(1));
 		
-		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		mv.addObject("merchantId", merchantId);
-		mv.addObject("random", new Random().nextInt(100000));
+		mv.addObject("imgSrc", imgServ.getImgUrl("theme"));
 		mv.addObject("listImgX", Dict.listImgX());
 		mv.addObject("listImgY", Dict.listImgY());
 		
