@@ -15,6 +15,9 @@ public class ImgService extends MyDaoSupport {
 	
 	
 	public List<Img> listImg() {
+		//getJdbcTemplate().update("delete from img where MERCHANT_ID = -1");
+		
+		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();		
 		String countSql = "select count(*) from img where MERCHANT_ID = ?";
 		int c = getJdbcTemplate().queryForObject(countSql, Integer.class, merchantId);
