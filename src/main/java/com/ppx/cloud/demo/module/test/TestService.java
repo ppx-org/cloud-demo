@@ -1,10 +1,12 @@
 package com.ppx.cloud.demo.module.test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ppx.cloud.common.jdbc.MyCriteria;
@@ -27,8 +29,17 @@ public class TestService extends MyDaoSupport {
 		
 		System.out.println("------------------begin:" + merchantId);
 		
-		//getJdbcTemplate().queryfor
 		
+		NamedParameterJdbcTemplate jdbc = new NamedParameterJdbcTemplate(getJdbcTemplate());
+		
+		Map<String, Object> paraMap = new HashMap<String, Object>();
+		paraMap.put("para", 100);
+		
+		int c = jdbc.queryForObject("select :para", paraMap, Integer.class);
+		System.out.println("ccccccccc:" + c);
+		
+		List<Integer> list = jdbc.queryForList("select :para union select 200", paraMap, Integer.class);
+	
 		
 		System.out.println("------------------end");
 		
