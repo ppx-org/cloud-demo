@@ -81,6 +81,88 @@ move.down = function(id) {
 function storeChange() {
 	query();
 }
+
+
+//>>>>>>>>>>>>>>>>>>>img>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+var img = {};
+img.zIndex = 1000;
+img.click = function(obj) {
+	
+}
+img.html = '<td class="imgTd"><table><tr><td rowspan="2"><img onclick="img.click(this)" onload="img.resize(this)"/></td>\
+	<td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td></tr></table></td>';
+img.fileChange = function(obj) {
+	this.loadImg(obj.files, obj.files.length, $(obj).parent().parent());
+	
+	// 重新生成一个，防止在图片被删除时onchange不生效
+	$(obj).prop("outerHTML", $(obj).prop("outerHTML"));
+}
+img.loadImg = function(f, n, imgTr) {
+	n--;
+	
+	// data-max-size默认为1M,maxLength默认为1
+	var maxSize =  $(imgTr).find("input").attr("data-max-size");
+	maxSize = !maxSize ? 1024*1024 : new Number(maxSize);
+	
+	if (f[n].size > maxSize) {
+		var max = maxSize >= 1024*1024 ? (maxSize/1024/1024).toFixed(1) + "M" : (maxSize/1024).toFixed(1) + "K";
+		return alertWarning("不能大于" + max);
+	}
+	
+	// 删除之前的
+	imgTr.find(".imgTd").remove();
+	
+	var td = $(this.html);
+	td.appendTo(imgTr);
+	var reader = new FileReader();
+	reader.onload = function(e) {
+		var imgObj = td.find("img");
+		imgObj.prop("src", this.result);
+		imgObj.data("file", f[n]);
+		if (n > 0) img.loadImg(f, n, imgTr);
+	}
+	reader.readAsDataURL(f[n]);
+	
+	imgTr.find(".uploadAction").show();	
+}
+img.resize = function(img) {
+	var initWidth = img.width;
+	var intiHeight = img.height;
+	$(img).data("data-init-width", initWidth);
+	$(img).data("data-init-height", intiHeight);
+	$(img).css({width:80 * initWidth / intiHeight, height:80});
+	
+	$(img).show();
+	$(img).nextAll().remove();
+	$(img).after("<span>" + initWidth + "x" + intiHeight + "</span>");
+
+}
+img.remove = function(obj) {
+	$(obj).parents(".imgTr").find(".uploadAction").hide();
+	$(obj).parents(".imgTd").remove();
+}
+
+
+
+function upload(obj) {
+	var type = "swiper/" + new Date().getTime();
+	var file = $(obj).parents(".imgTr").find("img").data("file");
+	var formData = new FormData();
+	formData.append("file", file);
+	formData.append("type", type);
+	
+	showLoading();
+	$.ajax({url:[[@{/imgUpload/showSave}]], type:"POST", contentType:false, data:formData ,processData:false,
+		success:function(r){
+			if (r.arrayList && r.arrayList.length == 1) {
+				var url = [[#{imgUrl}]] + r.arrayList[0];
+				$("#swiperImg").val(url);
+				hideLoading();
+			} 
+		}
+	});
+}
+
 </script>
 </head>
 
@@ -126,12 +208,26 @@ function storeChange() {
 	</table>
 </div>
 
-<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
+<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 560)">
 	<div class="form-group">
 		<input type="hidden" id="addStoreId" name="storeId">
 		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
-		<div class="col-sm-7"><input type="text" name="swiperImg" class="form-control" maxlength="32"></div>
+		<div class="col-sm-7"><input type="text" id="swiperImg" name="swiperImg" class="form-control" maxlength="32"></div>
 	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-3 control-label">img：</label>
+		
+		<table class="col-sm-7" border="1" style="border-color:#DDDDDD;height:84px">
+		<tr class="imgTr">
+		<td>
+			<input type="file" accept=".jpg,.png" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
+			<a href="#" onclick="$(this).prev().click()">[+]</a>
+			<a href="#" style="display:none" class="uploadAction" onclick="upload(this)">上传</a>
+		</td>
+	</table>
+	</div>
+	
 </div>
 
 

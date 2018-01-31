@@ -126,6 +126,7 @@ public class ImgUploadController {
 	private String getShowPath(String fileName, String type) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		String path = merchantId + "/show";
+		if (type.startsWith("swiper")) path = merchantId + "/show/swiper";
 		File pathFile = new File(System.getProperty("file.imgFilePath") + path);
 		if (!pathFile.exists()) {
 			pathFile.mkdirs();
@@ -133,6 +134,11 @@ public class ImgUploadController {
 		
 		String ext = fileName.substring(fileName.lastIndexOf("."));
 		String imgFileName = type + ext;
+		
+		if (type.startsWith("swiper")) {
+			return merchantId + "/show/" + imgFileName;
+		}
+		
 		return path + "/" + imgFileName;
 	}
 }

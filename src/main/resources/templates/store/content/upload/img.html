@@ -22,10 +22,8 @@ img.click = function(obj) {
 		$(obj).css({position:"",zIndex:1000,width:80*initWidth/initHeight,height:80});
 	}
 }
-img.html = '<td class="imgTd"><table><tr>\
-	<td rowspan="2"><img onclick="img.click(this)" onload="img.resize(this)"/></td>\
-	<td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td></tr>\
-	</table></td>';
+img.html = '<td class="imgTd"><table><tr><td rowspan="2"><img onclick="img.click(this)" onload="img.resize(this)"/></td>\
+	<td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td></tr></table></td>';
 img.fileChange = function(obj) {
 	this.loadImg(obj.files, obj.files.length, $(obj).parent().parent());
 	
@@ -156,7 +154,7 @@ function editUrl(obj) {
 		</td>
 		<td><a href="#" onclick="editUrl(this)" th:attr="data-type=${img.imgType}">editUrl</a></td>
 		<td>
-			<table border=1 style="border-color:#DDDDDD;height:84px">
+			<table border=""1 style="border-color:#DDDDDD;height:84px">
 			<tr class="imgTr">
 			<td>
 				<input type="file" accept=".jpg,.png" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
