@@ -11,8 +11,6 @@
 var img = {};
 img.zIndex = 1000;
 img.click = function(obj) {
-	
-	alert(1)
 	var initWidth = new Number($(obj).data("data-init-width"));
 	var initHeight = new Number($(obj).data("data-init-height"));
 	
@@ -26,7 +24,7 @@ img.click = function(obj) {
 	}
 }
 img.html = '<td class="imgTd">\
-	<table style="height:80px"><tr><td rowspan="2" style="width:80px;"><img data-init-width="" data-init-height="" onclick="img.click(this)" class="uploadImg" onload="img.resize(this)"/></td><td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td></tr>\
+	<table><tr><td rowspan="2"><img data-init-width="" data-init-height="" onclick="img.click(this)" onload="img.resize(this)" class="uploadImg" /></td><td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td></tr>\
 	</table></td>';
 img.fileChange = function(obj) {
 	this.loadImg(obj.files, obj.files.length, $(obj).parent().parent());
@@ -40,25 +38,14 @@ img.loadImg = function(f, n, imgTr) {
 	// data-max-size默认为1M,maxLength默认为1
 	var maxSize =  $(imgTr).find("input").attr("data-max-size");
 	maxSize = !maxSize ? 1024*1024 : new Number(maxSize);
-	var maxLength = $(imgTr).find("input").attr("data-max-length");
-	maxLength = !maxLength ? 1 : new Number(maxLength);
 	
-	var accept = $(imgTr).find("input").attr("accept").split(",");
-	var isAccept = false;
-	for (var i = 0; i < accept.length; i++) {
-		var fName = f[n].name.split(".");
-		isAccept = "." + fName[fName.length - 1].toLowerCase() == accept[i];
-	}
-	if (isAccept == false) {
-		return alertWarning("后缀名必须为:" + accept);
-	}
 	if (f[n].size > maxSize) {
 		var max = maxSize >= 1024*1024 ? (maxSize/1024/1024).toFixed(1) + "M" : (maxSize/1024).toFixed(1) + "K";
 		return alertWarning("不能大于" + max);
 	}
-	if　($(imgTr).find(".imgTd").length　== maxLength) {
-		return alertWarning("最多" + maxLength  + "个");
-	}
+	
+	// 删除之前的
+	imgTr.find(".imgTd").remove();
 	
 	var td = $(this.html);
 	td.appendTo(imgTr);
@@ -70,17 +57,26 @@ img.loadImg = function(f, n, imgTr) {
 		if (n > 0) img.loadImg(f, n, imgTr);
 	}
 	reader.readAsDataURL(f[n]);
+	
+	imgTr.find(".uploadAction").show();
+	
 }
 img.resize = function(img) {
-	$(img).data("data-init-width", img.width);
-	$(img).data("data-init-height", img.height);
-	$(img).css({width:80 * img.width / img.height, height:80});
+	var initWidth = img.width;
+	var intiHeight = img.height;
+	$(img).data("data-init-width", initWidth);
+	$(img).data("data-init-height", intiHeight);
+	$(img).css({width:80 * initWidth / intiHeight, height:80});
+	
+	$(img).show();
+	$(img).nextAll().remove();
+	$(img).after("<span>" + initWidth + "x" + intiHeight + "</span>");
 
 }
 img.remove = function(obj) {
+	$(obj).parents(".imgTr").find(".uploadAction").hide();
 	$(obj).parents(".imgTd").remove();
 }
-
 
 
 $(function() {
@@ -98,8 +94,12 @@ function upload(obj) {
 		success:function(r){
 			if (r.arrayList && r.arrayList.length == 1) {
 				var url = [[#{imgUrl}]] + r.arrayList[0] + "?t=" + new Date().getTime();
+				
+				$("#" + type).css("width", "");
+				$("#" + type).css("height", "");
 				$("#" + type).attr("src", url);
 				$("#" + type).attr("title", url);
+				
 				updateImgUrl(type, url);
 			} 
 		}
@@ -123,21 +123,26 @@ function updateImgUrl(type, url) {
 	<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>test</span></div>
 </div>
 
-<table class="page-list-table table table-bordered table-condensed">
+<table id="listTable" class="page-list-table table table-bordered table-condensed">
 	<tr>
-		<th style="width:300px;">TYPE</th>
-		<th style="width:300px;">IMG</th>
+		<th style="width:200px;">TYPE</th>
+		<th style="width:400px;">IMG</th>
 		<th>ACTION</th>
 	</tr>
-	<tr th:each="img:${imgList}">
+	<tr th:each="img:${imgList}" style="height:82px;overflow:hidden;">
 		<td th:text="${img.imgType}"></td>
-		<td><img th:id="${img.imgType}" th:src="${img.imgUrl}" onload="img.resize(this)" onclick="img.click(this)" th:title="${img.imgUrl}"></td>
 		<td>
-			<table border=1 style="border-color:#DDDDDD;height:82px">
+			<div style="height:80px;overflow:hidden">
+				<img th:id="${img.imgType}" style="display:none" th:src="${img.imgUrl}" onload="img.resize(this)" onclick="img.click(this)" th:title="${img.imgUrl}">
+			</div>
+		</td>
+		<td>
+			<table border=1 style="border-color:#DDDDDD;height:84px">
 			<tr class="imgTr">
 			<td>
 				<input type="file" accept=".jpg,.png" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
-				<a href="#" onclick="$(this).prev().click()">[+]</a><a href="#" onclick="upload(this)" th:attr="data-type=${img.imgType}">上传</a>
+				<a href="#" onclick="$(this).prev().click()">[+]</a>
+				<a href="#" style="display:none" class="uploadAction" onclick="upload(this)" th:attr="data-type=${img.imgType}" >上传</a>
 			</td>			
 			</tr>
 			</table>
