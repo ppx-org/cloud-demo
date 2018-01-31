@@ -125,20 +125,26 @@ public class ImgUploadController {
 	
 	private String getShowPath(String fileName, String type) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		String path = merchantId + "/show";
-		if (type.startsWith("swiper")) path = merchantId + "/show/swiper";
-		File pathFile = new File(System.getProperty("file.imgFilePath") + path);
-		if (!pathFile.exists()) {
-			pathFile.mkdirs();
-		}
-		
 		String ext = fileName.substring(fileName.lastIndexOf("."));
-		String imgFileName = type + ext;
 		
-		if (type.startsWith("swiper")) {
-			return merchantId + "/show/" + imgFileName;
+		if (type.equals("swiper")) {
+			String path = merchantId + "/show/swiper";
+			File pathFile = new File(System.getProperty("file.imgFilePath") + path);
+			if (!pathFile.exists()) {
+				pathFile.mkdirs();
+			}
+			String imgFileName = UUID.randomUUID().toString().replaceAll("-", "") + ext;
+			return path + "/" + imgFileName;
+		}
+		else {
+			String path = merchantId + "/show";
+			File pathFile = new File(System.getProperty("file.imgFilePath") + path);
+			if (!pathFile.exists()) {
+				pathFile.mkdirs();
+			}
+			return path + "/" + type + ext;
 		}
 		
-		return path + "/" + imgFileName;
+	
 	}
 }

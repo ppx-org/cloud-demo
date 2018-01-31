@@ -145,7 +145,7 @@ img.remove = function(obj) {
 
 
 function upload(obj) {
-	var type = "swiper/" + new Date().getTime();
+	var type = "swiper";
 	var file = $(obj).parents(".imgTr").find("img").data("file");
 	var formData = new FormData();
 	formData.append("file", file);
