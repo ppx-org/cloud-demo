@@ -79,6 +79,14 @@ function queryData() {
 }
 
 function addChild(parentId) {
+	if (parentId == -1) {
+		$("#addImgDiv").hide();
+	}	
+	else {
+		$("#addImgDiv").show();
+	}
+	
+	
 	$("#parentId").val(parentId);
 	
 	$('#add').modal('show');
@@ -282,6 +290,8 @@ function editImgChange() {
 		<label class="col-sm-4 control-label"><span class="required">*</span>CAT_NAME：</label>
 		<div class="col-sm-6"><input type="text" name="catName" class="form-control validate[required]" maxlength="32"></div>
 	</div>
+	
+	<div id="addImgDiv">
 	<div class="form-group">
 		<label class="col-sm-4 control-label"><span class="required">*</span>CAT_X：</label>
 		<div class="col-sm-6">
@@ -300,6 +310,7 @@ function editImgChange() {
 	</div>
 	<div class="form-group">
 		<div class="catImgUrl catImg" id="addCatImg"></div>
+	</div>
 	</div>
 	
 </div>
