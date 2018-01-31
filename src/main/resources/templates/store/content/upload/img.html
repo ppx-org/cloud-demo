@@ -19,12 +19,12 @@ img.click = function(obj) {
 		$(obj).css({zIndex:++img.zIndex,width:initWidth,height:initHeight});
 	}
 	else {
-		$(obj).css({position:""});
-		$(obj).css({zIndex:1000,width:80*initWidth/initHeight,height:80});
+		$(obj).css({position:"",zIndex:1000,width:80*initWidth/initHeight,height:80});
 	}
 }
-img.html = '<td class="imgTd">\
-	<table><tr><td rowspan="2"><img data-init-width="" data-init-height="" onclick="img.click(this)" onload="img.resize(this)" class="uploadImg" /></td><td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td></tr>\
+img.html = '<td class="imgTd"><table><tr>\
+	<td rowspan="2"><img onclick="img.click(this)" onload="img.resize(this)"/></td>\
+	<td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td></tr>\
 	</table></td>';
 img.fileChange = function(obj) {
 	this.loadImg(obj.files, obj.files.length, $(obj).parent().parent());
@@ -58,8 +58,7 @@ img.loadImg = function(f, n, imgTr) {
 	}
 	reader.readAsDataURL(f[n]);
 	
-	imgTr.find(".uploadAction").show();
-	
+	imgTr.find(".uploadAction").show();	
 }
 img.resize = function(img) {
 	var initWidth = img.width;
@@ -114,6 +113,24 @@ function updateImgUrl(type, url) {
 		}
 	});
 }
+
+function editUrl(obj) {
+	
+	var type = $(obj).attr("data-type");
+	var src = $("#" + type).attr("src");
+	$("#imgUrl").val(src);
+	$('#edit').modal('show');
+	
+	action = function() {
+		var url = $("#imgUrl").val();
+		$("#" + type).css("width", "");
+		$("#" + type).css("height", "");
+		$("#" + type).attr("src", url);
+		$("#" + type).attr("title", url);
+		updateImgUrl(type, encodeURIComponent(url));
+		$('#edit').modal('hide');
+	}
+}
 </script>
 </head>
 
@@ -127,6 +144,7 @@ function updateImgUrl(type, url) {
 	<tr>
 		<th style="width:200px;">TYPE</th>
 		<th style="width:400px;">IMG</th>
+		<th style="width:100px;">edit</th>
 		<th>ACTION</th>
 	</tr>
 	<tr th:each="img:${imgList}" style="height:82px;overflow:hidden;">
@@ -136,6 +154,7 @@ function updateImgUrl(type, url) {
 				<img th:id="${img.imgType}" style="display:none" th:src="${img.imgUrl}" onload="img.resize(this)" onclick="img.click(this)" th:title="${img.imgUrl}">
 			</div>
 		</td>
+		<td><a href="#" onclick="editUrl(this)" th:attr="data-type=${img.imgType}">editUrl</a></td>
 		<td>
 			<table border=1 style="border-color:#DDDDDD;height:84px">
 			<tr class="imgTr">
@@ -143,12 +162,22 @@ function updateImgUrl(type, url) {
 				<input type="file" accept=".jpg,.png" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
 				<a href="#" onclick="$(this).prev().click()">[+]</a>
 				<a href="#" style="display:none" class="uploadAction" onclick="upload(this)" th:attr="data-type=${img.imgType}" >上传</a>
-			</td>			
-			</tr>
+			</td>
 			</table>
+			
 		</td>
 	</tr>
 </table>
+
+
+<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改URL', 780)">
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><span class="required">*</span>URL：</label>
+		<div class="col-sm-8"><input type="text" id="imgUrl" class="form-control" maxlength="256" style="width:600px"></div>
+	</div>
+</div>
+
+
 
 
 </body>
