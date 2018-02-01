@@ -90,21 +90,21 @@ function upload(obj) {
 	$.ajax({url:[[@{/imgUpload/showSave}]], type:"POST", contentType:false, data:formData ,processData:false,
 		success:function(r){
 			if (r.arrayList && r.arrayList.length == 1) {
-				var url = [[#{imgUrl}]] + r.arrayList[0] + "?t=" + new Date().getTime();
+				var src = [[#{imgSrc}]] + r.arrayList[0] + "?t=" + new Date().getTime();
 				
 				$("#" + type).css("width", "");
 				$("#" + type).css("height", "");
-				$("#" + type).attr("src", url);
-				$("#" + type).attr("title", url);
+				$("#" + type).attr("src", src);
+				$("#" + type).attr("title", src);
 				
-				updateImgUrl(type, url);
+				updateImgSrc(type, src);
 			} 
 		}
 	});
 }
 
-function updateImgUrl(type, url) {
-	$.post([[@{/img/updateImgUrl}]], "type=" + type + "&url=" + url, function(r) {
+function updateImgSrc(type, src) {
+	$.post([[@{/img/updateImgSrc}]], "type=" + type + "&src=" + src, function(r) {
 		if (r.result == 1) {
 			alertSuccess("成功");
 			hideLoading();
@@ -112,20 +112,20 @@ function updateImgUrl(type, url) {
 	});
 }
 
-function editUrl(obj) {
+function editSrc(obj) {
 	
 	var type = $(obj).attr("data-type");
 	var src = $("#" + type).attr("src");
-	$("#imgUrl").val(src);
+	$("#imgSrc").val(src);
 	$('#edit').modal('show');
 	
 	action = function() {
-		var url = $("#imgUrl").val();
+		var src = $("#imgSrc").val();
 		$("#" + type).css("width", "");
 		$("#" + type).css("height", "");
-		$("#" + type).attr("src", url);
-		$("#" + type).attr("title", url);
-		updateImgUrl(type, encodeURIComponent(url));
+		$("#" + type).attr("src", src);
+		$("#" + type).attr("title", src);
+		updateImgSrc(type, encodeURIComponent(src));
 		$('#edit').modal('hide');
 	}
 }
@@ -149,10 +149,10 @@ function editUrl(obj) {
 		<td th:text="${img.imgType}"></td>
 		<td>
 			<div style="height:80px;overflow:hidden">
-				<img th:id="${img.imgType}" style="display:none" th:src="${img.imgUrl}" onload="img.resize(this)" onclick="img.click(this)" th:title="${img.imgUrl}">
+				<img th:id="${img.imgType}" style="display:none" th:src="${img.imgSrc}" onload="img.resize(this)" onclick="img.click(this)" th:title="${img.imgSrc}">
 			</div>
 		</td>
-		<td><a href="#" onclick="editUrl(this)" th:attr="data-type=${img.imgType}">editUrl</a></td>
+		<td><a href="#" onclick="editSrc(this)" th:attr="data-type=${img.imgType}">editSrc</a></td>
 		<td>
 			<table border=""1 style="border-color:#DDDDDD;height:84px">
 			<tr class="imgTr">
@@ -168,10 +168,10 @@ function editUrl(obj) {
 </table>
 
 
-<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改URL', 780)">
+<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改SRC', 780)">
 	<div class="form-group">
-		<label class="col-sm-2 control-label"><span class="required">*</span>URL：</label>
-		<div class="col-sm-8"><input type="text" id="imgUrl" class="form-control" maxlength="256" style="width:600px"></div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>SRC：</label>
+		<div class="col-sm-8"><input type="text" id="imgSrc" class="form-control" maxlength="256" style="width:600px"></div>
 	</div>
 </div>
 

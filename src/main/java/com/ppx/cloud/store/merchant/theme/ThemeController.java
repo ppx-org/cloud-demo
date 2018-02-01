@@ -37,7 +37,7 @@ public class ThemeController {
 		// 默认显示RECORD_STATUS=1
 		mv.addObject("listJson", listJson(1));
 		
-		mv.addObject("imgSrc", imgServ.getImgUrl("theme"));
+		mv.addObject("imgSrc", imgServ.getImgSrc("theme"));
 		mv.addObject("listImgX", Dict.listImgX());
 		mv.addObject("listImgY", Dict.listImgY());
 		

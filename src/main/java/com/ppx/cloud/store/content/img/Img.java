@@ -5,7 +5,7 @@ public class Img {
 	
 	private String imgType;
 
-	private String imgUrl;
+	private String imgSrc;
 
 	public Integer getMerchantId() {
 		return merchantId;
@@ -23,13 +23,15 @@ public class Img {
 		this.imgType = imgType;
 	}
 
-	public String getImgUrl() {
-		return imgUrl;
+	public String getImgSrc() {
+		return imgSrc;
 	}
 
-	public void setImgUrl(String imgUrl) {
-		this.imgUrl = imgUrl;
+	public void setImgSrc(String imgSrc) {
+		this.imgSrc = imgSrc;
 	}
+
+	
 	
 	
 }

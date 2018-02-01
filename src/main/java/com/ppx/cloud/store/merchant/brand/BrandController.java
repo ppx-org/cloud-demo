@@ -33,7 +33,7 @@ public class BrandController {
 		// 默认显示RECORD_STATUS=1
 		mv.addObject("listJson", listJson(1));
 		
-		mv.addObject("imgSrc", imgServ.getImgUrl("brand"));
+		mv.addObject("imgSrc", imgServ.getImgSrc("brand"));
 		mv.addObject("listImgX", Dict.listImgX());
 		mv.addObject("listImgY", Dict.listImgY());
 		

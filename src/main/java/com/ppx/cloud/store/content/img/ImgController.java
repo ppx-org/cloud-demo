@@ -33,8 +33,8 @@ public class ImgController {
 	}
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> updateImgUrl(@RequestParam(required=true)String type, @RequestParam(required=true)String url) {
-		int r = serv.updateImgUrl(type, url);
+	public Map<String, Object> updateImgUrl(@RequestParam(required=true)String type, @RequestParam(required=true)String src) {
+		int r = serv.updateImgSrc(type, src);
 		return ControllerReturn.ok(r);
 	}
 

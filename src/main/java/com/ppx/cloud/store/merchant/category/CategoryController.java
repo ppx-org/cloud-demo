@@ -36,7 +36,7 @@ public class CategoryController {
 		
 		
 		
-		mv.addObject("imgSrc", imgServ.getImgUrl("cat"));
+		mv.addObject("imgSrc", imgServ.getImgSrc("cat"));
 		mv.addObject("listImgX", Dict.listImgX());
 		mv.addObject("listImgY", Dict.listImgY());
 		
