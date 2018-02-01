@@ -19,11 +19,11 @@ public class MHomeService extends MyDaoSupport {
 	@Autowired
 	private QueryCommonService commonServ;
 	
-	public List<String> listSwiper() {
+	public List<MSwiper> listSwiper() {
 		int storeId = MGrantContext.getWxUser().getStoreId();
 		
-		String sql = "select SWIPER_IMG from home_swiper where STORE_ID = ? order by SWIPER_PRIO";
-		List<String> list = getJdbcTemplate().queryForList(sql, String.class, storeId);
+		String sql = "select SWIPER_IMG SRC, SWIPER_URL URL from home_swiper where STORE_ID = ? order by SWIPER_PRIO";
+		List<MSwiper> list = getJdbcTemplate().query(sql,  BeanPropertyRowMapper.newInstance(MSwiper.class), storeId);
 		
 		return list;
 	}

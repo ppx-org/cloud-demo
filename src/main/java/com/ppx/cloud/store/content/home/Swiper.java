@@ -14,6 +14,8 @@ public class Swiper {
 	
 	private String swiperImg;
 	
+	private String swiperUrl;
+	
 	private Integer swiperPrio;
 
 	public Integer getSwiperId() {
@@ -38,6 +40,14 @@ public class Swiper {
 
 	public void setSwiperImg(String swiperImg) {
 		this.swiperImg = swiperImg;
+	}
+
+	public String getSwiperUrl() {
+		return swiperUrl;
+	}
+
+	public void setSwiperUrl(String swiperUrl) {
+		this.swiperUrl = swiperUrl;
 	}
 
 	public Integer getSwiperPrio() {

@@ -22,7 +22,7 @@ public class MHomeController {
 	// 合成一个
 	@PostMapping @ResponseBody
 	public Map<String, Object> listJson() {
-		List<String> swiperList = serv.listSwiper();
+		List<MSwiper> swiperList = serv.listSwiper();
 		List<MLevel> levelList = serv.listLevel();
 		MPage page = new MPage();
 		List<MQueryProduct> prodList = serv.listLevelProd(page);

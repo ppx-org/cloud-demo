@@ -180,7 +180,8 @@ function upload(obj) {
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
 		<th>ID</th>
-		<th>NAME</th>
+		<th>PNG</th>
+		<th>URL</th>
 		<th>SORT</th>
 		<th>操作</th>
 	</tr>
@@ -189,6 +190,7 @@ function upload(obj) {
 	<tr>
 		<td class="w-id">{{v.swiperId}}</td>
 		<td class="w-title-s">{{v.swiperImg}}</td>
+		<td class="w-title-s">{{v.swiperUrl}}</td>
 		<td class="w-action">
 			{{if arrayList.length != 1 && i !== 0}}
 			<a href="#" onclick="move.top({{v.swiperId}})" title="置顶" class="glyphicon glyphicon-step-backward" style="transform: rotate(90deg);"></a>
@@ -209,10 +211,17 @@ function upload(obj) {
 </div>
 
 <div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 560)">
+	
 	<div class="form-group">
 		<input type="hidden" id="addStoreId" name="storeId">
-		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
-		<div class="col-sm-7"><input type="text" id="swiperImg" name="swiperImg" class="form-control" maxlength="32"></div>
+		<label class="col-sm-3 control-label"><span class="required">*</span>TARGET_URL：</label>
+		<div class="col-sm-7"><input type="text" name="swiperUrl" class="form-control" maxlength="32"></div>
+	</div>
+	
+	<div class="form-group">
+		<input type="hidden" id="addStoreId" name="storeId">
+		<label class="col-sm-3 control-label"><span class="required">*</span>IMG：</label>
+		<div class="col-sm-7"><input type="text" id="swiperImg" name="swiperImg" class="form-control" maxlength="32" style="width:"></div>
 	</div>
 	
 	<div class="form-group">
