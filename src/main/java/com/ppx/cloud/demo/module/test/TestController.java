@@ -29,6 +29,10 @@ public class TestController {
 	@Autowired
 	private TestService serv;
 	
+	
+	
+	
+	
 	@GetMapping
 	public ModelAndView myTest(HttpServletRequest request) {
 		
@@ -48,6 +52,16 @@ public class TestController {
 		return mv;
 	}
 	
+	public TestService getServ() {
+		return serv;
+	}
+
+	public void setServ(TestService serv) {
+		this.serv = serv;
+	}
+
+
+
 	@GetMapping @ResponseBody
 	public Map<String, Object> test() {
 	
