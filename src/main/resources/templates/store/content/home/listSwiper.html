@@ -13,7 +13,7 @@ function refreshData(data) {
 }
 
 $(function() {
-	//refreshData([[${listJson}]]);
+	query();
 });
 
 function query() {
@@ -26,10 +26,30 @@ function query() {
 
 function add() {
 	$('#addForm')[0].reset();
+	// 清除图片
+	$(".imgTr").find(".uploadAction").hide();
+	$(".imgTd").remove();
+	
 	$("#addStoreId").val($("#storeId").val());
 	$('#add').modal('show');
 	
 	action = function() {
+		// swiperUrl swiperImg
+		var url = $("#swiperUrl").val();
+		var src = $("#swiperImg").val();
+		if (url == "") {
+			alertWarning("url不能为空");
+			return;
+		}
+		if (src == "") {
+			alertWarning("src不能为空");
+			return;
+		}
+		if (src.indexOf("http") != 0) {
+			alertWarning("src必须以http开头");
+			return;
+		}
+			
 		showLoading();
 		$.post([[@{/swiper/insertSwiper}]], $("#addForm").serialize(), function(r) {
 			if (r.result == 1) {
@@ -40,41 +60,30 @@ function add() {
 	}
 }
 
-
-
 function remove(id) {
 	var callback = function () {
 		showLoading();
 		$.post([[@{/swiper/deleteSwiper}]], "id=" + id, function(r) {
-			if (r.result == 1) {
-				query();
-			}
+			if (r.result == 1) {query();}
 		});	
 	}
 	confirm(id, callback);
 }
 
-
 var move = {};
 move.top = function(id) {
 	$.post([[@{/swiper/top}]], "id=" + id + "&storeId=" + $("#storeId").val(), function(r) {
-		if (r.result == 1) {
-			query();
-		}
+		if (r.result == 1) {query();}
 	});	
 }
 move.up = function(id) {
 	$.post([[@{/swiper/up}]], "id=" + id + "&storeId=" + $("#storeId").val(), function(r) {
-		if (r.result == 1) {
-			query();
-		}
+		if (r.result == 1) {query();}
 	});
 }
 move.down = function(id) {
 	$.post([[@{/swiper/down}]], "id=" + id + "&storeId=" + $("#storeId").val(), function(r) {
-		if (r.result == 1) {
-			query();
-		}
+		if (r.result == 1) {query();}
 	});
 }
 
@@ -82,14 +91,22 @@ function storeChange() {
 	query();
 }
 
-
 //>>>>>>>>>>>>>>>>>>>img>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 var img = {};
 img.zIndex = 1000;
 img.click = function(obj) {
+	var initWidth = new Number($(obj).data("data-init-width"));
+	var initHeight = new Number($(obj).data("data-init-height"));
 	
+	if (obj.height == 80) {
+		$(obj).css({position:"fixed",left:$(obj).offset().left,top:$(obj).offset().top});
+		$(obj).css({zIndex:++img.zIndex,width:initWidth,height:initHeight});
+	}
+	else {
+		$(obj).css({position:"",zIndex:1000,width:80*initWidth/initHeight,height:80});
+	}
 }
-img.html = '<td class="imgTd"><table><tr><td rowspan="2"><img onclick="img.click(this)" onload="img.resize(this)"/></td>\
+img.html = '<td class="imgTd"><table><tr><td rowspan="2"><img onload="img.resize(this)"/></td>\
 	<td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td></tr></table></td>';
 img.fileChange = function(obj) {
 	this.loadImg(obj.files, obj.files.length, $(obj).parent().parent());
@@ -143,7 +160,6 @@ img.remove = function(obj) {
 }
 
 
-
 function upload(obj) {
 	var type = "swiper";
 	var file = $(obj).parents(".imgTr").find("img").data("file");
@@ -158,6 +174,7 @@ function upload(obj) {
 				var url = [[#{imgUrl}]] + r.arrayList[0];
 				$("#swiperImg").val(url);
 				hideLoading();
+				alertWarning("上传图片成功");
 			} 
 		}
 	});
@@ -181,7 +198,7 @@ function upload(obj) {
 	<tr>
 		<th>ID</th>
 		<th>PNG</th>
-		<th>URL</th>
+		<th>SRC</th>
 		<th>SORT</th>
 		<th>操作</th>
 	</tr>
@@ -189,7 +206,11 @@ function upload(obj) {
 	{{each arrayList as v i}}
 	<tr>
 		<td class="w-id">{{v.swiperId}}</td>
-		<td class="w-title-s">{{v.swiperImg}}</td>
+		<td class="w-title-s">
+			<div style="height:80px;overflow:hidden">
+				<img style="display:none" src="{{v.swiperImg}}" onload="img.resize(this)" onclick="img.click(this)">
+			</div>
+		</td>
 		<td class="w-title-s">{{v.swiperUrl}}</td>
 		<td class="w-action">
 			{{if arrayList.length != 1 && i !== 0}}
@@ -210,36 +231,33 @@ function upload(obj) {
 	</table>
 </div>
 
-<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 560)">
-	
+<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 660)">
 	<div class="form-group">
 		<input type="hidden" id="addStoreId" name="storeId">
-		<label class="col-sm-3 control-label"><span class="required">*</span>TARGET_URL：</label>
-		<div class="col-sm-7"><input type="text" name="swiperUrl" class="form-control" maxlength="32"></div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>URL：</label>
+		<div class="col-sm-8"><input type="text" id="swiperUrl" name="swiperUrl" class="form-control" maxlength="128" style="width:500px"></div>
 	</div>
 	
 	<div class="form-group">
 		<input type="hidden" id="addStoreId" name="storeId">
-		<label class="col-sm-3 control-label"><span class="required">*</span>IMG：</label>
-		<div class="col-sm-7"><input type="text" id="swiperImg" name="swiperImg" class="form-control" maxlength="32" style="width:"></div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>SRC：</label>
+		<div class="col-sm-8"><input type="text" id="swiperImg" name="swiperImg" class="form-control" maxlength="128" style="width:500px"></div>
 	</div>
 	
 	<div class="form-group">
-		<label class="col-sm-3 control-label">img：</label>
-		
-		<table class="col-sm-7" border="1" style="border-color:#DDDDDD;height:84px">
+		<label class="col-sm-2 control-label">img：</label>
+		<div class="col-sm-8">
+		<table border="1" style="border-color:#DDDDDD;height:84px;">
 		<tr class="imgTr">
 		<td>
 			<input type="file" accept=".jpg,.png" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
 			<a href="#" onclick="$(this).prev().click()">[+]</a>
 			<a href="#" style="display:none" class="uploadAction" onclick="upload(this)">上传</a>
 		</td>
-	</table>
+		</table>
+		</div>
 	</div>
-	
 </div>
-
-
 
 </body>
 </html>
