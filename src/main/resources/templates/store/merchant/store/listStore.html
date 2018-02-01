@@ -127,6 +127,8 @@ function storeDeleteRepo(obj) {
 		<th>ID</th>
 		<th>NAME</th>
 		<th>No</th>
+		<th>LNG</th>
+		<th>LAT</th>
 		<th>ADD</th>
 		<th>操作</th>
 	</tr>
@@ -136,6 +138,8 @@ function storeDeleteRepo(obj) {
 		<td class="w-id">{{v.storeId}}</td>
 		<td class="w-title-s">{{v.storeName}}</td>
 		<td class="w-title-s">{{v.storeNo}}</td>
+		<td class="w-id">{{v.storeLng}}</td>
+		<td class="w-id">{{v.storeLat}}</td>
 		<td class="w-title-s">{{v.storeAddress}}</td>
 		<td class="w-action">
 			<a href="#" onclick="repo('{{v.storeId}}')">[repo]</a>&nbsp;&nbsp;
@@ -165,6 +169,14 @@ function storeDeleteRepo(obj) {
 		<label class="col-sm-3 control-label"><span class="required">*</span>No：</label>
 		<div class="col-sm-7"><input type="text" name="storeNo" class="form-control validate[required]" maxlength="32"></div>
 	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>经：</label>
+		<div class="col-sm-7"><input type="text" name="storeLng" class="form-control validate[required]" maxlength="32"></div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>LAT：</label>
+		<div class="col-sm-7"><input type="text" name="storeLat" class="form-control validate[required]" maxlength="32"></div>
+	</div>
 </div>
 
 <div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 360)">
@@ -178,8 +190,16 @@ function storeDeleteRepo(obj) {
 		<div class="col-sm-7"><input type="text" name="storeName" value="{{store.storeName}}" class="form-control validate[required]" maxlength="32"></div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
+		<label class="col-sm-3 control-label"><span class="required">*</span>NO：</label>
 		<div class="col-sm-7"><input type="text" name="storeNo" value="{{store.storeNo}}" class="form-control validate[required]" maxlength="32"></div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>经：</label>
+		<div class="col-sm-7"><input type="text" name="storeLng" value="{{store.storeLng}}" class="form-control validate[required]" maxlength="32"></div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>LAT：</label>
+		<div class="col-sm-7"><input type="text" name="storeLat" value="{{store.storeLat}}" class="form-control validate[required]" maxlength="32"></div>
 	</div>
 	</script>
 </div>

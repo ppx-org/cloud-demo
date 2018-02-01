@@ -1,10 +1,10 @@
-package com.ppx.cloud.store.merchant.store;
+package com.ppx.cloud.micro.content.store;
 
 import com.ppx.cloud.common.jdbc.annotation.Id;
 import com.ppx.cloud.common.jdbc.annotation.Table;
 
 @Table(name = "store")
-public class Store {
+public class MStore {
 
 	@Id
 	private Integer storeId;
