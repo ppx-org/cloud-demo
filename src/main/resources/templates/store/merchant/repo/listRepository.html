@@ -57,7 +57,19 @@ function edit(id) {
 	}
 }
 
-function remove(id) {
+
+function remove(obj, id) {
+	
+	alert($(obj).attr("data-repo-name"))
+	return;
+	
+	
+	$('#delete').modal('show');
+	
+	action = function() {
+		$("#deleteRepoName")
+	}
+	/*
 	var callback = function () {
 		showLoading();
 		$.post([[@{/repository/deleteRepository}]], "id=" + id, function(r) {
@@ -67,6 +79,7 @@ function remove(id) {
 		});	
 	}
 	confirm(id, callback);
+	*/
 }
 </script>
 </head>
@@ -92,7 +105,7 @@ function remove(id) {
 		<td class="w-title-s">{{v.repoName}}</td>
 		<td class="w-title-m">{{v.repoAddress}}</td>
 		<td class="w-action">
-			<a href="#" onclick="remove('{{v.repoId}}')" class="glyphicon glyphicon-trash" title="删除"></a>&nbsp;&nbsp;
+			<a href="#" onclick="remove(this, '{{v.repoId}}')" data-repo-name="{{v.repoName}}" class="glyphicon glyphicon-trash" title="删除"></a>&nbsp;&nbsp;
 			<a href="#" onclick="edit('{{v.repoId}}')" class="glyphicon glyphicon-edit" title="修改"></a>
 		</td>
 	</tr>
@@ -110,7 +123,6 @@ function remove(id) {
 		<label class="col-sm-3 control-label"><span class="required">*</span>addR：</label>
 		<div class="col-sm-7"><input type="text" name="repoAddress" class="form-control validate[required]" maxlength="32"></div>
 	</div>
-	
 </div>
 
 <div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 360)">
@@ -129,6 +141,19 @@ function remove(id) {
 	</div>
 	</script>
 </div>
+
+
+<div th:fragment="delete" th:replace="common/fragment/common::modal('delete', '确认删除', 360)">
+	<div class="form-group">
+		<div class="col-sm-10">请确保仓库没有被使用</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>ro_NAME：</label>
+		<div class="col-sm-7"><input type="text" class="form-control" id="deleteRepoName" maxlength="32"></div>
+	</div>
+</div>
+
+
 
 </body>
 </html>

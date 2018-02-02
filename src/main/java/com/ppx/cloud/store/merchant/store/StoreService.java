@@ -99,24 +99,9 @@ public class StoreService extends MyDaoSupport {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	// >>>>>>>>>>>>其它地方调用
 	public List<Store> listStore() {
-		int merchantId = -1;//GrantContext.getLoginAccount().getMerchantId();
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 	
 		String sql = "select STORE_ID, STORE_NAME from store where MERCHANT_ID = ? order by STORE_ID desc";
 		
