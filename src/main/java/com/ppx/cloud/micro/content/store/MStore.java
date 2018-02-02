@@ -7,76 +7,87 @@ import com.ppx.cloud.common.jdbc.annotation.Table;
 public class MStore {
 
 	@Id
-	private Integer storeId;
+	private Integer id;
+
+	private String name;
 	
-	private Integer merchantId;
-
-	private String storeName;
+	private String no;
 	
-	private String storeNo;
+	private String lng;
 	
-	private Double storeLng;
+	private String lat;
 	
-	private Double storeLat;
+	private String phone;
 	
-	private String storeAddress;
-
-	public Integer getStoreId() {
-		return storeId;
-	}
-
-	public void setStoreId(Integer storeId) {
-		this.storeId = storeId;
-	}
-
-	public Integer getMerchantId() {
-		return merchantId;
-	}
-
-	public void setMerchantId(Integer merchantId) {
-		this.merchantId = merchantId;
-	}
-
-	public String getStoreName() {
-		return storeName;
-	}
-
-	public void setStoreName(String storeName) {
-		this.storeName = storeName;
-	}
-
-	public String getStoreNo() {
-		return storeNo;
-	}
-
-	public void setStoreNo(String storeNo) {
-		this.storeNo = storeNo;
-	}
+	private String img;
 	
-	public Double getStoreLng() {
-		return storeLng;
+	private String addr;
+
+	public Integer getId() {
+		return id;
 	}
 
-	public void setStoreLng(Double storeLng) {
-		this.storeLng = storeLng;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public Double getStoreLat() {
-		return storeLat;
+	public String getName() {
+		return name;
 	}
 
-	public void setStoreLat(Double storeLat) {
-		this.storeLat = storeLat;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getStoreAddress() {
-		return storeAddress;
+	public String getNo() {
+		return no;
 	}
 
-	public void setStoreAddress(String storeAddress) {
-		this.storeAddress = storeAddress;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
+	public String getLng() {
+		return lng;
+	}
+
+	public void setLng(String lng) {
+		this.lng = lng;
+	}
+
+	public String getLat() {
+		return lat;
+	}
+
+	public void setLat(String lat) {
+		this.lat = lat;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
+
+	public String getAddr() {
+		return addr;
+	}
+
+	public void setAddr(String addr) {
+		this.addr = addr;
+	}
+
+	
 	
 	
 }

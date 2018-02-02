@@ -127,8 +127,8 @@ public class ImgUploadController {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		String ext = fileName.substring(fileName.lastIndexOf("."));
 		
-		if (type.equals("swiper")) {
-			String path = merchantId + "/show/swiper";
+		if (type.equals("swiper") || type.equals("store")) {
+			String path = merchantId + "/show/" + type;
 			File pathFile = new File(System.getProperty("file.imgFilePath") + path);
 			if (!pathFile.exists()) {
 				pathFile.mkdirs();

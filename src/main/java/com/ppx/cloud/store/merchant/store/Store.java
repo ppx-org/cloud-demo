@@ -15,9 +15,13 @@ public class Store {
 	
 	private String storeNo;
 	
-	private Double storeLng;
+	private String storeLng;
 	
-	private Double storeLat;
+	private String storeLat;
+	
+	private String storePhone;
+	
+	private String storeImg;
 	
 	private String storeAddress;
 
@@ -53,20 +57,36 @@ public class Store {
 		this.storeNo = storeNo;
 	}
 	
-	public Double getStoreLng() {
+	public String getStoreLng() {
 		return storeLng;
 	}
 
-	public void setStoreLng(Double storeLng) {
+	public void setStoreLng(String storeLng) {
 		this.storeLng = storeLng;
 	}
 
-	public Double getStoreLat() {
+	public String getStoreLat() {
 		return storeLat;
 	}
 
-	public void setStoreLat(Double storeLat) {
+	public void setStoreLat(String storeLat) {
 		this.storeLat = storeLat;
+	}
+
+	public String getStorePhone() {
+		return storePhone;
+	}
+
+	public void setStorePhone(String storePhone) {
+		this.storePhone = storePhone;
+	}
+
+	public String getStoreImg() {
+		return storeImg;
+	}
+
+	public void setStoreImg(String storeImg) {
+		this.storeImg = storeImg;
 	}
 
 	public String getStoreAddress() {

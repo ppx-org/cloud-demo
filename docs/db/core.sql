@@ -56,8 +56,10 @@ create table store
    MERCHANT_ID          int not null,
    STORE_NAME           varchar(32) not null,
    STORE_NO             varchar(32) not null,
-   STORE_LNG			decimal(10, 6) not null,
-   STORE_LAT			decimal(10, 6) not null,
+   STORE_LNG			varchar(32) not null,
+   STORE_LAT			varchar(32) not null,
+   STORE_PHONE			varchar(32),
+   STORE_IMG			varchar(128),
    CREATED              timestamp not null default CURRENT_TIMESTAMP,
    RECORD_STATUS        smallint not null default 1,
    primary key (STORE_ID)

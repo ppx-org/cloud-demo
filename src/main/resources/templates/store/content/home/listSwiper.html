@@ -161,11 +161,10 @@ img.remove = function(obj) {
 
 
 function upload(obj) {
-	var type = "swiper";
 	var file = $(obj).parents(".imgTr").find("img").data("file");
 	var formData = new FormData();
 	formData.append("file", file);
-	formData.append("type", type);
+	formData.append("type", "swiper");
 	
 	showLoading();
 	$.ajax({url:[[@{/imgUpload/showSave}]], type:"POST", contentType:false, data:formData ,processData:false,
