@@ -90,7 +90,7 @@ function upload(obj) {
 	$.ajax({url:[[@{/imgUpload/showSave}]], type:"POST", contentType:false, data:formData ,processData:false,
 		success:function(r){
 			if (r.arrayList && r.arrayList.length == 1) {
-				var src = [[#{imgSrc}]] + r.arrayList[0] + "?t=" + new Date().getTime();
+				var src = [[#{imgUrl}]] + r.arrayList[0] + "?t=" + new Date().getTime();
 				
 				$("#" + type).css("width", "");
 				$("#" + type).css("height", "");
@@ -106,14 +106,13 @@ function upload(obj) {
 function updateImgSrc(type, src) {
 	$.post([[@{/img/updateImgSrc}]], "type=" + type + "&src=" + src, function(r) {
 		if (r.result == 1) {
-			alertSuccess("成功");
+			alertSuccess("上传成功");
 			hideLoading();
 		}
 	});
 }
 
 function editSrc(obj) {
-	
 	var type = $(obj).attr("data-type");
 	var src = $("#" + type).attr("src");
 	$("#imgSrc").val(src);
@@ -135,24 +134,28 @@ function editSrc(obj) {
 <body class="page-list-body">
 
 <div class="page-list-query">
-	<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>test</span></div>
+	<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>图片设置</span></div>
 </div>
 
 <table id="listTable" class="page-list-table table table-bordered table-condensed">
 	<tr>
-		<th style="width:200px;">TYPE</th>
-		<th style="width:400px;">IMG</th>
-		<th style="width:100px;">edit</th>
-		<th>ACTION</th>
+		<th style="width:200px">类型</th>
+		<th style="width:600px">图片</th>
+		<th style="width:200px">修改</th>
+		<th>上传图片</th>
 	</tr>
 	<tr th:each="img:${imgList}" style="height:82px;overflow:hidden;">
-		<td th:text="${img.imgType}"></td>
+		<td th:if="${img.imgType == 'cat'}">类目</td>
+		<td th:if="${img.imgType == 'brand'}">品牌</td>
+		<td th:if="${img.imgType == 'theme'}">专题</td>
+		<td th:if="${img.imgType == 'promo'}">促销</td>
+		
 		<td>
 			<div style="height:80px;overflow:hidden">
 				<img th:id="${img.imgType}" style="display:none" th:src="${img.imgSrc}" onload="img.resize(this)" onclick="img.click(this)" th:title="${img.imgSrc}">
 			</div>
 		</td>
-		<td><a href="#" onclick="editSrc(this)" th:attr="data-type=${img.imgType}">editSrc</a></td>
+		<td><a href="#" onclick="editSrc(this)" th:attr="data-type=${img.imgType}">修改图片地址</a></td>
 		<td>
 			<table border=""1 style="border-color:#DDDDDD;height:84px">
 			<tr class="imgTr">

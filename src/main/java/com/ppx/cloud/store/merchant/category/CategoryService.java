@@ -90,45 +90,7 @@ public class CategoryService extends MyDaoSupport {
 		}
 		return returnList;
 	}
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+		
 	
 	@Transactional
 	public int insertCategory(Category bean) {
@@ -149,12 +111,12 @@ public class CategoryService extends MyDaoSupport {
 	public int updateCategory(Category bean) {
 		return update(bean);
 	}
-	
+		
 	@Transactional
 	public int deleteCategory(Integer id) {
 		int r = getJdbcTemplate().update("update category set RECORD_STATUS = ? where CAT_ID = ?", 0, id);
 		// 子类也删除
-		int cR = getJdbcTemplate().update("update category set RECORD_STATUS = ? where PARENT_ID = ?", 0, id);
+		getJdbcTemplate().update("update category set RECORD_STATUS = ? where PARENT_ID = ?", 0, id);
 		
 		return r;
 	}
@@ -163,7 +125,7 @@ public class CategoryService extends MyDaoSupport {
 	public int restoreCategory(Integer id) {
 		int r = getJdbcTemplate().update("update category set RECORD_STATUS = ? where CAT_ID = ?", 1, id);
 		// 子类也恢复
-		int cR = getJdbcTemplate().update("update category set RECORD_STATUS = ? where PARENT_ID = ?", 1, id);
+		getJdbcTemplate().update("update category set RECORD_STATUS = ? where PARENT_ID = ?", 1, id);
 		
 		return r;
 	}

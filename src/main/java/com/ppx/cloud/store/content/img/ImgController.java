@@ -26,14 +26,12 @@ public class ImgController {
 	@GetMapping
 	public ModelAndView img() {
 		ModelAndView mv = new ModelAndView();
-		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		mv.addObject("merchantId", merchantId);
 		mv.addObject("imgList", serv.listImg());
 		return mv;
 	}
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> updateImgUrl(@RequestParam(required=true)String type, @RequestParam(required=true)String src) {
+	public Map<String, Object> updateImgSrc(@RequestParam(required=true)String type, @RequestParam(required=true)String src) {
 		int r = serv.updateImgSrc(type, src);
 		return ControllerReturn.ok(r);
 	}

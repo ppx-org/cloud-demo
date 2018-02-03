@@ -130,16 +130,16 @@ function editImgChange() {
 </script>
 
 <style th:inline="text">
-.catImgUrl {background-image: url("[[${imgSrc}]]");}
-.catImgList {background-size:250px 250px;width:50px;height:50px;margin:0 auto;}
-.catImg {width:100px;height:100px;margin:0 auto;}
+.brandImgUrl {background-image: url("[[${imgSrc}]]");}
+.brandImgList {background-size:250px 250px;width:50px;height:50px;margin:0 auto;}
+.brandImg {width:100px;height:100px;margin:0 auto;}
 </style>
 </head>
 
 <body>
 <div class="page-list-body">
 	<div class="page-list-query">
-		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>test</span></div>
+		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>品牌管理</span></div>
 		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
 		<input type="radio" onchange="query()" value="1" name="status" id="normal" style="vertical-align:sub;width:25px" checked="checked"><label class="control-label" for="normal">正常</label>
 		<input type="radio" onchange="query()" value="" name="status" id="all" style="vertical-align:sub;width:25px"><label class="control-label" for="all">全部</label>
@@ -147,17 +147,18 @@ function editImgChange() {
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
 		<th>ID</th>
-		<th>NAME</th>
-		<th>SORT</th>
-		<th>png</th>
-		<th>status</th>
+		<th>品牌名称</th>
+		<th>图片</th>
+		<th>排序</th>
+		<th>状态</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
-	<tr>
+	<tr {{if v.recordStatus == 0}}style="color:#CCCCCC"{{/if}}>
 		<td class="w-id">{{v.brandId}}</td>
 		<td class="w-title-s">{{v.brandName}}</td>
+		<td class="w-id"><div class="brandImgUrl brandImgList" style="background-position: -{{v.brandImgX * 50}}px -{{v.brandImgY * 50}}px;"></div></td>
 		<td class="w-action">
 			{{if arrayList.length != 1 && i !== 0}}
 			<a href="#" onclick="move.top({{v.brandId}})" title="置顶" class="glyphicon glyphicon-step-backward" style="transform: rotate(90deg);"></a>
@@ -169,11 +170,14 @@ function editImgChange() {
 			{{/if}}					
 		</td>
 		<td class="w-id">{{v.recordStatus}}</td>
-		<td class="w-id"><div class="catImgUrl catImgList" style="background-position: -{{v.brandImgX * 50}}px -{{v.brandImgY * 50}}px;"></div></td>
+		
 		<td class="w-action">
-			<a href="#" onclick="restore({{v.brandId}})">[恢复]</a>&nbsp;&nbsp;
-			<a href="#" onclick="remove({{v.brandId}})" class="glyphicon glyphicon-trash" title="删除"></a>&nbsp;&nbsp;
-			<a href="#" onclick="edit('{{v.brandId}}', {{v.brandImgX}}, {{v.brandImgY}})" class="glyphicon glyphicon-edit" title="修改"></a>
+		{{if v.recordStatus == 1}}
+			<a href="#" onclick="remove({{v.brandId}})">[删除]</a>&nbsp;&nbsp;
+			<a href="#" onclick="edit('{{v.brandId}}', {{v.brandImgX}}, {{v.brandImgY}})">[修改]</a>
+		{{else}}
+			<a href="#" onclick="restore({{v.brandId}})">[恢复]</a>
+		{{/if}}
 		</td>
 	</tr>
 	{{/each}}
@@ -181,13 +185,13 @@ function editImgChange() {
 	</table>
 </div>
 
-<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
+<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 420)">
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
-		<div class="col-sm-7"><input type="text" name="brandName" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-4 control-label"><span class="required">*</span>品牌名称：</label>
+		<div class="col-sm-6"><input type="text" name="brandName" class="form-control validate[required]" maxlength="32"></div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-4 control-label"><span class="required">*</span>Bxxx_X：</label>
+		<label class="col-sm-4 control-label"><span class="required">*</span>座标X：</label>
 		<div class="col-sm-6">
 			<select class="form-control" id="addBrandImgX" name="brandImgX" onchange="addImgChange()">
 				<option th:each="item:${listImgX}" th:value="${item.value}" th:text="${item.name}"></option>
@@ -195,7 +199,7 @@ function editImgChange() {
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-4 control-label"><span class="required">*</span>Bxxxx_Y：</label>
+		<label class="col-sm-4 control-label"><span class="required">*</span>座标Y：</label>
 		<div class="col-sm-6">
 			<select class="form-control" id="addBrandImgY" name="brandImgY" onchange="addImgChange()">
 				<option th:each="item:${listImgY}" th:value="${item.value}" th:text="${item.name}"></option>
@@ -203,25 +207,25 @@ function editImgChange() {
 		</div>
 	</div>
 	<div class="form-group">
-		<div class="catImgUrl catImg" id="addCatImg"></div>
+		<div class="brandImgUrl brandImg" id="addBrandImg"></div>
 	</div>
 </div>
 
-<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 360)">
+<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 420)">
 	<script id="editTemplate" type="text/html">
 	<div class="form-group">
-		<label class="col-sm-3 control-label">ID：</label>
-		<div class="col-sm-7"><input type="text" name="brandId" value="{{brand.brandId}}" class="form-control" readonly></div>
+		<label class="col-sm-4 control-label">ID：</label>
+		<div class="col-sm-6"><input type="text" name="brandId" value="{{brand.brandId}}" class="form-control" readonly></div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
-		<div class="col-sm-7"><input type="text" name="brandName" value="{{brand.brandName}}" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-4 control-label"><span class="required">*</span>品牌名称：</label>
+		<div class="col-sm-6"><input type="text" name="brandName" value="{{brand.brandName}}" class="form-control validate[required]" maxlength="32"></div>
 	</div>
 
 
 	<div id="imgDiv">
 	<div class="form-group">
-		<label class="col-sm-4 control-label"><span class="required">*</span>Brand_X：</label>
+		<label class="col-sm-4 control-label"><span class="required">*</span>座标X：</label>
 		<div class="col-sm-6">
 			<select class="form-control" id="editBrandImgX" name="brandImgX" onchange="editImgChange()">
 				<option th:each="item:${listImgX}" th:value="${item.value}" th:text="${item.name}"></option>
@@ -229,7 +233,7 @@ function editImgChange() {
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-4 control-label"><span class="required">*</span>Brand_Y：</label>
+		<label class="col-sm-4 control-label"><span class="required">*</span>座标Y：</label>
 		<div class="col-sm-6">
 			<select class="form-control" id="editBrandImgY" name="brandImgY" onchange="editImgChange()">
 				<option th:each="item:${listImgY}" th:value="${item.value}" th:text="${item.name}"></option>
@@ -237,7 +241,7 @@ function editImgChange() {
 		</div>
 	</div>
 	<div class="form-group">
-		<div class="catImgUrl catImg" id="editCatImg"></div>
+		<div class="brandImgUrl brandImg" id="editBrandImg"></div>
 	</div>
 	</div>
 	</script>
