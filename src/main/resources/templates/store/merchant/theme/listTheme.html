@@ -159,7 +159,7 @@ function editImgChange() {
 	</tr>
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
-	<tr>
+	<tr {{if v.recordStatus == 0}}style="color:#CCCCCC"{{/if}}>
 		<td class="w-id">{{v.themeId}}</td>
 		<td class="w-title-s">{{v.themeName}}</td>
 		<td class="w-id"><div class="themeImgUrl themeImgList" style="background-position: -{{v.themeImgX * 50}}px -{{v.themeImgY * 50}}px;"></div></td>
