@@ -119,16 +119,24 @@ function editPassword(id) {
 	}
 }
 
-function remove(id) {
-	var callback = function() {
+function remove(obj, id) {
+	var merchantName = $(obj).attr("data-merchant-name");
+	$("#showMerchantName").text(merchantName);
+	$('#delete').modal('show');
+	
+	action = function() {
+		if ($("#deleteMerchantName").val() != merchantName) {
+			alertWarning("商户名称不正确");
+			return;
+		}
 		showLoading();
 		$.post([[@{/merchant/deleteMerchant}]], "id=" + id, function(r) {
 			if (r.result == 1) {
+				$('#delete').modal('hide');
 				queryPage(1);
 			}
 		});	
 	}
-	confirm("确定要删除" + id + "?", callback);
 }
 </script>
 </head>
@@ -155,7 +163,7 @@ function remove(id) {
 		<td class="w-title-s">{{v.merchantName}}</td>
   		<td class="w-title-s">{{v.loginAccount}}</td>
 		<td class="w-action">
-			<a href="#" onclick="remove('{{v.merchantId}}')">[删除]</a>&nbsp;&nbsp;
+			<a href="#" onclick="remove(this, '{{v.merchantId}}')" data-merchant-name="{{v.merchantName}}">[删除]</a>&nbsp;&nbsp;
 			<a href="#" onclick="editName('{{v.merchantId}}')">[修改名称]</a>&nbsp;&nbsp;
 			<a href="#" onclick="editAccount('{{v.merchantId}}')">[修改帐号]</a>&nbsp;&nbsp;
 			<a href="#" onclick="editPassword('{{v.merchantId}}')">[修改密码]</a>
@@ -223,6 +231,17 @@ function remove(id) {
 	</div>
 	</script>
 </div>
+
+<div th:fragment="delete" th:replace="common/fragment/common::modal('delete', '确认删除', 400)">
+	<div class="form-group" style="text-align:center">
+		<div class="col-sm-10" style="color:red">请确保商户：<span id="showMerchantName"></span>没有被使用</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-4 control-label"><span class="required">*</span>商户名称：</label>
+		<div class="col-sm-6"><input type="text" class="form-control" id="deleteMerchantName" maxlength="32"></div>
+	</div>
+</div>
+
 
 
 

@@ -61,27 +61,38 @@ function edit(id) {
 	}
 }
 
-function remove(id) {
-	var callback = function () {
+function remove(obj, id) {
+	var storeName = $(obj).attr("data-store-name");
+	$("#showStoreName").text(storeName);
+	$('#delete').modal('show');
+	
+	action = function() {
+		if ($("#deleteStoreName").val() != storeName) {
+			alertWarning("店铺名称不正确");
+			return;
+		}
 		showLoading();
 		$.post([[@{/store/deleteStore}]], "id=" + id, function(r) {
 			if (r.result == 1) {
+				$('#delete').modal('hide');
 				queryPage(1);
 			}
 		});	
 	}
-	confirm(id, callback);
 }
 
 function repo(id) {
+	$("#seletedId").text(id);
 	showLoading();
 	$.post([[@{/store/listStoreRepo}]], "id=" + id, function(r) {
 		hideLoading();
 		$('#repo').modal('show');
 		$("#selectedRepo").empty();
 		for (var i = 0; r.arrayList && i < r.arrayList.length; i++) {
+			var name = r.arrayList[i].repoName;
 			var disabled = (r.arrayList[i].repoId == id ? "disabled style='color:red'" : "");
-			$("#selectedRepo").append('<option value="' + r.arrayList[i].repoId + '" ' + disabled + '>' + r.arrayList[i].repoName + '</option>');
+			var name = (r.arrayList[i].repoId == id ? name + "(位于)" : name);
+			$("#selectedRepo").append('<option value="' + r.arrayList[i].repoId + '" ' + disabled + '>' + name + '</option>');
 		}
 	});
 	
@@ -194,7 +205,7 @@ function upload(obj) {
 		success:function(r){
 			if (r.arrayList && r.arrayList.length == 1) {
 				var url = [[#{imgUrl}]] + r.arrayList[0];
-				$("#storeImg").val(url);
+				$("[name=storeImg]").val(url);
 				hideLoading();
 				alertWarning("上传图片成功");
 			} 
@@ -217,8 +228,7 @@ function upload(obj) {
 		<th>店铺图片</th>
 		<th>店铺名称</th>
 		<th>店铺编号</th>
-		<th>经度</th>
-		<th>纬度</th>
+		<th>经度-纬度</th>
 		<th>店铺电话</th>
 		<th>地址</th>
 		<th>操作</th>
@@ -232,15 +242,14 @@ function upload(obj) {
 				<img style="display:none" src="{{v.storeImg}}" onload="img.resize(this)" onclick="img.click(this)"/>
 			</div>
 		</td>
-		<td class="w-title-s">{{v.storeName}}</td>
+		<td class="w-id">{{v.storeName}}</td>
 		<td class="w-id">{{v.storeNo}}</td>
-		<td class="w-id">{{v.storeLng}}</td>
-		<td class="w-id">{{v.storeLat}}</td>
+		<td class="w-title-m">{{v.storeLng}}-{{v.storeLat}}</td>
 		<td class="w-id">{{v.storePhone}}</td>
 		<td class="w-title-l">{{v.storeAddress}}</td>
-		<td class="w-action">
-			<a href="#" onclick="repo('{{v.storeId}}')">[仓库设置]</a>&nbsp;&nbsp;
-			<a href="#" onclick="remove('{{v.storeId}}')">[删除]</a>&nbsp;&nbsp;
+		<td class="w-action-m">
+			<a href="#" onclick="remove(this, '{{v.storeId}}')" data-store-name="{{v.storeName}}">[删除]</a>&nbsp;&nbsp;
+			<a href="#" onclick="repo('{{v.storeId}}')">[关联仓库]</a>&nbsp;&nbsp;
 			<a href="#" onclick="edit('{{v.storeId}}')">[修改]</a>
 		</td>
 	</tr>
@@ -291,12 +300,7 @@ function upload(obj) {
 		</table>
 		</div>
 	</div>
-	
-	
 </div>
-
-
-
 
 <div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 800)">
 	<script id="editTemplate" type="text/html">
@@ -307,38 +311,61 @@ function upload(obj) {
 		<div class="col-sm-3"><input type="text" name="storePhone" class="form-control" value="{{store.storePhone}}"></div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>店铺名称：</label>
-		<div class="col-sm-7"><input type="text" name="storeName" value="{{store.storeName}}" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>店铺名称：</label>
+		<div class="col-sm-3"><input type="text" name="storeName" value="{{store.storeName}}" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>店铺编号：</label>
+		<div class="col-sm-3"><input type="text" name="storeNo" value="{{store.storeNo}}" class="form-control validate[required]" maxlength="32"></div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>店铺编号：</label>
-		<div class="col-sm-7"><input type="text" name="storeNo" value="{{store.storeNo}}" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>经度：</label>
+		<div class="col-sm-3"><input type="text" name="storeLng" value="{{store.storeLng}}" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>纬度：</label>
+		<div class="col-sm-3"><input type="text" name="storeLat" value="{{store.storeLat}}" class="form-control validate[required]" maxlength="32"></div>
 	</div>
+
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>经度：</label>
-		<div class="col-sm-7"><input type="text" name="storeLng" value="{{store.storeLng}}" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-2 control-label">店铺图片：</label>
+		<div class="col-sm-8"><input type="text" name="storeImg" value="{{store.storeImg}}" class="form-control" style="width:530px;"></div>
 	</div>
+
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>纬度：</label>
-		<div class="col-sm-7"><input type="text" name="storeLat" value="{{store.storeLat}}" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-2 control-label">选择图片：</label>
+		<div class="col-sm-8">
+		<table border="1" style="border-color:#DDDDDD;height:84px;">
+		<tr class="imgTr">
+		<td>
+			<input type="file" accept=".jpg,.png" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
+			<a href="#" onclick="$(this).prev().click()">[+]</a>
+			<a href="#" style="display:none" class="uploadAction" onclick="upload(this)">上传</a>
+		</td>
+		</table>
+		</div>
 	</div>
 	</script>
 </div>
 
-
-<div th:fragment="repo" th:replace="common/fragment/common::modal('repo', 'repo', 400)">
+<div th:fragment="repo" th:replace="common/fragment/common::modal('repo', '仓库设置', 560)">
 	<div class="form-group">
 		<div class="col-sm-5">
-			<label>can't repo</label>
-			<select id="selectedRepo" class="form-control" style="width:150px" size="10" ondblclick="storeDeleteRepo(this)">
-			</select>
+			<label>ID:<span id="seletedId"></span>关联的仓库</label>
+			<select  class="form-control" id="selectedRepo" style="width:220px" size="10" ondblclick="storeDeleteRepo(this)"></select>
 		</div>
 		<div class="col-sm-5">
-			<label>double</label>
-			<select class="form-control" style="width:150px" size="10" ondblclick="storeAddRepo(this)">
+			<label>所有仓库(双击选择)</label>
+			<select class="form-control" style="width:220px" size="10" ondblclick="storeAddRepo(this)">
 				<option th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${listRepo}"></option>
 			</select>
 		</div>
+	</div>
+</div>
+
+<div th:fragment="delete" th:replace="common/fragment/common::modal('delete', '确认删除', 400)">
+	<div class="form-group" style="text-align:center">
+		<div class="col-sm-10" style="color:red">请确保店铺：<span id="showStoreName"></span>没有被使用</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-4 control-label"><span class="required">*</span>店铺名称：</label>
+		<div class="col-sm-6"><input type="text" class="form-control" id="deleteStoreName" maxlength="32"></div>
 	</div>
 </div>
 
