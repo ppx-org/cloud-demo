@@ -57,29 +57,24 @@ function edit(id) {
 	}
 }
 
-
 function remove(obj, id) {
-	
-	alert($(obj).attr("data-repo-name"))
-	return;
-	
-	
+	var repoName = $(obj).attr("data-repo-name");
+	$("#showRepoName").text(repoName);
 	$('#delete').modal('show');
 	
 	action = function() {
-		$("#deleteRepoName")
-	}
-	/*
-	var callback = function () {
+		if ($("#deleteRepoName").val() != repoName) {
+			alertWarning("仓库名称不正确");
+			return;
+		}
 		showLoading();
 		$.post([[@{/repository/deleteRepository}]], "id=" + id, function(r) {
 			if (r.result == 1) {
+				$('#delete').modal('hide');
 				queryPage(1);
 			}
 		});	
 	}
-	confirm(id, callback);
-	*/
 }
 </script>
 </head>
@@ -94,8 +89,8 @@ function remove(obj, id) {
 	<table th:fragment="listFragment">
 	<tr>
 		<th>ID</th>
-		<th>NAME</th>
-		<th>Addr</th>
+		<th>仓库名称</th>
+		<th>仓库地址</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
@@ -105,8 +100,8 @@ function remove(obj, id) {
 		<td class="w-title-s">{{v.repoName}}</td>
 		<td class="w-title-m">{{v.repoAddress}}</td>
 		<td class="w-action">
-			<a href="#" onclick="remove(this, '{{v.repoId}}')" data-repo-name="{{v.repoName}}" class="glyphicon glyphicon-trash" title="删除"></a>&nbsp;&nbsp;
-			<a href="#" onclick="edit('{{v.repoId}}')" class="glyphicon glyphicon-edit" title="修改"></a>
+			<a href="#" onclick="remove(this, '{{v.repoId}}')" data-repo-name="{{v.repoName}}">[删除]</a>&nbsp;&nbsp;
+			<a href="#" onclick="edit('{{v.repoId}}')">[修改]</a>
 		</td>
 	</tr>
 	{{/each}}
@@ -114,46 +109,43 @@ function remove(obj, id) {
 	</table>
 </div>
 
-<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
+<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 620)">
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
-		<div class="col-sm-7"><input type="text" name="repoName" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-3 control-label"><span class="required">*</span>仓库名称：</label>
+		<div class="col-sm-7"><input type="text" name="repoName" class="form-control validate[required]" maxlength="32" style="width:380px"></div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>addR：</label>
-		<div class="col-sm-7"><input type="text" name="repoAddress" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-3 control-label"><span class="required">*</span>仓库地址：</label>
+		<div class="col-sm-7"><input type="text" name="repoAddress" class="form-control validate[required]" maxlength="64" style="width:380px"></div>
 	</div>
 </div>
 
-<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 360)">
+<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 620)">
 	<script id="editTemplate" type="text/html">
 	<div class="form-group">
 		<label class="col-sm-3 control-label">ID：</label>
 		<div class="col-sm-7"><input type="text" name="repoId" value="{{repository.repoId}}" class="form-control" readonly></div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
-		<div class="col-sm-7"><input type="text" name="repoName" value="{{repository.repoName}}" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-3 control-label"><span class="required">*</span>仓库名称：</label>
+		<div class="col-sm-7"><input type="text" name="repoName" value="{{repository.repoName}}" class="form-control validate[required]" maxlength="32" style="width:380px"></div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
-		<div class="col-sm-7"><input type="text" name="repoAddress" value="{{repository.repoAddress}}" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-3 control-label"><span class="required">*</span>仓库地址：</label>
+		<div class="col-sm-7"><input type="text" name="repoAddress" value="{{repository.repoAddress}}" class="form-control validate[required]" maxlength="64" style="width:380px"></div>
 	</div>
 	</script>
 </div>
 
-
-<div th:fragment="delete" th:replace="common/fragment/common::modal('delete', '确认删除', 360)">
-	<div class="form-group">
-		<div class="col-sm-10">请确保仓库没有被使用</div>
+<div th:fragment="delete" th:replace="common/fragment/common::modal('delete', '确认删除', 400)">
+	<div class="form-group" style="text-align:center">
+		<div class="col-sm-10" style="color:red">请确保仓库：<span id="showRepoName"></span>没有被使用</div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>ro_NAME：</label>
-		<div class="col-sm-7"><input type="text" class="form-control" id="deleteRepoName" maxlength="32"></div>
+		<label class="col-sm-4 control-label"><span class="required">*</span>仓库名称：</label>
+		<div class="col-sm-6"><input type="text" class="form-control" id="deleteRepoName" maxlength="32"></div>
 	</div>
 </div>
-
-
 
 </body>
 </html>

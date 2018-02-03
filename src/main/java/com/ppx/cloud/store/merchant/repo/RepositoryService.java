@@ -21,7 +21,7 @@ public class RepositoryService extends MyDaoSupport {
 		
 		String sql = " where MERCHANT_ID = ? and RECORD_STATUS = ? ";
 		StringBuilder cSql = new StringBuilder("select count(*) from repository").append(sql).append(c);
-		StringBuilder qSql = new StringBuilder("select * from repository").append(sql).append("order by REPO_ID desc").append(c);
+		StringBuilder qSql = new StringBuilder("select * from repository").append(sql).append(c).append("order by REPO_ID desc");
 		c.addPrePara(merchantId);
 		c.addPrePara(1);
 		

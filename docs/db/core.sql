@@ -50,6 +50,7 @@ create table repository
    primary key (REPO_ID)
 );
 
+/** STORE_ID继承repository.REPO_ID */
 create table store
 (
    STORE_ID             int not null,

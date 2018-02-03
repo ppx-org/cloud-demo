@@ -19,14 +19,14 @@ public class StoreService extends MyDaoSupport {
 	public PageList<Store> listStore(Page page, Store bean) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
-		MyCriteria c = createCriteria("where").addAnd("s.STORE_NAME like ?", "%", bean.getStoreName(), "%");
+		MyCriteria c = createCriteria("and").addAnd("s.STORE_NAME like ?", "%", bean.getStoreName(), "%");
 		
 		
 		String sql = " where s.MERCHANT_ID = ? and s.RECORD_STATUS = ? ";
 		StringBuilder cSql = new StringBuilder("select count(*) from store s").append(sql).append(c);
 		StringBuilder qSql = new StringBuilder("select s.STORE_ID, s.STORE_NAME, s.STORE_NO, r.REPO_ADDRESS STORE_ADDRESS,").append(
-				" s.STORE_LNG, s.STORE_LAT").append(
-				" from store s left join repository r on s.STORE_ID = r.REPO_ID").append(sql).append("order by s.STORE_ID desc").append(c);
+				" s.STORE_LNG, s.STORE_LAT, s.STORE_PHONE, s.STORE_IMG").append(
+				" from store s left join repository r on s.STORE_ID = r.REPO_ID").append(sql).append(c).append("order by s.STORE_ID desc");
 		c.addPrePara(merchantId);
 		c.addPrePara(1);
 		
