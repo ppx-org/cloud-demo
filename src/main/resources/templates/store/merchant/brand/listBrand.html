@@ -42,17 +42,19 @@ function add() {
 }
 
 function edit(id, x, y) {
-	$("#imgDiv").show();
-	$("#editBrandImgX option[value=" + x + "]").attr("selected", true);
-	$("#editBrandImgY option[value=" + y + "]").attr("selected", true);
-	editImgChange();
+	
 	
 	showLoading();
 	$.post([[@{/brand/getBrand}]], "id=" + id, function(r) {
 		hideLoading();
-		$('#edit').modal('show');
 		$("#editTemplate").nextAll().remove();
 		$("#editTemplate").parent().append(template("editTemplate", r));
+		
+		$("#imgDiv").show();
+		$("#editBrandImgX option[value=" + x + "]").attr("selected", true);
+		$("#editBrandImgY option[value=" + y + "]").attr("selected", true);
+		editImgChange();
+		$('#edit').modal('show');
 	});
 	
 	action = function() {
