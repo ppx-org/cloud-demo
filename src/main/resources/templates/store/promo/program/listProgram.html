@@ -110,9 +110,6 @@ function policyTypeChange(obj) {
 	}
 }
 
-
-
-
 function start(progId, obj) {
 	showLoading();
 	$.post([[@{/program/start}]], "progId=" + progId, function(r) {
@@ -176,58 +173,17 @@ function getStatusDescByStr(string) {
 	return getStatusDesc(s[0], s[1], s[2]);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
 </head>
 
 <body>
 
-<div th:replace="common/fragment/common::pageList('DEMO')">
+<div th:replace="common/fragment/common::pageList('促销管理')">
 	<div th:fragment="queryFragment">
 		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
 		
 		<div class="input-group input-group-sm">
-			<span class="input-group-addon">type</span>	
+			<span class="input-group-addon">促销类型</span>	
 			<select class="form-control" id="queryPolicyType" name="policyType">
 				<option value="">全部</option>
 				<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listPolicy}"></option>
@@ -235,20 +191,20 @@ function getStatusDescByStr(string) {
 		</div>
 		
 		
-		<input type="text" class="form-control input-sm" name="progName" placeholder="请输入NAME" style="width:200px;">
+		<input type="text" class="form-control input-sm" name="progName" placeholder="请输入方案名称" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
 		<th>ID</th>
-		<th>Name</th>
-		<th>DATE1</th>
-		<th>DATE2</th>
-		<th>PRIO</th>
-		<th>TYPE</th>
+		<th>方案名称</th>
+		<th>开始日期</th>
+		<th>结束日期</th>
+		<th>排序</th>
+		<th>促销类型</th>
 		<th>args</th>
 		<th>TIME</th>
-		<th>STATUS</th>
+		<th>状态</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
@@ -275,21 +231,21 @@ function getStatusDescByStr(string) {
 	</table>
 </div>
 
-<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 760)">
+<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 860)">
 	<div class="form-group">
-		<label class="col-sm-2 control-label"><span class="required">*</span>NAME：</label>
+		<label class="col-sm-2 control-label"><span class="required">*</span>方案名称：</label>
 		<div class="col-sm-4"><input type="text" name="progName" class="form-control validate[required]" maxlength="32"></div>
-		<label class="col-sm-2 control-label"><span class="required">*</span>PRIO：</label>
+		<label class="col-sm-2 control-label"><span class="required">*</span>优先级：</label>
 		<div class="col-sm-4"><input type="text" name="progPrio" class="form-control validate[required,custom[integer]]" maxlength="32"></div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-2 control-label"><span class="required">*</span>begin：</label>
+		<label class="col-sm-2 control-label"><span class="required">*</span>开始日期：</label>
 		<div class="col-sm-4"><input type="text" name="progBegin" th:value="${today}" class="form-control validate[required]" onclick="WdatePicker()"></div>
-		<label class="col-sm-2 control-label"><span class="required"></span>end：</label>
+		<label class="col-sm-2 control-label"><span class="required"></span>结束日期：</label>
 		<div class="col-sm-4"><input type="text" name="progEnd" class="form-control" onclick="WdatePicker()" placeholder="空表示没有结束"></div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-2 control-label"><span class="required">*</span>poli：</label>
+		<label class="col-sm-2 control-label"><span class="required">*</span>促销策略：</label>
 		<div class="col-sm-8">
 		<select class="form-control validate[required]" id="policyType" name="policyType" onchange="policyTypeChange(this)">
 			<option value="">请选择</option>
@@ -301,8 +257,8 @@ function getStatusDescByStr(string) {
 	</form>
 	<form id="policyArgsForm" class="form-horizontal">
 	<div class="form-group">
-		<label class="col-sm-2 control-label"><span class="required" >*</span>poli_args：</label>
-		<div class="col-sm-8 form-inline" th:include="store/promo/common/promoCommon::policyArgs"></div>
+		<label class="col-sm-2 control-label"><span class="required" >*</span>策略参数：</label>
+		<div class="col-sm-9 form-inline" th:include="store/promo/common/promoCommon::policyArgs"></div>
 	</div>	
 </div>
 

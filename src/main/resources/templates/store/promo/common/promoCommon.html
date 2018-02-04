@@ -8,18 +8,20 @@
 	<option value="8">8</option>
 	<option value="10">10</option>
 	<option value="12">12</option>
+	<option value="12">15</option>
 </select>
 
 
 <select th:fragment="discount">
-	<option value="0.95">9.5d</option>
-	<option value="0.9">9d</option>
-	<option value="0.85">8.5d</option>
-	<option value="0.8">8d</option>
-	<option value="0.75">7.5d</option>
-	<option value="0.7">7d</option>
-	<option value="0.6">6d</option>
-	<option value="0.5">5d</option>
+	<option value="1">10</option>
+	<option value="0.95">9.5</option>
+	<option value="0.9">9.0</option>
+	<option value="0.85">8.5</option>
+	<option value="0.8">8.0</option>
+	<option value="0.75">7.5</option>
+	<option value="0.7">7.0</option>
+	<option value="0.6">6.0</option>
+	<option value="0.5">5.0</option>
 </select>
 
 
@@ -40,7 +42,7 @@
 	
 	function getPolicyArgs(policyType) {
 		var policy = $("#" + policyType + "Policy").val();
-		if (policyType == "Change") {
+		if (policyType == "Change" || policyType == "Special" || policyType == "Dependence") {
 			return policy;
 		}
 		
@@ -58,7 +60,7 @@
 	
 	<input type="text" style="display:none" id="ChangePolicy" class="form-control validate[required,custom[number]]" placeholder="enoughChange" >
 	<div id="argType" style="display:none" class="input-group">
-		<span class="input-group-addon">type</span>	
+		<span class="input-group-addon">类型</span>	
 		<select class="form-control" style="display:none" onchange="policyChange(this)" id="ProductPolicy">
 			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listProductPolicy}"></option>
 		</select>
@@ -73,48 +75,48 @@
 	
 	
 	<div id="%:d" style="display:none" class="input-group policy">
-		<span class="input-group-addon">disc</span>	
+		<span class="input-group-addon">折扣</span>	
 		<select class="form-control" th:include="::discount" name="%:d"></select>
 	</div>	
 	<div id="A:y" style="display:none" class="input-group policy">
-		<span class="input-group-addon">avg</span>	
+		<span class="input-group-addon">均价</span>	
 		<select class="form-control" th:include="::avg" name="A:y"></select>
 	</div>
 	<div id="E:y,-:y" style="display:none" class="input-group policy">
-		<span class="input-group-addon">E</span>
+		<span class="input-group-addon">满</span>
 		<input class="form-control validate[required,custom[number]]" type="text" style="width:70px" maxlength="5" name="E:y">
-		<span class="input-group-addon">-</span>
+		<span class="input-group-addon">立减</span>
 		<input class="form-control validate[required,custom[number,funcCall[validateMax]]]" type="text" style="width:70px" maxlength="5" name="-:y">
 	</div>	
 	<div id="%:d,2:d" style="display:none" class="input-group policy">
-		<span class="input-group-addon">1</span>
+		<span class="input-group-addon">单件</span>
 		<select class="form-control" id="discount" th:include="::discount" name="%:d"></select>
-		<span class="input-group-addon">2</span>
+		<span class="input-group-addon">第二件</span>
 		<select class="form-control" id="discount" th:include="::discount" name="2:d"></select>
 	</div>
 	<div id="%:d,2+:d" style="display:none" class="input-group policy">
-		<span class="input-group-addon">1</span>
+		<span class="input-group-addon">第一件</span>
 		<select class="form-control" id="discount" th:include="::discount" name="%:d"></select>
-		<span class="input-group-addon">2+</span>
+		<span class="input-group-addon">任两件及以上</span>
 		<select class="form-control" id="discount" th:include="::discount" name="2+:d"></select>
 	</div>
 	<div id="y:Y,n:N" style="display:none" class="input-group policy">
-		<span class="input-group-addon">N</span>
+		<span class="input-group-addon">元</span>
 		<input class="form-control validate[required,custom[integer]]" id="enough" type="text" style="width:70px" maxlength="2" name="y:Y">
-		<span class="input-group-addon">y</span>
+		<span class="input-group-addon">件</span>
 		<input class="form-control validate[required,custom[number]]" id="minus" type="text" style="width:70px" maxlength="5" name="n:N">
 	</div>
 	<div id="+:y,m:1" style="display:none" class="input-group policy">
-		<span class="input-group-addon">y</span>
+		<span class="input-group-addon">多一件</span>
 		<input class="form-control validate[required,custom[number]]" type="text" style="width:70px" maxlength="5" name="+:y">
 		<input type="hidden" value="1" name="m:1">
 	</div>
 	<div id="B:n,F:n" style="display:none" class="input-group policy">
-		<span class="input-group-addon">bu</span>
+		<span class="input-group-addon">买</span>
 		<select class="form-control" name="B:n">
 			<option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
 		</select>
-		<span class="input-group-addon">free</span>
+		<span class="input-group-addon">免</span>
 		<select class="form-control" name="F:n">
 			<option value="1">1</option><option value="2">2</option>
 		</select>
