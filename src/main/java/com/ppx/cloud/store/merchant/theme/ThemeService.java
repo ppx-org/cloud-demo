@@ -61,6 +61,8 @@ public class ThemeService extends MyDaoSupport {
 	}
 	
 	public int restoreTheme(Integer id) {
+		
+		
 		return getJdbcTemplate().update("update theme set RECORD_STATUS = ? where THEME_ID = ?", 1, id);
 	}
 	
@@ -145,20 +147,12 @@ public class ThemeService extends MyDaoSupport {
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
 	public PageList<ThemeProduct> listThemeProduct(Page page, ThemeProduct bean) {
 	
-		MyCriteria c = createCriteria("and").addAnd("PROD_ID = ?", bean.getProdId());
+		MyCriteria c = createCriteria("and").addAnd("m.PROD_ID = ?", bean.getProdId());
 		
-		StringBuilder cSql = new StringBuilder("select count(*) from theme_map_prod where THEME_ID = ?").append(c);
-		StringBuilder qSql = new StringBuilder("select * from theme_map_prod where THEME_ID = ?").append(c);		
+		StringBuilder cSql = new StringBuilder("select count(*) from theme_map_prod m where m.THEME_ID = ?").append(c);
+		StringBuilder qSql = new StringBuilder("select m.THEME_ID, m.PROD_ID, d.PROD_TITLE from theme_map_prod m left join product d on m.PROD_ID = d.PROD_ID where THEME_ID = ?").append(c);		
 		c.addPrePara(bean.getThemeId());
 		
 		List<ThemeProduct> list = queryPage(ThemeProduct.class, page, cSql, qSql, c.getParaList());

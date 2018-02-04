@@ -165,21 +165,23 @@ function editImgChange() {
 		<td class="w-id"><div class="themeImgUrl themeImgList" style="background-position: -{{v.themeImgX * 50}}px -{{v.themeImgY * 50}}px;"></div></td>
 		<td class="w-id">{{v.recordStatus}}</td>
 		<td class="w-action">
-			{{if arrayList.length != 1 && i !== 0}}
+			{{if arrayList.length != 1 && i !== 0 && v.recordStatus == 1}}
 			<a href="#" onclick="move.top({{v.themeId}})" title="置顶" class="glyphicon glyphicon-step-backward" style="transform: rotate(90deg);"></a>
 			<a href="#" onclick="move.up({{v.themeId}})" title="上移" class="glyphicon glyphicon-arrow-up"></a>
 			{{/if}}
 			
-			{{if arrayList.length != 1 && i != arrayList.length - 1}}
+			{{if arrayList.length != 1 && i != arrayList.length - 1 && v.recordStatus == 1}}
 			<a href="#" onclick="move.down({{v.themeId}})" title="下移" class="glyphicon glyphicon-arrow-down"></a>
 			{{/if}}					
 		</td>
 		<td class="w-action">
-			<a href="#" onclick="restore({{v.themeId}})">[恢复]</a>&nbsp;&nbsp;
+		{{if v.recordStatus == 1}}
 			<a href="#" onclick="remove({{v.themeId}})">[删除]</a>&nbsp;&nbsp;
-			<a href="#" onclick="edit({{v.themeId}}, {{v.themeImgX}}, {{v.themeImgY}})">[修改]</a>
-
+			<a href="#" onclick="edit({{v.themeId}}, {{v.themeImgX}}, {{v.themeImgY}})">[修改]</a>&nbsp;&nbsp;
 			<a href="#" onclick="themeProduct({{v.themeId}})">[专题产品]</a>
+		{{else}}
+			<a href="#" onclick="restore({{v.themeId}})">[恢复]</a>
+		{{/if}}	
 		</td>
 	</tr>
 	{{/each}}
@@ -225,7 +227,7 @@ function editImgChange() {
 	</div>
 
 	<div class="form-group">
-		<label class="col-sm-4 control-label"><span class="required">*</span>theme_X：</label>
+		<label class="col-sm-4 control-label"><span class="required">*</span>座标X：</label>
 		<div class="col-sm-6">
 			<select class="form-control" id="editThemeImgX" name="themeImgX" onchange="editImgChange()">
 				<option th:each="item:${listImgX}" th:value="${item.value}" th:text="${item.name}"></option>
@@ -233,7 +235,7 @@ function editImgChange() {
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-4 control-label"><span class="required">*</span>theme_Y：</label>
+		<label class="col-sm-4 control-label"><span class="required">*</span>座标Y：</label>
 		<div class="col-sm-6">
 			<select class="form-control" id="editThemeImgY" name="themeImgY" onchange="editImgChange()">
 				<option th:each="item:${listImgY}" th:value="${item.value}" th:text="${item.name}"></option>
@@ -248,25 +250,6 @@ function editImgChange() {
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

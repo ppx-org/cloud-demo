@@ -23,6 +23,7 @@ function queryPage(pageNumber) {
 
 function add() {
 	$('#addForm')[0].reset();
+	$("#hint").empty();
 	$('#add').modal('show');
 	
 	action = function() {
@@ -126,17 +127,18 @@ function validate() {
 </head>
 
 <body>
-<div th:replace="common/fragment/common::pageList('theme_PROD')">
+<div th:replace="common/fragment/common::pageList('专题商品')">
 	<div th:fragment="queryFragment">
 		<input type="hidden" id="themeId" name="themeId" th:value="${themeId}">
 		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
-		<input type="text" class="form-control input-sm" name="prodId" placeholder="请输入PROD_ID" style="width:200px;">
+		<input type="text" class="form-control input-sm" name="prodId" placeholder="请输入商品ID" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
+		<label th:text="'专题名称:'  + ${themeName}"></label>
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
-		<th>PROD_ID</th>
-		<th>PROD_TITLE</th>
+		<th>商品ID</th>
+		<th>商品标题</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
@@ -158,7 +160,7 @@ function validate() {
 		<table style="margin-left:30px">
 		<tr>
 			<td>行号</td>
-			<td>内容:产品ID(允许有空格)</td>
+			<td>内容:商品ID(允许有空格)</td>
 			<td>提示(点击跳到指定行)</td>
 		</tr>
 		<tr>

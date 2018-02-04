@@ -107,6 +107,10 @@ public class ThemeController {
 		ThemeProduct bean = new ThemeProduct();
 		bean.setThemeId(themeId);
 		mv.addObject("listJson", listThemeProduct(new Page(), bean));
+		
+		Theme theme = serv.getTheme(themeId);
+		mv.addObject("themeName", theme.getThemeName());
+		
 		return mv;
 	}
 
