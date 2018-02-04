@@ -33,10 +33,10 @@
 	}
 	
 	function validateMax() {
-		var enough = $("[id='E:y,-:y'] [name='E:y']").val();
-		var minus = $("[id='E:y,-:y'] [name='-:y']").val();
+		var enough = new Number($("[id='E:y,-:y'] [name='E:y']").val());
+		var minus = new Number($("[id='E:y,-:y'] [name='-:y']").val());
 		if (minus >= enough) {
-			return "minus必须小于enough";
+			return "<立减>必须小于<满>";
 		}
 	}
 	
@@ -101,15 +101,15 @@
 		<select class="form-control" id="discount" th:include="::discount" name="2+:d"></select>
 	</div>
 	<div id="y:Y,n:N" style="display:none" class="input-group policy">
-		<span class="input-group-addon">元</span>
 		<input class="form-control validate[required,custom[integer]]" id="enough" type="text" style="width:70px" maxlength="2" name="y:Y">
-		<span class="input-group-addon">件</span>
+		<span class="input-group-addon">元</span>
 		<input class="form-control validate[required,custom[number]]" id="minus" type="text" style="width:70px" maxlength="5" name="n:N">
+		<span class="input-group-addon">件</span>
 	</div>
-	<div id="+:y,m:1" style="display:none" class="input-group policy">
-		<span class="input-group-addon">多一件</span>
+	<div id="+:y" style="display:none" class="input-group policy">
+		<span class="input-group-addon">加</span>
 		<input class="form-control validate[required,custom[number]]" type="text" style="width:70px" maxlength="5" name="+:y">
-		<input type="hidden" value="1" name="m:1">
+		<span class="input-group-addon">元多一件</span>
 	</div>
 	<div id="B:n,F:n" style="display:none" class="input-group policy">
 		<span class="input-group-addon">买</span>

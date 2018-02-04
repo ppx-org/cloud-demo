@@ -14,7 +14,8 @@ import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
 import com.ppx.cloud.common.util.DateUtils;
-import com.ppx.cloud.store.merchant.category.CategoryService;
+import com.ppx.cloud.store.common.dictionary.Dict;
+import com.ppx.cloud.store.content.img.ImgService;
 import com.ppx.cloud.store.promo.util.PolicyUtils;
 
 
@@ -27,17 +28,25 @@ public class ProgramController {
 	@Autowired
 	private ProgramIndexService indexServ;
 	
+	@Autowired
+	private ImgService imgServ;
 	
 	@GetMapping
 	public ModelAndView listProgram() {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("listJson", listJson(new Page(), new Program()));
+		
 		mv.addObject("listPolicy", PolicyUtils.listPolicyType());
 		mv.addObject("listProductPolicy", PolicyUtils.listProductPolicy());
 		mv.addObject("listCatPolicy", PolicyUtils.listCatPolicy());
 		mv.addObject("listBrandPolicy", PolicyUtils.listBrandPolicy());
 		
 		mv.addObject("today", DateUtils.today());
+		
+		mv.addObject("imgSrc", imgServ.getImgSrc("promo"));
+		mv.addObject("listImgX", Dict.listImgX());
+		mv.addObject("listImgY", Dict.listImgY());
+		
 		return mv;
 	}
 

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ppx.cloud.common.jdbc.annotation.Id;
 import com.ppx.cloud.common.util.DateUtils;
 import com.ppx.cloud.store.common.dictionary.Dict;
+import com.ppx.cloud.storecommon.price.utils.DecodePolicy;
 
 public class Program {
 
@@ -36,6 +37,10 @@ public class Program {
 	private Date created;
 	
 	private Integer recordStatus;
+	
+	private Integer progImgX;
+
+	private Integer progImgY;
 
 	public Integer getProgId() {
 		return progId;
@@ -107,6 +112,10 @@ public class Program {
 	public String getPolicyArgs() {
 		return policyArgs;
 	}
+	
+	public String getPolicyArgsDesc() {
+		return DecodePolicy.decode(this.policyArgs);
+	}
 
 	public void setPolicyArgs(String policyArgs) {
 		this.policyArgs = policyArgs;
@@ -130,6 +139,22 @@ public class Program {
 
 	public String getRecordStatusDesc() {
 		return Dict.getProgramStatusDesc(this.recordStatus);
+	}
+
+	public Integer getProgImgX() {
+		return progImgX;
+	}
+
+	public void setProgImgX(Integer progImgX) {
+		this.progImgX = progImgX;
+	}
+
+	public Integer getProgImgY() {
+		return progImgY;
+	}
+
+	public void setProgImgY(Integer progImgY) {
+		this.progImgY = progImgY;
 	}
 	
 	

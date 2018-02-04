@@ -31,10 +31,6 @@ function add() {
 		if (!$("#addForm,#policyArgsForm").validationEngine('validate')) return;
 		
 		$("#policyArgs").val(getPolicyArgs($("#policyType").val()));
-		//
-		//var para = "progName=" + $("#progName").val() + "&progPrio=" + $("#progPrio").val() + "&progBegin=" + $("#progBegin").val()
-		//	 + "&progEnd=" + $("#progEnd").val() + "&policyType=" + $("#policyType").val() + "&policyArgs=" + getPolicyArgs($("#policyType").val());
-		
 		showLoading();
 		$.post([[@{/program/insertProgram}]], $("#addForm").serialize(), function(r) {
 			if (r.result == 1) {
@@ -45,13 +41,17 @@ function add() {
 	}
 }
 
-function edit(id) {
+function edit(id, x, y) {
 	showLoading();
 	$.post([[@{/program/getProgram}]], "id=" + id, function(r) {
 		hideLoading();
-		$('#edit').modal('show');
 		$("#editTemplate").nextAll().remove();
 		$("#editTemplate").parent().append(template("editTemplate", r));
+		
+		$("#editProgImgX option[value=" + x + "]").attr("selected", true);
+		$("#editProgImgY option[value=" + y + "]").attr("selected", true);
+		editImgChange();
+		$('#edit').modal('show');
 	});
 	
 	action = function() {
@@ -103,7 +103,9 @@ function policyTypeChange(obj) {
 		policy.show();
 	}
 	else if (policy.length == 1) {
+		policy.find("option").removeAttr("selected");
 		policy.find("option:eq(0)").attr("selected", true);
+		
 		$("#argType").show();
 		policy.show();
 		$("[id='%:d']").show();
@@ -173,11 +175,30 @@ function getStatusDescByStr(string) {
 	return getStatusDesc(s[0], s[1], s[2]);
 }
 
+
+
+function addImgChange() {
+	var x = new Number($("#addProgImgX").val());
+	var y = new Number($("#addProgImgY").val());
+	$("#addProgImg").css("background-position", "-" + 100*x + "px -" + 100*y +"px")
+}
+
+function editImgChange() {
+	var x = new Number($("#editProgImgX").val());
+	var y = new Number($("#editProgImgY").val());
+	$("#editProgImg").css("background-position", "-" + 100*x + "px -" + 100*y +"px")
+}
 </script>
+
+
+<style th:inline="text">
+.progImgUrl {background-image: url("[[${imgSrc}]]");}
+.progImgList {background-size:250px 250px;width:50px;height:50px;margin:0 auto;}
+.progImg {width:100px;height:100px;margin:0 auto;}
+</style>
 </head>
 
 <body>
-
 <div th:replace="common/fragment/common::pageList('促销管理')">
 	<div th:fragment="queryFragment">
 		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
@@ -189,8 +210,6 @@ function getStatusDescByStr(string) {
 				<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listPolicy}"></option>
 			</select>
 		</div>
-		
-		
 		<input type="text" class="form-control input-sm" name="progName" placeholder="请输入方案名称" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
@@ -216,12 +235,12 @@ function getStatusDescByStr(string) {
 		<td class="w-date">{{v.progEndDesc}}</td>
 		<td class="w-id">{{v.progPrio}}</td>
 		<td class="w-id">{{getPolicyTypeName(v.policyType)}}</td>
-		<td class="w-id">{{v.policyArgs}}</td>
+		<td class="w-id">{{v.policyArgsDesc}}</td>
 		<td class="w-time">{{v.created}}</td>
 		<td class="w-action">{{getStatusDesc(v.progId, v.recordStatus, v.recordStatusDesc)}}</td>
 		<td class="w-action-m">
 			<a href="#" onclick="remove({{v.progId}})">[删除]</a>&nbsp;&nbsp;
-			<a href="#" onclick="edit({{v.progId}})">[修改]</a>&nbsp;&nbsp;
+			<a href="#" onclick="edit({{v.progId}}, {{v.progImgX}}, {{v.progImgY}})">[修改]</a>&nbsp;&nbsp;
 			<a href="#" onclick="conf({{v.progId}}, '{{v.policyType}}')">[配置]</a>
 
 		</td>
@@ -259,18 +278,53 @@ function getStatusDescByStr(string) {
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required" >*</span>策略参数：</label>
 		<div class="col-sm-9 form-inline" th:include="store/promo/common/promoCommon::policyArgs"></div>
-	</div>	
-</div>
-
-<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 360)">
-	<script id="editTemplate" type="text/html">
+	</div>
+	
 	<div class="form-group">
-		<label class="col-sm-3 control-label">ID：</label>
-		<div class="col-sm-7"><input type="text" name="progId" value="{{program.progId}}" class="form-control" readonly></div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>座标X：</label>
+		<div class="col-sm-4">
+			<select class="form-control" id="addProgImgX" name="progImgX" onchange="addImgChange()">
+				<option th:each="item:${listImgX}" th:value="${item.value}" th:text="${item.name}"></option>
+			</select>
+		</div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>座标Y：</label>
+		<div class="col-sm-4">
+			<select class="form-control" id="addProgImgY" name="progImgY" onchange="addImgChange()">
+				<option th:each="item:${listImgY}" th:value="${item.value}" th:text="${item.name}"></option>
+			</select>
+		</div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
-		<div class="col-sm-7"><input type="text" name="progName" value="{{program.progName}}" class="form-control validate[required]" maxlength="32"></div>
+		<div class="progImgUrl progImg" id="addProgImg"></div>
+	</div>
+</div>
+
+<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 780)">
+	<script id="editTemplate" type="text/html">
+	<div class="form-group">
+		<label class="col-sm-2 control-label">ID：</label>
+		<div class="col-sm-4"><input type="text" name="progId" value="{{program.progId}}" class="form-control" readonly></div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>方案名称：</label>
+		<div class="col-sm-4"><input type="text" name="progName" value="{{program.progName}}" class="form-control validate[required]" maxlength="32"></div>
+	</div>
+
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><span class="required">*</span>座标X：</label>
+		<div class="col-sm-4">
+			<select class="form-control" id="editProgImgX" name="progImgX" onchange="editImgChange()">
+				<option th:each="item:${listImgX}" th:value="${item.value}" th:text="${item.name}"></option>
+			</select>
+		</div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>座标Y：</label>
+		<div class="col-sm-4">
+			<select class="form-control" id="editProgImgY" name="progImgY" onchange="editImgChange()">
+				<option th:each="item:${listImgY}" th:value="${item.value}" th:text="${item.name}"></option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="progImgUrl progImg" id="editProgImg"></div>
 	</div>
 	</script>
 </div>

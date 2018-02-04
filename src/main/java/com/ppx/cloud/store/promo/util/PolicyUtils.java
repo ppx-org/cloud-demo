@@ -30,10 +30,6 @@ public class PolicyUtils {
 	private static List<Policy> catPolicyList = new ArrayList<Policy>();
 	private static List<Policy> brandPolicyList = new ArrayList<Policy>();
 	private static List<Policy> productPolicyList = new ArrayList<Policy>();
-	
-	//private static Policy specialPolicy = new Policy("S:y", "特价¥y");
-	//private static Policy changePolicy = new Policy("E:y;C:y", "满¥y立减¥y");
-
 
 
 	static {
@@ -55,10 +51,10 @@ public class PolicyUtils {
 		brandPolicyList.add(new Policy("E:y,-:y", "满n元立减m元"));
 		
 		// product
-		productPolicyList.add(new Policy("A:y", "n元均价"));
-		productPolicyList.add(new Policy("%:d", "打折"));
+		productPolicyList.add(new Policy("%:d", "n折"));
 		productPolicyList.add(new Policy("%:d,2:d", "单件n折，第二件m折"));
 		productPolicyList.add(new Policy("%:d,2+:d", "第一件n折，任两件及以上m折"));
+		productPolicyList.add(new Policy("A:y", "n元均价"));
 		productPolicyList.add(new Policy("E:y,-:y", "满n元立减m元"));
 		productPolicyList.add(new Policy("y:Y,n:N", "n元m件"));
 		productPolicyList.add(new Policy("+:y", "加n元多一件"));
