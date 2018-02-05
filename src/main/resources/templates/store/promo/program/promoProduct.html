@@ -128,11 +128,11 @@ function validate() {
 </head>
 
 <body>
-<div th:replace="common/fragment/common::pageList('PROD')">
+<div th:replace="common/fragment/common::pageList('商品促销')">
 	<div th:fragment="queryFragment">
 		<input type="hidden" id="progId" name="progId" th:value="${prog.progId}">
 		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
-		<input type="text" class="form-control input-sm" name="prodId" placeholder="请输入PROD_ID" style="width:200px;">
+		<input type="text" class="form-control input-sm" name="prodId" placeholder="商品ID" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 		
 		<label>方案名称：<span th:text="${prog.progName}"></span>(<span th:text="${#dates.format(prog.progBegin, 'yyyy-MM-dd')} + '至' + ${prog.progEndDesc}"></span>)
@@ -141,8 +141,8 @@ function validate() {
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
-		<th>PROD_ID</th>
-		<th>PROD_TITLE</th>
+		<th>商品ID</th>
+		<th>商品标题</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
