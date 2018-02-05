@@ -55,16 +55,13 @@ function offShelves(prodId) {
 
 template.config("escape", false);
 template.helper('actionHtml', function(v) {	
-	return actionHtml(v.prodId, v.recordStatus);
+	var edit = '<a href="#" onclick="edit(' + v.prodId + ')">[修改]</a>&nbsp;&nbsp;';
+	var onShelves = '<a href="#" onclick="onShelves(' + v.prodId + ')">[上架]</a>';
+	var offShelves = '<a href="#" onclick="offShelves(' + v.prodId + ')">[下架]</a>';
+	if (v.prodStatus == 1 || v.prodStatus == 3) return edit + onShelves;
+	if (v.prodStatus == 2) return edit + offShelves;
 })
 
-function actionHtml(prodId, status) {
-	var edit = '<a href="#" onclick="edit(' + prodId + ')">[修改]</a>';
-	var onShelves = '<a href="#" onclick="onShelves(' + prodId + ')">[onShe]</a>';
-	var offShelves = '<a href="#" onclick="offShelves(' + prodId + ')">[offShe]</a>';
-	if (status == 1 || status == 3) return edit + onShelves;
-	if (status == 2) return edit + offShelves;
-}
 
 </script>
 </head>
