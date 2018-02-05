@@ -37,11 +37,15 @@ function dateChange(obj) {
 
 <script th:fragment="prod" id="pageTemplate" type="text/html">
 {{each arrayList as v i}}
-<tr>
-	<td class="w-id">{{v.src}}</td>
+<tr style="height:110px;">
 	<td class="w-id">
-		<div>{{v.t}}|fast:{{v.f}}</div>
-		<div>{{v.promo}}</div>
+		<img src="" style="width:80px;height:80px">
+	</td>
+	<td class="w-id">
+		<div>{{v.t}}</div>
+		<div style="color:green">{{if v.f == 0}}2小时提货{{else}}立即{{/if}}</div>
+		<div style="color:red">¥{{v.p}}</div>
+		<div style="color:red"><span>{{v.promo}}</span></div>
 	</td>
 </tr>
 {{/each}}
