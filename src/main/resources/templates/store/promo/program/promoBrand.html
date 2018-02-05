@@ -78,7 +78,7 @@ function remove(progId, brandId) {
 				<option th:value="${item.brandId}" th:text="${item.brandName}" th:each="item:${listBrand}"></option>
 			</select>
 		</div>
-		<button type="button" class="btn btn-success" onclick="addProgramBrand()">新增</button>
+		<button type="button" th:if="${prog.recordStatus != 2}" class="btn btn-success" onclick="addProgramBrand()">新增</button>
 		
 		<label>方案名称：<span th:text="${prog.progName}"></span>(<span th:text="${#dates.format(prog.progBegin, 'yyyy-MM-dd')} + '至' + ${prog.progEndDesc}"></span>)
 			促销策略:<span th:text="${prog.policyArgsDesc}"></span>
@@ -99,7 +99,7 @@ function remove(progId, brandId) {
 		<td class="w-id">{{v.brandId}}</td>
 		<td class="w-title-s">{{v.brandName}}</td>
 		<td class="w-action">
-			<a href="#" onclick="remove({{v.progId}}, {{v.brandId}})">[删除]</a>
+			<a href="#" th:if="${prog.recordStatus != 2}" onclick="remove({{v.progId}}, {{v.brandId}})">[删除]</a>
 		</td>
 	</tr>
 	{{/each}}

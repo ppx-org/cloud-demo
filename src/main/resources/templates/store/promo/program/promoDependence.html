@@ -153,7 +153,7 @@ function validate() {
 <div th:replace="common/fragment/common::pageList('组合促销')">
 	<div th:fragment="queryFragment">
 		<input type="hidden" id="progId" name="progId" th:value="${prog.progId}">
-		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
+		<button type="button" th:if="${prog.recordStatus != 2}" class="btn btn-success btn-sm" onclick="add()">新增</button>
 		<input type="text" class="form-control input-sm" name="prodId" placeholder="请输入商品ID" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 		
