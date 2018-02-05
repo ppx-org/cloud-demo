@@ -36,8 +36,6 @@ function edit() {
 }
 
 
-
-
 function onShelves(prodId) {
 	$.post([[@{/product/onShelves}]], "prodId=" + prodId, function(r) {
 		var html = actionHtml(prodId, r.result);
@@ -89,8 +87,8 @@ function actionHtml(prodId, status) {
 	<table th:fragment="listFragment">
 	<tr>
 		<th>ID</th>
-		<th>TIME</th>
-		<th>sta</th>
+		<th>标题</th>
+		<th>状态</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
