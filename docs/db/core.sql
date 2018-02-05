@@ -139,6 +139,7 @@ create table product
    PROD_ID              int not null,
    MERCHANT_ID          int not null,
    CAT_ID               int not null,
+   MAIN_CAT_ID			int not null,	
    BRAND_ID             int,
    REPO_ID              int not null,
    PROD_TITLE           varchar(32) int not null,

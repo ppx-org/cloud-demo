@@ -2,13 +2,7 @@
 
 <ul th:fragment="head" id="myTab" class="nav nav-tabs">
 
-<!--  
-<li id="search"><a href="#" onclick="tagGo(this)" data-toggle="tab">SEARCH</a></li>
-<li id="cat"><a href="#" onclick="tagGo(this)" data-toggle="tab">cat</a></li>
-<li id="theme"><a href="#" onclick="tagGo(this)" data-toggle="tab">theme</a></li>
-<li id="brand"><a href="#" onclick="tagGo(this)" data-toggle="tab">brand</a></li>
-<li id="promo"><a href="#" onclick="tagGo(this)" data-toggle="tab">promo</a></li>
--->
+
 
 <script type="text/javascript">
 function tagGo(obj) {
@@ -47,7 +41,7 @@ function dateChange(obj) {
 	<td class="w-id">{{v.src}}</td>
 	<td class="w-id">
 		<div>{{v.t}}|fast:{{v.f}}</div>
-		<a href="/preSearch/promo?progId={{v.gid}}" target="_blank">{{v.arg}}</a>
+		<div>{{v.promo}}</div>
 	</td>
 </tr>
 {{/each}}

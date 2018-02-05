@@ -11,7 +11,6 @@ function queryPage(pageNumber) {
 	var w = $("#w").val();
 	$("#pageNumber").val(pageNumber);
 	showLoading();
-
 	
 	$.get([[@{/query/pcQuery}]], $("#queryForm").serialize(), function(r) {
 		refreshPageData(r);
@@ -29,9 +28,8 @@ function queryPage(pageNumber) {
 		
 		// fast
 		var selected = $("#fast").val() == 	1 ? "class='selected'" : "";
-		$("#fastView").append('<a ' + selected + ' href="javascript:onFast(1)">fast(' + r.fastN + ')</a>');
-		$("#fastView").append('<a href="javascript:onFast(\'\')">cancel</a>');
-		
+		$("#fastView").append('<a ' + selected + ' href="javascript:onFast(1)">立即(' + r.fastN + ')</a>');
+		$("#fastView").append('<a href="javascript:onFast(\'\')">取消</a>');
 		
 		// cat
 		for (var i = 0; i < r.catList.length; i++) {
@@ -39,7 +37,7 @@ function queryPage(pageNumber) {
 			$("#catView").append('<a ' + selected + ' href="javascript:onCat(' + r.catList[i].cid + ')">' + r.catList[i].cn + '(' + r.catList[i].n + ')</a>');
 		}
 		if (r.catList.length > 0 && $("#cId").val() != "") {
-			$("#catView").append('<a href="javascript:onCat(\'\')">cancel</a>');
+			$("#catView").append('<a href="javascript:onCat(\'\')">取消</a>');
 		}
 		
 		// brand
@@ -48,7 +46,7 @@ function queryPage(pageNumber) {
 			$("#brandView").append('<a ' + selected + ' href="javascript:onBrand(' + r.brandList[i].bid + ')">' + r.brandList[i].bn + '(' + r.brandList[i].n + ')</a>');
 		}
 		if (r.brandList.length > 0 && $("#bId").val() != "") {
-			$("#brandView").append('<a href="javascript:onBrand(\'\')">cancel</a>');
+			$("#brandView").append('<a href="javascript:onBrand(\'\')">取消</a>');
 		}
 		
 		// theme
@@ -57,18 +55,17 @@ function queryPage(pageNumber) {
 			$("#themeView").append('<a ' + selected + ' href="javascript:onTheme(' + r.themeList[i].tid + ')">' + r.themeList[i].tn + '(' + r.themeList[i].n + ')</a>');
 		}
 		if (r.themeList.length > 0 && $("#tId").val() != "") {
-			$("#themeView").append('<a href="javascript:onTheme(\'\')">cancel</a>');
+			$("#themeView").append('<a href="javascript:onTheme(\'\')">取消</a>');
 		}
 		
 		// promo
 		for (var i = 0; i < r.promoList.length; i++) {
 			var selected = $("#gId").val() == r.promoList[i].gid ? "class='selected'" : "";
-			$("#promoView").append('<a ' + selected + ' href="javascript:onPromo(' + r.promoList[i].gid + ')">' + r.promoList[i].arg + '(' + r.promoList[i].n + ')</a>');
+			$("#promoView").append('<a ' + selected + ' href="javascript:onPromo(' + r.promoList[i].gid + ')">' + r.promoList[i].gN + '(' + r.promoList[i].n + ')</a>');
 		}
 		if (r.promoList.length > 0 && $("#gId").val() != "") {
-			$("#promoView").append('<a href="javascript:onPromo(\'\')">cancel</a>');
+			$("#promoView").append('<a href="javascript:onPromo(\'\')">取消</a>');
 		}
-		
 		
 	});
 }
@@ -120,9 +117,10 @@ function storeChange(obj) {
 </script>
 
 <style>
-#catView a {
-	padding-left:10px
-}
+#filter a {padding-left:8px}
+
+
+
 .page-list-title {display: none;}
 
 .selected {
@@ -137,7 +135,7 @@ function storeChange(obj) {
 <ul th:replace="store/search/pre/preCommon::head"></ul>
 <script type="text/javascript">$("#search").tab('show')</script>
 
-<div th:replace="common/fragment/common::pageList('')">
+<div th:replace="common/fragment/common::pageList('搜索测试')">
 	<div th:fragment="queryFragment">
 		<input type="hidden" id="fast" name="fast">
 		<input type="hidden" id="cId" name="cId">
@@ -147,32 +145,34 @@ function storeChange(obj) {
 		<input type="hidden" id="o" name="o">
 		
 		<select class="form-control input-sm" id="d" name="d" onchange="dateChange(this)">
-			<option value="0">tod</option>
-			<option value="1">tom</option>
+			<option value="0">今天</option>
+			<option value="1">明天</option>
 		</select>
 		
 		<select class="form-control input-sm" id="sId" name="sId" onchange="storeChange(this)">
 			<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
 		</select>
-		<input type="text" class="form-control input-sm" id="w" name="w" placeholder="请输入WORD" style="width:200px;" value="招聘">
+		<input type="text" class="form-control input-sm" id="w" name="w" placeholder="请输入搜索词" style="width:200px;" value="招聘">
 		<button type="button" class="btn btn-default btn-sm" onclick="query();"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	
 	<table th:fragment="listFragment">
 	<tr>
 	<td colspan="2">
-		<table>
-			<tr><td style="text-align: left;margin-left:10px">
-				<select onchange="$('#o').val($(this).val());queryPage(1);">
-					<option value="0">normal</option><option value="1">new</option>
-				</select>
-			</td></tr>
-			<tr><td style="text-align: left;margin-left:10px">fast<span id="fastView"></span></td></tr>
-			<tr><td style="text-align: left;margin-left:10px">cccc<span id="catView"></span></td></tr>
-			<tr><td style="text-align: left;margin-left:10px">bbbb<span id="brandView"></span></td></tr>
-			<tr><td style="text-align: left;margin-left:10px">bbbb<span id="themeView"></span></td></tr>
-			<tr><td style="text-align: left;margin-left:10px">pppp<span id="promoView"></span></td></tr>
-		</table>
+	<table id="filter">
+		<tr>
+			<td style="text-align: left;margin-left:10px">
+			<select class="form-control input-sm" onchange="$('#o').val($(this).val());queryPage(1);">
+				<option value="0">综合排序</option><option value="1">新品优先</option>
+			</select>
+			</td>
+		</tr>
+		<tr><td style="text-align: left;margin-left:10px">提货：<span id="fastView"></span></td></tr>
+		<tr><td style="text-align: left;margin-left:10px">分类：<span id="catView"></span></td></tr>
+		<tr><td style="text-align: left;margin-left:10px">品牌：<span id="brandView"></span></td></tr>
+		<tr><td style="text-align: left;margin-left:10px">专题：<span id="themeView"></span></td></tr>
+		<tr><td style="text-align: left;margin-left:10px">促销：<span id="promoView"></span></td></tr>
+	</table>
 	</td>
 	</tr>
 	

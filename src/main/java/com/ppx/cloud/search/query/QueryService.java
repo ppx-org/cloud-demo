@@ -206,7 +206,7 @@ public class QueryService extends MyDaoSupport {
 		
 		// theme statistic
 		List<QueryTheme> themeList = new ArrayList<QueryTheme>();
-		List<Integer> themeIdList = listBrandId(orderType);		
+		List<Integer> themeIdList = listThemeId(orderType);		
 		for (Integer themeId : themeIdList) {			
 			BitSet bs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_THEME, themeId + "");
 			bs.and(resultBs);
@@ -229,34 +229,8 @@ public class QueryService extends MyDaoSupport {
 		returnMap.put("progList", progList);
 		
 		
-	
-		
-		
-		
 		return returnMap;
 	}
-
-	
-	
-//	private List<QueryProduct> listProduct(List<Integer> prodIdList, Integer storeId) {
-//		if (prodIdList.size() == 0) {
-//			return new ArrayList<QueryProduct>();
-//		}
-//		
-//		NamedParameterJdbcTemplate jdbc = new NamedParameterJdbcTemplate(getJdbcTemplate());
-//		Map<String, Object> paramMap = new HashMap<String, Object>();
-//		paramMap.put("storeId", storeId);
-//		paramMap.put("prodIdList", prodIdList);	
-//		
-//		String prodSql = "select p.PROD_ID PID, p.PROD_TITLE T, s.PRICE P, img.SKU_IMG_SRC SRC, idx.PROG_ID GID, idx.POLICY ARG, if(p.REPO_ID = :storeId, 1, 0) F from product p join sku s on p.PROD_ID = s.PROD_ID left join " +
-//			"(select t.SKU_ID, t.SKU_IMG_SRC from (select * from sku_img order by SKU_IMG_PRIO desc) t group by t.SKU_ID) img on s.SKU_ID = img.SKU_ID left join " +
-//			"(select t.PROD_ID, t.PROG_ID, t.INDEX_POLICY POLICY from (select * from program_index i where curdate() between INDEX_BEGIN and INDEX_END order by INDEX_PRIO desc) t group by t.PROD_ID) idx on p.PROD_ID = idx.PROD_ID " + 
-//			"where p.PROD_ID in (:prodIdList)";
-//		
-//		List<QueryProduct> prodList = jdbc.query(prodSql, paramMap, BeanPropertyRowMapper.newInstance(QueryProduct.class));
-//		return prodList;
-//	}
-
 	
 	private List<QueryCategory> listCategory(List<QueryCategory> catList) {
 		if (catList.size() == 0) {
@@ -297,7 +271,7 @@ public class QueryService extends MyDaoSupport {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("progIdList", progIdMapNum.keySet());	
 		
-		String progSql = "select PROG_ID GID, POLICY_ARGS ARG from program where PROG_ID in (:progIdList) order by PROG_PRIO";
+		String progSql = "select PROG_ID GID, PROG_NAME GN from program where PROG_ID in (:progIdList) order by PROG_PRIO";
 		
 		List<QueryPromo> resultPromoList = jdbc.query(progSql, paramMap, BeanPropertyRowMapper.newInstance(QueryPromo.class));
 		
@@ -359,9 +333,6 @@ public class QueryService extends MyDaoSupport {
 		
 		return resultBrandList;
 	}
-	
-	
-	
 	
 	
 	private List<Integer> listCatId(String orderType) {

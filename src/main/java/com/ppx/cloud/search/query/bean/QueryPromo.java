@@ -4,7 +4,7 @@ public class QueryPromo {
 	
 	private Integer gid;
 	
-	private String arg;
+	private String gN;
 	
 	private Integer n;
 	
@@ -24,13 +24,13 @@ public class QueryPromo {
 	public void setGid(Integer gid) {
 		this.gid = gid;
 	}
-
-	public String getArg() {
-		return arg;
+	
+	public String getgN() {
+		return gN;
 	}
 
-	public void setArg(String arg) {
-		this.arg = arg;
+	public void setgN(String gN) {
+		this.gN = gN;
 	}
 
 	public Integer getN() {

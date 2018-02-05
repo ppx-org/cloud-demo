@@ -42,8 +42,6 @@ public class MQueryController {
 				b.getCid(), b.getBid(), b.getTid(), b.getGid(), b.getFast(), b.getO());
 	}
 	
-	
-	
 	private Map<String, Object> pcQuery(@RequestParam(required=true) Integer sId, Integer d,
 			String w, MPage p, Integer cId, Integer bId, Integer tId,
 			Integer gId, Integer fast, Integer o) {
@@ -67,63 +65,8 @@ public class MQueryController {
 		return ControllerReturn.ok(returnMap);
 	}
 	
-	// 使用在搜索词转名称再转换成ID
-	/*
-	@RequestMapping @ResponseBody
-	public Map<String, Object> cat(@RequestParam Integer sId, QueryPage p, Integer cId) {
-		QueryPageList bean = serv.queryCat(sId, p, cId);
 	
-		Map<String, Object> returnMap = new HashMap<String, Object>();
-		returnMap.put("arrayList", bean.getProdList());
-		returnMap.put("catList", bean.getCatList());
-		returnMap.put("page", bean.getQueryPage());
-		
-		return ControllerReturn.ok(returnMap);
-	}
-	
-	@RequestMapping @ResponseBody
-	public Map<String, Object> brand(@RequestParam Integer sId, QueryPage p, Integer bId) {
-		QueryPageList bean = serv.queryBrand(sId, p, bId);
-	
-		Map<String, Object> returnMap = new HashMap<String, Object>();
-		returnMap.put("arrayList", bean.getProdList());
-		returnMap.put("brandList", bean.getBrandList());
-		returnMap.put("page", bean.getQueryPage());
-		
-		return ControllerReturn.ok(returnMap);
-	}
-	
-	@RequestMapping @ResponseBody
-	public Map<String, Object> theme(@RequestParam Integer sId, QueryPage p, Integer tId) {
-		QueryPageList bean = serv.queryTheme(sId, p, tId);
-	
-		Map<String, Object> returnMap = new HashMap<String, Object>();
-		returnMap.put("arrayList", bean.getProdList());
-		returnMap.put("themeList", bean.getThemeList());
-		returnMap.put("page", bean.getQueryPage());
-		
-		return ControllerReturn.ok(returnMap);
-	}
 
-	
-	@RequestMapping @ResponseBody
-	public Map<String, Object> promo(@RequestParam Integer sId, @RequestParam Integer d, QueryPage p, Integer gId) {
-		String date = (d == 1 ? DateUtils.today() : DateUtils.tomorrow());
-		QueryPageList bean = serv.queryPromo(sId, date, p, gId);
-	
-		Map<String, Object> returnMap = new HashMap<String, Object>();
-		returnMap.put("arrayList", bean.getProdList());
-		returnMap.put("promoList", bean.getPromoList());
-		returnMap.put("page", bean.getQueryPage());
-		
-		return ControllerReturn.ok(returnMap);
-	}*/
-	
-	
-	
-	
-	
-	
 	
 	
 	

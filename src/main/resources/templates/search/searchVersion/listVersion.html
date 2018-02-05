@@ -51,16 +51,16 @@ function viewDetail(obj) {
 <body>
 <div class="page-list-body">
 	<div class="page-list-query">
-		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>DEMO_TEST</span></div>
+		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>搜索版本管理</span></div>
 	</div>
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
-		<th>v</th>
-		<th>b</th>
-		<th>e</th>
-		<th>SSSS</th>
-		<th>UPxxx</th>
-		<th>spendT</th>
+		<th>版本号</th>
+		<th>创建索引开始时间</th>
+		<th>创建索引结束时间</th>
+		<th>更新时间</th>
+		<th>创建花费时间</th>
+		<th>状态</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
@@ -69,16 +69,14 @@ function viewDetail(obj) {
 		<td class="w-id">{{v.versionName}}</td>
 		<td class="w-time">{{v.createBegin}}</td>
 		<td class="w-time">{{v.createEnd}}</td>
-		<td class="w-id">{{v.versionStatus}}</td>
 		<td class="w-id">{{v.updated}}</td>
 		<td class="w-id">{{v.spendTime}}s</td>
+		<td class="w-id">{{v.versionStatusDesc}}</td>		
 		<td class="w-action">
-			{{if v.versionStatus == 1}}<a href="javascript:createIndex('{{v.versionName}}')">CCCCC</a>{{/if}}
+			{{if v.versionStatus == 1}}<a href="javascript:createIndex('{{v.versionName}}')">重建索引</a>&nbsp;&nbsp;{{/if}}
 			{{if v.versionStatus == 2}}
-				<a href="javascript:createIndex('{{v.versionName}}')">reCCC</a>&nbsp;&nbsp;
-				<a href="javascript:useIndex('{{v.versionName}}')">UUUU</a>
-
-				
+				<a href="javascript:createIndex('{{v.versionName}}')">重建索引</a>&nbsp;&nbsp;
+				<a href="javascript:useIndex('{{v.versionName}}')">使用索引</a>&nbsp;&nbsp;
 			{{/if}}
 			<a href="#" data-content="{{v.createInfo}}" onclick="viewDetail(this)">[详情]</a>
 		</td>

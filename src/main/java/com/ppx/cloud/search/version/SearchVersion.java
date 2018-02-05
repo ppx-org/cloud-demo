@@ -59,7 +59,7 @@ public class SearchVersion {
 	public void setVersionStatus(Integer versionStatus) {
 		this.versionStatus = versionStatus;
 	}
-
+	
 	public String getCreateInfo() {
 		return createInfo;
 	}
