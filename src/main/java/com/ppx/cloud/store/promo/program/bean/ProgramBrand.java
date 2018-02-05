@@ -4,6 +4,8 @@ public class ProgramBrand {
 	private Integer progId;
 
 	private Integer brandId;
+	
+	private String brandName;
 
 	public Integer getProgId() {
 		return progId;
@@ -19,6 +21,14 @@ public class ProgramBrand {
 
 	public void setBrandId(Integer brandId) {
 		this.brandId = brandId;
+	}
+
+	public String getBrandName() {
+		return brandName;
+	}
+
+	public void setBrandName(String brandName) {
+		this.brandName = brandName;
 	}
 
 	

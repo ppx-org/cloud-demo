@@ -31,6 +31,8 @@ function add() {
 		if (!$("#addForm,#policyArgsForm").validationEngine('validate')) return;
 		
 		$("#policyArgs").val(getPolicyArgs($("#policyType").val()));
+		
+		
 		showLoading();
 		$.post([[@{/program/insertProgram}]], $("#addForm").serialize(), function(r) {
 			if (r.result == 1) {

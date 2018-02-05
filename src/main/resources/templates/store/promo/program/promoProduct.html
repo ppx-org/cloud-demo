@@ -130,10 +130,14 @@ function validate() {
 <body>
 <div th:replace="common/fragment/common::pageList('PROD')">
 	<div th:fragment="queryFragment">
-		<input type="hidden" id="progId" name="progId" th:value="${progId}">
+		<input type="hidden" id="progId" name="progId" th:value="${prog.progId}">
 		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
-		<input type="text" class="form-control input-sm" name="testName" placeholder="请输入PROD_ID" style="width:200px;">
+		<input type="text" class="form-control input-sm" name="prodId" placeholder="请输入PROD_ID" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
+		
+		<label>方案名称：<span th:text="${prog.progName}"></span>(<span th:text="${#dates.format(prog.progBegin, 'yyyy-MM-dd')} + '至' + ${prog.progEndDesc}"></span>)
+			促销策略:<span th:text="${prog.policyArgsDesc}"></span>
+		</label>
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
@@ -156,7 +160,6 @@ function validate() {
 </div>
 
 <div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 600)">
-	
 		<table style="margin-left:30px">
 		<tr>
 			<td>行号</td>

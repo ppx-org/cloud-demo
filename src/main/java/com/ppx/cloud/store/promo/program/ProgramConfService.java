@@ -27,7 +27,7 @@ public class ProgramConfService extends MyDaoSupport {
 	private MerchantService merchantService;
 	
 	public List<ProgramCategory> listProgramCat(Integer progId) {
-		String sql = "select * from program_category where PROG_ID = ?";
+		String sql = "select pc.*, c.CAT_NAME from program_category pc left join category c on pc.CAT_ID = c.CAT_ID where pc.PROG_ID = ?";
 		List<ProgramCategory> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(ProgramCategory.class), progId);
 		return list;
 	}
@@ -79,7 +79,7 @@ public class ProgramConfService extends MyDaoSupport {
 	// ---------------------------------------brand------------------------------------
 	
 	public List<ProgramBrand> listProgramBrand(Integer progId) {
-		String sql = "select * from program_brand where PROG_ID = ?";
+		String sql = "select pb.*, b.BRAND_NAME from program_brand pb left join brand b on pb.BRAND_ID = b.BRAND_ID where pb.PROG_ID = ?";
 		List<ProgramBrand> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(ProgramBrand.class), progId);
 		return list;
 	}
@@ -103,28 +103,13 @@ public class ProgramConfService extends MyDaoSupport {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	// ----------------------------------product-------------------------------
-	
-	
-	
 	public PageList<ProgramProduct> listProgramProduct(Page page, ProgramProduct bean) {
 		
-		MyCriteria c = createCriteria("and").addAnd("PROD_ID like ?", bean.getProdId());
+		MyCriteria c = createCriteria("and").addAnd("pp.PROD_ID like ?", bean.getProdId());
 		
-		StringBuilder cSql = new StringBuilder("select count(*) from program_product where PROG_ID = ?").append(c);
-		StringBuilder qSql = new StringBuilder("select * from program_product where PROG_ID = ?").append(c);
+		StringBuilder cSql = new StringBuilder("select count(*) from program_product pp where pp.PROG_ID = ?").append(c);
+		StringBuilder qSql = new StringBuilder("select pp.*, p.PROD_TITLE from program_product pp left join product p on pp.PROD_ID = p.PROD_ID where pp.PROG_ID = ?").append(c);
 		
 		c.addPrePara(bean.getProgId());
 			
@@ -180,10 +165,10 @@ public class ProgramConfService extends MyDaoSupport {
 	// ----------------special-----------------
 	public PageList<ProgramSpecial> listProgramSpecial(Page page, ProgramSpecial bean) {
 	
-		MyCriteria c = createCriteria("and").addAnd("PROD_ID like ?", bean.getProdId());
+		MyCriteria c = createCriteria("and").addAnd("s.PROD_ID like ?", bean.getProdId());
 		
-		StringBuilder cSql = new StringBuilder("select count(*) from program_special where PROG_ID = ?").append(c);
-		StringBuilder qSql = new StringBuilder("select * from program_special where PROG_ID = ?").append(c);
+		StringBuilder cSql = new StringBuilder("select count(*) from program_special s where s.PROG_ID = ?").append(c);
+		StringBuilder qSql = new StringBuilder("select * from program_special s left join product p on s.PROD_ID = p.PROD_ID where s.PROG_ID = ?").append(c);
 		
 		c.addPrePara(bean.getProgId());
 			
@@ -244,10 +229,10 @@ public class ProgramConfService extends MyDaoSupport {
 	// ----------------dependence-----------------
 	public PageList<ProgramDependence> listProgramDependence(Page page, ProgramDependence bean) {
 	
-		MyCriteria c = createCriteria("and").addAnd("PROD_ID like ?", bean.getProdId());
+		MyCriteria c = createCriteria("and").addAnd("d.PROD_ID like ?", bean.getProdId());
 		
-		StringBuilder cSql = new StringBuilder("select count(*) from program_dependence where PROG_ID = ?").append(c);
-		StringBuilder qSql = new StringBuilder("select * from program_dependence where PROG_ID = ?").append(c);
+		StringBuilder cSql = new StringBuilder("select count(*) from program_dependence d where d.PROG_ID = ?").append(c);
+		StringBuilder qSql = new StringBuilder("select d.*, p.PROD_TITLE from program_dependence d left join product p on d.PROD_ID = p.PROD_ID where d.PROG_ID = ?").append(c);
 		
 		c.addPrePara(bean.getProgId());
 			
@@ -317,10 +302,10 @@ public class ProgramConfService extends MyDaoSupport {
 	// ----------------change-----------------
 	public PageList<ProgramChange> listProgramChange(Page page, ProgramChange bean) {
 	
-		MyCriteria c = createCriteria("and").addAnd("PROD_ID like ?", bean.getProdId());
+		MyCriteria c = createCriteria("and").addAnd("c.PROD_ID like ?", bean.getProdId());
 		
-		StringBuilder cSql = new StringBuilder("select count(*) from program_change where PROG_ID = ?").append(c);
-		StringBuilder qSql = new StringBuilder("select * from program_change where PROG_ID = ?").append(c);
+		StringBuilder cSql = new StringBuilder("select count(*) from program_change c where c.PROG_ID = ?").append(c);
+		StringBuilder qSql = new StringBuilder("select c.*, p.PROD_TITLE from program_change c left join product p on c.PROD_ID = p.PROD_ID where c.PROG_ID = ?").append(c);
 		
 		c.addPrePara(bean.getProgId());
 			

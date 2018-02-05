@@ -20,19 +20,14 @@ $(function() {
 
 function query() {
 	showLoading();
-	$.post([[@{'/programConf/listProgramCat?progId=' + ${progId}}]], null, function(r) {
+	$.post([[@{/programConf/listProgramCat}]], "progId=" + $("#progId").val(), function(r) {
 		refreshData(r);
 		hideLoading();
 	});
 }
 
-
-
-
 function addProgramCat() {
-	
 	var para = "progId=" + $("#progId").val() + "&catId=" + $("#catId").val();
-	
 	showLoading();
 	$.post([[@{/programConf/insertProgramCategory}]], para, function(r) {
 		if (r.result == 1) {
@@ -44,10 +39,6 @@ function addProgramCat() {
 		}
 	});
 }
-
-template.helper('getCatName', function(catId) {
-	return $("#catId [value=" + catId + "]").text();
-})
 
 function remove(progId, catId) {
 	
@@ -62,51 +53,45 @@ function remove(progId, catId) {
 	confirm(progId, callback);
 }
 
-
-
-
-
 </script>
-
 
 <style>
 </style>
 
 </head>
-
-
 <body>
-
-
 <div class="page-list-body">
 	<div class="page-list-query">
-		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>test</span></div>
+		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>分类促销</span></div>
 		<form id="addForm" class="form-inline">
 		<div>
-		<input type="hidden" id="progId" th:value="${progId}">
+		<input type="hidden" id="progId" th:value="${prog.progId}">
 		<div class="input-group">
 			<span class="input-group-addon">CAT</span>	
 			<select class="form-control" id="catId">
 				<option th:value="${item.catId}" th:text="${item.catName}" th:each="item:${listCat}"></option>
 			</select>
 		</div>
-	
-		
 		<button type="button" class="btn btn-success" onclick="addProgramCat()">新增</button>
+		
+		<label>方案名称：<span th:text="${prog.progName}"></span>(<span th:text="${#dates.format(prog.progBegin, 'yyyy-MM-dd')} + '至' + ${prog.progEndDesc}"></span>)
+			促销策略:<span th:text="${prog.policyArgsDesc}"></span>
+		</label>
+		
 		</div>
 		</form>
 	</div>
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
-		<th>CAT</th>
-		<th>NAME</th>
-		<th>ACTION</th>
+		<th>分类ID</th>
+		<th>分类名称</th>
+		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
 	<tr>
-		<td class="w-id">{{getCatName(v.catId)}}</td>
-		<td class="w-title-s">xxx</td>
+		<td class="w-id">{{v.catId}}</td>
+		<td class="w-title-s">{{v.catName}}</td>
 		<td class="w-action">
 			<a href="#" onclick="remove({{v.progId}}, {{v.catId}})">[删除]</a>
 		</td>

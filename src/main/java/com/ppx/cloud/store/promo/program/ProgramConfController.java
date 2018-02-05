@@ -36,13 +36,14 @@ public class ProgramConfController {
 	@Autowired
 	private BrandService brandServ;
 	
-	
+	@Autowired
+	private ProgramService progServ;
 	
 
 	@GetMapping
 	public ModelAndView promoCategory(@RequestParam Integer progId) {
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("progId", progId);
+		mv.addObject("prog", progServ.getProgram(progId));
 		mv.addObject("listJson", listProgramCat(progId));
 		mv.addObject("listCat", catServ.displayAllCat());
 		
@@ -74,7 +75,7 @@ public class ProgramConfController {
 	@GetMapping
 	public ModelAndView promoBrand(@RequestParam Integer progId) {
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("progId", progId);
+		mv.addObject("prog", progServ.getProgram(progId));
 		mv.addObject("listJson", listProgramBrand(progId));
 		mv.addObject("listBrand", brandServ.listBrand(1));
 		return mv;
@@ -102,12 +103,13 @@ public class ProgramConfController {
 	
 	
 	
-	// -----------------------------subject-----------------------------
+	// -----------------------------promoProduct-----------------------------
 	
 	@GetMapping
 	public ModelAndView promoProduct(@RequestParam Integer progId) {
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("progId", progId);
+		mv.addObject("prog", progServ.getProgram(progId));
+		
 		ProgramProduct bean = new ProgramProduct();
 		bean.setProgId(progId);
 		mv.addObject("listJson", listProgramProduct(new Page(), bean));
@@ -145,28 +147,12 @@ public class ProgramConfController {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	// ---------------------special----------------------
 	@GetMapping
 	public ModelAndView promoSpecial(@RequestParam Integer progId) {
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("progId", progId);
+		mv.addObject("prog", progServ.getProgram(progId));
+		
 		ProgramSpecial bean = new ProgramSpecial();
 		bean.setProgId(progId);
 		mv.addObject("listJson", listProgramSpecial(new Page(), bean));
@@ -197,7 +183,8 @@ public class ProgramConfController {
 	@GetMapping
 	public ModelAndView promoDependence(@RequestParam Integer progId) {
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("progId", progId);
+		mv.addObject("prog", progServ.getProgram(progId));
+		
 		ProgramDependence bean = new ProgramDependence();
 		bean.setProgId(progId);
 		mv.addObject("listJson", listProgramDependence(new Page(), bean));
@@ -228,7 +215,8 @@ public class ProgramConfController {
 	@GetMapping
 	public ModelAndView promoChange(@RequestParam Integer progId) {
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("progId", progId);
+		mv.addObject("prog", progServ.getProgram(progId));
+		
 		ProgramChange bean = new ProgramChange();
 		bean.setProgId(progId);
 		mv.addObject("listJson", listProgramChange(new Page(), bean));

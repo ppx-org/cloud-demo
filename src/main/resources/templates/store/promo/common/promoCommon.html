@@ -13,6 +13,17 @@
 
 
 <select th:fragment="discount">
+	<option value="0.95">9.5</option>
+	<option value="0.9">9.0</option>
+	<option value="0.85">8.5</option>
+	<option value="0.8">8.0</option>
+	<option value="0.75">7.5</option>
+	<option value="0.7">7.0</option>
+	<option value="0.6">6.0</option>
+	<option value="0.5">5.0</option>
+</select>
+
+<select th:fragment="oneDiscount">
 	<option value="1">10</option>
 	<option value="0.95">9.5</option>
 	<option value="0.9">9.0</option>
@@ -54,7 +65,7 @@
 			var v = $("[id='" + policy + "']").find("[name='" + policyArray[i] + "']").val();
 			arg.push(pre + policyArray[i].replace(policyArray[i], v));
 		}
-		return encodeURI(arg);
+		return arg;
 	}
 	</script>
 	
@@ -90,13 +101,13 @@
 	</div>	
 	<div id="%:d,2:d" style="display:none" class="input-group policy">
 		<span class="input-group-addon">单件</span>
-		<select class="form-control" id="discount" th:include="::discount" name="%:d"></select>
+		<select class="form-control" id="discount" th:include="::oneDiscount" name="%:d"></select>
 		<span class="input-group-addon">第二件</span>
 		<select class="form-control" id="discount" th:include="::discount" name="2:d"></select>
 	</div>
 	<div id="%:d,2+:d" style="display:none" class="input-group policy">
 		<span class="input-group-addon">第一件</span>
-		<select class="form-control" id="discount" th:include="::discount" name="%:d"></select>
+		<select class="form-control" id="discount" th:include="::oneDiscount" name="%:d"></select>
 		<span class="input-group-addon">任两件及以上</span>
 		<select class="form-control" id="discount" th:include="::discount" name="2+:d"></select>
 	</div>

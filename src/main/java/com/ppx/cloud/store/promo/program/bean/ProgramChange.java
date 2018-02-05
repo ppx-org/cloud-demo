@@ -7,6 +7,8 @@ public class ProgramChange {
 	private Integer prodId;
 	
 	private Float changePrice;
+	
+	private String prodTitle;
 
 	public Integer getProgId() {
 		return progId;
@@ -32,6 +34,15 @@ public class ProgramChange {
 		this.changePrice = changePrice;
 	}
 
+	public String getProdTitle() {
+		return prodTitle;
+	}
+
+	public void setProdTitle(String prodTitle) {
+		this.prodTitle = prodTitle;
+	}
+
+	
 	
 	
 

@@ -5,6 +5,8 @@ public class ProgramProduct {
 	private Integer progId;
 
 	private Integer prodId;
+	
+	private String prodTitle;
 
 	public Integer getProgId() {
 		return progId;
@@ -22,9 +24,14 @@ public class ProgramProduct {
 		this.prodId = prodId;
 	}
 
-	
-	
+	public String getProdTitle() {
+		return prodTitle;
+	}
 
-	
+	public void setProdTitle(String prodTitle) {
+		this.prodTitle = prodTitle;
+	}
+
+
 
 }

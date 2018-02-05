@@ -163,7 +163,7 @@ public class ChromeController {
 		
 		String location = chromeSession.getLocation();
 		System.out.println("xxxxlocation:" + location);
-		https://rd2.zhaopin.com/s/homepage.asp
+		//https://rd2.zhaopin.com/s/homepage.asp
 		if (location.startsWith("https://rd2.zhaopin.com/s/homepage.asp")) {
 			return getCookie(request);
 		}

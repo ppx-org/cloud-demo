@@ -4,6 +4,8 @@ public class ProgramCategory {
 	private Integer progId;
 
 	private Integer catId;
+	
+	private String catName;
 
 	public Integer getProgId() {
 		return progId;
@@ -21,4 +23,14 @@ public class ProgramCategory {
 		this.catId = catId;
 	}
 
+	public String getCatName() {
+		return catName;
+	}
+
+	public void setCatName(String catName) {
+		this.catName = catName;
+	}
+
+	
+	
 }

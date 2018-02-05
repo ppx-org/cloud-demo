@@ -20,7 +20,7 @@ $(function() {
 
 function query() {
 	showLoading();
-	$.post([[@{'/programConf/listProgramBrand?progId=' + ${progId}}]], null, function(r) {
+	$.post([[@{/programConf/listProgramBrand}]], "progId=" + $("#progId").val(), function(r) {
 		refreshData(r);
 		hideLoading();
 	});
@@ -45,10 +45,6 @@ function addProgramBrand() {
 	});
 }
 
-template.helper('getBrandName', function(brandId) {
-	return $("#brandId [value=" + brandId + "]").text();
-})
-
 function remove(progId, brandId) {
 	
 	var callback = function () {
@@ -62,49 +58,46 @@ function remove(progId, brandId) {
 	confirm(progId, callback);
 }
 
-
-
 </script>
 
 
 <style>
 </style>
-
 </head>
 
-
 <body>
-
-
 <div class="page-list-body">
 	<div class="page-list-query">
-		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>test</span></div>
+		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>品牌促销</span></div>
 		<form id="addForm" class="form-inline">
 		<div>
-		<input type="hidden" id="progId" th:value="${progId}">
+		<input type="hidden" id="progId" th:value="${prog.progId}">
 		<div class="input-group">
-			<span class="input-group-addon">BRA</span>	
+			<span class="input-group-addon">品牌</span>	
 			<select class="form-control" id="brandId">
 				<option th:value="${item.brandId}" th:text="${item.brandName}" th:each="item:${listBrand}"></option>
 			</select>
 		</div>
-	
-		
 		<button type="button" class="btn btn-success" onclick="addProgramBrand()">新增</button>
+		
+		<label>方案名称：<span th:text="${prog.progName}"></span>(<span th:text="${#dates.format(prog.progBegin, 'yyyy-MM-dd')} + '至' + ${prog.progEndDesc}"></span>)
+			促销策略:<span th:text="${prog.policyArgsDesc}"></span>
+		</label>
+		
 		</div>
 		</form>
 	</div>
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
-		<th>BRA</th>
-		<th>NAME</th>
-		<th>ACTION</th>
+		<th>品牌ID</th>
+		<th>品牌名称</th>
+		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
 	<tr>
-		<td class="w-id">{{getBrandName(v.brandId)}}</td>
-		<td class="w-title-s">NAME</td>
+		<td class="w-id">{{v.brandId}}</td>
+		<td class="w-title-s">{{v.brandName}}</td>
 		<td class="w-action">
 			<a href="#" onclick="remove({{v.progId}}, {{v.brandId}})">[删除]</a>
 		</td>
