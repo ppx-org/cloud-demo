@@ -109,7 +109,7 @@ function storeChange() {
 <div class="page-list-body">
 	<div class="page-list-query">
 		<form id="queryForm" class="form-inline">
-			<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>test</span></div>
+			<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>推荐搜索管理</span></div>
 			<select class="form-control input-sm" id="storeId" name="storeId" onchange="storeChange(this)">
 				<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
 			</select>
@@ -119,8 +119,8 @@ function storeChange() {
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
 		<th>ID</th>
-		<th>NAME</th>
-		<th>SORT</th>
+		<th>推荐词</th>
+		<th>排序</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
@@ -139,8 +139,8 @@ function storeChange() {
 			{{/if}}					
 		</td>
 		<td class="w-action">
-			<a href="#" onclick="remove({{v.hotId}})" class="glyphicon glyphicon-trash" title="删除"></a>&nbsp;&nbsp;
-			<a href="#" onclick="edit('{{v.hotId}}')" class="glyphicon glyphicon-edit" title="修改"></a>
+			<a href="#" onclick="remove({{v.hotId}})">["删除]</a>&nbsp;&nbsp;
+			<a href="#" onclick="edit('{{v.hotId}}')">["修改]</a>
 		</td>
 	</tr>
 	{{/each}}

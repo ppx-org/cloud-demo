@@ -33,7 +33,7 @@ function add() {
 				queryPage(1);
 			}
 			else if (r.result == 0) {
-				alertWarning("NAME已经存在！");
+				alertWarning("分词已经存在！");
 				hideLoading();
 			}
 		});
@@ -55,15 +55,15 @@ function remove(id) {
 </head>
 
 <body>
-<div th:replace="common/fragment/common::pageList('DEMO_TEST')">
+<div th:replace="common/fragment/common::pageList('分词管理')">
 	<div th:fragment="queryFragment">
 		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
-		<input type="text" class="form-control input-sm" name="extWord" placeholder="请输入WORD" style="width:200px;">
+		<input type="text" class="form-control input-sm" name="extWord" placeholder="请输入分词" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
-		<th>WORD</th>
+		<th>分词</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
@@ -71,7 +71,7 @@ function remove(id) {
 	<tr>
 		<td class="w-title-m">{{v.extWord}}</td>
 		<td class="w-action">
-			<a href="#" onclick="remove('{{v.extWord}}')" class="glyphicon glyphicon-trash" title="删除"></a>
+			<a href="#" onclick="remove('{{v.extWord}}')">[删除]</a>
 		</td>
 	</tr>
 	{{/each}}

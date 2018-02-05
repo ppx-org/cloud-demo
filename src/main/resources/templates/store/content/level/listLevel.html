@@ -40,8 +40,6 @@ function add() {
 	}
 }
 
-
-
 function remove(id) {
 	var callback = function () {
 		showLoading();
@@ -82,7 +80,6 @@ function storeChange() {
 	query();
 }
 
-
 function levelProduct(levelId) {
 	var url = [[@{/level/listLevelProd}]] + "?levelId=" + levelId;
 	open(url);
@@ -94,7 +91,7 @@ function levelProduct(levelId) {
 <div class="page-list-body">
 	<div class="page-list-query">
 		<form id="queryForm" class="form-inline">
-			<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>test</span></div>
+			<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>楼层管理</span></div>
 			<select class="form-control input-sm" id="storeId" name="storeId" onchange="storeChange(this)">
 				<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
 			</select>
@@ -104,8 +101,8 @@ function levelProduct(levelId) {
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
 		<th>ID</th>
-		<th>NAME</th>
-		<th>SORT</th>
+		<th>楼层名称</th>
+		<th>排序</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
@@ -124,9 +121,8 @@ function levelProduct(levelId) {
 			{{/if}}					
 		</td>
 		<td class="w-action">
-			<a href="#" onclick="remove({{v.levelId}})" class="glyphicon glyphicon-trash" title="删除"></a>
-
-			<a href="#" onclick="levelProduct({{v.levelId}})">[goto]</a>
+			<a href="#" onclick="remove({{v.levelId}})">[删除]</a>&nbsp;&nbsp;
+			<a href="#" onclick="levelProduct({{v.levelId}})">[楼层商品]</a>
 		</td>
 	</tr>
 	{{/each}}
@@ -137,7 +133,7 @@ function levelProduct(levelId) {
 <div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
 	<div class="form-group">
 		<input type="hidden" id="addStoreId" name="storeId">
-		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
+		<label class="col-sm-3 control-label"><span class="required">*</span>楼层名称：</label>
 		<div class="col-sm-7"><input type="text" name="levelName" class="form-control" maxlength="32"></div>
 	</div>
 </div>

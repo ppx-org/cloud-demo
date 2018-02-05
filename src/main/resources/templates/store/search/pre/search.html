@@ -7,14 +7,11 @@
 
 <script type="text/javascript" th:inline="javascript">
 
-
-
 function queryPage(pageNumber) {
 	var w = $("#w").val();
 	$("#pageNumber").val(pageNumber);
 	showLoading();
-	
-	
+
 	
 	$.get([[@{/query/pcQuery}]], $("#queryForm").serialize(), function(r) {
 		refreshPageData(r);
@@ -137,10 +134,6 @@ function storeChange(obj) {
 </head>
 
 <body>
-
-
-
-
 <ul th:replace="store/search/pre/preCommon::head"></ul>
 <script type="text/javascript">$("#search").tab('show')</script>
 

@@ -34,7 +34,7 @@ function add() {
 		showLoading();
 		$.post([[@{/level/insertLevelProd}]], $("#addForm").serialize(), function(r) {
 			if (r.result == 0) {
-				alertWarning("不存在prod");
+				alertWarning("不存在商品");
 				hideLoading();
 			}
 			else if (r.result == -1) {
@@ -49,8 +49,6 @@ function add() {
 	}
 }
 
-
-
 function removeProd(id) {
 	var callback = function () {
 		showLoading();
@@ -62,7 +60,6 @@ function removeProd(id) {
 	}
 	confirm(id, callback);
 }
-
 
 var move = {};
 move.top = function(id) {
@@ -91,8 +88,6 @@ function storeChange() {
 	query();
 }
 
-
-
 </script>
 </head>
 
@@ -108,8 +103,8 @@ function storeChange() {
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
 		<th>ID</th>
-		<th>NAME</th>
-		<th>SORT</th>
+		<th>商品标题</th>
+		<th>排序</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
@@ -146,24 +141,8 @@ function storeChange() {
 </div>
 
 
-
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -134,7 +134,7 @@ function editSrc(obj) {
 <body class="page-list-body">
 
 <div class="page-list-query">
-	<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>图片设置</span></div>
+	<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>图片管理</span></div>
 </div>
 
 <table id="listTable" class="page-list-table table table-bordered table-condensed">
@@ -171,7 +171,7 @@ function editSrc(obj) {
 </table>
 
 
-<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改SRC', 780)">
+<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改图片地址', 780)">
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>SRC：</label>
 		<div class="col-sm-8"><input type="text" id="imgSrc" class="form-control" maxlength="256" style="width:600px"></div>
