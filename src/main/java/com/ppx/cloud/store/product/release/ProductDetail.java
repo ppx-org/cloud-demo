@@ -1,5 +1,6 @@
 package com.ppx.cloud.store.product.release;
 
+
 public class ProductDetail {
 	
 	private Integer prodId;

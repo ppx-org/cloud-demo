@@ -59,9 +59,13 @@ public class ProductController {
 	}
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> insertProduct(Product bean, ProductDetail detail, @RequestParam String[] prodImgSrc,
-			@RequestParam Integer[] stockNum, @RequestParam Float[] price,
-			String[] skuName, String[] skuImgSrc) {
+	public Map<String, Object> insertProduct(Product bean, ProductDetail detail, @RequestParam String prodImgSrc,
+			@RequestParam Integer[] stockNum, @RequestParam Float[] price, String[] skuName, String[] skuImgSrc) {
+		if (stockNum.length != price.length) {
+			ControllerReturn.ok(-1);
+		}
+		
+		
 		System.out.println("..........getRepoId:" + bean.getRepoId());
 		System.out.println("..........getCatId:" + bean.getCatId());
 		System.out.println("..........getProdTitle:" + bean.getProdTitle());
@@ -87,10 +91,8 @@ public class ProductController {
 		}
 	
 		
-		return ControllerReturn.ok(1);
-		
-		//int r = serv.insertProduct(bean);
-		//return ControllerReturn.ok(r);
+		int r = serv.insertProduct(bean, detail, prodImgSrc, stockNum, price, skuName, skuImgSrc);
+		return ControllerReturn.ok(r);
 	}
 	
 
@@ -108,6 +110,7 @@ public class ProductController {
 		return mv;
 	}
 
+	
 	
 	
 	// >>>>>>>>>>>>>>>>>>>>action

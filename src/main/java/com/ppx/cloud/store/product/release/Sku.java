@@ -14,6 +14,8 @@ public class Sku {
 	
 	private Integer skuPrio;
 	
+	private String skuName;
+	
 	private String skuImgSrc;
 
 	public Integer getSkuId() {
@@ -54,6 +56,14 @@ public class Sku {
 
 	public void setSkuPrio(Integer skuPrio) {
 		this.skuPrio = skuPrio;
+	}
+
+	public String getSkuName() {
+		return skuName;
+	}
+
+	public void setSkuName(String skuName) {
+		this.skuName = skuName;
 	}
 
 	public String getSkuImgSrc() {
