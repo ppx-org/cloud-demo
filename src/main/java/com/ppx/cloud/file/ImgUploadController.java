@@ -1,4 +1,4 @@
-package com.ppx.cloud.file.img;
+package com.ppx.cloud.file;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -6,8 +6,10 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
@@ -20,21 +22,37 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.grant.common.GrantContext;
 
+import net.coobird.thumbnailator.Thumbnails;
+
 @Controller
 public class ImgUploadController {
 
+	private static Set<String> prodTypeSet = new HashSet<String>();
+	
+	static {
+		prodTypeSet.add("prod");
+		prodTypeSet.add("sku");
+	}
 	/**
+	 * product
+	 * 路经=merchantId/prod/yyyyMMdd/UUID.ext
 	 * 路经=merchantId/yyyyMMdd/UUID.ext
-	 * 
 	 * @param file
+	 * @param type 
 	 * @return
 	 */
 	@PostMapping @ResponseBody
-	public Map<String, Object> multipleSave(@RequestParam("file") MultipartFile[] file) {
+	public Map<String, Object> prodSave(@RequestParam("file") MultipartFile[] file, @RequestParam("type") String[] type) {
 		List<String> returnList = new ArrayList<String>();
 		
-		if (file == null || file.length == 0) {
+		if (file == null || file.length == 0 || file.length != type.length) {
 			return ControllerReturn.ok(returnList);
+		}
+		
+		for (String t : type) {
+			if (!prodTypeSet.contains(t)) {
+				return ControllerReturn.ok(returnList);
+			}
 		}
 		
 		for (int i = 0; i < file.length; i++) {				
@@ -45,9 +63,16 @@ public class ImgUploadController {
 					continue;
 				}
 				byte[] bytes = file[i].getBytes();
-				String path = getImgPath(fileName);
-				buffStream = new BufferedOutputStream(new FileOutputStream(new File(System.getProperty("file.imgFilePath") + path)));
+				String path = getImgPath(fileName, type[i]);
+				String savePath = System.getProperty("file.imgFilePath") + path;
+				buffStream = new BufferedOutputStream(new FileOutputStream(new File(savePath)));
 				buffStream.write(bytes);
+				
+				// 图片压缩
+				if ("prod".equals(type[i])) {
+					Thumbnails.of(savePath).size(200, 200).toFile(savePath + "_200.jpg");
+				}
+				
 				returnList.add(path);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -62,11 +87,9 @@ public class ImgUploadController {
 		return ControllerReturn.ok(returnList);
 	}
 	
-	
-	
-	private String getImgPath(String fileName) {
+	private String getImgPath(String fileName, String type) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		String path = merchantId + "/" + new SimpleDateFormat("yyyyMMdd").format(new Date());
+		String path = merchantId + "/" + type + "/" + new SimpleDateFormat("yyyyMMdd").format(new Date());
 		File pathFile = new File(System.getProperty("file.imgFilePath") + path);
 		if (!pathFile.exists()) {
 			pathFile.mkdirs();
@@ -76,16 +99,24 @@ public class ImgUploadController {
 		String imgFileName = UUID.randomUUID().toString().replaceAll("-", "") + ext;
 		return path + "/" + imgFileName;
 	}
-
 	
+	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	private static Set<String> showTypeSet = new HashSet<String>();
 	
+	static {
+		showTypeSet.add("store");
+		showTypeSet.add("swiper");
+		showTypeSet.add("cat");
+		showTypeSet.add("brand");
+		showTypeSet.add("theme");
+		showTypeSet.add("promo");
+	}
 	
-	
-	
-	
-	// 其它图片上传
 	/**
 	 * 路经=merchantId/show/name.ext
+	 * show/
+	 * store/ swiper/ brand cat promo theme 
+	 * 
 	 * 
 	 * @param file
 	 * @return
@@ -97,6 +128,14 @@ public class ImgUploadController {
 		if (file == null || file.length == 0 || file.length != type.length) {
 			return ControllerReturn.ok(returnList);
 		}
+		
+		for (String t : type) {
+			if (!showTypeSet.contains(t)) {
+				return ControllerReturn.ok(returnList);
+			}
+		}
+		
+		
 		
 		for (int i = 0; i < file.length; i++) {				
 			BufferedOutputStream buffStream = null;
@@ -144,7 +183,5 @@ public class ImgUploadController {
 			}
 			return path + "/" + type + ext;
 		}
-		
-	
 	}
 }
