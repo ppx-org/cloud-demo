@@ -54,29 +54,39 @@ function setProArgs() {
 
 function uploadImg(callback) {
 	var formData = new FormData();
-	$(".uploadImg").each(function() {formData.append("file", $(this).data("file"))});	
+	$("#prodImg .uploadImg").each(function() {
+		formData.append("file", $(this).data("file"));
+		formData.append("type", "prod");
+	});
+	
+	$(".skuImg .uploadImg").each(function() {
+		formData.append("file", $(this).data("file"));
+		formData.append("type", "sku");
+	});
 	
 	$.ajax({url:[[@{/imgUpload/multipleSave}]], type:"POST", contentType:false, data:formData ,processData:false,
 		success:function(r){
 			var len = r.arrayList.length;
 			if ($(".uploadImg").length != len) {
-				alertDanger("上传失败");
+				alertDanger("上传图片失败");
 				return;
 			}
-			
 			for (var i = 0; i < len; i++) {
 				// 上传后路径写回img
 				$(".uploadImg").eq(i).data("imgSrc", r.arrayList[i]);
 			}
 			
-			// 路径以,分格写到hidden
-			$(".imgTr").each(function() {
-				var r = [];
-				$(this).find("img").each(function(){
-					r.push($(this).data("imgSrc"));
-				});
-				$(this).find("[name=skuImgSrc]").val(r);
+			// prodImg hidden
+			var prodImgSrc = [];
+			$("#prodImg .uploadImg").each(function() {prodImgSrc.push($(this).data("imgSrc"))});
+			$("#prodImg input[name=prodImgSrc]").val(prodImgSrc);
+			
+			// skuImg hidden
+			$(".skuImg").each(function() {
+				$(this).find("[name=skuImgSrc]").val($(this).data("imgSrc"));
 			});
+			
+			
 			callback.call();
 		}
 	});
@@ -150,7 +160,7 @@ function uploadImg(callback) {
 				<td class="skuAction">
 					<a href="#" onclick="sku.add(this)">[增加]</a>
 				</td>
-				<td class="dragImg">
+				<td class="dragImg skuImg">
 				<input type="hidden" name="skuImgSrc">
 				<table>
 				<tr class="imgTr">
@@ -167,8 +177,9 @@ function uploadImg(callback) {
 	</div>
 
 	
-	<div class="form-group">
+	<div id="prodImg" class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>商品图片：</label>
+		<input type="hidden" name="prodImgSrc">
 		<div class="col-sm-8 dragImg" style="background-color:#EEEEEE">
 		<table border=1 style="border-color:#DDDDDD;height:82px">
 		<tr class="imgTr">
@@ -192,7 +203,6 @@ function uploadImg(callback) {
 		</div>
 	</div>
 	
-	<!-- 移动到</form>上面 -->
 	<div class="form-group">
 		<label class="col-sm-2 control-label">存放位置：</label>
 		<div class="col-sm-3">
