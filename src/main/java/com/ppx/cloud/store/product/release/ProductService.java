@@ -117,6 +117,12 @@ public class ProductService extends MyDaoSupport {
 		return prod;
 	}
 	
+	public ProductDetail getProductDetail(int prodId) {
+		String sql = "select * from product_detail where PROD_ID = ?";
+		ProductDetail detail = getJdbcTemplate().queryForObject(sql, BeanPropertyRowMapper.newInstance(ProductDetail.class), prodId);
+		return detail;
+	}
+	
 	
 	public List<Sku> listSku(int prodId) {
 		String skuSql = "select * from sku where PROD_ID = ? order by SKU_PRIO";

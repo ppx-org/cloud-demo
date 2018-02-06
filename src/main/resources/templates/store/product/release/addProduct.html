@@ -92,6 +92,11 @@ function uploadImg(callback) {
 	});
 }
 
+// 默认选择的仓库和分类
+$(function() {
+	$("#repoId option[value=" + localStorage.defaultRepoId + "]").attr("selected", true);
+	$("#catId option[value=" + localStorage.defaultCatId + "]").attr("selected", true);
+});
 </script>
 
 <style>
@@ -112,14 +117,14 @@ function uploadImg(callback) {
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>仓库：</label>
 		<div class="col-sm-3">
-			<select class="form-control" name="repoId">
+			<select class="form-control" id="repoId	XBK3 " name="repoId" onchange="localStorage.defaultRepoId=$(this).val()">
 				<option th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${listRepo}"></option>
 			</select>
 		</div>
 		
-		<label class="col-sm-2 control-label"><span class="required">*</span>类目：</label>
+		<label class="col-sm-2 control-label"><span class="required">*</span>分类：</label>
 		<div class="col-sm-3">
-			<select class="form-control" name="catId">
+			<select class="form-control" id="catId" name="catId" onchange="localStorage.defaultCatId=$(this).val()">
 				<option th:value="${item.catId}" th:text="${item.catName}" th:each="item:${listCat}"></option>
 			</select>
 		</div>
@@ -248,4 +253,5 @@ function uploadImg(callback) {
 
 </body>
 </html>
+
 

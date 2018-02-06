@@ -105,6 +105,7 @@ public class ProductController {
 		
 		
 		mv.addObject("prod", serv.getProduct(prodId));
+		mv.addObject("detail", serv.getProductDetail(prodId));
 		mv.addObject("listSku", serv.listSku(prodId));
 		
 		return mv;
