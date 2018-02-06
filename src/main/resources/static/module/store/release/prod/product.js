@@ -44,6 +44,8 @@ sku.top = function(obj) {
 	firstSku.find(".skuAction").html('<a href="#" onclick="sku.add(this)">[增加]</a>');
 }
 sku.add = function(obj) {
+	
+	$("#skuDescDiv").show();
 	// 显示firstSkuTitle
 	$(".firstSkuTitle").show();
 	
@@ -53,15 +55,14 @@ sku.add = function(obj) {
 	newTr.find(".imgTr>td:gt(0)").remove();
 	
 	
-	
 	$("#skuTable").append(newTr);
-	
 	refreshDrag();
 }
 sku.remove = function(obj) {
 	// 只剩下一个sku时，隐藏firstSkuTitle
 	var len = $("#skuTable>tbody>tr").length;
 	if (len == 3) {
+		$("#skuDescDiv").hide();
 		$(".firstSkuTitle").hide();
 	}
 	$(obj).parent().parent().remove();
