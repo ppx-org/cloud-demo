@@ -10,10 +10,10 @@ CREATE TABLE program (
   PROG_END 			date NOT NULL,
   POLICY_TYPE 		varchar(32) NOT NULL,
   POLICY_ARGS 		varchar(32),
-  RECORD_STATUS 	smallint not null default 1,
-  CREATED 			timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PROG_IMG_X		smallint not null default 0,
   PROG_IMG_Y		smallint not null default 0,
+  RECORD_STATUS 	smallint not null default 1,
+  CREATED 			timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (PROG_ID)
 );
 
