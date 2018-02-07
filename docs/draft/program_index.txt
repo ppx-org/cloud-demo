@@ -2,7 +2,7 @@
 
 program_index
 
-edit cat|edit brand
+edit cat|edit brand(可能要删除program_index的cat_id和brand_id字段)
 
 
  on shelves ->
@@ -10,9 +10,16 @@ edit cat|edit brand
 2.再启用cat和promo
 3.再重建索引
 
+(如果由A类改成B类)
+
 off shelves ->
-1.off shelves之前删除program_index的对应数据
-2.更新搜索引擎的
+1.off shelves之前删除program_index的对应数据(不需要)
+2.更新搜索引擎的displayProduct
+
+// 
+修改标题需要更新搜索引擎
+修改分类和品牌需要更新分类或品牌促销,
+
 
 
 
