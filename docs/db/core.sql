@@ -45,8 +45,8 @@ create table repository
    MERCHANT_ID          int not null,
    REPO_NAME            varchar(32) not null,
    REPO_ADDRESS         varchar(128) not null,
-   CREATED              timestamp not null default CURRENT_TIMESTAMP,
    RECORD_STATUS        smallint not null default 1,
+   CREATED              timestamp not null default CURRENT_TIMESTAMP,
    primary key (REPO_ID)
 );
 
@@ -61,8 +61,8 @@ create table store
    STORE_LAT			varchar(32) not null,
    STORE_PHONE			varchar(32),
    STORE_IMG			varchar(128),
-   CREATED              timestamp not null default CURRENT_TIMESTAMP,
    RECORD_STATUS        smallint not null default 1,
+   CREATED              timestamp not null default CURRENT_TIMESTAMP,
    primary key (STORE_ID)
 );
 
@@ -80,10 +80,10 @@ create table category
    PARENT_ID            int not null,
    CAT_NAME             varchar(32) not null,
    CAT_PRIO             int not null,
-   CREATED              timestamp not null default CURRENT_TIMESTAMP,
-   RECORD_STATUS        smallint not null default 1,
    CAT_IMG_X			smallint not null default 0,
    CAT_IMG_Y			smallint not null default 0,
+   RECORD_STATUS        smallint not null default 1,
+   CREATED              timestamp not null default CURRENT_TIMESTAMP,
    primary key (CAT_ID)
 );
 
@@ -93,10 +93,10 @@ create table brand
    MERCHANT_ID          int not null,
    BRAND_NAME           varchar(32) not null,
    BRAND_PRIO           int not null,
-   CREATED              timestamp not null default CURRENT_TIMESTAMP,
-   RECORD_STATUS        smallint not null default 1,
    BRAND_IMG_X			smallint not null default 0,
    BRAND_IMG_Y			smallint not null default 0,
+   RECORD_STATUS        smallint not null default 1,
+   CREATED              timestamp not null default CURRENT_TIMESTAMP,
    primary key (BRAND_ID)
 );
 
@@ -106,10 +106,10 @@ create table theme
    MERCHANT_ID        int,
    THEME_NAME         varchar(32) not null,
    THEME_PRIO         int not null,
-   CREATED            timestamp not null default CURRENT_TIMESTAMP,
-   RECORD_STATUS      smallint not null default 1,
    THEME_IMG_X		  smallint not null default 0,
    THEME_IMG_Y	      smallint not null default 0,
+   RECORD_STATUS      smallint not null default 1,
+   CREATED            timestamp not null default CURRENT_TIMESTAMP,
    primary key (THEME_ID)
 );
 
@@ -127,8 +127,8 @@ create table sku
    SKU_ID               int not null auto_increment,
    PROD_ID              int not null,
    STOCK_NUM            int not null not null,
-   SKU_PRIO             int not null,
    PRICE                decimal(7,2) not null,
+   SKU_PRIO             int not null,
    SKU_NAME				varchar(32),
    SKU_IMG_SRC          varchar(128),
    primary key (SKU_ID)
@@ -152,11 +152,11 @@ create table product
 create table product_detail
 (
 	PROD_ID 		int not null,
-	CREATED 		timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PROD_POSITION	varchar(32),
 	BAR_CODE		varchar(32),
 	PROD_DESC		varchar(128),
 	PROD_ARGS		varchar(128),
+	CREATED 		timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	primary key (PROD_ID)
 );
 
@@ -203,8 +203,8 @@ create table user_cart
 (
 	OPENID		varchar(32) NOT NULL,
 	SKU_ID		int not null,
-	SKU_NUM		int not null,
 	STORE_ID	int not null,
+	SKU_NUM		int not null,
 	CREATED 	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	primary key (OPENID, SKU_ID)
 );
