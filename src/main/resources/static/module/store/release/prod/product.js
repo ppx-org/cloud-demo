@@ -47,7 +47,7 @@ sku.add = function(obj) {
 	
 	$("#skuDescDiv").show();
 	// 显示firstSkuTitle
-	$(".firstSkuTitle").show();
+	$(".firstSkuItem").show();
 	
 	var firstSku = $("#skuTable>tbody>tr:eq(1)");
 	var newTr = $('<tr>' + firstSku.html() + '</tr>');
@@ -63,7 +63,7 @@ sku.remove = function(obj) {
 	var len = $("#skuTable>tbody>tr").length;
 	if (len == 3) {
 		$("#skuDescDiv").hide();
-		$(".firstSkuTitle").hide();
+		$(".firstSkuItem").hide();
 	}
 	$(obj).parent().parent().remove();
 }

@@ -9,9 +9,6 @@
 <script type="text/javascript" th:src="@{/static/module/store/release/prod/product.js}"></script>
 
 <script type="text/javascript" th:inline="javascript">
-$(function() {
-	
-});
 
 function insert() {
 	$.post([[@{/product/insertProduct}]], $("#addForm").serialize(), function(r) {
@@ -22,12 +19,20 @@ function insert() {
 }
 
 function add() {
+	// validate product img|sku img
+	if ($("#prodImg .uploadImg").length == 0) {
+		alertWarning("商品图片不能为空");
+		return;
+	}
+	if ($(".skuImg").length != $(".skuImg .uploadImg").length) {
+		alertWarning("SKU图片不能为空");
+		return;
+	}
+
+	
+	setProArgs();
 	if (!$("#addForm").validationEngine('validate')) return;
 	uploadImg(insert);
-}
-
-function testArg() {
-	setProArgs();
 }
 
 function setProArgs() {
@@ -37,11 +42,11 @@ function setProArgs() {
 	var result = [];
 	for (var i = 0; i < argName.length; i++) {
 		if (argName[i].value.indexOf("|") >= 0 || argValue[i].value.indexOf("|") >= 0) {
-			alert((i + 1) + "存在|")
+			alertWarning((i + 1) + "行存在|")
 			return false;
 		}
 		if (argName[i].value.indexOf("@") >= 0 || argValue[i].value.indexOf("@") >= 0) {
-			alert((i + 1) + "存在@")
+			alertWarning((i + 1) + "行存在@")
 			return false;
 		}
 		if ($.trim(argName[i].value) != "") {
@@ -50,7 +55,6 @@ function setProArgs() {
 	}
 	$("#prodArgs").val(result.join("@"));
 }
-
 
 function uploadImg(callback) {
 	var formData = new FormData();
@@ -86,7 +90,6 @@ function uploadImg(callback) {
 				$(this).find("[name=skuImgSrc]").val($(this).data("imgSrc"));
 			});
 			
-			
 			callback.call();
 		}
 	});
@@ -101,7 +104,7 @@ $(function() {
 
 <style>
 .imgTd {display:none;}
-#skuTable>tbody>tr>td {height:86px;vertical-align:middle;}
+#skuTable>tbody>tr>td {height:88px;vertical-align:middle;padding:0;}
 </style>
 
 </head>
@@ -152,14 +155,14 @@ $(function() {
 			<tr>
 				<th style="width:55px">数量</th>
 				<th style="width:95px">价格</th>
-				<th style="display:none;" class="firstSkuTitle w-title-s">SKU名称</th>
-				<th style="width:90px" class="">操作</th>
+				<th style="display:none;" class="firstSkuItem w-title-s">SKU名称</th>
+				<th style="width:90px">操作</th>
 				<th>图片(可拖拉图片进来)</th>
 			</tr>
 			<tr>
 				<td><input type="text" name="stockNum" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px" value="1"></td>
 				<td><input type="text" name="price" class="form-control validate[required,custom[number]]" maxlength="7" style="width:90px" value="8.8"></td>
-				<td style="display:none;" class="firstSkuTitle"><input type="text" name="skuName" class="form-control validate[required]" maxlength="32"></td>
+				<td style="display:none;" class="firstSkuItem"><input type="text" name="skuName" class="form-control validate[required]" maxlength="32"></td>
 				<td class="skuAction">
 					<a href="#this" onclick="sku.add(this)">[增加]</a>
 				</td>
