@@ -1,0 +1,22 @@
+
+
+program_index
+
+edit cat|edit brand
+
+
+ on shelves ->
+1.on shelves之前需先暂停所有的cat promo和brand promo
+2.再启用cat和promo
+3.再重建索引
+
+off shelves ->
+1.off shelves之前删除program_index的对应数据
+2.更新搜索引擎的
+
+
+
+
+
+
+

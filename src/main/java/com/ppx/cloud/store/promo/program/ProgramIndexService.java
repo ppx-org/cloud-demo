@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
-import com.ppx.cloud.grant.common.GrantContext;
 import com.ppx.cloud.store.common.dictionary.Dict;
 
 @Service
@@ -64,114 +63,13 @@ public class ProgramIndexService extends MyDaoSupport {
 	public String stop(Integer progId) {
 		if (getStatusForUpdate(progId) != START_STATUS) return "-1";
 		
-		// 删除
+		// 删除索引
 		String deleteSql = "delete from program_index where PROG_ID = ?";
 		getJdbcTemplate().update(deleteSql, progId);
 		
 		updateStatus(progId, STOP_STATUS);
 		return progId + "," + STOP_STATUS + "," + Dict.getProgramStatusDesc(STOP_STATUS);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-		
-		
-		
-		
-		
-		
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	private int startCategory(Program prog) {
 		String categorySql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY, CAT_ID) " + 
