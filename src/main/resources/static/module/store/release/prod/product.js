@@ -53,6 +53,7 @@ sku.add = function(obj) {
 	var newTr = $('<tr>' + firstSku.html() + '</tr>');
 	newTr.find(".skuAction").html(this.REMOVE_HTML);
 	newTr.find(".imgTr>td:gt(0)").remove();
+	newTr.find("[name=skuId]").val(-1);
 	
 	
 	$("#skuTable").append(newTr);
@@ -75,7 +76,7 @@ var img = {};
 img.zIndex = 1000;
 img.click = function(obj) {	
 	if (obj.width == 80) {
-		$(obj).css({position:"fixed",left:$(obj).offset().left,top:$(obj).offset().top});
+		$(obj).css({position:"fixed",left:$(obj).offset().left,top:$(obj).offset().top - $(document).scrollTop()});
 		$(obj).css({zIndex:++img.zIndex,width:$(obj).data("data-init-width"),height:$(obj).data("data-init-height")});
 	}
 	else {

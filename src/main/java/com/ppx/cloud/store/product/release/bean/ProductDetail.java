@@ -1,8 +1,10 @@
 package com.ppx.cloud.store.product.release.bean;
 
+import com.ppx.cloud.common.jdbc.annotation.Id;
 
 public class ProductDetail {
 	
+	@Id
 	private Integer prodId;
 	
 	private String prodPosition;

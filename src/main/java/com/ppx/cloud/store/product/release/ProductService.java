@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
@@ -34,7 +35,8 @@ public class ProductService extends MyDaoSupport {
 		return new PageList<Product>(list, page);
 	}
 	
-	public int insertProduct(Product bean, ProductDetail detail, String prodImgSrc,
+	@Transactional
+	public int insertProduct(Product prod, ProductDetail detail, String prodImgSrc,
 			Integer[] stockNum, Float[] price, String[] skuName, String[] skuImgSrc) {
 		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
@@ -58,15 +60,15 @@ public class ProductService extends MyDaoSupport {
 			Object[] arg = {prodId, stockNum[i], i, price[i], skuName[i], skuImgSrc[i]};
 			skuArgList.add(arg);
 		}
-		if (stockNum.length > 1) {
+		if (!skuArgList.isEmpty()) {
 			String insertSkuSql = "insert into sku(PROD_ID, STOCK_NUM, SKU_PRIO, PRICE, SKU_NAME, SKU_IMG_SRC) values(?,?,?,?,?,?)";
 			getJdbcTemplate().batchUpdate(insertSkuSql, skuArgList);
 		}
 		
 		// product
-		bean.setProdId(prodId);
-		bean.setMerchantId(merchantId);
-		insert(bean);
+		prod.setProdId(prodId);
+		prod.setMerchantId(merchantId);
+		insert(prod);
 		
 		// detail
 		detail.setProdId(prodId);
@@ -84,25 +86,6 @@ public class ProductService extends MyDaoSupport {
 		
 		return r;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -143,6 +126,108 @@ public class ProductService extends MyDaoSupport {
 		List<ProductImg> imgList = getJdbcTemplate().query(imgSql, BeanPropertyRowMapper.newInstance(ProductImg.class), prodId);
 		return imgList;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// 数量不能直接改
+	@Transactional
+	public int updateProduct(Product prod, ProductDetail detail, String prodImgSrc,
+			Integer[] skuId, Integer[] stockNum, Float[] price, String[] skuName, String[] skuImgSrc) {
+		
+		// skuId=-1表示新增 其它表示修改
+		List<Object[]> newSkuArgList = new ArrayList<Object[]>(); 
+		for (int i = 0; i < skuId.length; i++) {
+			if (skuId[i] == -1) {
+				Object[] arg = {prod.getProdId(), stockNum[i], i, price[i], skuName[i], skuImgSrc[i]};
+				newSkuArgList.add(arg);
+			}
+			else {
+				Sku updateSku = new Sku();
+				updateSku.setSkuId(skuId[i]);
+				updateSku.setSkuName(skuName[i]);
+				updateSku.setSkuPrio(i);
+				updateSku.setSkuImgSrc(skuImgSrc[i]);
+				update(updateSku);
+			}
+		}
+		if (!newSkuArgList.isEmpty()) {
+			String insertSkuSql = "insert into sku(PROD_ID, STOCK_NUM, SKU_PRIO, PRICE, SKU_NAME, SKU_IMG_SRC) values(?,?,?,?,?,?)";
+			getJdbcTemplate().batchUpdate(insertSkuSql, newSkuArgList);
+		}
+		
+		
+		// product
+		int r = update(prod);
+		
+		// detail
+		update(detail);
+		
+		// img
+		getJdbcTemplate().update("delete from product_img where PROD_ID = ?", prod.getProdId());
+		String[] imgSrc = prodImgSrc.split(",");
+		List<Object[]> imgArgList = new ArrayList<Object[]>();
+		for (int i = 0; i < imgSrc.length; i++) {
+			Object[] arg = {prod.getProdId(), i, imgSrc[i]};
+			imgArgList.add(arg);
+		}
+		String imgSql = "insert into product_img(PROD_ID, PROD_IMG_PRIO, PROD_IMG_SRC) values(?,?,?)";
+		getJdbcTemplate().batchUpdate(imgSql, imgArgList);
+		
+		
+		
+		return r;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

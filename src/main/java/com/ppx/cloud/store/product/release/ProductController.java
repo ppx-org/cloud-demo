@@ -1,9 +1,13 @@
 package com.ppx.cloud.store.product.release;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -66,13 +70,13 @@ public class ProductController {
 	}
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> insertProduct(Product bean, ProductDetail detail, @RequestParam String prodImgSrc,
+	public Map<String, Object> insertProduct(Product prod, ProductDetail detail, @RequestParam String prodImgSrc,
 			@RequestParam Integer[] stockNum, @RequestParam Float[] price, String[] skuName, @RequestParam String[] skuImgSrc) {
-		if (stockNum.length != price.length) {
+		if (stockNum.length != price.length || stockNum.length != skuImgSrc.length) {
 			ControllerReturn.ok(-1);
 		}
 		
-		int r = serv.insertProduct(bean, detail, prodImgSrc, stockNum, price, skuName, skuImgSrc);
+		int r = serv.insertProduct(prod, detail, prodImgSrc, stockNum, price, skuName, skuImgSrc);
 		return ControllerReturn.ok(r);
 	}
 	
@@ -92,12 +96,54 @@ public class ProductController {
 		}
 		mv.addObject("prod", prod);
 		
-		mv.addObject("detail", serv.getProductDetail(prodId));
+		ProductDetail detail = serv.getProductDetail(prodId);
+		mv.addObject("detail", detail);
 		mv.addObject("listSku", serv.listSku(prodId));
+		mv.addObject("listImg", serv.listProductImg(prodId));
+		
+		// 产品参数
+		List<Map<String, String>> prodArsList = new ArrayList<Map<String, String>>();
+		if (!StringUtils.isEmpty(detail.getProdArgs())) {
+			String[] line = detail.getProdArgs().split("@");
+			for (String str : line) {
+				String name = str.split("\\|")[0];
+				String value = "";
+				if (str.split("\\|").length == 2) {
+					value = str.split("\\|")[1];
+				}
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("name", name);
+				map.put("value", value);
+				prodArsList.add(map);
+			}
+		}
+		int argsLen = prodArsList.size();
+		for (int i = 0; i < 10 - argsLen; i++) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("name", "");
+			map.put("value", "");
+			prodArsList.add(map);
+		}
+		mv.addObject("prodArsList", prodArsList);
+		
 		
 		return mv;
 	}
 
+	@PostMapping @ResponseBody
+	public Map<String, Object> updateProduct(Product prod, ProductDetail detail, @RequestParam String prodImgSrc,
+			@RequestParam Integer[] skuId, @RequestParam Integer[] stockNum, @RequestParam Float[] price,
+			String[] skuName, @RequestParam String[] skuImgSrc) {
+		if (skuId.length != stockNum.length || skuId.length != price.length || skuId.length != skuImgSrc.length) {
+			ControllerReturn.ok(-1);
+		}
+		
+		System.out.println("..............out:" + prod.getProdId());
+		System.out.println("..............out:" + detail.getProdId());
+		
+		int r = serv.updateProduct(prod, detail, prodImgSrc, skuId, stockNum, price, skuName, skuImgSrc);
+		return ControllerReturn.ok(r);
+	}
 	
 	
 	

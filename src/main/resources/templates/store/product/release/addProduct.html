@@ -24,7 +24,7 @@ function add() {
 	
 	// validate product img|sku img
 	if ($("#prodImg .uploadImg").length == 0) {
-		alertWarning("商品图片不能为空");
+		alertWarning("产品图片不能为空");
 		return;
 	}
 	if ($(".skuImg").length != $(".skuImg .uploadImg").length) {
@@ -117,9 +117,7 @@ $(function() {
 </head>
 <body>
 <div class="form-horizontal form-body">
-	<div class="form-group">
-		<div class="form-title"><span class="glyphicon glyphicon-th-list"></span><span>新增商品</span></div>
-	</div>
+	<div class="form-group"><div class="form-title"><span class="glyphicon glyphicon-th-list"></span><span>新增产品</span></div></div>
 
 	<form id="addForm">
 	<input type="hidden" id="prodArgs" name="prodArgs">
@@ -154,7 +152,7 @@ $(function() {
 	
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>描述：</label>
-		<div class="col-sm-8"><textarea type="text" name="prodDesc" class="form-control validate[required]" maxlength="256" style="width:500px">desc1</textarea></div>
+		<div class="col-sm-8"><textarea type="text" name="prodDesc" class="form-control validate[required]" maxlength="256" style="width:500px;">desc1</textarea></div>
 	</div>
 	
 	<div id="skuDescDiv" class="form-group" style="display:none">
@@ -197,7 +195,7 @@ $(function() {
 	</div>
 	
 	<div id="prodImg" class="form-group">
-		<label class="col-sm-2 control-label"><span class="required">*</span>商品图片：</label>
+		<label class="col-sm-2 control-label"><span class="required">*</span>产品图片：</label>
 		<input type="hidden" id="prodImgSrc" name="prodImgSrc">
 		<div class="col-sm-8 dragImg" style="background-color:#EEEEEE">
 		<table border=1 style="border-color:#DDDDDD;height:82px">

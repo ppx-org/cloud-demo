@@ -1,8 +1,10 @@
 package com.ppx.cloud.store.product.release.bean;
 
+import com.ppx.cloud.common.jdbc.annotation.Id;
 import com.ppx.cloud.store.common.dictionary.Dict;
 
 public class Product {
+	@Id
 	private Integer prodId;
 	
 	private Integer merchantId;
