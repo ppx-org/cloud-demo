@@ -5,11 +5,9 @@
 
 <link th:replace="common/fragment/common::common"/>
 <link th:replace="common/fragment/common::validation"/>
-
 <script type="text/javascript" th:src="@{/static/module/store/release/prod/product.js}"></script>
 
 <script type="text/javascript" th:inline="javascript">
-
 function update() {
 	$.post([[@{/product/updateProduct}]], $("#editForm").serialize(), function(r) {
 		if (r.result == 1) {
@@ -110,9 +108,7 @@ function setImgToHidden() {
 		$(this).find("[name=skuImgSrc]").val($(this).find("img").attr("data-imgSrc"));
 	});
 }
-
 </script>
-
 
 <style>
 .imgTd {display:none;}
@@ -151,7 +147,7 @@ function setImgToHidden() {
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>标题：</label>
 		<div class="col-sm-3"><input type="text" name="prodTitle" class="form-control validate[required]" maxlength="32" style="width:500px" th:value="${prod.prodTitle}"></div>
-		<label class="col-sm-2 control-label">bbbbb：</label>
+		<label class="col-sm-2 control-label">品牌：</label>
 		<div class="col-sm-3">
 			<select class="form-control" id="brandId" name="brandId" onchange="localStorage.defaultBrandId=$(this).val()">
 				<option value="">无</option>
@@ -194,7 +190,7 @@ function setImgToHidden() {
 			<td th:style="${prod.skuDesc == ''}?'display:none':''" class="firstSkuItem"><input type="text" name="skuName" class="form-control validate[required]" maxlength="32" th:value="${sku.skuName}"></td>
 			<td class="skuAction">
 				<a th:if="${skuStat.index == 0}" href="#this" onclick="sku.add(this)">[增加]</a>
-				<a th:if="${skuStat.index > 0}" href="#" onclick="sku.remove(this)">[删除]</a>
+				<!-- 已经有的不能删除,可以修改库存为0 -->
 				<a th:if="${skuStat.index > 0}" href="#" onclick="sku.top(this)">[置顶]</a>
 			</td>
 			<td class="dragImg skuImg">
@@ -216,7 +212,6 @@ function setImgToHidden() {
 		</table>
 		</div>
 	</div>
-	
 
 	<div id="prodImg" class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>产品图片：</label>
@@ -267,8 +262,6 @@ function setImgToHidden() {
 		</div>
 	</div>
 
-	
-	
 
 </form>
 </div>

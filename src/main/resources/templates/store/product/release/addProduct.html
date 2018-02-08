@@ -4,8 +4,8 @@
 <title></title>
 <link th:replace="common/fragment/common::common"/>
 <link th:replace="common/fragment/common::validation"/>
-
 <script type="text/javascript" th:src="@{/static/module/store/release/prod/product.js}"></script>
+
 <script type="text/javascript" th:inline="javascript">
 
 function insert() {
@@ -72,8 +72,6 @@ function uploadImg(callback) {
 		formData.append("type", "prod");
 	});
 	
-	
-	
 	$.ajax({url:[[@{/imgUpload/prodSave}]], type:"POST", contentType:false, data:formData ,processData:false,
 		success:function(r){
 			var len = r.arrayList.length;
@@ -128,7 +126,6 @@ $(function() {
 				<option th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${listRepo}"></option>
 			</select>
 		</div>
-		
 		<label class="col-sm-2 control-label"><span class="required">*</span>分类：</label>
 		<input type="hidden" id="mainCatId" name="mainCatId">
 		<div class="col-sm-3">
@@ -240,7 +237,6 @@ $(function() {
 	</div>
 
 	</form>
-	
 
 </div>
 </body>
