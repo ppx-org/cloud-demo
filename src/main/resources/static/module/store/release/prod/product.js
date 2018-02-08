@@ -84,7 +84,7 @@ img.click = function(obj) {
 	}
 }
 img.html = '<td class="imgTd">\
-	<table style="height:80px"><tr><td rowspan="2" style="width:80px;"><img data-init-width="" data-init-height="" onclick="img.click(this)" class="uploadImg" onload="img.resize(this)"/></td><td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td></tr>\
+	<table style="height:80px"><tr><td rowspan="2" style="width:80px;"><img onclick="img.click(this)" class="uploadImg" onload="img.resize(this)"/></td><td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td></tr>\
 	<tr><td class="glyphicon glyphicon-step-backward leftTopImg" onclick="img.top(this)"></td></tr></table></td>';
 img.fileChange = function(obj) {
 	this.loadImg(obj.files, obj.files.length, $(obj).parent().parent());

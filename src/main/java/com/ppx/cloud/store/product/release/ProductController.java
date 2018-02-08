@@ -17,6 +17,8 @@ import com.ppx.cloud.store.common.dictionary.Dict;
 import com.ppx.cloud.store.merchant.brand.BrandService;
 import com.ppx.cloud.store.merchant.category.CategoryService;
 import com.ppx.cloud.store.merchant.repo.RepositoryService;
+import com.ppx.cloud.store.product.release.bean.Product;
+import com.ppx.cloud.store.product.release.bean.ProductDetail;
 
 
 @Controller	
@@ -65,36 +67,10 @@ public class ProductController {
 	
 	@PostMapping @ResponseBody
 	public Map<String, Object> insertProduct(Product bean, ProductDetail detail, @RequestParam String prodImgSrc,
-			@RequestParam Integer[] stockNum, @RequestParam Float[] price, String[] skuName, String[] skuImgSrc) {
+			@RequestParam Integer[] stockNum, @RequestParam Float[] price, String[] skuName, @RequestParam String[] skuImgSrc) {
 		if (stockNum.length != price.length) {
 			ControllerReturn.ok(-1);
 		}
-		
-		
-		System.out.println("..........getRepoId:" + bean.getRepoId());
-		System.out.println("..........getCatId:" + bean.getCatId());
-		System.out.println("..........getProdTitle:" + bean.getProdTitle());
-		
-		for (Integer n : stockNum) {
-			System.out.println("nnnnnnn:" + n);
-		}
-		
-		for (Float p : price) {
-			System.out.println("pppppppp:" + p);
-		}
-		
-		if (skuName != null) {
-			for (String name : skuName) {
-				System.out.println("skuName:" + name);
-			}
-		}
-		
-		if (skuImgSrc != null) {
-			for (String src : skuImgSrc) {
-				System.out.println("skuImgSrc:" + src);
-			}
-		}
-	
 		
 		int r = serv.insertProduct(bean, detail, prodImgSrc, stockNum, price, skuName, skuImgSrc);
 		return ControllerReturn.ok(r);
@@ -104,12 +80,18 @@ public class ProductController {
 	@GetMapping
 	public ModelAndView editProduct(@RequestParam Integer prodId) {
 		ModelAndView mv = new ModelAndView();
-		// repo
+		// <select
 		mv.addObject("listRepo", repoServ.displayRepository());
 		mv.addObject("listCat", catServ.displaySubCat());
+		mv.addObject("listBrand", brandServ.displayBrand());
 		
+		Product prod = serv.getProduct(prodId);
+		if (prod.getSkuDesc() == null) {
+			// 页面根据skuDesc是不是为""来判断是否有多个sku
+			prod.setSkuDesc("");
+		}
+		mv.addObject("prod", prod);
 		
-		mv.addObject("prod", serv.getProduct(prodId));
 		mv.addObject("detail", serv.getProductDetail(prodId));
 		mv.addObject("listSku", serv.listSku(prodId));
 		

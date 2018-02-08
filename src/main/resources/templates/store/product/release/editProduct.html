@@ -6,6 +6,8 @@
 <link th:replace="common/fragment/common::common"/>
 <link th:replace="common/fragment/common::validation"/>
 
+<script type="text/javascript" th:src="@{/static/module/store/release/prod/product.js}"></script>
+
 <script type="text/javascript" th:inline="javascript">
 $(function() {
 	
@@ -14,25 +16,130 @@ $(function() {
 </script>
 
 
-
+<style>
+.imgTd {display:none;}
+#skuTable>tbody>tr>td {height:88px;vertical-align:middle;padding:0;}
+</style>
 </head>
 
 <body>
 
+<div class="form-horizontal form-body">
 
 <div class="form-group">
-	<div class="form-title"><span class="glyphicon glyphicon-th-list"></span><span>修改商品</span></div>
+		<div class="form-title"><span class="glyphicon glyphicon-th-list"></span><span>edit</span></div>
 </div>
+	
+<form id="addForm">
+	<input type="hidden" th:value="${prod.prodId}" name="prodId">
+	<input type="hidden" id="prodArgs" name="prodArgs">
+	
+	<!--  
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><span class="required">*</span>repo：</label>
+		<div class="col-sm-3">
+			<select class="form-control" name="repoId">
+				<option th:selected="${prod.repoId == item.repoId}" th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${listRepo}"></option>
+			</select>
+		</div>
+		
+		<label class="col-sm-2 control-label"><span class="required">*</span>cat：</label>
+		<input type="hidden" id="mainCatId" name="mainCatId">
+		<div class="col-sm-3">
+			<select class="form-control" name="catId">
+				<option th:selected="${prod.catId == item.catId}" th:attr="data-mainCatId=${item.parentId}" th:value="${item.catId}" th:text="${item.catName}" th:each="item:${listCat}"></option>
+			</select>
+		</div>
+	</div>
 
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><span class="required">*</span>title：</label>
+		<div class="col-sm-3"><input type="text" name="prodTitle" class="form-control validate[required]" maxlength="32" style="width:500px" th:value="${prod.prodTitle}"></div>
+		<label class="col-sm-2 control-label">bbbbb：</label>
+		<div class="col-sm-3">
+			<select class="form-control" id="brandId" name="brandId" onchange="localStorage.defaultBrandId=$(this).val()">
+				<option value="">无</option>
+				<option th:selected="${prod.brandId == item.brandId}" th:value="${item.brandId}" th:text="${item.brandName}" th:each="item:${listBrand}"></option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><span class="required">*</span>desc：</label>
+		<div class="col-sm-8">
+		<textarea th:text="${detail.prodDesc}" type="text" name="prodDesc" class="form-control validate[required]" maxlength="256" style="width:500px">
+		</textarea></div>
+	</div>
+	
+	
+	<div id="skuDescDiv" class="form-group" th:style="${prod.skuDesc == ''}?'display:none':''">
+		<label class="col-sm-2 control-label"><span class="required">*</span>sk....desc：</label>
+		<div class="col-sm-8"><input type="text" th:value="${prod.skuDesc}" name="skuDesc" class="form-control validate[required]" maxlength="32"></div>
+	</div>
+	
+	
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><span class="required">*</span>SK：</label>
+		<div class="col-sm-7">
+		<table id="skuTable" class="page-list-table table table-bordered table-condensed">
+		<tr>
+			<th style="width:55px">num</th>
+			<th style="width:95px">p......</th>
+			<th th:style="${prod.skuDesc == ''}?'display:none':''" class="firstSkuItem w-title-s">Sname</th>
+			<th style="width:90px">操作</th>
+			<th>im...............</th>
+		</tr>
+		
+		<tr th:each="sku,skuStat:${listSku}">
+			<td><input type="text" name="stockNum" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px" th:value="${sku.stockNum}"></td>
+			<td><input type="text" name="price" class="form-control validate[required,custom[number]]" maxlength="7" style="width:90px" th:value="${sku.price}"></td>
+			<td th:style="${prod.skuDesc == ''}?'display:none':''" class="firstSkuItem"><input type="text" name="skuName" class="form-control validate[required]" maxlength="32" th:value="${sku.skuName}"></td>
+			<td class="skuAction">
+				<a th:if="${skuStat.index == 0}" href="#this" onclick="sku.add(this)">[增加]</a>
+				<a th:if="${skuStat.index > 0}" href="#" onclick="sku.remove(this)">[删除]</a>
+				<a th:if="${skuStat.index > 0}" href="#" onclick="sku.top(this)">[置顶]</a>
+			</td>
+			<td class="dragImg skuImg">
+				<input type="hidden" name="skuId" th:value="${sku.skuId}">
+				<input type="hidden" name="skuImgSrc">
+				<table><tr class="imgTr"><td>
+					<input type="file" data-max-size="256000" onchange="img.fileChange(this)" style="display:none" accept=".jpg,.png">
+					<a href="#this" onclick="$(this).prev().click()">[+]</a>
+				</td>
+				<td class="imgTd" style="height:80px">
+					<img onclick="img.click(this)" onload="img.resize(this)" th:src="#{imgUrl}+${sku.skuImgSrc}" th:attr="data-imgSrc=${sku.skuImgSrc}"/>
+					<span class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></span>
+				</td>
+				</tr>
+				</table>
+			</td>		
+		</tr>
+		
+		</table>
+		</div>
+	</div>
+	-->
 
+	<div id="prodImg" class="form-group">
+		<label class="col-sm-2 control-label"><span class="required">*</span>商品图片：</label>
+		<input type="hidden" id="prodImgSrc" name="prodImgSrc">
+		<div class="col-sm-8 dragImg" style="background-color:#EEEEEE">
+		<table border=1 style="border-color:#DDDDDD;height:82px">
+		<tr class="imgTr">
+		<td>
+			<input type="file" data-max-length="3" accept=".jpg,.png" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
+			<a href="#this" onclick="$(this).prev().click()">[+]</a>
+		</td>
+		<td class="imgTd" style="height:80px" >
+			<img onclick="img.click(this)" onload="img.resize(this)" th:src="#{imgUrl}+${sku.skuImgSrc}" th:attr="data-imgSrc=${sku.skuImgSrc}"/>
+			<span class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></span>
+		</td>
+		</tr>
+		</table>
+		</div>
+	</div>
 
-
-<span th:text="${prod.repoId}"></span>
-
-<select class="form-control" name="repoId">
-	<option th:selected="${prod.repoId == item.repoId}" th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${listRepo}"></option>
-</select>
-
+</form>
+</div>
 </body>
 </html>
 

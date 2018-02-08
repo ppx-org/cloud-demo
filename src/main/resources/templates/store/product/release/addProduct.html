@@ -83,17 +83,17 @@ function uploadImg(callback) {
 			}
 			for (var i = 0; i < len; i++) {
 				// 上传后路径写回img
-				$(".uploadImg").eq(i).data("imgSrc", r.arrayList[i]);
+				$(".uploadImg").eq(i).attr("data-imgSrc", r.arrayList[i]);
 			}
 			
 			// prodImg hidden
 			var prodImgSrc = [];
-			$("#prodImg .uploadImg").each(function() {prodImgSrc.push($(this).data("imgSrc"))});
+			$("#prodImg .uploadImg").each(function() {prodImgSrc.push($(this).attr("data-imgSrc"))});
 			$("#prodImgSrc").val(prodImgSrc);
 			
 			// skuImg hidden
 			$(".skuImg").each(function() {
-				$(this).find("[name=skuImgSrc]").val($(this).find(".uploadImg").data("imgSrc"));
+				$(this).find("[name=skuImgSrc]").val($(this).find(".uploadImg").attr("data-imgSrc"));
 			});
 			
 			callback.call();
@@ -166,32 +166,32 @@ $(function() {
 		<label class="col-sm-2 control-label"><span class="required">*</span>SKU：</label>
 		<div class="col-sm-7">
 		<table id="skuTable" class="page-list-table table table-bordered table-condensed">
-			<tr>
-				<th style="width:55px">数量</th>
-				<th style="width:95px">价格</th>
-				<th style="display:none;" class="firstSkuItem w-title-s">SKU名称</th>
-				<th style="width:90px">操作</th>
-				<th>图片(可拖拉图片进来)</th>
+		<tr>
+			<th style="width:55px">数量</th>
+			<th style="width:95px">价格</th>
+			<th style="display:none;" class="firstSkuItem w-title-s">SKU名称</th>
+			<th style="width:90px">操作</th>
+			<th>图片(可拖拉图片进来)</th>
+		</tr>
+		<tr>
+			<td><input type="text" name="stockNum" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px" value="1"></td>
+			<td><input type="text" name="price" class="form-control validate[required,custom[number]]" maxlength="7" style="width:90px" value="8.8"></td>
+			<td style="display:none;" class="firstSkuItem"><input type="text" name="skuName" class="form-control validate[required]" maxlength="32"></td>
+			<td class="skuAction">
+				<a href="#this" onclick="sku.add(this)">[增加]</a>
+			</td>
+			<td class="dragImg skuImg">
+			<input type="hidden" name="skuImgSrc">
+			<table>
+			<tr class="imgTr">
+			<td>
+				<input type="file" data-max-size="256000" onchange="img.fileChange(this)" style="display:none" accept=".jpg,.png">
+				<a href="#this" onclick="$(this).prev().click()">[+]</a>
+			</td>
 			</tr>
-			<tr>
-				<td><input type="text" name="stockNum" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px" value="1"></td>
-				<td><input type="text" name="price" class="form-control validate[required,custom[number]]" maxlength="7" style="width:90px" value="8.8"></td>
-				<td style="display:none;" class="firstSkuItem"><input type="text" name="skuName" class="form-control validate[required]" maxlength="32"></td>
-				<td class="skuAction">
-					<a href="#this" onclick="sku.add(this)">[增加]</a>
-				</td>
-				<td class="dragImg skuImg">
-				<input type="hidden" name="skuImgSrc">
-				<table>
-				<tr class="imgTr">
-				<td>
-					<input type="file" data-max-size="256000" onchange="img.fileChange(this)" style="display:none" accept=".jpg,.png">
-					<a href="#this" onclick="$(this).prev().click()">[+]</a>
-				</td>
-				</tr>
-				</table>
-				</td>
-			</tr>
+			</table>
+			</td>
+		</tr>
 		</table>
 		</div>
 	</div>

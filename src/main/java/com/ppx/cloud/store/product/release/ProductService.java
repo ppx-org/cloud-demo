@@ -11,6 +11,10 @@ import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
 import com.ppx.cloud.grant.common.GrantContext;
+import com.ppx.cloud.store.product.release.bean.Product;
+import com.ppx.cloud.store.product.release.bean.ProductDetail;
+import com.ppx.cloud.store.product.release.bean.ProductImg;
+import com.ppx.cloud.store.product.release.bean.Sku;
 
 
 @Service
@@ -133,6 +137,15 @@ public class ProductService extends MyDaoSupport {
 		List<Sku> skuList = getJdbcTemplate().query(skuSql, BeanPropertyRowMapper.newInstance(Sku.class), prodId);
 		return skuList;
 	}
+	
+	public List<ProductImg> listProductImg(int prodId) {
+		String imgSql = "select * from product_img where PROD_ID = ? order by PROD_IMG_PRIO";
+		List<ProductImg> imgList = getJdbcTemplate().query(imgSql, BeanPropertyRowMapper.newInstance(ProductImg.class), prodId);
+		return imgList;
+	}
+	
+	
+	
 	
 	
 	

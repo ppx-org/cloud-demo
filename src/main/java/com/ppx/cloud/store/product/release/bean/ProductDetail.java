@@ -1,4 +1,4 @@
-package com.ppx.cloud.store.product.release;
+package com.ppx.cloud.store.product.release.bean;
 
 
 public class ProductDetail {
