@@ -10,6 +10,7 @@ import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
+import com.ppx.cloud.grant.common.GrantContext;
 
 
 @Service
@@ -32,14 +33,16 @@ public class ProductService extends MyDaoSupport {
 	public int insertProduct(Product bean, ProductDetail detail, String prodImgSrc,
 			Integer[] stockNum, Float[] price, String[] skuName, String[] skuImgSrc) {
 		
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		
 		// 第一个SKU
 		Sku firstSku = new Sku();
 		firstSku.setProdId(-1);
 		firstSku.setStockNum(stockNum[0]);
 		firstSku.setPrice(price[0]);
 		firstSku.setSkuPrio(0);
-		if (skuName != null) firstSku.setSkuName(skuName[0]);
-		if (skuImgSrc != null) firstSku.setSkuImgSrc(skuImgSrc[0]);
+		if (skuName != null && skuName.length > 0) firstSku.setSkuName(skuName[0]);
+		if (skuImgSrc != null && skuImgSrc.length > 0) firstSku.setSkuImgSrc(skuImgSrc[0]);
 		int r = insert(firstSku);
 		int prodId = super.getLastInsertId();
 		// 更新SKU.PROD_ID以便跟SKU_ID一样
@@ -58,6 +61,7 @@ public class ProductService extends MyDaoSupport {
 		
 		// product
 		bean.setProdId(prodId);
+		bean.setMerchantId(merchantId);
 		insert(bean);
 		
 		// detail
@@ -67,7 +71,7 @@ public class ProductService extends MyDaoSupport {
 		// img
 		String[] imgSrc = prodImgSrc.split(",");
 		List<Object[]> imgArgList = new ArrayList<Object[]>();
-		for (int i = 1; i < imgSrc.length; i++) {
+		for (int i = 0; i < imgSrc.length; i++) {
 			Object[] arg = {prodId, i, imgSrc[i]};
 			imgArgList.add(arg);
 		}

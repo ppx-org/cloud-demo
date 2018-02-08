@@ -63,6 +63,7 @@ public class CategoryService extends MyDaoSupport {
 				Category c = new Category();
 				c.setCatId(child.getCatId());
 				c.setCatName(category.getCatName() + "-" + child.getCatName());
+				c.setParentId(child.getParentId());
 				returnList.add(c);
 			}
 		}

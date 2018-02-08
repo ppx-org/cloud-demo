@@ -22,10 +22,13 @@ public class BrandService extends MyDaoSupport {
 				.addAnd("RECORD_STATUS = ?", status);
 		
 		String sql = "select * from brand" + c + " order by BRAND_PRIO";
-		
 		List<Brand> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Brand.class), c.getParaList().toArray());
 		
 		return list;
+	}
+	
+	public List<Brand> displayBrand() {
+		return listBrand(1); 
 	}
 	
 	public int insertBrand(Brand bean) {

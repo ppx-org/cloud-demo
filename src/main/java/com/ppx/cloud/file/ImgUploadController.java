@@ -68,10 +68,10 @@ public class ImgUploadController {
 				buffStream = new BufferedOutputStream(new FileOutputStream(new File(savePath)));
 				buffStream.write(bytes);
 				
-				// 图片压缩
-				if ("prod".equals(type[i])) {
-					Thumbnails.of(savePath).size(200, 200).toFile(savePath + "_200.jpg");
-				}
+				// 图片压缩 不需要 
+//				if ("prod".equals(type[i])) {
+//					Thumbnails.of(savePath).size(200, 200).toFile(savePath + "_200.jpg");
+//				}
 				
 				returnList.add(path);
 			} catch (Exception e) {

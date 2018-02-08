@@ -14,6 +14,7 @@ import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
 import com.ppx.cloud.store.common.dictionary.Dict;
+import com.ppx.cloud.store.merchant.brand.BrandService;
 import com.ppx.cloud.store.merchant.category.CategoryService;
 import com.ppx.cloud.store.merchant.repo.RepositoryService;
 
@@ -26,6 +27,9 @@ public class ProductController {
 	
 	@Autowired
 	private CategoryService catServ;
+	
+	@Autowired
+	private BrandService brandServ;
 	
 	
 	@Autowired
@@ -51,9 +55,10 @@ public class ProductController {
 	@GetMapping
 	public ModelAndView addProduct() {
 		ModelAndView mv = new ModelAndView();
-		// repo
-		mv.addObject("listRepo", repoServ.listRepository());
+		// <select
+		mv.addObject("listRepo", repoServ.displayRepository());
 		mv.addObject("listCat", catServ.displaySubCat());
+		mv.addObject("listBrand", brandServ.displayBrand());
 		
 		return mv;
 	}
@@ -100,7 +105,7 @@ public class ProductController {
 	public ModelAndView editProduct(@RequestParam Integer prodId) {
 		ModelAndView mv = new ModelAndView();
 		// repo
-		mv.addObject("listRepo", repoServ.listRepository());
+		mv.addObject("listRepo", repoServ.displayRepository());
 		mv.addObject("listCat", catServ.displaySubCat());
 		
 		

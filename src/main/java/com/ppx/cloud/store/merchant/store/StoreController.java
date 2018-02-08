@@ -31,7 +31,7 @@ public class StoreController {
 	public ModelAndView listStore() {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("listJson", listJson(new Page(), new Store()));
-		mv.addObject("listRepo", repoServ.listRepository());
+		mv.addObject("listRepo", repoServ.displayRepository());
 		
 		return mv;
 	}

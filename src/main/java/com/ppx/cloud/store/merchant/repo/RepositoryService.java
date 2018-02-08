@@ -29,7 +29,7 @@ public class RepositoryService extends MyDaoSupport {
 		return new PageList<Repository>(list, page);
 	}
 	
-	public List<Repository> listRepository() {
+	public List<Repository> displayRepository() {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		String sql = "select REPO_ID, REPO_NAME from repository where MERCHANT_ID = ? and RECORD_STATUS = ?";
 		List<Repository> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Repository.class), merchantId, 1);

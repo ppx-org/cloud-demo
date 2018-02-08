@@ -31,7 +31,7 @@ public class RepoOrderController {
 	public ModelAndView listOrderItem() {
 		ModelAndView mv = new ModelAndView();
 		
-		mv.addObject("repoList", repoServ.listRepository());
+		mv.addObject("repoList", repoServ.displayRepository());
 		
 		return mv;
 	}

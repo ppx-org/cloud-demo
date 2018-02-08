@@ -5,11 +5,15 @@ import com.ppx.cloud.store.common.dictionary.Dict;
 public class Product {
 	private Integer prodId;
 	
+	private Integer merchantId;
+	
 	private Integer repoId;
 	
 	private Integer catId;
 	
 	private Integer mainCatId;
+	
+	private Integer brandId;
 	
 	private String prodTitle;
 	
@@ -17,12 +21,21 @@ public class Product {
 	
 	private Integer prodStatus;
 	
+	
 	public Integer getProdId() {
 		return prodId;
 	}
 
 	public void setProdId(Integer prodId) {
 		this.prodId = prodId;
+	}
+
+	public Integer getMerchantId() {
+		return merchantId;
+	}
+
+	public void setMerchantId(Integer merchantId) {
+		this.merchantId = merchantId;
 	}
 
 	public Integer getRepoId() {
@@ -47,6 +60,14 @@ public class Product {
 
 	public void setMainCatId(Integer mainCatId) {
 		this.mainCatId = mainCatId;
+	}
+
+	public Integer getBrandId() {
+		return brandId;
+	}
+
+	public void setBrandId(Integer brandId) {
+		this.brandId = brandId;
 	}
 
 	public String getProdTitle() {

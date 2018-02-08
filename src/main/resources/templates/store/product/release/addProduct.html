@@ -2,23 +2,26 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title></title>
-
 <link th:replace="common/fragment/common::common"/>
 <link th:replace="common/fragment/common::validation"/>
 
 <script type="text/javascript" th:src="@{/static/module/store/release/prod/product.js}"></script>
-
 <script type="text/javascript" th:inline="javascript">
 
 function insert() {
 	$.post([[@{/product/insertProduct}]], $("#addForm").serialize(), function(r) {
 		if (r.result == 1) {
-			alertSuccess();
+			alertSuccess("成功");
 		}
 	});
 }
 
 function add() {
+	// mainCatId
+	var mainCatId = $("#catId option:selected").attr("data-mainCatId");
+	$("#mainCatId").val(mainCatId);
+	
+	
 	// validate product img|sku img
 	if ($("#prodImg .uploadImg").length == 0) {
 		alertWarning("商品图片不能为空");
@@ -28,8 +31,8 @@ function add() {
 		alertWarning("SKU图片不能为空");
 		return;
 	}
-
 	
+	// 产品参数
 	setProArgs();
 	if (!$("#addForm").validationEngine('validate')) return;
 	uploadImg(insert);
@@ -58,17 +61,20 @@ function setProArgs() {
 
 function uploadImg(callback) {
 	var formData = new FormData();
-	$("#prodImg .uploadImg").each(function() {
-		formData.append("file", $(this).data("file"));
-		formData.append("type", "prod");
-	});
 	
 	$(".skuImg .uploadImg").each(function() {
 		formData.append("file", $(this).data("file"));
 		formData.append("type", "sku");
 	});
 	
-	$.ajax({url:[[@{/imgUpload/multipleSave}]], type:"POST", contentType:false, data:formData ,processData:false,
+	$("#prodImg .uploadImg").each(function() {
+		formData.append("file", $(this).data("file"));
+		formData.append("type", "prod");
+	});
+	
+	
+	
+	$.ajax({url:[[@{/imgUpload/prodSave}]], type:"POST", contentType:false, data:formData ,processData:false,
 		success:function(r){
 			var len = r.arrayList.length;
 			if ($(".uploadImg").length != len) {
@@ -83,11 +89,11 @@ function uploadImg(callback) {
 			// prodImg hidden
 			var prodImgSrc = [];
 			$("#prodImg .uploadImg").each(function() {prodImgSrc.push($(this).data("imgSrc"))});
-			$("#prodImg input[name=prodImgSrc]").val(prodImgSrc);
+			$("#prodImgSrc").val(prodImgSrc);
 			
 			// skuImg hidden
 			$(".skuImg").each(function() {
-				$(this).find("[name=skuImgSrc]").val($(this).data("imgSrc"));
+				$(this).find("[name=skuImgSrc]").val($(this).find(".uploadImg").data("imgSrc"));
 			});
 			
 			callback.call();
@@ -99,6 +105,7 @@ function uploadImg(callback) {
 $(function() {
 	$("#repoId option[value=" + localStorage.defaultRepoId + "]").attr("selected", true);
 	$("#catId option[value=" + localStorage.defaultCatId + "]").attr("selected", true);
+	$("#brandId option[value=" + localStorage.defaultBrandId + "]").attr("selected", true);
 });
 </script>
 
@@ -113,29 +120,36 @@ $(function() {
 	<div class="form-group">
 		<div class="form-title"><span class="glyphicon glyphicon-th-list"></span><span>新增商品</span></div>
 	</div>
-	
 
 	<form id="addForm">
 	<input type="hidden" id="prodArgs" name="prodArgs">
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>仓库：</label>
 		<div class="col-sm-3">
-			<select class="form-control" id="repoId	XBK3 " name="repoId" onchange="localStorage.defaultRepoId=$(this).val()">
+			<select class="form-control" id="repoId" name="repoId" onchange="localStorage.defaultRepoId=$(this).val()">
 				<option th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${listRepo}"></option>
 			</select>
 		</div>
 		
 		<label class="col-sm-2 control-label"><span class="required">*</span>分类：</label>
+		<input type="hidden" id="mainCatId" name="mainCatId">
 		<div class="col-sm-3">
 			<select class="form-control" id="catId" name="catId" onchange="localStorage.defaultCatId=$(this).val()">
-				<option th:value="${item.catId}" th:text="${item.catName}" th:each="item:${listCat}"></option>
+				<option th:attr="data-mainCatId=${item.parentId}" th:value="${item.catId}" th:text="${item.catName}" th:each="item:${listCat}"></option>
 			</select>
 		</div>
 	</div>
 	
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>标题：</label>
-		<div class="col-sm-8"><input type="text" name="prodTitle" class="form-control validate[required]" maxlength="32" style="width:500px" value="title1"></div>
+		<div class="col-sm-3"><input type="text" name="prodTitle" class="form-control validate[required]" maxlength="32" style="width:500px" value="title1"></div>
+		<label class="col-sm-2 control-label">品牌：</label>
+		<div class="col-sm-3">
+			<select class="form-control" id="brandId" name="brandId" onchange="localStorage.defaultBrandId=$(this).val()">
+				<option value="">无</option>
+				<option th:value="${item.brandId}" th:text="${item.brandName}" th:each="item:${listBrand}"></option>
+			</select>
+		</div>
 	</div>
 	
 	<div class="form-group">
@@ -172,7 +186,7 @@ $(function() {
 				<tr class="imgTr">
 				<td>
 					<input type="file" data-max-size="256000" onchange="img.fileChange(this)" style="display:none" accept=".jpg,.png">
-					<a href="#" onclick="$(this).prev().click()">[+]</a>
+					<a href="#this" onclick="$(this).prev().click()">[+]</a>
 				</td>
 				</tr>
 				</table>
@@ -184,13 +198,13 @@ $(function() {
 	
 	<div id="prodImg" class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>商品图片：</label>
-		<input type="hidden" name="prodImgSrc">
+		<input type="hidden" id="prodImgSrc" name="prodImgSrc">
 		<div class="col-sm-8 dragImg" style="background-color:#EEEEEE">
 		<table border=1 style="border-color:#DDDDDD;height:82px">
 		<tr class="imgTr">
 		<td>
 			<input type="file" data-max-length="3" accept=".jpg,.png" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
-			<a href="#" onclick="$(this).prev().click()">[+]</a>
+			<a href="#this" onclick="$(this).prev().click()">[+]</a>
 		</td>
 		</tr>
 		</table>
@@ -198,7 +212,7 @@ $(function() {
 	</div>
 	
 	<div class="form-group">
-		<label class="col-sm-2 control-label"><span class="required">*</span>产品参数：</label>
+		<label class="col-sm-2 control-label">产品参数：</label>
 		<div class="col-sm-8" style="background-color:#EEEEEE;height:100px;overflow-y: scroll">
 			<div th:each="i:${#strings.arraySplit('1,2,3,4,5,6,7,8,9,10',',')}">
 			<label th:text="${i}" style="width:20px"></label>
@@ -213,7 +227,6 @@ $(function() {
 		<div class="col-sm-3">
 			<input type="text" name="prodPosition" class="form-control" maxlength="16">
 		</div>
-		
 		<label class="col-sm-2 control-label">店内码：</label>
 		<div class="col-sm-3">
 			<input type="text" name="barCode" class="form-control" maxlength="32">
@@ -230,31 +243,8 @@ $(function() {
 
 	</form>
 	
-	
-	
-	
-	
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-	
 </div>
-
 </body>
 </html>
-
 
