@@ -50,11 +50,16 @@ sku.add = function(obj) {
 	$(".firstSkuItem").show();
 	
 	var firstSku = $("#skuTable>tbody>tr:eq(1)");
+	var stockNum = firstSku.find("[name=stockNum]").val();
+	var price = firstSku.find("[name=price]").val();
+	
 	var newTr = $('<tr>' + firstSku.html() + '</tr>');
 	newTr.find(".skuAction").html(this.REMOVE_HTML);
 	newTr.find(".imgTr>td:gt(0)").remove();
 	newTr.find("[name=skuId]").val(-1);
-	
+	// 默认的stockNum和price
+	newTr.find("[name=price]").val(price);
+	newTr.find("[name=stockNum]").val(stockNum);
 	
 	$("#skuTable").append(newTr);
 	refreshDrag();
@@ -103,14 +108,15 @@ img.loadImg = function(f, n, imgTr) {
 	maxLength = !maxLength ? 1 : new Number(maxLength);
 	
 	var accept = $(imgTr).find("input").attr("accept").split(",");
-	var isAccept = false;
+	var acceptExtMap = {};
 	for (var i = 0; i < accept.length; i++) {
-		var fName = f[n].name.split(".");
-		isAccept = "." + fName[fName.length - 1].toLowerCase() == accept[i];
+		acceptExtMap[accept[i]] = true;
 	}
-	if (isAccept == false) {
+	var fName = f[n].name.split(".");
+	if (!acceptExtMap["." + fName[fName.length - 1].toLowerCase()]) {
 		return alertWarning("后缀名必须为:" + accept);
 	}
+	
 	if (f[n].size > maxSize) {
 		var max = maxSize >= 1024*1024 ? (maxSize/1024/1024).toFixed(1) + "M" : (maxSize/1024).toFixed(1) + "K";
 		return alertWarning("不能大于" + max);
