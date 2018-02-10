@@ -8,30 +8,30 @@ import java.util.Set;
 
 public class Dict {
 	
-	private static Map<Integer, String> programStatusMap = new HashMap<Integer, String>();
+	private static Map<Integer, String> progStatusMap = new HashMap<Integer, String>();
 	static {
 		// 0:删除1:未启动2:进行中3:暂停4:停止  结束
-		programStatusMap.put(1, "未启动");
-		programStatusMap.put(2, "进行中");
-		programStatusMap.put(3, "暂停");
-		programStatusMap.put(4, "停止");
+		progStatusMap.put(1, "未启动");
+		progStatusMap.put(2, "进行中");
+		progStatusMap.put(3, "暂停");
+		progStatusMap.put(4, "停止");
 	}
 	
-	public static String getProgramStatusDesc(Integer status) {
-		return programStatusMap.get(status);
-	}
-
-	
-	private static Map<Integer, String> productStatusMap = new HashMap<Integer, String>();
+	private static Map<Integer, String> prodStatusMap = new HashMap<Integer, String>();
 	static {
 		// 
-		productStatusMap.put(1, "-");
-		productStatusMap.put(2, "上");
-		productStatusMap.put(3, "下");
+		prodStatusMap.put(1, "-");
+		prodStatusMap.put(2, "上");
+		prodStatusMap.put(3, "下");
 	}
 	
-	public static String getProductStatusDesc(Integer status) {
-		return productStatusMap.get(status);
+	private static Map<Integer, String> changeTypeMap = new HashMap<Integer, String>();
+	static {
+		// 
+		changeTypeMap.put(1, "进货");
+		changeTypeMap.put(2, "盘盈");
+		changeTypeMap.put(3, "盘亏");
+		changeTypeMap.put(4, "损坏");
 	}
 	
 	
@@ -42,17 +42,73 @@ public class Dict {
 	
 	
 	
-	public static List<DictBean> listProductStatus() {
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static String getProgStatusDesc(Integer status) {
+		return progStatusMap.get(status);
+	}
+
+	public static String getProdStatusDesc(Integer status) {
+		return prodStatusMap.get(status);
+	}
+	
+	public static String getChangeTypeDesc(Integer type) {
+		return changeTypeMap.get(type);
+	}
+	
+	public static List<DictBean> listChangeType() {
 		List<DictBean> returnList = new ArrayList<DictBean>();
-		
-		Set<Integer> set = productStatusMap.keySet();
+		Set<Integer> set = changeTypeMap.keySet();
 		for (Integer v : set) {
-			returnList.add(new DictBean(v, productStatusMap.get(v)));
+			returnList.add(new DictBean(v, changeTypeMap.get(v)));
 		}
 		return returnList;
 	}
 	
-	
+	public static List<DictBean> listProdStatus() {
+		List<DictBean> returnList = new ArrayList<DictBean>();
+		
+		Set<Integer> set = prodStatusMap.keySet();
+		for (Integer v : set) {
+			returnList.add(new DictBean(v, prodStatusMap.get(v)));
+		}
+		return returnList;
+	}
 	
 	public static List<DictBean> listImgX() {
 		List<DictBean> returnList = new ArrayList<DictBean>();
@@ -61,7 +117,6 @@ public class Dict {
 		}
 		return returnList;
 	}
-	
 	
 	public static List<DictBean> listImgY() {
 		List<DictBean> returnList = new ArrayList<DictBean>();

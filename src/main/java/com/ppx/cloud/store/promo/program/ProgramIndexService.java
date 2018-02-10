@@ -48,7 +48,7 @@ public class ProgramIndexService extends MyDaoSupport {
 		}
 		
 		updateStatus(progId, START_STATUS);
-		return progId + "," + START_STATUS + "," + Dict.getProgramStatusDesc(START_STATUS);
+		return progId + "," + START_STATUS + "," + Dict.getProgStatusDesc(START_STATUS);
 	}
 	
 	@Transactional
@@ -56,7 +56,7 @@ public class ProgramIndexService extends MyDaoSupport {
 		if (getStatusForUpdate(progId) != START_STATUS) return "-1";
 		
 		updateStatus(progId, PAUSE_STATUS);
-		return progId + "," + PAUSE_STATUS + "," + Dict.getProgramStatusDesc(PAUSE_STATUS);
+		return progId + "," + PAUSE_STATUS + "," + Dict.getProgStatusDesc(PAUSE_STATUS);
 	}
 	
 	@Transactional
@@ -68,7 +68,7 @@ public class ProgramIndexService extends MyDaoSupport {
 		getJdbcTemplate().update(deleteSql, progId);
 		
 		updateStatus(progId, STOP_STATUS);
-		return progId + "," + STOP_STATUS + "," + Dict.getProgramStatusDesc(STOP_STATUS);
+		return progId + "," + STOP_STATUS + "," + Dict.getProgStatusDesc(STOP_STATUS);
 	}
 	
 	private int startCategory(Program prog) {

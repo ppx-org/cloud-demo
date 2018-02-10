@@ -81,7 +81,7 @@ public class Product {
 	}
 	
 	public String getRecordStatusDesc() {
-		return Dict.getProductStatusDesc(prodStatus);
+		return Dict.getProdStatusDesc(prodStatus);
 	}
 
 	public Integer getProdStatus() {

@@ -122,6 +122,17 @@ create table theme_map_prod
 
 /** ----------------- release ----------------- */
 
+create table stock_change
+(
+	CHANGE_ID 		int not null auto_increment,
+	SKU_ID          int not null,
+	CHANGE_NUM 		int not null,
+	CHANGE_TYPE	 	smallint not null,
+	CREATED         timestamp not null default CURRENT_TIMESTAMP,
+	primary key (CHANGE_ID)
+);
+
+
 create table sku
 (
    SKU_ID               int not null auto_increment,
@@ -168,6 +179,8 @@ create table product_img
    PROD_IMG_SRC          varchar(128) not null,
    primary key (PROD_IMG_ID)
 );
+
+
 
 /** ----------------- user ----------------- */
 

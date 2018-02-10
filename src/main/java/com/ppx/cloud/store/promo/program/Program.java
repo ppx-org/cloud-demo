@@ -138,7 +138,7 @@ public class Program {
 	}
 
 	public String getRecordStatusDesc() {
-		return Dict.getProgramStatusDesc(this.recordStatus);
+		return Dict.getProgStatusDesc(this.recordStatus);
 	}
 
 	public Integer getProgImgX() {

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+
+<script type="text/javascript" th:inline="javascript">
+
+
+$(function() {
+	//refreshPageData([[${listJson}]]);
+});
+
+function queryPage(pageNumber) {
+	showLoading();
+	$("#pageNumber").val(pageNumber);
+	$.post([[@{/stockChange/listJson}]], $("#queryForm").serialize(), function(r) {
+		refreshPageData(r);
+		hideLoading();
+	});
+}
+
+
+
+
+
+
+</script>
+</head>
+
+<body>
+<div th:replace="common/fragment/common::pageList('change')">
+	<div th:fragment="queryFragment">
+		
+		<!-- productStatusList -->
+		<select class="form-control input-sm" name="recordStatus">
+				<option value="">全部</option>
+				<option th:value="${item.value}" th:text="${item.name}" th:each="item:${productStatusList}"></option>
+		</select>
+		
+		
+		<input type="text" class="form-control input-sm" name="testName" placeholder="请输入ID" style="width:200px;">
+		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
+	</div>
+	<table th:fragment="listFragment">
+	<tr>
+		<th>ID</th>
+		<th>changeNum</th>
+		<th>changeType</th>
+		<th>created</th>
+		<th>操作</th>
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td class="w-id">{{v.changeId}}</td>
+		<td class="w-id">{{v.changeNum}}</td>
+		<td class="w-id">{{v.changeType}}</td>
+		<th class="w-time">{{v.created}}</th>
+		<td class="w-action"></td>
+	</tr>
+	{{/each}}
+	</script>
+	</table>
+</div>
+
+
+
+</body>
+</html>
+

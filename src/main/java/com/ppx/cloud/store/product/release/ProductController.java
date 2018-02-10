@@ -46,7 +46,7 @@ public class ProductController {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("listJson", listJson(new Page(), new Product()));
 		
-		mv.addObject("productStatusList", Dict.listProductStatus());
+		mv.addObject("productStatusList", Dict.listProdStatus());
 		
 		return mv;
 	}
@@ -151,14 +151,14 @@ public class ProductController {
 	@PostMapping @ResponseBody
 	public Map<String, Object> onShelves(@RequestParam Integer prodId) {
 		int r = serv.onShelves(prodId);
-		String statusDesc = Dict.getProductStatusDesc(r);
+		String statusDesc = Dict.getProdStatusDesc(r);
 		return ControllerReturn.ok(r, statusDesc);
 	}
 	
 	@PostMapping @ResponseBody
 	public Map<String, Object> offShelves(@RequestParam Integer prodId) {
 		int r = serv.offShelves(prodId);
-		String statusDesc = Dict.getProductStatusDesc(r);
+		String statusDesc = Dict.getProdStatusDesc(r);
 		return ControllerReturn.ok(r, statusDesc);
 	}
 	
