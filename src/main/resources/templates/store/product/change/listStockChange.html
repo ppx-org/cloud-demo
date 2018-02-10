@@ -13,6 +13,11 @@ $(function() {
 });
 
 function queryPage(pageNumber) {
+	if ($("#skuId").val() == "") {
+		alertWarning("skuId不能为空");
+		return;
+	}
+
 	showLoading();
 	$("#pageNumber").val(pageNumber);
 	$.post([[@{/stockChange/listJson}]], $("#queryForm").serialize(), function(r) {
@@ -22,25 +27,13 @@ function queryPage(pageNumber) {
 }
 
 
-
-
-
-
 </script>
 </head>
 
 <body>
 <div th:replace="common/fragment/common::pageList('change')">
 	<div th:fragment="queryFragment">
-		
-		<!-- productStatusList -->
-		<select class="form-control input-sm" name="recordStatus">
-				<option value="">全部</option>
-				<option th:value="${item.value}" th:text="${item.name}" th:each="item:${productStatusList}"></option>
-		</select>
-		
-		
-		<input type="text" class="form-control input-sm" name="testName" placeholder="请输入ID" style="width:200px;">
+		<input type="text" class="form-control input-sm" id="skuId" name="skuId" placeholder="请输入skuId" style="width:200px;" onkeyup="this.value=this.value.replace(/\D/g,'')">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	<table th:fragment="listFragment">
@@ -48,17 +41,18 @@ function queryPage(pageNumber) {
 		<th>ID</th>
 		<th>changeNum</th>
 		<th>changeType</th>
+		<th>changeComment</th>
 		<th>created</th>
-		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
 	<tr>
 		<td class="w-id">{{v.changeId}}</td>
 		<td class="w-id">{{v.changeNum}}</td>
-		<td class="w-id">{{v.changeType}}</td>
-		<th class="w-time">{{v.created}}</th>
-		<td class="w-action"></td>
+		<td class="w-id">{{v.changeTypeDescs}}</td>
+		<td class="w-title-s">{{v.changeComment}}</td>
+		<td class="w-time">{{v.created}}</th>
+		
 	</tr>
 	{{/each}}
 	</script>

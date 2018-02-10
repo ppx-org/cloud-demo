@@ -128,6 +128,7 @@ create table stock_change
 	SKU_ID          int not null,
 	CHANGE_NUM 		int not null,
 	CHANGE_TYPE	 	smallint not null,
+	CHANGE_COMMENT	varchar(128),
 	CREATED         timestamp not null default CURRENT_TIMESTAMP,
 	primary key (CHANGE_ID)
 );

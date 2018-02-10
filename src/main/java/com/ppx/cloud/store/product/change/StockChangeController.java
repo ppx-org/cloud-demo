@@ -24,13 +24,14 @@ public class StockChangeController {
 	@GetMapping
 	public ModelAndView listStockChange() {
 		ModelAndView mv = new ModelAndView();
-		
 		return mv;
 	}
 
 	@PostMapping @ResponseBody
 	public Map<String, Object> listJson(Page page, Integer skuId) {
 		PageList<StockChange> list = serv.listStockChange(page, skuId);
+		
+		
 		return ControllerReturn.ok(list);
 	}
 	
