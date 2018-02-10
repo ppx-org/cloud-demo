@@ -138,7 +138,8 @@ create table sku
 (
    SKU_ID               int not null auto_increment,
    PROD_ID              int not null,
-   STOCK_NUM            int not null not null,
+   STOCK_NUM            int not null,
+   SOLD_NUM				int not null default 0,
    PRICE                decimal(7,2) not null,
    SKU_PRIO             int not null,
    SKU_NAME				varchar(32),
