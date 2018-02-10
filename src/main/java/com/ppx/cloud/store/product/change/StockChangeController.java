@@ -17,7 +17,6 @@ import com.ppx.cloud.common.page.PageList;
 @Controller	
 public class StockChangeController {
 	
-	
 	@Autowired
 	private StockChangeService serv;
 	
@@ -30,14 +29,16 @@ public class StockChangeController {
 	@PostMapping @ResponseBody
 	public Map<String, Object> listJson(Page page, Integer skuId) {
 		PageList<StockChange> list = serv.listStockChange(page, skuId);
-		
-		
 		return ControllerReturn.ok(list);
 	}
 	
-	
-
-	
+	@PostMapping @ResponseBody
+	public Map<String, Object> addStockChange(StockChange stockChange) {
+		
+		int r = serv.addStockChange(stockChange);
+		
+		return ControllerReturn.ok(r);
+	}
 	
 	
 }

@@ -108,6 +108,25 @@ function setImgToHidden() {
 		$(this).find("[name=skuImgSrc]").val($(this).find("img").attr("data-imgSrc"));
 	});
 }
+
+
+// stock change
+function stockChange(skuId) {
+	$('#stock').modal('show');
+	
+	action = function() {
+		if (!$("#stockForm").validationEngine('validate')) return;
+		showLoading();
+		$.post([[@{/stockChange/addStockChange}]], $("#stockForm").serialize(), function(r) {
+			if (r.result) {
+				// 修改对应的库存
+				$('#sku' + skuId).val(r.result);
+				$('#stock').modal('hide');
+			}
+		});
+	}
+}
+
 </script>
 
 <style>
@@ -185,7 +204,7 @@ function setImgToHidden() {
 		</tr>
 		
 		<tr th:each="sku,skuStat:${listSku}">
-			<td><input type="text" name="stockNum" readonly="readonly" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px" th:value="${sku.stockNum}"></td>
+			<td><input type="text" name="stockNum" readonly="readonly" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px" th:id="'sku'+${sku.skuId}" th:value="${sku.stockNum}"></td>
 			<td><input type="text" name="price" class="form-control validate[required,custom[number]]" maxlength="7" style="width:90px" th:value="${sku.price}"></td>
 			<td th:style="${prod.skuDesc == ''}?'display:none':''" class="firstSkuItem"><input type="text" name="skuName" class="form-control validate[required]" maxlength="32" th:value="${sku.skuName}"></td>
 			<td class="skuAction">
@@ -265,9 +284,24 @@ function setImgToHidden() {
 		</div>
 	</div>
 
-
 </form>
 </div>
+
+<div th:fragment="stock" th:replace="common/fragment/common::modal('stock', 'stockAction', 360)">
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>type：</label>
+		<div class="col-sm-7">
+			<select class="form-control" name="changeType">
+				<option th:each="item:${listChangeType}" th:value="${item.value}" th:text="${item.name}"></option>
+			</select>
+		</div>
+		<label class="col-sm-3 control-label"><span class="required">*</span>changeNum：</label>
+		<div class="col-sm-7"><input type="text" name="changeNum" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-3 control-label"><span class="required">*</span>changeComment：</label>
+		<div class="col-sm-7"><input type="text" name="changeComment" class="form-control validate[required]" maxlength="128"></div>
+	</div>
+</div>
+
 </body>
 </html>
 

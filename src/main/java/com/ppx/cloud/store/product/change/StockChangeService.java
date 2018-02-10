@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.page.Page;
@@ -23,14 +24,50 @@ public class StockChangeService extends MyDaoSupport {
 		
 		List<StockChange> list = queryPage(StockChange.class, page, cSql, qSql, paraList);
 		
-		
-		
 		return new PageList<StockChange>(list, page);
-		
 	}
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Transactional
+	public int addStockChange(StockChange stockChange) {
+		insert(stockChange);
+		
+		// 变更库存
+		String updateSql = "update sku set STOCK_NUM = STOCK_NUM + ? where SKU_ID = ?";
+		int r = getJdbcTemplate().update(updateSql, stockChange.getChangeNum(), stockChange.getSkuId());
+		
+		String getSql = "select STOCK_NUM from sku where SKU_ID = ?";
+		int stock = getJdbcTemplate().queryForObject(getSql, Integer.class, stockChange.getSkuId());
+		
+		return stock;
+	}
 	
 	
 

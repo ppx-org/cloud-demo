@@ -89,6 +89,11 @@ public class ProductController {
 		mv.addObject("listCat", catServ.displaySubCat());
 		mv.addObject("listBrand", brandServ.displayBrand());
 		
+		
+		// stockChange
+		mv.addObject("listChangeType", Dict.listChangeType());
+		
+		
 		Product prod = serv.getProduct(prodId);
 		if (prod.getSkuDesc() == null) {
 			// 页面根据skuDesc是不是为""来判断是否有多个sku
