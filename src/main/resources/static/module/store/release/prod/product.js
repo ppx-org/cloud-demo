@@ -50,11 +50,16 @@ sku.add = function(obj) {
 	$(".firstSkuItem").show();
 	
 	var firstSku = $("#skuTable>tbody>tr:eq(1)");
+	var stockNum = firstSku.find("[name=stockNum]").val();
+	var price = firstSku.find("[name=price]").val();
+	
 	var newTr = $('<tr>' + firstSku.html() + '</tr>');
 	newTr.find(".skuAction").html(this.REMOVE_HTML);
 	newTr.find(".imgTr>td:gt(0)").remove();
 	newTr.find("[name=skuId]").val(-1);
-	
+	// 默认的stockNum和price
+	newTr.find("[name=price]").val(price);
+	newTr.find("[name=stockNum]").val(stockNum);
 	
 	$("#skuTable").append(newTr);
 	refreshDrag();
@@ -74,15 +79,8 @@ sku.remove = function(obj) {
 // >>>>>>>>>>>>>>>>>>>img>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 var img = {};
 img.zIndex = 1000;
-img.click = function(obj) {	
-	if (obj.width == 80) {
-		$(obj).css({position:"fixed",left:$(obj).offset().left,top:$(obj).offset().top - $(document).scrollTop()});
-		$(obj).css({zIndex:++img.zIndex,width:$(obj).data("data-init-width"),height:$(obj).data("data-init-height")});
-	}
-	else {
-		$(obj).css({position:""});
-		$(obj).css({zIndex:1000,width:80,height:80});
-	}
+img.click = function(obj) {
+	open("").document.write("<title>预览图片</title><img src='" + obj.src +"'>");
 }
 img.html = '<td class="imgTd">\
 	<table style="height:80px"><tr><td rowspan="2" style="width:80px;"><img onclick="img.click(this)" class="uploadImg" onload="img.resize(this)"/></td><td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td></tr>\
@@ -103,14 +101,15 @@ img.loadImg = function(f, n, imgTr) {
 	maxLength = !maxLength ? 1 : new Number(maxLength);
 	
 	var accept = $(imgTr).find("input").attr("accept").split(",");
-	var isAccept = false;
+	var acceptExtMap = {};
 	for (var i = 0; i < accept.length; i++) {
-		var fName = f[n].name.split(".");
-		isAccept = "." + fName[fName.length - 1].toLowerCase() == accept[i];
+		acceptExtMap[accept[i]] = true;
 	}
-	if (isAccept == false) {
+	var fName = f[n].name.split(".");
+	if (!acceptExtMap["." + fName[fName.length - 1].toLowerCase()]) {
 		return alertWarning("后缀名必须为:" + accept);
 	}
+	
 	if (f[n].size > maxSize) {
 		var max = maxSize >= 1024*1024 ? (maxSize/1024/1024).toFixed(1) + "M" : (maxSize/1024).toFixed(1) + "K";
 		return alertWarning("不能大于" + max);
@@ -129,7 +128,7 @@ img.loadImg = function(f, n, imgTr) {
 		if (n > 0) img.loadImg(f, n, imgTr);
 	}
 	reader.readAsDataURL(f[n]);
-	this.refreshTop();
+	this.refreshTop(imgTr);
 }
 img.resize = function(img) {
 	if (img.width != img.height) {
@@ -138,27 +137,26 @@ img.resize = function(img) {
 	}
 	else {
 		$(img).parents(".imgTd").show();
-		$(img).data("data-init-width", img.width);
-		$(img).data("data-init-height", img.height);
 		$(img).css({width:80, height:80});
 	}
 }
 img.remove = function(obj) {
+	var imgTr = $(obj).parents(".imgTr");
 	$(obj).parents(".imgTd").remove();
-	this.refreshTop();
+	this.refreshTop(imgTr);
 }
-img.refreshTop = function() {
-	$(".leftTopImg").show();
-	$(".leftTopImg").first().hide();
+img.refreshTop = function(imgTr) {
+	imgTr.find(".leftTopImg").show();
+	imgTr.find(".leftTopImg").first().hide();
 }
 img.top = function(obj) {
-	var firstImgTd = $(obj).parents(".imgTr").find("td:eq(0)");
+	var imgTr = $(obj).parents(".imgTr");
+	
+	var firstImgTd = imgTr.find("td:eq(0)");
 	$(obj).parents(".imgTd").clone(true).insertAfter(firstImgTd);
 	$(obj).parents(".imgTd").remove();
-	this.refreshTop();
+	this.refreshTop(imgTr);
 }
-
-
 
 
 

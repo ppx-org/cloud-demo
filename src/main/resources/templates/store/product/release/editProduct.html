@@ -203,6 +203,8 @@ function setImgToHidden() {
 				<td class="imgTd" style="height:80px">
 					<img onclick="img.click(this)" onload="img.resize(this)" th:src="#{imgUrl}+${sku.skuImgSrc}" th:attr="data-imgSrc=${sku.skuImgSrc}"/>
 					<span class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></span>
+					
+					
 				</td>
 				</tr>
 				</table>
@@ -223,9 +225,10 @@ function setImgToHidden() {
 			<input type="file" data-max-length="3" accept=".jpg,.png" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
 			<a href="#this" onclick="$(this).prev().click()">[+]</a>
 		</td>
-		<td class="imgTd" style="height:80px;width:100px;" th:each="img:${listImg}">
+		<td class="imgTd" style="height:80px;width:100px;" th:each="img,imgStat:${listImg}">
 			<img onclick="img.click(this)" onload="img.resize(this)" th:src="#{imgUrl}+${img.prodImgSrc}" th:attr="data-imgSrc=${img.prodImgSrc}"/>
 			<span class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></span>
+			<span class="glyphicon glyphicon-step-backward leftTopImg" th:style="'display:' + ${imgStat.index==0?'none':''} + ''" onclick="img.top(this)"></span>
 		</td>
 		</tr>
 		</table>
