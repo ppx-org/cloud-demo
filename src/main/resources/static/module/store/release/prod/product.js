@@ -56,6 +56,8 @@ sku.add = function(obj) {
 	var newTr = $('<tr>' + firstSku.html() + '</tr>');
 	newTr.find(".skuAction").html(this.REMOVE_HTML);
 	newTr.find(".imgTr>td:gt(0)").remove();
+	
+	newTr.find(".stockChange").remove();
 	newTr.find("[name=skuId]").val(-1);
 	// 默认的stockNum和price
 	newTr.find("[name=price]").val(price);

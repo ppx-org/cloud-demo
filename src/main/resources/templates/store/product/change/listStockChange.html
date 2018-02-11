@@ -9,7 +9,11 @@
 
 
 $(function() {
-	//refreshPageData([[${listJson}]]);
+	var skuId = [[${skuId}]];
+	if (skuId != null) {
+		$("#skuId").val(skuId);
+		queryPage(1);
+	}
 });
 
 function queryPage(pageNumber) {
@@ -23,6 +27,8 @@ function queryPage(pageNumber) {
 	$.post([[@{/stockChange/listJson}]], $("#queryForm").serialize(), function(r) {
 		refreshPageData(r);
 		hideLoading();
+		
+		$("#skuMsg").text(r.string);
 	});
 }
 
@@ -31,28 +37,29 @@ function queryPage(pageNumber) {
 </head>
 
 <body>
-<div th:replace="common/fragment/common::pageList('change')">
+<div th:replace="common/fragment/common::pageList('库存变更历史')">
 	<div th:fragment="queryFragment">
 		<input type="text" class="form-control input-sm" id="skuId" name="skuId" placeholder="请输入skuId" style="width:200px;" onkeyup="this.value=this.value.replace(/\D/g,'')">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
+		
+		<span id="skuMsg"></span>
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
 		<th>ID</th>
-		<th>changeNum</th>
-		<th>changeType</th>
-		<th>changeComment</th>
-		<th>created</th>
+		<th>变量类型</th>
+		<th>数量</th>
+		<th>创建时间</th>
+		<th>备注</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
 	<tr>
 		<td class="w-id">{{v.changeId}}</td>
+		<td class="w-id">{{v.changeTypeDesc}}</td>
 		<td class="w-id">{{v.changeNum}}</td>
-		<td class="w-id">{{v.changeTypeDescs}}</td>
-		<td class="w-title-s">{{v.changeComment}}</td>
 		<td class="w-time">{{v.created}}</th>
-		
+		<td class="w-title-s">{{v.changeComment}}</td>
 	</tr>
 	{{/each}}
 	</script>

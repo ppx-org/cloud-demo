@@ -30,7 +30,13 @@ public class StockChangeService extends MyDaoSupport {
 	
 	
 	
-	
+	public String getSkuMsg(Integer skuId) {
+		String sql = "select concat(SKU_NAME, ':', STOCK_NUM) from sku where SKU_ID = ?";
+		String msg = getJdbcTemplate().queryForObject(sql, String.class, skuId);
+
+		return msg;
+		
+	}
 	
 	
 	

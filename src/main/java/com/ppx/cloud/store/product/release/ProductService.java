@@ -223,22 +223,7 @@ public class ProductService extends MyDaoSupport {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	// action >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 	/*

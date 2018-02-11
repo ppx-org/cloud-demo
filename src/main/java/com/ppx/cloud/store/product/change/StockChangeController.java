@@ -20,23 +20,31 @@ public class StockChangeController {
 	@Autowired
 	private StockChangeService serv;
 	
+	
+	
 	@GetMapping
-	public ModelAndView listStockChange() {
+	public ModelAndView listStockChange(Integer skuId) {
 		ModelAndView mv = new ModelAndView();
+		mv.addObject("skuId", skuId);
+		
+		
 		return mv;
 	}
 
 	@PostMapping @ResponseBody
 	public Map<String, Object> listJson(Page page, Integer skuId) {
 		PageList<StockChange> list = serv.listStockChange(page, skuId);
-		return ControllerReturn.ok(list);
+		String skuMsg = "";
+		if (list.getList().size() > 0) {
+			skuMsg = serv.getSkuMsg(skuId);
+		}
+		
+		return ControllerReturn.ok(list, skuMsg);
 	}
 	
 	@PostMapping @ResponseBody
 	public Map<String, Object> addStockChange(StockChange stockChange) {
-		
 		int r = serv.addStockChange(stockChange);
-		
 		return ControllerReturn.ok(r);
 	}
 	

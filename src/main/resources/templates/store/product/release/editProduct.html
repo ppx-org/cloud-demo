@@ -113,6 +113,8 @@ function setImgToHidden() {
 // stock change
 function stockChange(skuId) {
 	$('#stock').modal('show');
+	$("#stockForm")[0].reset();
+	$("#stockSkuId").val(skuId);
 	
 	action = function() {
 		if (!$("#stockForm").validationEngine('validate')) return;
@@ -122,8 +124,26 @@ function stockChange(skuId) {
 				// 修改对应的库存
 				$('#sku' + skuId).val(r.result);
 				$('#stock').modal('hide');
+				hideLoading();
 			}
 		});
+	}
+}
+
+function viewStockChange(skuId) {
+	open([[@{/stockChange/listStockChange}]] + "?skuId=" + skuId);
+}
+
+function validateStockChange(field, rules, i, options) {
+	if ($("#changeType").val() == 1 || $("#changeType").val() == 2) {
+		if (field.val() < 0) {
+			return $("#changeType option:selected").text() + "的数量必须为正数";
+		}
+	}
+	else if ($("#changeType").val() == 3 || $("#changeType").val() == 4) {
+		if (field.val() > 0) {
+			return $("#changeType option:selected").text() + "的数量必须为负数";
+		}
 	}
 }
 
@@ -201,6 +221,7 @@ function stockChange(skuId) {
 			<th th:style="${prod.skuDesc == ''}?'display:none':''" class="firstSkuItem w-title-s">Sname</th>
 			<th style="width:90px">操作</th>
 			<th>图片(可拖拉图片进来)</th>
+			<th>库存操作</th>
 		</tr>
 		
 		<tr th:each="sku,skuStat:${listSku}">
@@ -222,12 +243,14 @@ function stockChange(skuId) {
 				<td class="imgTd" style="height:80px">
 					<img onclick="img.click(this)" onload="img.resize(this)" th:src="#{imgUrl}+${sku.skuImgSrc}" th:attr="data-imgSrc=${sku.skuImgSrc}"/>
 					<span class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></span>
-					
-					
 				</td>
 				</tr>
 				</table>
-			</td>		
+			</td>
+			<td>
+				<a class="stockChange" href="#this" th:onclick="'stockChange('+${sku.skuId}+')'">修改库存</a>&nbsp;&nbsp;
+				<a class="stockChange" href="#this" th:onclick="'viewStockChange('+${sku.skuId}+')'">变更历史</a>
+			</td>	
 		</tr>
 		
 		</table>
@@ -245,9 +268,13 @@ function stockChange(skuId) {
 			<a href="#this" onclick="$(this).prev().click()">[+]</a>
 		</td>
 		<td class="imgTd" style="height:80px;width:100px;" th:each="img,imgStat:${listImg}">
-			<img onclick="img.click(this)" onload="img.resize(this)" th:src="#{imgUrl}+${img.prodImgSrc}" th:attr="data-imgSrc=${img.prodImgSrc}"/>
-			<span class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></span>
-			<span class="glyphicon glyphicon-step-backward leftTopImg" th:style="'display:' + ${imgStat.index==0?'none':''} + ''" onclick="img.top(this)"></span>
+			<table style="height:80px">
+			<tr>
+				<td rowspan="2" style="width:80px;"><img onclick="img.click(this)" onload="img.resize(this)" th:src="#{imgUrl}+${img.prodImgSrc}" th:attr="data-imgSrc=${img.prodImgSrc}"/></td>
+				<td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td>
+			</tr>
+			<tr><td class="glyphicon glyphicon-step-backward leftTopImg" th:style="'display:'+${imgStat.index==0?'none':''}+''" onclick="img.top(this)"></td></tr>
+			</table>
 		</td>
 		</tr>
 		</table>
@@ -287,18 +314,23 @@ function stockChange(skuId) {
 </form>
 </div>
 
-<div th:fragment="stock" th:replace="common/fragment/common::modal('stock', 'stockAction', 360)">
+<div th:fragment="stock" th:replace="common/fragment/common::modal('stock', '库存变更', 460)">
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>type：</label>
+		<input type="hidden" id="stockSkuId" name="skuId">
+		<label class="col-sm-3 control-label"><span class="required">*</span>变更类型：</label>
 		<div class="col-sm-7">
-			<select class="form-control" name="changeType">
+			<select class="form-control" id="changeType" name="changeType">
 				<option th:each="item:${listChangeType}" th:value="${item.value}" th:text="${item.name}"></option>
 			</select>
 		</div>
-		<label class="col-sm-3 control-label"><span class="required">*</span>changeNum：</label>
-		<div class="col-sm-7"><input type="text" name="changeNum" class="form-control validate[required]" maxlength="32"></div>
-		<label class="col-sm-3 control-label"><span class="required">*</span>changeComment：</label>
-		<div class="col-sm-7"><input type="text" name="changeComment" class="form-control validate[required]" maxlength="128"></div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label"><span class="required">*</span>数量：</label>
+		<div class="col-sm-7"><input type="text" name="changeNum" class="form-control validate[required,custom[integer],funcCall[validateStockChange]]" maxlength="3"></div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label">备注：</label>
+		<div class="col-sm-7"><input type="text" name="changeComment" class="form-control" maxlength="128"></div>
 	</div>
 </div>
 
