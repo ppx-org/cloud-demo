@@ -46,20 +46,22 @@ function queryPage(pageNumber) {
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
-		<th>ID</th>
-		<th>变量类型</th>
-		<th>数量</th>
-		<th>创建时间</th>
-		<th>备注</th>
+		<th class="w-id">ID</th>
+		<th class="w-id">变更类型</th>
+		<th class="w-id">数量</th>
+		<th class="w-time">变更时间</th>
+		<th class="w-id">变更人</th>
+		<th class="w-title-s">备注</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
 	<tr>
-		<td class="w-id">{{v.changeId}}</td>
-		<td class="w-id">{{v.changeTypeDesc}}</td>
-		<td class="w-id">{{v.changeNum}}</td>
-		<td class="w-time">{{v.created}}</th>
-		<td class="w-title-s">{{v.changeComment}}</td>
+		<td>{{v.changeId}}</td>
+		<td>{{v.changeTypeDesc}}</td>
+		<td>{{v.changeNum}}</td>
+		<td>{{v.created}}</th>
+		<td>{{v.creator}}</th>
+		<td>{{v.changeComment}}</td>
 	</tr>
 	{{/each}}
 	</script>

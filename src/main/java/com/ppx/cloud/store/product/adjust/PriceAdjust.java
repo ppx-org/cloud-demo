@@ -16,6 +16,8 @@ public class PriceAdjust {
 	private String adjustComment;
 	
 	private Date created;
+	
+	private Integer creator;
 
 	public Integer getAdjustId() {
 		return adjustId;
@@ -55,6 +57,14 @@ public class PriceAdjust {
 
 	public void setCreated(Date created) {
 		this.created = created;
+	}
+
+	public Integer getCreator() {
+		return creator;
+	}
+
+	public void setCreator(Integer creator) {
+		this.creator = creator;
 	}
 
 	

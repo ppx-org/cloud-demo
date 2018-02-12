@@ -130,6 +130,7 @@ create table stock_change
 	CHANGE_TYPE	 	smallint not null,
 	CHANGE_COMMENT	varchar(128),
 	CREATED         timestamp not null default CURRENT_TIMESTAMP,
+	CREATOR			int not null,
 	primary key (CHANGE_ID)
 );
 
@@ -140,6 +141,7 @@ create table price_adjust
 	ADJUST_PRICE	decimal(7,2) not null,
 	ADJUST_COMMENT	varchar(128),
 	CREATED         timestamp not null default CURRENT_TIMESTAMP,
+	CREATOR			int not null,
 	primary key (ADJUST_ID)
 );
 

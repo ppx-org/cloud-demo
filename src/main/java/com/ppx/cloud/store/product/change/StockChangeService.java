@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
+import com.ppx.cloud.grant.common.GrantContext;
 
 
 @Service
@@ -32,31 +33,12 @@ public class StockChangeService extends MyDaoSupport {
 		return msg;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	@Transactional
 	public int addStockChange(StockChange stockChange) {
+		int creator = GrantContext.getLoginAccount().getAccountId();
+		stockChange.setCreator(creator);
 		insert(stockChange);
 		
 		// 变更库存

@@ -37,7 +37,7 @@ function queryPage(pageNumber) {
 </head>
 
 <body>
-<div th:replace="common/fragment/common::pageList('价格变更历史')">
+<div th:replace="common/fragment/common::pageList('价格调整历史')">
 	<div th:fragment="queryFragment">
 		<input type="text" class="form-control input-sm" id="skuId" name="skuId" placeholder="请输入skuId" style="width:200px;" onkeyup="this.value=this.value.replace(/\D/g,'')">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
@@ -46,18 +46,20 @@ function queryPage(pageNumber) {
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
-		<th>ID</th>
-		<th>价格</th>
-		<th>创建时间</th>
-		<th>备注</th>
+		<th class="w-id">ID</th>
+		<th class="w-id">价格</th>
+		<th class="w-time">调整时间</th>
+		<th class="w-id">调整人</th>
+		<th class="w-title-s">备注</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
 	<tr>
-		<td class="w-id">{{v.adjustId}}</td>
-		<td class="w-id">{{v.adjustPrice}}</td>
-		<td class="w-time">{{v.created}}</th>
-		<td class="w-title-s">{{v.adjustComment}}</td>
+		<td>{{v.adjustId}}</td>
+		<td>{{v.adjustPrice}}</td>
+		<td>{{v.created}}</th>
+		<td>{{v.creator}}</th>
+		<td>{{v.adjustComment}}</td>
 	</tr>
 	{{/each}}
 	</script>

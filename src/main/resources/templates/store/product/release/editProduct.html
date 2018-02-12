@@ -156,9 +156,9 @@ function priceAdjust(skuId) {
 		if (!$("#priceForm").validationEngine('validate')) return;
 		showLoading();
 		$.post([[@{/priceAdjust/addPriceAdjust}]], $("#priceForm").serialize(), function(r) {
-			if (r.result) {
+			if (r.result != undefined) {
 				// 修改对应的库存
-				$('#price' + skuId).val(r.result);
+				$('#price' + skuId).val(r.result.toFixed(2));
 				$('#price').modal('hide');
 				hideLoading();
 			}
@@ -228,15 +228,15 @@ function viewPriceAdjust(skuId) {
 			<th style="width:65px">数量</th>
 			<th style="width:85px">价格</th>
 			<th style="width:90px">操作</th>
-			<th th:style="${prod.skuDesc == ''}?'display:none':''" class="firstSkuItem w-title-s">SKU名称</th>
-			<th>图片(可拖拉图片进来)</th>
+			<th th:style="${prod.skuDesc == ''}?'display:none':'width:210px'" class="firstSkuItem w-title-s">SKU名称</th>
+			<th style="width:150px">图片(可拖拉图片进来)</th>
 			<th>变更操作</th>
 		</tr>
 		
 		<tr th:each="sku,skuStat:${listSku}">
 			<td><input type="text" name="skuId" class="form-control" readonly="readonly" th:value="${sku.skuId}" style="width:66px"></td>
 			<td><input type="text" name="stockNum" readonly="readonly" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:61px" th:id="'sku'+${sku.skuId}" th:value="${sku.stockNum}"></td>
-			<td><input type="text" name="price"  readonly="readonly" class="form-control validate[required,custom[number]]" maxlength="7" style="width:81px" th:id="'price'+${sku.skuId}" th:value="${sku.price}"></td>
+			<td><input type="text" name="price"  readonly="readonly" class="form-control validate[required,custom[number]]" maxlength="7" style="width:81px" th:id="'price'+${sku.skuId}" th:value="${#numbers.formatDecimal(sku.price, 1, 2)}"></td>
 			<td class="skuAction">
 				<a th:if="${skuStat.index == 0}" href="#this" onclick="sku.add(this)">[增加SKU]</a>
 				<!-- 已经有的不能删除,可以修改库存为0 -->
@@ -265,7 +265,7 @@ function viewPriceAdjust(skuId) {
 				<a class="stockChange" href="#this" th:onclick="'stockChange('+${sku.skuId}+')'">[修改库存]</a>&nbsp;&nbsp;
 				<a class="stockChange" href="#this" th:onclick="'viewStockChange('+${sku.skuId}+')'">[库存历史]</a>
 				&nbsp;｜&nbsp;
-				<a class="stockChange" href="#this" th:onclick="'priceAdjust('+${sku.skuId}+')'">[修改价格]</a>&nbsp;&nbsp;
+				<a class="stockChange" href="#this" th:onclick="'priceAdjust('+${sku.skuId}+')'">[调整价格]</a>&nbsp;&nbsp;
 				<a class="stockChange" href="#this" th:onclick="'viewPriceAdjust('+${sku.skuId}+')'">[价格历史]</a>
 			</td>	
 		</tr>

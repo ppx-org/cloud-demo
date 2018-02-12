@@ -19,6 +19,8 @@ public class StockChange {
 	private String changeComment;
 	
 	private Date created;
+	
+	private Integer creator;
 
 	public Integer getChangeId() {
 		
@@ -73,6 +75,14 @@ public class StockChange {
 
 	public void setCreated(Date created) {
 		this.created = created;
+	}
+
+	public Integer getCreator() {
+		return creator;
+	}
+
+	public void setCreator(Integer creator) {
+		this.creator = creator;
 	}
 	
 	

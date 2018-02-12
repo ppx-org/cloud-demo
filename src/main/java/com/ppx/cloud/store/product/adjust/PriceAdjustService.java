@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
+import com.ppx.cloud.grant.common.GrantContext;
 
 
 @Service
@@ -38,6 +39,9 @@ public class PriceAdjustService extends MyDaoSupport {
 	
 	@Transactional
 	public double addPriceAdjust(PriceAdjust priceAdjust) {
+		int creator = GrantContext.getLoginAccount().getAccountId();
+		
+		priceAdjust.setCreator(creator);
 		insert(priceAdjust);
 		
 		// 变更库存
