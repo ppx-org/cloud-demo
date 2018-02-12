@@ -88,20 +88,6 @@ public class ProductService extends MyDaoSupport {
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public Product getProduct(int prodId) {
 		String sql = "select * from product where PROD_ID = ?";
 		Product prod = getJdbcTemplate().queryForObject(sql, BeanPropertyRowMapper.newInstance(Product.class), prodId);
@@ -126,25 +112,8 @@ public class ProductService extends MyDaoSupport {
 		List<ProductImg> imgList = getJdbcTemplate().query(imgSql, BeanPropertyRowMapper.newInstance(ProductImg.class), prodId);
 		return imgList;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	// 数量不能直接改
+
+	// 数量和价格不能直接改
 	@Transactional
 	public int updateProduct(Product prod, ProductDetail detail, String prodImgSrc,
 			Integer[] skuId, Integer[] stockNum, Float[] price, String[] skuName, String[] skuImgSrc) {
@@ -188,41 +157,8 @@ public class ProductService extends MyDaoSupport {
 		String imgSql = "insert into product_img(PROD_ID, PROD_IMG_PRIO, PROD_IMG_SRC) values(?,?,?)";
 		getJdbcTemplate().batchUpdate(imgSql, imgArgList);
 		
-		
-		
 		return r;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 	
 	// action >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

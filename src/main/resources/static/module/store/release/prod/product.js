@@ -35,7 +35,12 @@ var sku = {};
 sku.REMOVE_HTML = '<a href="#this" onclick="sku.remove(this)">[删除]</a>&nbsp;<a href="#" onclick="sku.top(this)">[置顶]</a>';
 sku.top = function(obj) {
 	var firstSku = $("#skuTable>tbody>tr:eq(1)");
-	firstSku.find(".skuAction").html(this.REMOVE_HTML);
+	if (firstSku.find("[name=skuId]").val() && firstSku.find("[name=skuId]").val() != -1) {
+		firstSku.find(".skuAction").html('<a href="#" onclick="sku.top(this)">[置顶]</a>');
+	}
+	else {
+		firstSku.find(".skuAction").html(this.REMOVE_HTML);
+	}
 	
 	$(obj).parent().parent().clone(true).insertAfter($("#skuTable>tbody>tr:eq(0)"));
 	$(obj).parent().parent().remove();
