@@ -21,24 +21,17 @@ public class StockChangeController {
 	private StockChangeService serv;
 	
 	
-	
 	@GetMapping
 	public ModelAndView listStockChange(Integer skuId) {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("skuId", skuId);
-		
-		
 		return mv;
 	}
 
 	@PostMapping @ResponseBody
 	public Map<String, Object> listJson(Page page, Integer skuId) {
 		PageList<StockChange> list = serv.listStockChange(page, skuId);
-		String skuMsg = "";
-		if (list.getList().size() > 0) {
-			skuMsg = serv.getSkuMsg(skuId);
-		}
-		
+		String skuMsg = serv.getSkuMsg(skuId);
 		return ControllerReturn.ok(list, skuMsg);
 	}
 	

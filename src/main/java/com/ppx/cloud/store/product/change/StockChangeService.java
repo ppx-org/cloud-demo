@@ -23,19 +23,13 @@ public class StockChangeService extends MyDaoSupport {
 		StringBuilder qSql = new StringBuilder("select c.* from stock_change c where c.SKU_ID = ?");
 		
 		List<StockChange> list = queryPage(StockChange.class, page, cSql, qSql, paraList);
-		
 		return new PageList<StockChange>(list, page);
 	}
 	
-	
-	
-	
 	public String getSkuMsg(Integer skuId) {
-		String sql = "select concat(SKU_NAME, ':', STOCK_NUM) from sku where SKU_ID = ?";
+		String sql = "select ifnull((select concat(SKU_NAME, ':', STOCK_NUM) from sku where SKU_ID = ?), '')";
 		String msg = getJdbcTemplate().queryForObject(sql, String.class, skuId);
-
 		return msg;
-		
 	}
 	
 	

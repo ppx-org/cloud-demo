@@ -3,23 +3,15 @@ package com.ppx.cloud.store.product.adjust;
 import java.util.Date;
 
 import com.ppx.cloud.common.jdbc.annotation.Id;
-import com.ppx.cloud.store.common.dictionary.Dict;
 
 public class PriceAdjust {
-	/*
-	 * ADJUST_ID		int not null auto_increment,
-	SKU_ID			int not null,
-	ADJUST_RPICE	decimal(7,2) not null,
-	ADJUST_COMMENT	varchar(128),
-	CREATED         timestamp not null default CURRENT_TIMESTAMP,
-	 */
 	
 	@Id
 	private Integer adjustId;
 	
 	private Integer skuId;
 	
-	private Integer adjustPrice;
+	private Float adjustPrice;
 	
 	private String adjustComment;
 	
@@ -41,11 +33,11 @@ public class PriceAdjust {
 		this.skuId = skuId;
 	}
 
-	public Integer getAdjustPrice() {
+	public Float getAdjustPrice() {
 		return adjustPrice;
 	}
 
-	public void setAdjustPrice(Integer adjustPrice) {
+	public void setAdjustPrice(Float adjustPrice) {
 		this.adjustPrice = adjustPrice;
 	}
 

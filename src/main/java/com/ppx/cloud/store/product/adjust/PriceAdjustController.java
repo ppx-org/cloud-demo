@@ -33,18 +33,17 @@ public class PriceAdjustController {
 
 	@PostMapping @ResponseBody
 	public Map<String, Object> listJson(Page page, Integer skuId) {
+		
 		PageList<PriceAdjust> list = serv.listPriceAdjust(page, skuId);
-		String skuMsg = "";
-		if (list.getList().size() > 0) {
-			skuMsg = serv.getSkuMsg(skuId);
-		}
+		String skuMsg = serv.getSkuMsg(skuId);
+		
 		
 		return ControllerReturn.ok(list, skuMsg);
 	}
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> addPriceAdjust(PriceAdjust stockChange) {
-		int r = serv.addPriceAdjust(stockChange);
+	public Map<String, Object> addPriceAdjust(PriceAdjust priceAdjust) {
+		double r = serv.addPriceAdjust(priceAdjust);
 		return ControllerReturn.ok(r);
 	}
 	

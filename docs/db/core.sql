@@ -137,7 +137,7 @@ create table price_adjust
 (
 	ADJUST_ID		int not null auto_increment,
 	SKU_ID			int not null,
-	ADJUST_RPICE	decimal(7,2) not null,
+	ADJUST_PRICE	decimal(7,2) not null,
 	ADJUST_COMMENT	varchar(128),
 	CREATED         timestamp not null default CURRENT_TIMESTAMP,
 	primary key (ADJUST_ID)

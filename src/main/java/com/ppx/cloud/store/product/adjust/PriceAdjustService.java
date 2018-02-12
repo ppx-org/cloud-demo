@@ -19,8 +19,8 @@ public class PriceAdjustService extends MyDaoSupport {
 		List<Object> paraList = new ArrayList<Object>();
 		paraList.add(skuId);
 	
-		StringBuilder cSql = new StringBuilder("select count(*) from stock_change c where c.SKU_ID = ?");
-		StringBuilder qSql = new StringBuilder("select c.* from stock_change c where c.SKU_ID = ?");
+		StringBuilder cSql = new StringBuilder("select count(*) from price_adjust c where c.SKU_ID = ?");
+		StringBuilder qSql = new StringBuilder("select c.* from price_adjust c where c.SKU_ID = ? order by CREATED desc");
 		
 		List<PriceAdjust> list = queryPage(PriceAdjust.class, page, cSql, qSql, paraList);
 		
@@ -28,56 +28,29 @@ public class PriceAdjustService extends MyDaoSupport {
 	}
 	
 	
-	
-	
 	public String getSkuMsg(Integer skuId) {
-		String sql = "select concat(SKU_NAME, ':', PRICE) from sku where SKU_ID = ?";
+		String sql = "select ifnull((select concat(SKU_NAME, ':', PRICE) from sku where SKU_ID = ?), '')";
 		String msg = getJdbcTemplate().queryForObject(sql, String.class, skuId);
 
 		return msg;
-		
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	@Transactional
-	public int addPriceAdjust(PriceAdjust priceAdjust) {
+	public double addPriceAdjust(PriceAdjust priceAdjust) {
 		insert(priceAdjust);
 		
 		// 变更库存
 		String updateSql = "update sku set PRICE = ? where SKU_ID = ?";
-		int r = getJdbcTemplate().update(updateSql, priceAdjust.getAdjustPrice(), priceAdjust.getSkuId());
+		getJdbcTemplate().update(updateSql, priceAdjust.getAdjustPrice(), priceAdjust.getSkuId());
 		
-		String getSql = "select STOCK_NUM from sku where SKU_ID = ?";
-		int stock = getJdbcTemplate().queryForObject(getSql, Integer.class, priceAdjust.getSkuId());
 		
-		return stock;
+		return priceAdjust.getAdjustPrice();
 	}
 	
 	
 
-	
-	
-	
+
 }
+
+

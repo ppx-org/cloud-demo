@@ -32,7 +32,7 @@ $(function() {
 
 // sku >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 var sku = {};
-sku.REMOVE_HTML = '<a href="#" onclick="sku.remove(this)">[删除]</a><a href="#" onclick="sku.top(this)">[置顶]</a>';
+sku.REMOVE_HTML = '<a href="#this" onclick="sku.remove(this)">[删除]</a>&nbsp;<a href="#" onclick="sku.top(this)">[置顶]</a>';
 sku.top = function(obj) {
 	var firstSku = $("#skuTable>tbody>tr:eq(1)");
 	firstSku.find(".skuAction").html(this.REMOVE_HTML);
@@ -41,7 +41,7 @@ sku.top = function(obj) {
 	$(obj).parent().parent().remove();
 	
 	var firstSku = $("#skuTable>tbody>tr:eq(1)");
-	firstSku.find(".skuAction").html('<a href="#" onclick="sku.add(this)">[增加]</a>');
+	firstSku.find(".skuAction").html('<a href="#this" onclick="sku.add(this)">[增加SKU]</a>');
 }
 sku.add = function(obj) {
 	
@@ -61,7 +61,9 @@ sku.add = function(obj) {
 	newTr.find("[name=skuId]").val(-1);
 	// 默认的stockNum和price
 	newTr.find("[name=price]").val(price);
+	newTr.find("[name=price]").removeAttr("readonly");
 	newTr.find("[name=stockNum]").val(stockNum);
+	newTr.find("[name=stockNum]").removeAttr("readonly");
 	
 	$("#skuTable").append(newTr);
 	refreshDrag();
@@ -85,7 +87,8 @@ img.click = function(obj) {
 	open("").document.write("<title>预览图片</title><img src='" + obj.src +"'>");
 }
 img.html = '<td class="imgTd">\
-	<table style="height:80px"><tr><td rowspan="2" style="width:80px;"><img onclick="img.click(this)" class="uploadImg" onload="img.resize(this)"/></td><td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td></tr>\
+	<table style="height:80px"><tr><td rowspan="2" style="width:80px;"><img onclick="img.click(this)" class="uploadImg" onload="img.resize(this)"/></td>\
+	<td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td></tr>\
 	<tr><td class="glyphicon glyphicon-step-backward leftTopImg" onclick="img.top(this)"></td></tr></table></td>';
 img.fileChange = function(obj) {
 	this.loadImg(obj.files, obj.files.length, $(obj).parent().parent());
