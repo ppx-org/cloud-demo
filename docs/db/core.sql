@@ -59,6 +59,8 @@ create table store
    STORE_NO             varchar(32) not null,
    STORE_LNG			varchar(32) not null,
    STORE_LAT			varchar(32) not null,
+   BUSINESS_BEGIN		time not null,
+   BUSINESS_END			time not null,
    STORE_PHONE			varchar(32),
    STORE_IMG			varchar(128),
    RECORD_STATUS        smallint not null default 1,
@@ -122,28 +124,39 @@ create table theme_map_prod
 
 /** ----------------- release ----------------- */
 
-create table stock_change
+create table change_stock
 (
-	CHANGE_ID 		int not null auto_increment,
+	CHANGE_STOCK_ID int not null auto_increment,
 	SKU_ID          int not null,
 	CHANGE_NUM 		int not null,
 	CHANGE_TYPE	 	smallint not null,
 	CHANGE_COMMENT	varchar(128),
 	CREATED         timestamp not null default CURRENT_TIMESTAMP,
 	CREATOR			int not null,
-	primary key (CHANGE_ID)
+	primary key (CHANGE_STOCK_ID)
 );
 
-create table price_adjust
+create table change_price
 (
-	ADJUST_ID		int not null auto_increment,
+	CHANGE_PRICE_ID	int not null auto_increment,
 	SKU_ID			int not null,
-	ADJUST_PRICE	decimal(7,2) not null,
-	ADJUST_COMMENT	varchar(128),
+	CHANGE_PRICE	decimal(7,2) not null,
+	CHANGE_COMMENT	varchar(128),
 	CREATED         timestamp not null default CURRENT_TIMESTAMP,
 	CREATOR			int not null,
-	primary key (ADJUST_ID)
+	primary key (CHANGE_PRICE_ID)
 );
+
+create table change_status 
+(
+	CHANGE_STATUS_ID 	int not null auto_increment,
+	PROD_ID 			int not null,
+	CHANGE_STATUS 		tinyint(1) not null,
+	CREATED         	timestamp not null default CURRENT_TIMESTAMP,
+	CREATOR				int not null,
+	primary key (CHANGE_STATUS_ID)
+);
+
 
 create table sku
 (
@@ -169,7 +182,7 @@ create table product
    PROD_TITLE           varchar(32) not null,
    SKU_DESC				varchar(32),
    PROD_PRIO			int not null default 10000,
-   PROD_STATUS 			tinyint(1) NOT NULL DEFAULT 1,   
+   PROD_STATUS 			tinyint(1) not null DEFAULT 1,   
    primary key (PROD_ID)
 );
 

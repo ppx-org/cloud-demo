@@ -1,7 +1,13 @@
 package com.ppx.cloud.store.merchant.store;
 
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ppx.cloud.common.jdbc.annotation.Id;
 import com.ppx.cloud.common.jdbc.annotation.Table;
+import com.ppx.cloud.common.util.DateUtils;
 
 @Table(name = "store")
 public class Store {
@@ -18,6 +24,14 @@ public class Store {
 	private String storeLng;
 	
 	private String storeLat;
+	
+	@JsonFormat(pattern=DateUtils.HHMM_PATTERN, timezone="GMT+8")
+	@DateTimeFormat(pattern=DateUtils.HHMM_PATTERN)
+	private Date businessBegin;
+	
+	@JsonFormat(pattern=DateUtils.HHMM_PATTERN, timezone="GMT+8")
+	@DateTimeFormat(pattern=DateUtils.HHMM_PATTERN)
+	private Date businessEnd;
 	
 	private String storePhone;
 	
@@ -95,6 +109,22 @@ public class Store {
 
 	public void setStoreAddress(String storeAddress) {
 		this.storeAddress = storeAddress;
+	}
+
+	public Date getBusinessBegin() {
+		return businessBegin;
+	}
+
+	public void setBusinessBegin(Date businessBegin) {
+		this.businessBegin = businessBegin;
+	}
+
+	public Date getBusinessEnd() {
+		return businessEnd;
+	}
+
+	public void setBusinessEnd(Date businessEnd) {
+		this.businessEnd = businessEnd;
 	}
 
 	

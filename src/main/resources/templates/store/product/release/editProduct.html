@@ -110,7 +110,7 @@ function setImgToHidden() {
 }
 
 // stock change
-function stockChange(skuId) {
+function changeStock(skuId) {
 	$('#stock').modal('show');
 	$("#stockForm")[0].reset();
 	$("#stockSkuId").val(skuId);
@@ -118,7 +118,7 @@ function stockChange(skuId) {
 	action = function() {
 		if (!$("#stockForm").validationEngine('validate')) return;
 		showLoading();
-		$.post([[@{/stockChange/addStockChange}]], $("#stockForm").serialize(), function(r) {
+		$.post([[@{/changeStock/addChangeStock}]], $("#stockForm").serialize(), function(r) {
 			if (r.result) {
 				// 修改对应的库存
 				$('#sku' + skuId).val(r.result);
@@ -129,11 +129,11 @@ function stockChange(skuId) {
 	}
 }
 
-function viewStockChange(skuId) {
-	open([[@{/stockChange/listStockChange}]] + "?skuId=" + skuId);
+function viewChangeStock(skuId) {
+	open([[@{/changeStock/listChangeStock}]] + "?skuId=" + skuId);
 }
 
-function validateStockChange(field, rules, i, options) {
+function validateChangeStock(field, rules, i, options) {
 	if ($("#changeType").val() == 1 || $("#changeType").val() == 2) {
 		if (field.val() < 0) {
 			return $("#changeType option:selected").text() + "的数量必须为正数";
@@ -146,16 +146,16 @@ function validateStockChange(field, rules, i, options) {
 	}
 }
 
-function priceAdjust(skuId) {
+function changePrice(skuId) {
 	$('#price').modal('show');
 	$("#priceForm")[0].reset();
 	$("#priceSkuId").val(skuId);
-	$("#adjustPrice").val($('#price' + skuId).val());
+	$("#changePrice").val($('#price' + skuId).val());
 	
 	action = function() {
 		if (!$("#priceForm").validationEngine('validate')) return;
 		showLoading();
-		$.post([[@{/priceAdjust/addPriceAdjust}]], $("#priceForm").serialize(), function(r) {
+		$.post([[@{/changePrice/addChangePrice}]], $("#priceForm").serialize(), function(r) {
 			if (r.result != undefined) {
 				// 修改对应的库存
 				$('#price' + skuId).val(r.result.toFixed(2));
@@ -166,8 +166,8 @@ function priceAdjust(skuId) {
 	}
 }
 
-function viewPriceAdjust(skuId) {
-	open([[@{/priceAdjust/listPriceAdjust}]] + "?skuId=" + skuId);
+function viewChangePrice(skuId) {
+	open([[@{/changePrice/listChangePrice}]] + "?skuId=" + skuId);
 }
 
 </script>
@@ -262,11 +262,11 @@ function viewPriceAdjust(skuId) {
 				</table>
 			</td>
 			<td>
-				<a class="stockChange" href="#this" th:onclick="'stockChange('+${sku.skuId}+')'">[修改库存]</a>&nbsp;&nbsp;
-				<a class="stockChange" href="#this" th:onclick="'viewStockChange('+${sku.skuId}+')'">[库存历史]</a>
+				<a class="stockChange" href="#this" th:onclick="'changeStock('+${sku.skuId}+')'">[修改库存]</a>&nbsp;&nbsp;
+				<a class="stockChange" href="#this" th:onclick="'viewChangeStock('+${sku.skuId}+')'">[库存历史]</a>
 				&nbsp;｜&nbsp;
-				<a class="stockChange" href="#this" th:onclick="'priceAdjust('+${sku.skuId}+')'">[调整价格]</a>&nbsp;&nbsp;
-				<a class="stockChange" href="#this" th:onclick="'viewPriceAdjust('+${sku.skuId}+')'">[价格历史]</a>
+				<a class="stockChange" href="#this" th:onclick="'changePrice('+${sku.skuId}+')'">[调整价格]</a>&nbsp;&nbsp;
+				<a class="stockChange" href="#this" th:onclick="'viewChangePrice('+${sku.skuId}+')'">[价格历史]</a>
 			</td>	
 		</tr>
 		</table>
@@ -356,7 +356,7 @@ function viewPriceAdjust(skuId) {
 	</div>
 	<div class="form-group">
 		<label class="col-sm-3 control-label"><span class="required">*</span>数量：</label>
-		<div class="col-sm-7"><input type="text" name="changeNum" class="form-control validate[required,custom[integer],funcCall[validateStockChange]]" maxlength="3"></div>
+		<div class="col-sm-7"><input type="text" name="changeNum" class="form-control validate[required,custom[integer],funcCall[validateChangeStock]]" maxlength="3"></div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-3 control-label">备注：</label>
@@ -368,11 +368,11 @@ function viewPriceAdjust(skuId) {
 	<input type="hidden" id="priceSkuId" name="skuId">
 	<div class="form-group">
 		<label class="col-sm-3 control-label"><span class="required">*</span>价格：</label>
-		<div class="col-sm-7"><input type="text" id="adjustPrice" name="adjustPrice" class="form-control validate[required,custom[number]" maxlength="7"></div>
+		<div class="col-sm-7"><input type="text" id="changePrice" name="changePrice" class="form-control validate[required,custom[number]" maxlength="7"></div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-3 control-label">备注：</label>
-		<div class="col-sm-7"><input type="text" name="adjustComment" class="form-control" maxlength="128"></div>
+		<div class="col-sm-7"><input type="text" name="changeComment" class="form-control" maxlength="128"></div>
 	</div>
 </div>
 

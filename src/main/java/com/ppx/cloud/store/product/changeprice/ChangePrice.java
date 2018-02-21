@@ -1,20 +1,17 @@
-package com.ppx.cloud.store.product.change;
+package com.ppx.cloud.store.product.changeprice;
 
 import java.util.Date;
 
 import com.ppx.cloud.common.jdbc.annotation.Id;
-import com.ppx.cloud.store.common.dictionary.Dict;
 
-public class StockChange {
+public class ChangePrice {
 	
 	@Id
-	private Integer changeId;
+	private Integer changePriceId;
 	
 	private Integer skuId;
 	
-	private Integer changeNum;
-	
-	private Integer changeType;
+	private Float changePrice;
 	
 	private String changeComment;
 	
@@ -22,14 +19,12 @@ public class StockChange {
 	
 	private Integer creator;
 
-	public Integer getChangeId() {
-		
-		System.out.println("xxxxxxgetChangeId:" + changeId);
-		return changeId;
+	public Integer getChangePriceId() {
+		return changePriceId;
 	}
 
-	public void setChangeId(Integer changeId) {
-		this.changeId = changeId;
+	public void setChangePriceId(Integer changePriceId) {
+		this.changePriceId = changePriceId;
 	}
 
 	public Integer getSkuId() {
@@ -40,25 +35,12 @@ public class StockChange {
 		this.skuId = skuId;
 	}
 
-	public Integer getChangeNum() {
-		return changeNum;
+	public Float getChangePrice() {
+		return changePrice;
 	}
 
-	public void setChangeNum(Integer changeNum) {
-		
-		this.changeNum = changeNum;
-	}
-
-	public Integer getChangeType() {
-		return changeType;
-	}
-	
-	public String getChangeTypeDesc() {
-		return Dict.getChangeTypeDesc(changeType);
-	}
-
-	public void setChangeType(Integer changeType) {
-		this.changeType = changeType;
+	public void setChangePrice(Float changePrice) {
+		this.changePrice = changePrice;
 	}
 
 	public String getChangeComment() {
@@ -84,6 +66,7 @@ public class StockChange {
 	public void setCreator(Integer creator) {
 		this.creator = creator;
 	}
+
 	
 	
 

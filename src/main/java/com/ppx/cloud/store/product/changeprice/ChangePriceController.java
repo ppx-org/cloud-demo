@@ -1,4 +1,4 @@
-package com.ppx.cloud.store.product.adjust;
+package com.ppx.cloud.store.product.changeprice;
 
 import java.util.Map;
 
@@ -15,15 +15,15 @@ import com.ppx.cloud.common.page.PageList;
 
 
 @Controller	
-public class PriceAdjustController {
+public class ChangePriceController {
 	
 	@Autowired
-	private PriceAdjustService serv;
+	private ChangePriceService serv;
 	
 	
 	
 	@GetMapping
-	public ModelAndView listPriceAdjust(Integer skuId) {
+	public ModelAndView listChangePrice(Integer skuId) {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("skuId", skuId);
 		
@@ -34,7 +34,7 @@ public class PriceAdjustController {
 	@PostMapping @ResponseBody
 	public Map<String, Object> listJson(Page page, Integer skuId) {
 		
-		PageList<PriceAdjust> list = serv.listPriceAdjust(page, skuId);
+		PageList<ChangePrice> list = serv.listChangePrice(page, skuId);
 		String skuMsg = serv.getSkuMsg(skuId);
 		
 		
@@ -42,8 +42,8 @@ public class PriceAdjustController {
 	}
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> addPriceAdjust(PriceAdjust priceAdjust) {
-		double r = serv.addPriceAdjust(priceAdjust);
+	public Map<String, Object> addChangePrice(ChangePrice changePrice) {
+		double r = serv.addChangePrice(changePrice);
 		return ControllerReturn.ok(r);
 	}
 	

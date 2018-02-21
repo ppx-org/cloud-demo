@@ -1,4 +1,4 @@
-package com.ppx.cloud.store.product.change;
+package com.ppx.cloud.store.product.changestock;
 
 import java.util.Map;
 
@@ -15,14 +15,14 @@ import com.ppx.cloud.common.page.PageList;
 
 
 @Controller	
-public class StockChangeController {
+public class ChangeStockController {
 	
 	@Autowired
-	private StockChangeService serv;
+	private ChangeStockService serv;
 	
 	
 	@GetMapping
-	public ModelAndView listStockChange(Integer skuId) {
+	public ModelAndView listChangeStock(Integer skuId) {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("skuId", skuId);
 		return mv;
@@ -30,14 +30,14 @@ public class StockChangeController {
 
 	@PostMapping @ResponseBody
 	public Map<String, Object> listJson(Page page, Integer skuId) {
-		PageList<StockChange> list = serv.listStockChange(page, skuId);
+		PageList<ChangeStock> list = serv.listStockChange(page, skuId);
 		String skuMsg = serv.getSkuMsg(skuId);
 		return ControllerReturn.ok(list, skuMsg);
 	}
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> addStockChange(StockChange stockChange) {
-		int r = serv.addStockChange(stockChange);
+	public Map<String, Object> addChangeStock(ChangeStock stockChange) {
+		int r = serv.addChangeStock(stockChange);
 		return ControllerReturn.ok(r);
 	}
 	

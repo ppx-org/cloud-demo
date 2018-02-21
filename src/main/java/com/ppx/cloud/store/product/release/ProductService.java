@@ -12,6 +12,7 @@ import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
 import com.ppx.cloud.grant.common.GrantContext;
+import com.ppx.cloud.store.product.changestatus.ChangeStatus;
 import com.ppx.cloud.store.product.release.bean.Product;
 import com.ppx.cloud.store.product.release.bean.ProductDetail;
 import com.ppx.cloud.store.product.release.bean.ProductImg;
@@ -23,13 +24,24 @@ public class ProductService extends MyDaoSupport {
 	
 	
 	public PageList<Product> listProduct(Page page, Product bean) {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
-		MyCriteria c = createCriteria("where")
-			.addAnd("PROD_TITLE like ?", "%", bean.getProdTitle(), "%")
-			.addAnd("PROD_STATUS = ?", bean.getProdStatus());
+		MyCriteria c = createCriteria("and")
+			.addAnd("PROD_STATUS = ?", bean.getProdStatus())
+			.addAnd("REPO_ID = ?", bean.getRepoId())
+			.addAnd("CAT_ID = ?", bean.getCatId())
+			.addAnd("MAIN_CAT_ID = ?", bean.getMainCatId())
+			.addAnd("BRAND_ID = ?", bean.getBrandId())
+			.addAnd("PROD_ID = ?", bean.getProdId())
+			.addAnd("PROD_TITLE like ?", "%", bean.getProdTitle(), "%");
+			
 		
-		StringBuilder cSql = new StringBuilder("select count(*) from product p").append(c);
-		StringBuilder qSql = new StringBuilder("select p.* from product p").append(c);
+		String whereSql = " where p.MERCHANT_ID = ?";
+		StringBuilder cSql = new StringBuilder("select count(*) from product p").append(whereSql).append(c);
+		StringBuilder qSql = new StringBuilder("select p.*, (select concat(min(PRICE), '-', max(PRICE)) from sku where PROD_ID = p.PROD_ID) PROD_PRICE,"
+				+ " (select sum(STOCK_NUM) from sku where PROD_ID = p.PROD_ID) PROD_STOCK from product p").append(whereSql).append(c);
+		
+		c.addPrePara(merchantId);
 		
 		List<Product> list = queryPage(Product.class, page, cSql, qSql, c.getParaList());
 		return new PageList<Product>(list, page);
@@ -166,16 +178,31 @@ public class ProductService extends MyDaoSupport {
 	 * onShelves和offSheles都需要判断相关活动是否停止，因为需要生成价格索引和搜索索引
 	 */
 	
-	// action 
+	// 2:上架
+	@Transactional
 	public int onShelves(Integer prodId) {
-		
+		ChangeStatus changeStatus = new ChangeStatus();
+		changeStatus.setProdId(prodId);
+		changeStatus.setChangeStatus(2);
+		int creator = GrantContext.getLoginAccount().getAccountId();
+		changeStatus.setCreator(creator);
+		insert(changeStatus);
 		
 		String sql = "update product set PROD_STATUS = ? where PROD_ID = ?";
 		getJdbcTemplate().update(sql, 2, prodId);
 		return 2;
 	}
 	
+	// 3:下架
+	@Transactional
 	public int offShelves(Integer prodId) {
+		ChangeStatus changeStatus = new ChangeStatus();
+		changeStatus.setProdId(prodId);
+		changeStatus.setChangeStatus(3);
+		int creator = GrantContext.getLoginAccount().getAccountId();
+		changeStatus.setCreator(creator);
+		insert(changeStatus);
+		
 		String sql = "update product set PROD_STATUS = ? where PROD_ID = ?";
 		getJdbcTemplate().update(sql, 3, prodId);
 		return 3;

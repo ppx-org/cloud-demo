@@ -1,4 +1,4 @@
-package com.ppx.cloud.store.product.change;
+package com.ppx.cloud.store.product.changestock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,18 +13,18 @@ import com.ppx.cloud.grant.common.GrantContext;
 
 
 @Service
-public class StockChangeService extends MyDaoSupport {
+public class ChangeStockService extends MyDaoSupport {
 	
-	public PageList<StockChange> listStockChange(Page page, Integer skuId) {
+	public PageList<ChangeStock> listStockChange(Page page, Integer skuId) {
 		
 		List<Object> paraList = new ArrayList<Object>();
 		paraList.add(skuId);
 	
-		StringBuilder cSql = new StringBuilder("select count(*) from stock_change c where c.SKU_ID = ?");
-		StringBuilder qSql = new StringBuilder("select c.* from stock_change c where c.SKU_ID = ?");
+		StringBuilder cSql = new StringBuilder("select count(*) from change_stock c where c.SKU_ID = ?");
+		StringBuilder qSql = new StringBuilder("select c.* from change_stock c where c.SKU_ID = ? order by CREATED desc");
 		
-		List<StockChange> list = queryPage(StockChange.class, page, cSql, qSql, paraList);
-		return new PageList<StockChange>(list, page);
+		List<ChangeStock> list = queryPage(ChangeStock.class, page, cSql, qSql, paraList);
+		return new PageList<ChangeStock>(list, page);
 	}
 	
 	public String getSkuMsg(Integer skuId) {
@@ -36,7 +36,7 @@ public class StockChangeService extends MyDaoSupport {
 
 	
 	@Transactional
-	public int addStockChange(StockChange stockChange) {
+	public int addChangeStock(ChangeStock stockChange) {
 		int creator = GrantContext.getLoginAccount().getAccountId();
 		stockChange.setCreator(creator);
 		insert(stockChange);

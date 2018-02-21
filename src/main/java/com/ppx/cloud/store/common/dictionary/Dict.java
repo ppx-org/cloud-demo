@@ -20,9 +20,9 @@ public class Dict {
 	private static Map<Integer, String> prodStatusMap = new HashMap<Integer, String>();
 	static {
 		// 
-		prodStatusMap.put(1, "-");
-		prodStatusMap.put(2, "上");
-		prodStatusMap.put(3, "下");
+		prodStatusMap.put(1, "草稿");
+		prodStatusMap.put(2, "上架");
+		prodStatusMap.put(3, "下架");
 	}
 	
 	private static Map<Integer, String> changeTypeMap = new HashMap<Integer, String>();

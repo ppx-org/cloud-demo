@@ -29,62 +29,121 @@ function add() {
 	open(contextPath + 'product/addProduct');
 }
 
-
-
-function edit() {
-	
+function edit(prodId) {
+	open(contextPath + 'product/editProduct?prodId=' + prodId);
 }
 
+function viewStatusHistory(prodId) {
+	open(contextPath + 'changeStatus/listChangeStatus?prodId=' + prodId);
+}
+ 
+
+function statusActionHtml(prodId, prodStatus, prodStatusDesc) {
+	var statusHistory = '&nbsp;&nbsp;<a href="#" onclick="viewStatusHistory(' + prodId + ')">[状态历史]</a>'; 
+	
+	var onShelves = '&nbsp;&nbsp;<a href="#" onclick="onShelves(' + prodId + ')">[上架]</a>';
+	var offShelves = '&nbsp;&nbsp;<a href="#" onclick="offShelves(' + prodId + ')">[下架]</a>';
+	if (prodStatus == 1 || prodStatus == 3) return prodStatusDesc + onShelves + statusHistory;
+	if (prodStatus == 2) return '<span style="color:red">' + prodStatusDesc + '</span>' + offShelves + statusHistory;
+}
 
 function onShelves(prodId) {
+	showLoading();
 	$.post([[@{/product/onShelves}]], "prodId=" + prodId, function(r) {
-		var html = actionHtml(prodId, r.result);
-		$("#action" + prodId).html(html);
-		$("#status" + prodId).html(r.string);
+		hideLoading();
+		var html = statusActionHtml(prodId, r.result, r.string);
+		$("#statusAction" + prodId).html(html);
 	});
 }
 
 function offShelves(prodId) {
+	showLoading();
 	$.post([[@{/product/offShelves}]], "prodId=" + prodId, function(r) {
-		var html = actionHtml(prodId, r.result);
-		$("#action" + prodId).html(html);
-		$("#status" + prodId).html(r.string);
+		hideLoading();
+		var html = statusActionHtml(prodId, r.result, r.string);
+		$("#statusAction" + prodId).html(html);
 	});
 }
 
+template.helper('getRepoName', function(repoId) {
+	return $("#repoId option[value=" + repoId + "]").text();
+})
 
-template.config("escape", false);
-template.helper('actionHtml', function(v) {	
-	var edit = '<a href="#" onclick="edit(' + v.prodId + ')">[修改]</a>&nbsp;&nbsp;';
-	var onShelves = '<a href="#" onclick="onShelves(' + v.prodId + ')">[上架]</a>';
-	var offShelves = '<a href="#" onclick="offShelves(' + v.prodId + ')">[下架]</a>';
-	if (v.prodStatus == 1 || v.prodStatus == 3) return edit + onShelves;
-	if (v.prodStatus == 2) return edit + offShelves;
+template.helper('getCatName', function(catId) {
+	return $("#catId option[value=" + catId + "]").text();
+})
+
+template.helper('getBrandName', function(brandId) {
+	return $("#brandId option[value=" + brandId + "]").text();
 })
 
 
+
+template.config("escape", false);
+template.helper('statusActionHtml', function(prodId, prodStatus, prodStatusDesc) {
+	return statusActionHtml(prodId, prodStatus, prodStatusDesc);
+})
+
+
+
+function catChange(obj) {
+	var mainCatId = $("#catId option[value=" + obj.value + "]").attr("data-mainCatId");
+	$("#catId").attr("name", mainCatId == -1 ? "mainCatId" : "catId");
+}
 </script>
+
+<style>
+
+.page-list-table {margin-top:45px}
+
+</style>
 </head>
 
 <body>
-<div th:replace="common/fragment/common::pageList('PROD')">
+<div th:replace="common/fragment/common::pageList('产品管理')">
 	<div th:fragment="queryFragment">
 		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
 		
-		<!-- productStatusList -->
+		<label>状态:</label>
 		<select class="form-control input-sm" name="recordStatus">
-				<option value="">全部</option>
-				<option th:value="${item.value}" th:text="${item.name}" th:each="item:${productStatusList}"></option>
+			<option value="">全部</option><option th:value="${item.value}" th:text="${item.name}" th:each="item:${productStatusList}"></option>
 		</select>
 		
+		<label>仓库:</label>
+		<select class="form-control" id="repoId" name="repoId">
+			<option value="">全部</option><option th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${listRepo}"></option>
+		</select>
 		
-		<input type="text" class="form-control input-sm" name="testName" placeholder="请输入NAME" style="width:200px;">
-		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
+		<label>分类:</label>
+		<select class="form-control" id="catId" name="catId" onchange="catChange(this)">
+			<option value="">全部</option><option th:attr="data-mainCatId=${item.parentId}" th:value="${item.catId}" th:text="${item.catName}" th:each="item:${listCat}"></option>
+		</select>
+		
+		<label>品牌:</label>
+		<select class="form-control" id="brandId" name="brandId" onchange="localStorage.defaultBrandId=$(this).val()">
+			<option value="">全部</option><option th:value="${item.brandId}" th:text="${item.brandName}" th:each="item:${listBrand}"></option>
+		</select>
+		
+		<div style="margin:8px;">
+			<label>ID:</label>
+			<input type="text" class="form-control input-sm" name="prodId" placeholder="请输入ID" style="width:100px;">
+			
+			<label>标题:</label>	
+			<input type="text" class="form-control input-sm" name="prodTitle" placeholder="请输入标题" style="width:200px;">
+			
+			<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
+		</div>
+		
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
 		<th>ID</th>
+		<th>仓库</th>
+		<th>分类</th>
+		<th>品牌</th>
 		<th>标题</th>
+		<th>价格</th>
+		<th>库存</th>
 		<th>状态</th>
 		<th>操作</th>
 	</tr>
@@ -92,9 +151,16 @@ template.helper('actionHtml', function(v) {
 	{{each arrayList as v i}}
 	<tr>
 		<td class="w-id">{{v.prodId}}</td>
+		<td class="w-id">{{getRepoName(v.repoId)}}</td>
+		<td class="w-id">{{getCatName(v.catId)}}</td>
+		<td class="w-id">{{getBrandName(v.brandId)}}</td>
 		<td class="w-title-s">{{v.prodTitle}}</td>
-		<td class="w-id" id="status{{v.prodId}}">{{v.recordStatusDesc}}</td>
-		<td class="w-action" id="action{{v.prodId}}">{{actionHtml(v)}}</td>
+		<td class="w-number" style="color:red">{{v.prodPrice}}</td>
+		<td class="w-number">{{v.prodStock}}</td>
+		<td class="w-action" id="statusAction{{v.prodId}}">{{statusActionHtml(v.prodId, v.prodStatus, v.prodStatusDesc)}}</td>
+		<td class="w-action">
+			<a href="#" onclick="edit({{v.prodId}})">[修改]</a>
+		</td>
 	</tr>
 	{{/each}}
 	</script>

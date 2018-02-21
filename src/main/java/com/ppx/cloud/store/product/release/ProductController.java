@@ -46,6 +46,10 @@ public class ProductController {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("listJson", listJson(new Page(), new Product()));
 		
+		mv.addObject("listRepo", repoServ.displayRepository());
+		mv.addObject("listCat", catServ.displayAllCat());
+		mv.addObject("listBrand", brandServ.displayBrand());
+		
 		mv.addObject("productStatusList", Dict.listProdStatus());
 		
 		return mv;

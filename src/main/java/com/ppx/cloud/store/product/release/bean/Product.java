@@ -1,5 +1,8 @@
 package com.ppx.cloud.store.product.release.bean;
 
+import org.springframework.util.StringUtils;
+
+import com.ppx.cloud.common.jdbc.annotation.Column;
 import com.ppx.cloud.common.jdbc.annotation.Id;
 import com.ppx.cloud.store.common.dictionary.Dict;
 
@@ -23,6 +26,11 @@ public class Product {
 	
 	private Integer prodStatus;
 	
+	@Column(readonly=true)
+	private String prodPrice;
+	
+	@Column(readonly=true)
+	private Integer prodStock;
 	
 	public Integer getProdId() {
 		return prodId;
@@ -80,7 +88,7 @@ public class Product {
 		this.prodTitle = prodTitle;
 	}
 	
-	public String getRecordStatusDesc() {
+	public String getProdStatusDesc() {
 		return Dict.getProdStatusDesc(prodStatus);
 	}
 
@@ -98,6 +106,28 @@ public class Product {
 
 	public void setSkuDesc(String skuDesc) {
 		this.skuDesc = skuDesc;
+	}
+
+	public String getProdPrice() {
+		if (!StringUtils.isEmpty(prodPrice)) {
+			String[] price = prodPrice.split("-");
+			if (price[0].equals(price[1])) {
+				return price[0];
+			}			
+		}
+		return prodPrice;
+	}
+
+	public void setProdPrice(String prodPrice) {
+		this.prodPrice = prodPrice;
+	}
+
+	public Integer getProdStock() {
+		return prodStock;
+	}
+
+	public void setProdStock(Integer prodStock) {
+		this.prodStock = prodStock;
 	}
 
 	

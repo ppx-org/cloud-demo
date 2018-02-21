@@ -1,4 +1,4 @@
-package com.ppx.cloud.store.product.adjust;
+package com.ppx.cloud.store.product.changeprice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,19 +13,19 @@ import com.ppx.cloud.grant.common.GrantContext;
 
 
 @Service
-public class PriceAdjustService extends MyDaoSupport {
+public class ChangePriceService extends MyDaoSupport {
 	
-	public PageList<PriceAdjust> listPriceAdjust(Page page, Integer skuId) {
+	public PageList<ChangePrice> listChangePrice(Page page, Integer skuId) {
 		
 		List<Object> paraList = new ArrayList<Object>();
 		paraList.add(skuId);
 	
-		StringBuilder cSql = new StringBuilder("select count(*) from price_adjust c where c.SKU_ID = ?");
-		StringBuilder qSql = new StringBuilder("select c.* from price_adjust c where c.SKU_ID = ? order by CREATED desc");
+		StringBuilder cSql = new StringBuilder("select count(*) from change_price c where c.SKU_ID = ?");
+		StringBuilder qSql = new StringBuilder("select c.* from change_price c where c.SKU_ID = ? order by CREATED desc");
 		
-		List<PriceAdjust> list = queryPage(PriceAdjust.class, page, cSql, qSql, paraList);
+		List<ChangePrice> list = queryPage(ChangePrice.class, page, cSql, qSql, paraList);
 		
-		return new PageList<PriceAdjust>(list, page);
+		return new PageList<ChangePrice>(list, page);
 	}
 	
 	
@@ -38,18 +38,18 @@ public class PriceAdjustService extends MyDaoSupport {
 	
 	
 	@Transactional
-	public double addPriceAdjust(PriceAdjust priceAdjust) {
+	public double addChangePrice(ChangePrice changePrice) {
 		int creator = GrantContext.getLoginAccount().getAccountId();
 		
-		priceAdjust.setCreator(creator);
-		insert(priceAdjust);
+		changePrice.setCreator(creator);
+		insert(changePrice);
 		
 		// 变更库存
 		String updateSql = "update sku set PRICE = ? where SKU_ID = ?";
-		getJdbcTemplate().update(updateSql, priceAdjust.getAdjustPrice(), priceAdjust.getSkuId());
+		getJdbcTemplate().update(updateSql, changePrice.getChangePrice(), changePrice.getSkuId());
 		
 		
-		return priceAdjust.getAdjustPrice();
+		return changePrice.getChangePrice();
 	}
 	
 	

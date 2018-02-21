@@ -77,6 +77,7 @@ public class CategoryService extends MyDaoSupport {
 			Category mainC = new Category();
 			mainC.setCatId(category.getCatId());
 			mainC.setCatName(category.getCatName());
+			mainC.setParentId(category.getParentId());
 			returnList.add(mainC);
 			
 			if (category.getChildren() != null) {
@@ -84,6 +85,7 @@ public class CategoryService extends MyDaoSupport {
 					Category childC = new Category();
 					childC.setCatId(child.getCatId());
 					childC.setCatName(category.getCatName() + "-" + child.getCatName());
+					childC.setParentId(child.getParentId());
 					returnList.add(childC);
 				}
 			}

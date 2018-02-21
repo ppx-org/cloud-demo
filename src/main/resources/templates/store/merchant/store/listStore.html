@@ -5,6 +5,7 @@
 
 <link th:replace="common/fragment/common::common"/>
 <link th:replace="common/fragment/common::validation"/>
+<link th:replace="common/fragment/common::date"/>
 
 <script type="text/javascript" th:inline="javascript">
 $(function() {
@@ -246,7 +247,10 @@ function upload(obj) {
 		<td class="w-id">{{v.storeNo}}</td>
 		<td class="w-title-m">{{v.storeLng}}-{{v.storeLat}}</td>
 		<td class="w-id">{{v.storePhone}}</td>
-		<td class="w-title-l">{{v.storeAddress}}</td>
+		<td class="w-title-l">
+			<div>{{v.storeAddress}}</div>
+			<div>提货时间：{{v.businessBegin}}-{{v.businessEnd}}</div>
+		</td>
 		<td class="w-action-m">
 			<a href="#" onclick="remove(this, '{{v.storeId}}')" data-store-name="{{v.storeName}}">[删除]</a>&nbsp;&nbsp;
 			<a href="#" onclick="repo('{{v.storeId}}')">[关联仓库]</a>&nbsp;&nbsp;
@@ -258,7 +262,7 @@ function upload(obj) {
 	</table>
 </div>
 
-<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 800)">
+<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 820)">
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>所在仓库：</label>
 		<div class="col-sm-3">
@@ -283,8 +287,15 @@ function upload(obj) {
 	</div>
 	
 	<div class="form-group">
+		<label class="col-sm-2 control-label"><span class="required">*</span>提货开始时间：</label>
+		<div class="col-sm-3"><input type="text" name="storeLng" class="form-control validate[required]" onclick="WdatePicker({dateFmt:'HH:mm'})"></div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>提货结束时间：</label>
+		<div class="col-sm-3"><input type="text" name="storeLat" class="form-control validate[required]" onclick="WdatePicker({dateFmt:'HH:mm'})"></div>
+	</div>
+	
+	<div class="form-group">
 		<label class="col-sm-2 control-label">店铺图片：</label>
-		<div class="col-sm-8"><input type="text" id="storeImg" name="storeImg" class="form-control" style="width:530px;"></div>
+		<div class="col-sm-8"><input type="text" id="storeImg" name="storeImg" class="form-control" style="width:540px;"></div>
 	</div>
 	
 	<div class="form-group">
@@ -302,7 +313,7 @@ function upload(obj) {
 	</div>
 </div>
 
-<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 800)">
+<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 820)">
 	<script id="editTemplate" type="text/html">
 	<div class="form-group">
 		<label class="col-sm-2 control-label">ID：</label>
@@ -321,6 +332,13 @@ function upload(obj) {
 		<div class="col-sm-3"><input type="text" name="storeLng" value="{{store.storeLng}}" class="form-control validate[required]" maxlength="32"></div>
 		<label class="col-sm-2 control-label"><span class="required">*</span>纬度：</label>
 		<div class="col-sm-3"><input type="text" name="storeLat" value="{{store.storeLat}}" class="form-control validate[required]" maxlength="32"></div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><span class="required">*</span>提货开始时间：</label>
+		<div class="col-sm-3"><input type="text" name="businessBegin" value="{{store.businessBegin}}" class="form-control validate[required]" onclick="WdatePicker({dateFmt:'HH:mm'})"></div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>提货结束时间：</label>
+		<div class="col-sm-3"><input type="text" name="businessEnd" value="{{store.businessEnd}}" class="form-control validate[required]" onclick="WdatePicker({dateFmt:'HH:mm'})"></div>
 	</div>
 
 	<div class="form-group">
