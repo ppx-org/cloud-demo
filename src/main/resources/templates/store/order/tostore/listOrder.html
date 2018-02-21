@@ -31,6 +31,11 @@ function queryPage(pageNumber) {
 			<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
 		</select>
 		
+		<label>订单状态:</label>
+		<select class="form-control input-sm" name="orderStatus">
+			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${orderStatusList}"></option>
+		</select>
+		
 		<label>订单ID:</label>
 		<input type="text" class="form-control input-sm" name="testName" placeholder="请输入订单ID" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
