@@ -52,7 +52,7 @@ public class ChangeStock {
 	}
 	
 	public String getChangeTypeDesc() {
-		return Dict.getChangeTypeDesc(changeType);
+		return Dict.getChangeStockTypeDesc(changeType);
 	}
 
 	public void setChangeType(Integer changeType) {

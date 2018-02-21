@@ -23,17 +23,26 @@ function queryPage(pageNumber) {
 </head>
 
 <body>
-<div th:replace="common/fragment/common::pageList('DEMO_TEST')">
+<div th:replace="common/fragment/common::pageList('仓库订单')">
 	<div th:fragment="queryFragment">
+	
+		<label>仓库:</label>
 		<select class="form-control input-sm" name="repoId">
 			<option th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${repoList}"></option>
 		</select>
-		<input type="text" class="form-control input-sm" name="itemId" placeholder="请输入NAME" style="width:200px;">
+		
+		<label>订单状态:</label>
+		<select class="form-control input-sm" name="orderStatus">
+			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${orderStatusList}"></option>
+		</select>
+		
+		<label>订单ID:</label>
+		<input type="text" class="form-control input-sm" name="itemId" placeholder="请输入订单ID" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
-		<th>O_ID</th>
+		<th>订单ID</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">

@@ -7,6 +7,23 @@ import java.util.Map;
 import java.util.Set;
 
 public class Dict {
+
+	private static Map<Integer, String> prodStatusMap = new HashMap<Integer, String>();
+	static {
+		// 
+		prodStatusMap.put(1, "草稿");
+		prodStatusMap.put(2, "上架");
+		prodStatusMap.put(3, "下架");
+	}
+	
+	private static Map<Integer, String> changeStockTypeMap = new HashMap<Integer, String>();
+	static {
+		// 
+		changeStockTypeMap.put(1, "进货");
+		changeStockTypeMap.put(2, "盘盈");
+		changeStockTypeMap.put(3, "盘亏");
+		changeStockTypeMap.put(4, "损坏");
+	}
 	
 	private static Map<Integer, String> progStatusMap = new HashMap<Integer, String>();
 	static {
@@ -17,87 +34,33 @@ public class Dict {
 		progStatusMap.put(4, "停止");
 	}
 	
-	private static Map<Integer, String> prodStatusMap = new HashMap<Integer, String>();
+	private static Map<Integer, String> orderStatusMap = new HashMap<Integer, String>();
 	static {
-		// 
-		prodStatusMap.put(1, "草稿");
-		prodStatusMap.put(2, "上架");
-		prodStatusMap.put(3, "下架");
-	}
-	
-	private static Map<Integer, String> changeTypeMap = new HashMap<Integer, String>();
-	static {
-		// 
-		changeTypeMap.put(1, "进货");
-		changeTypeMap.put(2, "盘盈");
-		changeTypeMap.put(3, "盘亏");
-		changeTypeMap.put(4, "损坏");
+		orderStatusMap.put(1, "未付款");
+		orderStatusMap.put(2, "已付款");
+		orderStatusMap.put(3, "待提货");
+		orderStatusMap.put(4, "交易完成");
+		orderStatusMap.put(5, "交易取消");
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	public static String getProgStatusDesc(Integer status) {
-		return progStatusMap.get(status);
-	}
-
-	public static String getProdStatusDesc(Integer status) {
-		return prodStatusMap.get(status);
+	public static String getOrderStatusDesc(Integer status) {
+		return orderStatusMap.get(status);
 	}
 	
-	public static String getChangeTypeDesc(Integer type) {
-		return changeTypeMap.get(type);
-	}
-	
-	public static List<DictBean> listChangeType() {
+	public static List<DictBean> listOrderStatus() {
 		List<DictBean> returnList = new ArrayList<DictBean>();
-		Set<Integer> set = changeTypeMap.keySet();
+		
+		Set<Integer> set = orderStatusMap.keySet();
 		for (Integer v : set) {
-			returnList.add(new DictBean(v, changeTypeMap.get(v)));
+			returnList.add(new DictBean(v, orderStatusMap.get(v)));
 		}
 		return returnList;
+	}
+	
+	
+	public static String getProdStatusDesc(Integer status) {
+		return prodStatusMap.get(status);
 	}
 	
 	public static List<DictBean> listProdStatus() {
@@ -109,6 +72,27 @@ public class Dict {
 		}
 		return returnList;
 	}
+	
+	
+	public static String getProgStatusDesc(Integer status) {
+		return progStatusMap.get(status);
+	}
+	
+	
+	public static String getChangeStockTypeDesc(Integer type) {
+		return changeStockTypeMap.get(type);
+	}
+	
+	public static List<DictBean> listChangeStockType() {
+		List<DictBean> returnList = new ArrayList<DictBean>();
+		Set<Integer> set = changeStockTypeMap.keySet();
+		for (Integer v : set) {
+			returnList.add(new DictBean(v, changeStockTypeMap.get(v)));
+		}
+		return returnList;
+	}
+	
+	
 	
 	public static List<DictBean> listImgX() {
 		List<DictBean> returnList = new ArrayList<DictBean>();
@@ -137,30 +121,6 @@ public class Dict {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 }
+

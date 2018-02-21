@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
+import com.ppx.cloud.store.common.dictionary.Dict;
 import com.ppx.cloud.store.merchant.repo.RepositoryService;
 import com.ppx.cloud.storecommon.order.bean.OrderItem;
 
@@ -32,6 +33,8 @@ public class RepoOrderController {
 		ModelAndView mv = new ModelAndView();
 		
 		mv.addObject("repoList", repoServ.displayRepository());
+		
+		mv.addObject("orderStatusList", Dict.listOrderStatus());
 		
 		return mv;
 	}

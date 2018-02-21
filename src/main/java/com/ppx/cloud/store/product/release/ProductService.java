@@ -140,7 +140,7 @@ public class ProductService extends MyDaoSupport {
 			else {
 				Sku updateSku = new Sku();
 				updateSku.setSkuId(skuId[i]);
-				updateSku.setSkuName(skuName[i]);
+				updateSku.setSkuName(skuName.length == 0 ? null : skuName[i]);
 				updateSku.setSkuPrio(i);
 				updateSku.setSkuImgSrc(skuImgSrc[i]);
 				update(updateSku);

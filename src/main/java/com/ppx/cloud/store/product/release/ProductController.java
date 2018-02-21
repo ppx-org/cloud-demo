@@ -95,7 +95,7 @@ public class ProductController {
 		
 		
 		// stockChange
-		mv.addObject("listChangeType", Dict.listChangeType());
+		mv.addObject("listChangeType", Dict.listChangeStockType());
 		
 		
 		Product prod = serv.getProduct(prodId);
