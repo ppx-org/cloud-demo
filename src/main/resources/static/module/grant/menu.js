@@ -11,6 +11,13 @@ document.onkeydown = function (e) {
     }
 }*/
 
+function logout() {
+	var callback = function () {
+		location.href = contextPath + "login/loginIndex";
+	}
+	confirm("确定退出？", callback);
+}
+
 function gotoIndex() {
 	$(".menuSelected").removeClass("menuSelected");
 	$("#content").attr("src", $("#content").data("homeSrc"));

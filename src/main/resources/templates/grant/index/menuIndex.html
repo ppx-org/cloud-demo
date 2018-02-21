@@ -14,30 +14,17 @@
     <div id="topDiv">
     	<a id="toggleId" style="padding-right:20px" href="javascript:toggleMenu()">&lt;</a>
     	
-    	<a href="javascript:gotoIndex()">首页</a>
+    	帐号：<span th:text="${account.loginAccount}"></span>&nbsp;&nbsp;
+    	商户名称：<span th:text="${account.merchantName}"></span>&nbsp;&nbsp;
     	
-    	<!-- 管理员不能修改密码 -->
-    	<span th:if="${isAdmin==false}"> 
-    	<a href="javascript:editPassword()">修改密码</a>
-    	</span>
-    	
-    	<span th:text="${account.loginAccount}"></span>
-    	<span th:text="${account.merchantName}"></span>
-    	<a th:href="@{/login/loginIndex}">退出</a>
+    	<a href="javascript:gotoIndex()">首页</a>｜
+    	<!-- 管理员不能修改密码 --> 
+    	<a th:if="${isAdmin==false}" href="javascript:editPassword()">修改密码</a><span th:if="${isAdmin==false}">｜</span>
+    	<a href="javascript:logout()">退出</a>&nbsp;&nbsp;
     	
     	<a target="_blank" th:href="@{/monitorView/index}" class="badge" style="color:white;">
-    		<span class="badge" style="background-color: red;  height:14px;width:14px;display:inline-block;"></span>
-    		监控
-    	</a>
-    	
-    	<a target="_blank" href="https://github.com/ppx-org/cloud-parent" class="badge" style="color:white;">
-    		<span class="badge" style="background-color: red; height:14px;width:14px;display:inline-block;"></span>
-    		源码(github)
-    	</a>
-    	
-    	<a target="_blank" href="https://github.com/ppx-org/cloud-parent/issues" class="badge" style="color:white;">
-    		<span class="badge" style="background-color: red; height:14px;width:14px;display:inline-block;"></span>
-    		有话说
+    		<span class="badge" style="background-color: green;  height:14px;width:14px;display:inline-block;"></span>
+    		系统监控
     	</a>
     </div>
     

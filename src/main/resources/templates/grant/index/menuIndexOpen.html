@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<title>DEMO</title>
+
+<link th:replace="common/fragment/common::common"/>
+<link rel="stylesheet" th:href="@{/static/module/grant/menu.css}" />
+<script type="text/javascript" th:src="@{/static/module/grant/menu.js}"></script>
+<script type="text/javascript" th:inline="javascript">var menu = [[${menu}]];</script>
+
+
+<body style="display:none">
+    <div id="menuDiv" class="list-group"><ul id="accordion" class="accordion"></ul></div>
+    
+    <div id="topDiv">
+    	<a id="toggleId" style="padding-right:20px" href="javascript:toggleMenu()">&lt;</a>
+    	
+    	<a href="javascript:gotoIndex()">首页</a>
+    	
+    	<!-- 管理员不能修改密码 -->
+    	<span th:if="${isAdmin==false}"> 
+    	<a href="javascript:editPassword()">修改密码</a>
+    	</span>
+    	
+    	<span th:text="${account.loginAccount}"></span>
+    	<span th:text="${account.merchantName}"></span>
+    	<a th:href="@{/login/loginIndex}">退出</a>
+    	
+    	<a target="_blank" th:href="@{/monitorView/index}" class="badge" style="color:white;">
+    		<span class="badge" style="background-color: red;  height:14px;width:14px;display:inline-block;"></span>
+    		监控
+    	</a>
+    	
+    	<a target="_blank" href="https://github.com/ppx-org/cloud-parent" class="badge" style="color:white;">
+    		<span class="badge" style="background-color: red; height:14px;width:14px;display:inline-block;"></span>
+    		源码(github)
+    	</a>
+    	
+    	<a target="_blank" href="https://github.com/ppx-org/cloud-parent/issues" class="badge" style="color:white;">
+    		<span class="badge" style="background-color: red; height:14px;width:14px;display:inline-block;"></span>
+    		有话说
+    	</a>
+    </div>
+    
+    <div id="iframeDiv">
+    	<div id="iframeLoading"><span class="glyphicon glyphicon-info-sign"></span>请稍候...</div>
+		<iframe id="content" th:src="@{/index/home}" onload="iframeLoad()"></iframe>
+    </div>
+</body>
