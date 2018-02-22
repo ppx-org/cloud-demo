@@ -19,38 +19,125 @@ function queryPage(pageNumber) {
 	});
 }
 
+template.helper('getStoreName', function(storeId) {
+	return $("#storeId option[value=" + storeId + "]").text();
+})
+
+template.helper('getStatusDesc', function(storeId) {
+	return $("#itemStatus option[value=" + storeId + "]").text();
+})
+
+
+
+function lockItem(itemId) {
+	showLoading();
+	$.post([[@{/repoOrder/lockItem}]], "itemId=" + itemId, function(r) {
+		hideLoading();
+		if (r.result == 0) {
+			alertWarning("ID:" + itemId + "状态已经被改变");
+		}
+		else {
+			$("#status" + itemId).html(r.string);
+			$("#action" + itemId).html(actionHtml(itemId, 2));
+		}
+	});
+}
+
+function configItem(itemId) {
+	showLoading();
+	$.post([[@{/repoOrder/configItem}]], "itemId=" + itemId, function(r) {
+		hideLoading();
+		if (r.result == 0) {
+			alertWarning("ID:" + itemId + "状态已经被改变");
+		}
+		else {
+			$("#status" + itemId).html(r.string);
+			$("#action" + itemId).html(actionHtml(itemId, 3));
+		}
+	});
+}
+
+function actionHtml(itemId, itemStatus) {
+	var lock = '<a href="javascript:lockItem(' + itemId + ')">[lock]</a>';
+	var config = '<a href="javascript:configItem(' + itemId + ')">[config]</a>';
+	if (itemStatus == 1) return lock;
+	if (itemStatus == 2) return config;
+	return '';
+}
+
+template.config("escape", false);
+template.helper('actionHtml', function(itemId, itemStatus) {
+	return actionHtml(itemId, itemStatus);
+})
+
+
+
+
 </script>
 </head>
 
 <body>
-<div th:replace="common/fragment/common::pageList('仓库订单')">
+<div th:replace="common/fragment/common::pageList('repoOr')">
 	<div th:fragment="queryFragment">
-	
-		<label>仓库:</label>
+		
+		<label>repo:</label>
 		<select class="form-control input-sm" name="repoId">
 			<option th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${repoList}"></option>
 		</select>
 		
-		<label>订单状态:</label>
-		<select class="form-control input-sm" name="orderStatus">
-			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${orderStatusList}"></option>
+		<label>st:</label>
+		<select class="form-control input-sm" id="storeId" name="storeId">
+			<option value="">全部</option>
+			<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
 		</select>
 		
-		<label>订单ID:</label>
-		<input type="text" class="form-control input-sm" name="itemId" placeholder="请输入订单ID" style="width:200px;">
+		<label>status:</label>
+		<select class="form-control input-sm" id="itemStatus" name="itemStatus">
+			<option value="">全部</option>
+			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${itemStatusList}"></option>
+		</select>
+		
+		<label>iID:</label>
+		<input type="text" class="form-control input-sm" name="itemId" placeholder="请输入iID" style="width:100px;">
+		
+		<label>oID:</label>
+		<input type="text" class="form-control input-sm" name="orderId" placeholder="请输入oID" style="width:100px;">
+		
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
-		<th>订单ID</th>
+		<th>iId</th>
+		<th>title</th>
+		<th>img</th>
+		<th>N</th>
+		<th>sto</th>
+		<th>oId</th>
+		
+		
+		
+		<th>itemUP</th>
+		<th>itemP</th>
+		
+		<th>status</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
 	<tr>
 		<td class="w-id">{{v.itemId}}</td>
-		<td class="w-action">
-		</td>
+		<td class="w-title-s">{{v.itemTitle}}</td>
+		<td class="w-id"><img style="width:50px;height:50px"></td>
+		<td class="w-id">{{v.itemNum}}</td>
+		<td class="w-id">{{getStoreName(v.storeId)}}</td>
+		<td class="w-id">{{v.orderId}}</td>
+		
+		
+		
+		<td class="w-id">{{v.itemUnitPrice}}</td>
+		<td class="w-id">{{v.itemPrice}}</td>
+		<td class="w-id" id="status{{v.itemId}}">{{getStatusDesc(v.itemStatus)}}</td>
+		<td class="w-action" id="action{{v.itemId}}">{{actionHtml(v.itemId, v.itemStatus)}}</td>
 	</tr>
 	{{/each}}
 	</script>

@@ -15,6 +15,7 @@ import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
 import com.ppx.cloud.store.common.dictionary.Dict;
 import com.ppx.cloud.store.merchant.repo.RepositoryService;
+import com.ppx.cloud.store.merchant.store.StoreService;
 import com.ppx.cloud.storecommon.order.bean.OrderItem;
 
 
@@ -25,6 +26,9 @@ public class RepoOrderController {
 	private RepositoryService repoServ;
 	
 	@Autowired
+	private StoreService storeServ;
+	
+	@Autowired
 	private RepoOrderService serv;
 	
 	
@@ -33,8 +37,8 @@ public class RepoOrderController {
 		ModelAndView mv = new ModelAndView();
 		
 		mv.addObject("repoList", repoServ.displayRepository());
-		
-		mv.addObject("orderStatusList", Dict.listOrderStatus());
+		mv.addObject("storeList", storeServ.listStore());
+		mv.addObject("itemStatusList", Dict.listOrderItemStatus());
 		
 		return mv;
 	}
@@ -44,6 +48,22 @@ public class RepoOrderController {
 		PageList<OrderItem> list = serv.listOrderItemByRepo(page, repoId, bean);
 		return ControllerReturn.ok(list);
 	}
+	
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> lockItem(@RequestParam Integer itemId) {
+		int r = serv.lockItem(itemId);
+		String statusDesc = (r == 1) ? Dict.getOrderItemStatusDesc(2) : "";
+		return ControllerReturn.ok(r, statusDesc);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> configItem(@RequestParam Integer itemId) {
+		int r = serv.configItem(itemId);
+		String statusDesc = (r == 1) ? Dict.getOrderItemStatusDesc(3) : "";
+		return ControllerReturn.ok(r, statusDesc);
+	}
+	
 	
 	
 }

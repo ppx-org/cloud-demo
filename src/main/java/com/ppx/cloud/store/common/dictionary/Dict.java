@@ -43,6 +43,28 @@ public class Dict {
 		orderStatusMap.put(5, "交易取消");
 	}
 	
+	private static Map<Integer, String> orderItemStatusMap = new HashMap<Integer, String>();
+	static {
+		orderItemStatusMap.put(1, "未配送");
+		orderItemStatusMap.put(2, "已锁定");
+		orderItemStatusMap.put(3, "已配置");
+		orderItemStatusMap.put(4, "已配送");
+	}
+	
+	public static String getOrderItemStatusDesc(Integer status) {
+		return orderItemStatusMap.get(status);
+	}
+	
+	public static List<DictBean> listOrderItemStatus() {
+		List<DictBean> returnList = new ArrayList<DictBean>();
+		
+		Set<Integer> set = orderItemStatusMap.keySet();
+		for (Integer v : set) {
+			returnList.add(new DictBean(v, orderItemStatusMap.get(v)));
+		}
+		return returnList;
+	}
+	
 	
 	public static String getOrderStatusDesc(Integer status) {
 		return orderStatusMap.get(status);

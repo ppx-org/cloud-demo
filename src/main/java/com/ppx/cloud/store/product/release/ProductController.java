@@ -147,9 +147,6 @@ public class ProductController {
 			ControllerReturn.ok(-1);
 		}
 		
-		System.out.println("..............out:" + prod.getProdId());
-		System.out.println("..............out:" + detail.getProdId());
-		
 		int r = serv.updateProduct(prod, detail, prodImgSrc, skuId, stockNum, price, skuName, skuImgSrc);
 		return ControllerReturn.ok(r);
 	}

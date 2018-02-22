@@ -238,6 +238,19 @@ create table order_item
    primary key (ITEM_ID)
 );
 
+create table order_item_status
+(
+	ITEM_ID 			int not null,
+    ITEM_STATUS 		tinyint(1) not null default 1,
+    LOCK_TIME 			timestamp not null,
+    LOCK_OPERATOR		int not null,
+	CONFIG_TIME			timestamp,
+    CONFIG_OPERATOR		int,
+    DELIVER_TIME		timestamp,
+    DELIVER_OPERATOR	int,
+	primary key(ITEM_ID)
+);
+
 create table user_cart 
 (
 	OPENID		varchar(32) NOT NULL,
