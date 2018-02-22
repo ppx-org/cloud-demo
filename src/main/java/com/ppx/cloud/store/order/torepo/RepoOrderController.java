@@ -64,6 +64,12 @@ public class RepoOrderController {
 		return ControllerReturn.ok(r, statusDesc);
 	}
 	
+	@PostMapping @ResponseBody
+	public Map<String, Object> deliverItem(@RequestParam Integer itemId) {
+		int r = serv.deliverItem(itemId);
+		String statusDesc = (r == 1) ? Dict.getOrderItemStatusDesc(4) : "";
+		return ControllerReturn.ok(r, statusDesc);
+	}
 	
 	
 }

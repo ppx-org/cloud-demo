@@ -23,8 +23,8 @@ template.helper('getStoreName', function(storeId) {
 	return $("#storeId option[value=" + storeId + "]").text();
 })
 
-template.helper('getStatusDesc', function(storeId) {
-	return $("#itemStatus option[value=" + storeId + "]").text();
+template.helper('getStatusDesc', function(status) {
+	return $("#itemStatus option[value=" + status + "]").text();
 })
 
 
@@ -57,11 +57,27 @@ function configItem(itemId) {
 	});
 }
 
+function deliverItem(itemId) {
+	showLoading();
+	$.post([[@{/repoOrder/deliverItem}]], "itemId=" + itemId, function(r) {
+		hideLoading();
+		if (r.result == 0) {
+			alertWarning("ID:" + itemId + "状态已经被改变");
+		}
+		else {
+			$("#status" + itemId).html(r.string);
+			$("#action" + itemId).html(actionHtml(itemId, 4));
+		}
+	});
+}
+
 function actionHtml(itemId, itemStatus) {
-	var lock = '<a href="javascript:lockItem(' + itemId + ')">[lock]</a>';
-	var config = '<a href="javascript:configItem(' + itemId + ')">[config]</a>';
-	if (itemStatus == 1) return lock;
-	if (itemStatus == 2) return config;
+	var lockItem = '<a href="javascript:lockItem(' + itemId + ')">[lock]</a>';
+	var configItem = '<a href="javascript:configItem(' + itemId + ')">[config]</a>';
+	var deliverItem = '<a href="javascript:deliverItem(' + itemId + ')">[deliver]</a>';
+	if (itemStatus == 1) return lockItem;
+	if (itemStatus == 2) return configItem;
+	if (itemStatus == 3) return deliverItem;
 	return '';
 }
 
@@ -69,7 +85,6 @@ template.config("escape", false);
 template.helper('actionHtml', function(itemId, itemStatus) {
 	return actionHtml(itemId, itemStatus);
 })
-
 
 
 

@@ -103,7 +103,7 @@ public class StoreService extends MyDaoSupport {
 	public List<Store> listStore() {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 	
-		String sql = "select STORE_ID, STORE_NAME from store where MERCHANT_ID = ? order by STORE_ID desc";
+		String sql = "select STORE_ID, STORE_NAME from store where MERCHANT_ID = ? order by STORE_ID asc";
 		
 		List<Store> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Store.class), merchantId);
 		

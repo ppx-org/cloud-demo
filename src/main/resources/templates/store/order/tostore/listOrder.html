@@ -19,39 +19,84 @@ function queryPage(pageNumber) {
 	});
 }
 
+template.helper('getStatusDesc', function(status) {
+	return $("#orderStatus option[value=" + status + "]").text();
+})
+
+function finish(orderId) {
+	showLoading();
+	$.post([[@{/storeOrder/finish}]], "orderId=" + orderId, function(r) {
+		hideLoading();
+		if (r.result == 0) {
+			alertWarning("ID:" + itemId + "状态已经被改变");
+		}
+		else {
+			$("#status" + orderId).html(r.string);
+			$("#action" + orderId).html(actionHtml(itemId, 4));
+		}
+	});
+}
+
+function actionHtml(orderId, orderStatus) {
+	var finish = '<a href="javascript:finish(' + itemId + ')">[finish]</a>';
+	if (itemStatus == 3) return finish;
+	return '';
+}
+
+template.config("escape", false);
+template.helper('actionHtml', function(orderId, orderStatus) {
+	return actionHtml(orderId, orderStatus);
+})
+
+
 
 </script>
 </head>
 
 <body>
-<div th:replace="common/fragment/common::pageList('店铺订单')">
+<div th:replace="common/fragment/common::pageList('stOr')">
 	<div th:fragment="queryFragment">
-		<label>店铺:</label>
+		<label>st:</label>
 		<select class="form-control input-sm" name="storeId">
 			<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
 		</select>
 		
-		<label>订单状态:</label>
-		<select class="form-control input-sm" name="orderStatus">
+		<label>status:</label>
+		<select class="form-control input-sm" id="orderStatus" name="orderStatus">
+			<option value="">全部</option>
 			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${orderStatusList}"></option>
 		</select>
 		
-		<label>订单ID:</label>
-		<input type="text" class="form-control input-sm" name="testName" placeholder="请输入订单ID" style="width:200px;">
+		<label>oID:</label>
+		<input type="text" class="form-control input-sm" name="orderId" placeholder="请输入oID" style="width:100px;" value="16">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
-		<th>订单ID</th>
+		<th>oID</th>
+		<th>title</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
 	<tr>
 		<td class="w-id">{{v.orderId}}</td>
-		<td class="w-action">
-		</td>
+		<td class="w-id" id="status{{v.orderId}}">{{getStatusDesc(v.orderStatus)}}</td>
+		<td class="w-action" id="action{{v.orderId}}"></td>
 	</tr>
+	{{each v.listItem as item}}
+	<tr style="height:82px">
+		<td class="w-id"><img src="" style="width:60px;height:60px;"></td>
+		<td class="w-id">
+			<div>{{item.itemTitle}}<div>
+			<div style="color:red">¥{{item.itemPrice}}(¥{{item.itemUnitPrice}}x{{item.itemNum}})</div>
+			<div style="color:gray">{{item.itemSku}}</div>
+			<div style="color:red">{{item.itemPromo}}</div>
+		</td>
+		<td class="w-action"></td>
+	</tr>
+	{{/each}}
+	<tr style="background-color:gray;"><td colspan="100" style="height:3px;padding:0"></td></tr>
 	{{/each}}
 	</script>
 	</table>

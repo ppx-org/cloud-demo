@@ -251,6 +251,18 @@ create table order_item_status
 	primary key(ITEM_ID)
 );
 
+create table order_status_history
+(	
+	HISTORY_ID 		int not null auto_increment,
+	ORDER_ID        int not null,
+	HISTORY_STATUS  smallint not null,
+	CREATED         timestamp not null default CURRENT_TIMESTAMP,
+	CREATOR			int,
+	OPENID			varchar(32),
+	HISTORY_COMMENT	varchar(128),
+	primary key(HISTORY_ID)
+);
+
 create table user_cart 
 (
 	OPENID		varchar(32) NOT NULL,
