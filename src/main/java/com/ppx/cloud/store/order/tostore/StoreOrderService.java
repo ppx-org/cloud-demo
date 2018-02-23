@@ -18,7 +18,6 @@ import com.ppx.cloud.grant.common.GrantContext;
 import com.ppx.cloud.storecommon.order.bean.OrderItem;
 import com.ppx.cloud.storecommon.order.bean.OrderStatusHistory;
 import com.ppx.cloud.storecommon.order.bean.UserOrder;
-import com.ppx.cloud.storecommon.query.bean.MQueryProduct;
 
 @Service
 public class StoreOrderService extends MyDaoSupport {
@@ -26,7 +25,9 @@ public class StoreOrderService extends MyDaoSupport {
 	
 	public PageList<UserOrder> listOrder(Page page, UserOrder bean) {
 				
-		MyCriteria c = createCriteria("and").addAnd("ORDER_ID = ?", bean.getOrderId());
+		MyCriteria c = createCriteria("and")
+			.addAnd("ORDER_ID = ?", bean.getOrderId())
+			.addAnd("ORDER_STATUS = ?", bean.getOrderStatus());
 					
 		StringBuilder cSql = new StringBuilder("select count(*) from user_order where STORE_ID = ?").append(c);
 		StringBuilder qSql = new StringBuilder("select * from user_order where STORE_ID = ?")
@@ -103,7 +104,6 @@ public class StoreOrderService extends MyDaoSupport {
 			return 0;
 		}
 		
-		int operator = GrantContext.getLoginAccount().getAccountId();
 		String updateSql = "update user_order set ORDER_STATUS = ? where ORDER_ID = ?";
 		// 4:交易完成
 		int r = getJdbcTemplate().update(updateSql, 4, orderId);
@@ -111,6 +111,7 @@ public class StoreOrderService extends MyDaoSupport {
 		// status history
 		OrderStatusHistory his = new OrderStatusHistory();
 		int creator = GrantContext.getLoginAccount().getAccountId();
+		his.setOrderId(orderId);
 		his.setCreator(creator);
 		his.setHistoryStatus(4);
 		insert(his);

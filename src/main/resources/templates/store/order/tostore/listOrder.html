@@ -28,18 +28,18 @@ function finish(orderId) {
 	$.post([[@{/storeOrder/finish}]], "orderId=" + orderId, function(r) {
 		hideLoading();
 		if (r.result == 0) {
-			alertWarning("ID:" + itemId + "状态已经被改变");
+			alertWarning("ID:" + orderId + "状态已经被改变");
 		}
 		else {
 			$("#status" + orderId).html(r.string);
-			$("#action" + orderId).html(actionHtml(itemId, 4));
+			$("#action" + orderId).html(actionHtml(orderId, 4));
 		}
 	});
 }
 
 function actionHtml(orderId, orderStatus) {
-	var finish = '<a href="javascript:finish(' + itemId + ')">[finish]</a>';
-	if (itemStatus == 3) return finish;
+	var finish = '<a href="javascript:finish(' + orderId + ')">[finish]</a>';
+	if (orderStatus == 3) return finish;
 	return '';
 }
 
@@ -68,7 +68,7 @@ template.helper('actionHtml', function(orderId, orderStatus) {
 		</select>
 		
 		<label>oID:</label>
-		<input type="text" class="form-control input-sm" name="orderId" placeholder="请输入oID" style="width:100px;" value="16">
+		<input type="text" class="form-control input-sm" name="orderId" placeholder="请输入oID" style="width:100px;" value="">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	<table th:fragment="listFragment">
@@ -82,7 +82,7 @@ template.helper('actionHtml', function(orderId, orderStatus) {
 	<tr>
 		<td class="w-id">{{v.orderId}}</td>
 		<td class="w-id" id="status{{v.orderId}}">{{getStatusDesc(v.orderStatus)}}</td>
-		<td class="w-action" id="action{{v.orderId}}"></td>
+		<td class="w-action" id="action{{v.orderId}}">{{actionHtml(v.orderId, v.orderStatus)}}</td>
 	</tr>
 	{{each v.listItem as item}}
 	<tr style="height:82px">

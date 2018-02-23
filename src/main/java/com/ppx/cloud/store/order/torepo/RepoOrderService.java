@@ -125,13 +125,17 @@ public class RepoOrderService extends MyDaoSupport {
 				+ " where ORDER_ID = (select ORDER_ID from order_item where ITEM_ID = ?)";
 		int count = getJdbcTemplate().queryForObject(isAllDeliverSql, Integer.class, itemId);
 		if (count == 1) {
+			String orderIdSql = "select ORDER_ID from order_item where ITEM_ID = ?";
+			int orderId = getJdbcTemplate().queryForObject(orderIdSql, Integer.class, itemId);
+			
 			// 3:待提货
-			String updateOrderSql = "update user_order set ORDER_STATUS = ? where ORDER_ID = (select ORDER_ID from order_item where ITEM_ID = ?)";
-			getJdbcTemplate().update(updateOrderSql, 3, itemId);
+			String updateOrderSql = "update user_order set ORDER_STATUS = ? where ORDER_ID = ?";
+			getJdbcTemplate().update(updateOrderSql, 3, orderId);
 			
 			// status history
 			OrderStatusHistory his = new OrderStatusHistory();
 			int creator = GrantContext.getLoginAccount().getAccountId();
+			his.setOrderId(orderId);
 			his.setCreator(creator);
 			his.setHistoryStatus(3);
 			insert(his);
