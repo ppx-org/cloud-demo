@@ -166,6 +166,9 @@ public class ProgramIndexService extends MyDaoSupport {
 		Integer mainCatId = (Integer)prodMap.get("MAIN_CAT_ID");
 		Integer brandId = (Integer)prodMap.get("BRAND_ID");
 		
+		// @TODO 存在就不新增
+		String countSql = "";
+		
 		String categorySql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY, CAT_ID) " + 
 				" select p.MERCHANT_ID, pc.PROG_ID, ?, p.PROG_BEGIN, p.PROG_END, p.PROG_PRIO, p.POLICY_ARGS, pc.CAT_ID " +
 				" from program_category pc join program p on (pc.CAT_ID = ? or pc.CAT_ID = ?) and pc.PROG_ID = p.PROG_ID and p.RECORD_STATUS = 2 and to_days(p.PROG_END) >= to_days(now()) ";
