@@ -1,9 +1,10 @@
 package com.ppx.cloud.store.promo.program;
 
+import java.util.Map;
+
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.store.common.dictionary.Dict;
@@ -157,36 +158,41 @@ public class ProgramIndexService extends MyDaoSupport {
 	
 	
 	
-	// 
-	public int addProgramIndex(Integer prodId, Integer catId, Integer mainCatId, Integer brandId) {
+	// onShelves时
+	public int addProgramIndex(Integer prodId) {
+		String prodSql = "select CAT_ID, MAIN_CAT_ID from product where PROD_ID = ?";
+		Map<String, Object> prodMap = getJdbcTemplate().queryForMap(prodSql, prodId);
+		Integer catId = (Integer)prodMap.get("CAT_ID");
+		Integer mainCatId = (Integer)prodMap.get("MAIN_CAT_ID");
+		Integer brandId = (Integer)prodMap.get("BRAND_ID");
 		
-		createCategoryIndex(prodId, catId, mainCatId);
-		if (!StringUtils.isEmpty(brandId)) {
-			createBrandIndex(prodId, brandId);
+		String categorySql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY, CAT_ID) " + 
+				" select p.MERCHANT_ID, pc.PROG_ID, ?, p.PROG_BEGIN, p.PROG_END, p.PROG_PRIO, p.POLICY_ARGS, pc.CAT_ID " +
+				" from program_category pc join program p on (pc.CAT_ID = ? or pc.CAT_ID = ?) and pc.PROG_ID = p.PROG_ID and p.RECORD_STATUS = 2 and to_days(p.PROG_END) >= to_days(now()) ";
+		getJdbcTemplate().update(categorySql, prodId, catId, mainCatId);
+		
+		
+		if (brandId != null) {
+			String brandSql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY, BRAND_ID) " + 
+					" select p.MERCHANT_ID, b.PROG_ID, ?, p.PROG_BEGIN, p.PROG_END, p.PROG_PRIO, p.POLICY_ARGS " +
+					" from program_brand b join program p on b.BRAND_ID = ? and pc.PROG_ID = p.PROG_ID and p.RECORD_STATUS = 2 and to_days(p.PROG_END) >= to_days(now()) ";
+			 getJdbcTemplate().update(brandSql, prodId, brandId);
 		}
 		return 1;
 	}
 	
 	
-	
-	
-	public int editCategoryIndex(Integer prodId, Integer oldCatId, Integer oldMainCatId, Integer catId, Integer mainCatId) {
-		// delete
-		String deleteSql = "delete from program_index where PROD_ID = ? and (CAT_ID = ? or CAT_ID = ?)";
+	// offShelves时
+	public int removeProgramIndex(Integer prodId) {
+		String prodSql = "select CAT_ID, MAIN_CAT_ID, BRAND_ID from product where PROD_ID = ?";
+		Map<String, Object> prodMap = getJdbcTemplate().queryForMap(prodSql, prodId);
+		Integer catId = (Integer)prodMap.get("CAT_ID");
+		Integer mainCatId = (Integer)prodMap.get("MAIN_CAT_ID");
+		Integer brandId = (Integer)prodMap.get("BRAND_ID");
 		
-		
-		
-		return 1;
-	}
-	
-	public int editBrandIndex(Integer prodId, Integer oldBrandId, Integer brandId) {
-		// delete
-		String deleteSql = "delete from program_index where PROD_ID = ? and BRAND_ID = ?";
-		
-		createBrandIndex(prodId, brandId);
-		
-		
-		return 1;
+		String deleteSql = "delete from program_index where PROD_ID = ? and (CAT_ID = ? or CAT_ID = ? or BRAND_ID = ?)";
+		int r = getJdbcTemplate().update(deleteSql, prodId, catId, mainCatId, brandId);
+		return r;
 	}
 	
 
@@ -194,41 +200,9 @@ public class ProgramIndexService extends MyDaoSupport {
 	
 	
 	
-	private int createCategoryIndex(Integer prodId, Integer catId, Integer mainCatId) {
-		String categorySql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY) " + 
-				" select p.MERCHANT_ID, pc.PROG_ID, ?, p.PROG_BEGIN, p.PROG_END, p.PROG_PRIO, p.POLICY_ARGS " +
-				" from program_category pc join program p on (pc.CAT_ID = ? or pc.MAIN_CAT_ID = ?) and pc.PROG_ID = p.PROG_ID and p.RECORD_STATUS = 2 and to_days(p.PROD_END) >= to_days(now()) ";
-		
-		return 1;
-	}
 	
 	
-	
-	
-	
-	private int createBrandIndex(Integer prodId, Integer brandId) {
-		String brandSql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY) " + 
-				" select p.MERCHANT_ID, b.PROG_ID, ?, p.PROG_BEGIN, p.PROG_END, p.PROG_PRIO, p.POLICY_ARGS " +
-				" from program_brand b join program p on b.BRAND_ID = ? and pc.PROG_ID = p.PROG_ID and p.RECORD_STATUS = 2 and to_days(p.PROD_END) >= to_days(now()) ";
-		return 1;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	

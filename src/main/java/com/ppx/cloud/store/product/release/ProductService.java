@@ -3,6 +3,7 @@ package com.ppx.cloud.store.product.release;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +18,14 @@ import com.ppx.cloud.store.product.release.bean.Product;
 import com.ppx.cloud.store.product.release.bean.ProductDetail;
 import com.ppx.cloud.store.product.release.bean.ProductImg;
 import com.ppx.cloud.store.product.release.bean.Sku;
+import com.ppx.cloud.store.promo.program.ProgramIndexService;
 
 
 @Service
 public class ProductService extends MyDaoSupport {
+	
+	@Autowired
+	private ProgramIndexService programIndexService;
 	
 	
 	public PageList<Product> listProduct(Page page, Product bean) {
@@ -181,6 +186,8 @@ public class ProductService extends MyDaoSupport {
 	// 2:上架
 	@Transactional
 	public int onShelves(Integer prodId) {
+		programIndexService.addProgramIndex(prodId);
+		
 		ChangeStatus changeStatus = new ChangeStatus();
 		changeStatus.setProdId(prodId);
 		changeStatus.setChangeStatus(2);
@@ -196,6 +203,8 @@ public class ProductService extends MyDaoSupport {
 	// 3:下架
 	@Transactional
 	public int offShelves(Integer prodId) {
+		programIndexService.removeProgramIndex(prodId);
+		
 		ChangeStatus changeStatus = new ChangeStatus();
 		changeStatus.setProdId(prodId);
 		changeStatus.setChangeStatus(3);
