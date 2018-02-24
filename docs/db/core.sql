@@ -219,6 +219,7 @@ create table user_order
    ORDER_STATUS         smallint not null,
    ORDER_PRICE          decimal(7,2) not null,
    PAY_PRICE            decimal(7,2) not null,
+   DELIVER_CODE			varchar(32),
    primary key (ORDER_ID)
 );
 
