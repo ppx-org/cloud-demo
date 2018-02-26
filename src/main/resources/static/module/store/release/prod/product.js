@@ -150,6 +150,9 @@ img.resize = function(img) {
 		$(img).css({width:80, height:80});
 	}
 }
+img.error = function(img) {
+	$(img).parents(".imgTd").show();
+}
 img.remove = function(obj) {
 	var imgTr = $(obj).parents(".imgTr");
 	$(obj).parents(".imgTd").remove();

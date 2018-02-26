@@ -1,11 +1,17 @@
 package com.ppx.cloud.store.product.release.bean;
 
+import java.util.Date;
+
 import com.ppx.cloud.common.jdbc.annotation.Id;
 
 public class ProductDetail {
 	
 	@Id
 	private Integer prodId;
+	
+	private Date created;
+	
+	private Integer creator;
 	
 	private String prodPosition;
 	
@@ -21,6 +27,22 @@ public class ProductDetail {
 
 	public void setProdId(Integer prodId) {
 		this.prodId = prodId;
+	}
+
+	public Date getCreated() {
+		return created;
+	}
+
+	public void setCreated(Date created) {
+		this.created = created;
+	}
+
+	public Integer getCreator() {
+		return creator;
+	}
+
+	public void setCreator(Integer creator) {
+		this.creator = creator;
 	}
 
 	public String getProdPosition() {

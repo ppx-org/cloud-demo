@@ -189,11 +189,12 @@ create table product
 create table product_detail
 (
 	PROD_ID 		int not null,
+	CREATED 		timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CREATOR			int not null,
 	PROD_POSITION	varchar(32),
 	BAR_CODE		varchar(32),
 	PROD_DESC		varchar(128),
 	PROD_ARGS		varchar(128),
-	CREATED 		timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	primary key (PROD_ID)
 );
 

@@ -184,7 +184,12 @@ function viewChangePrice(skuId) {
 
 <div class="form-horizontal form-body">
 
-<div class="form-group"><div class="form-title"><span class="glyphicon glyphicon-th-list"></span><span>修改产品</span></div></div>
+<div class="form-group">
+	<div class="form-title">
+		<span class="glyphicon glyphicon-th-list"></span><span>修改产品</span>
+		<span th:if="${editType == 1}">(提示:草稿或上架状态才能修改仓库、分类、标题和品牌)</span>
+	</div>
+</div>
 	
 <form id="editForm">
 	<input type="hidden" th:value="${prod.prodId}" name="prodId">
@@ -193,30 +198,35 @@ function viewChangePrice(skuId) {
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>仓库：</label>
 		<div class="col-sm-3">
-			<select class="form-control" name="repoId">
+			<select class="form-control" id="repoId" name="repoId">
 				<option th:selected="${prod.repoId == item.repoId}" th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${listRepo}"></option>
 			</select>
 		</div>
+		<script th:if="${editType == 1}">$("#repoId").parent().html('<span class="form-control" readonly >' + $("#repoId option:selected").text() + '</span>');</script>
 		
 		<label class="col-sm-2 control-label"><span class="required">*</span>分类：</label>
 		<input type="hidden" id="mainCatId" name="mainCatId">
 		<div class="col-sm-3">
-			<select class="form-control" name="catId">
+			<select class="form-control" id="catId" name="catId">
 				<option th:selected="${prod.catId == item.catId}" th:attr="data-mainCatId=${item.parentId}" th:value="${item.catId}" th:text="${item.catName}" th:each="item:${listCat}"></option>
 			</select>
 		</div>
+		<script th:if="${editType == 1}">$("#catId").parent().html('<span class="form-control" readonly >' + $("#catId option:selected").text() + '</span>');</script>
 	</div>
 
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>标题：</label>
-		<div class="col-sm-3"><input type="text" name="prodTitle" class="form-control validate[required]" maxlength="32" style="width:500px" th:value="${prod.prodTitle}"></div>
+		<div class="col-sm-3"><input type="text" id="prodTitle" name="prodTitle" class="form-control validate[required]" maxlength="32" style="width:500px" th:value="${prod.prodTitle}"></div>
+		<script th:if="${editType == 1}">$("#prodTitle").attr("readonly", true)</script>
+		
 		<label class="col-sm-2 control-label">品牌：</label>
 		<div class="col-sm-3">
-			<select class="form-control" id="brandId" name="brandId" onchange="localStorage.defaultBrandId=$(this).val()">
+			<select class="form-control" id="brandId" name="brandId">
 				<option value="">无</option>
 				<option th:selected="${prod.brandId == item.brandId}" th:value="${item.brandId}" th:text="${item.brandName}" th:each="item:${listBrand}"></option>
 			</select>
 		</div>
+		<script th:if="${editType == 1}">$("#brandId").parent().html('<span class="form-control" readonly >' + $("#brandId option:selected").text() + '</span>');</script>
 	</div>
 
 	<div class="form-group">
@@ -253,7 +263,7 @@ function viewChangePrice(skuId) {
 				<td class="imgTd" style="height:80px">					
 					<table style="height:80px">
 					<tr>
-						<td rowspan="2" style="width:80px;"><img onclick="img.click(this)" onload="img.resize(this)" th:src="#{imgUrl}+${sku.skuImgSrc}" th:attr="data-imgSrc=${sku.skuImgSrc}"/></td>
+						<td rowspan="2" style="width:80px;"><img onclick="img.click(this)" onerror="img.error(this)" onload="img.resize(this)" th:src="#{imgUrl}+${sku.skuImgSrc}" th:attr="data-imgSrc=${sku.skuImgSrc}"/></td>
 						<td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td>
 					</tr>
 					</table>
@@ -292,7 +302,7 @@ function viewChangePrice(skuId) {
 			<td class="imgTd" style="height:80px;width:100px;" th:each="img,imgStat:${listImg}">
 				<table style="height:80px">
 				<tr>
-					<td rowspan="2" style="width:80px;"><img onclick="img.click(this)" onload="img.resize(this)" th:src="#{imgUrl}+${img.prodImgSrc}" th:attr="data-imgSrc=${img.prodImgSrc}"/></td>
+					<td rowspan="2" style="width:80px;"><img onclick="img.click(this)" onerror="img.error(this)" onload="img.resize(this)" th:src="#{imgUrl}+${img.prodImgSrc}" th:attr="data-imgSrc=${img.prodImgSrc}"/></td>
 					<td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td>
 				</tr>
 				<tr><td class="glyphicon glyphicon-step-backward leftTopImg" th:style="'display:'+${imgStat.index==0?'none':''}+''" onclick="img.top(this)"></td></tr>

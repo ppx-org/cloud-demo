@@ -89,6 +89,8 @@ public class ProductService extends MyDaoSupport {
 		
 		// detail
 		detail.setProdId(prodId);
+		int creator = GrantContext.getLoginAccount().getAccountId();
+		detail.setCreator(creator);
 		insert(detail);
 		
 		// img

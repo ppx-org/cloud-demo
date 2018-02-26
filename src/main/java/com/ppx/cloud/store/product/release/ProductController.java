@@ -83,11 +83,11 @@ public class ProductController {
 		int r = serv.insertProduct(prod, detail, prodImgSrc, stockNum, price, skuName, skuImgSrc);
 		return ControllerReturn.ok(r);
 	}
-	
 
 	@GetMapping
-	public ModelAndView editProduct(@RequestParam Integer prodId) {
+	public ModelAndView editProduct(@RequestParam(required=true) Integer prodId, @RequestParam(defaultValue="0") Integer editType) {
 		ModelAndView mv = new ModelAndView();
+		mv.addObject("editType", editType);
 		// <select
 		mv.addObject("listRepo", repoServ.displayRepository());
 		mv.addObject("listCat", catServ.displaySubCat());

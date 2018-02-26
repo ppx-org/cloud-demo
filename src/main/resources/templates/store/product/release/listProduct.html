@@ -33,6 +33,10 @@ function edit(prodId) {
 	open(contextPath + 'product/editProduct?prodId=' + prodId);
 }
 
+function editAtOnce(prodId) {
+	open(contextPath + 'product/editProduct?prodId=' + prodId + '&editType=1');
+}
+
 function viewStatusHistory(prodId) {
 	open(contextPath + 'changeStatus/listChangeStatus?prodId=' + prodId);
 }
@@ -159,7 +163,11 @@ function catChange(obj) {
 		<td class="w-number">{{v.prodStock}}</td>
 		<td class="w-action" id="statusAction{{v.prodId}}">{{statusActionHtml(v.prodId, v.prodStatus, v.prodStatusDesc)}}</td>
 		<td class="w-action">
+			{{if v.prodStatus != 2}}
 			<a href="#" onclick="edit({{v.prodId}})">[修改]</a>
+			{{else}}
+			<a href="#" onclick="editAtOnce({{v.prodId}})">[修改]</a>
+			{{/if}}
 		</td>
 	</tr>
 	{{/each}}
