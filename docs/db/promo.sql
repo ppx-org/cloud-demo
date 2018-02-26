@@ -12,10 +12,21 @@ CREATE TABLE program (
   POLICY_ARGS 		varchar(32),
   PROG_IMG_X		smallint not null default 0,
   PROG_IMG_Y		smallint not null default 0,
-  RECORD_STATUS 	smallint not null default 1,
+  PROG_STATUS 		smallint not null default 1,
   CREATED 			timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (PROG_ID)
 );
+
+create table program_status_history
+(	
+	HISTORY_PROG_STATUS_ID 	int not null auto_increment,
+	PROG_ID        			int not null,
+	HISTORY_PROG_STATUS		smallint not null,
+	CREATED         		timestamp not null default CURRENT_TIMESTAMP,
+	CREATOR					int,
+	primary key(HISTORY_PROG_STATUS_ID)
+);
+
 
 create table program_category
 (

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+
+<script type="text/javascript" th:inline="javascript">
+
+
+$(function() {
+	var progId = [[${progId}]];
+	if (progId != null) {
+		$("#progId").val(progId);
+		queryPage(1);
+	}
+});
+
+function queryPage(pageNumber) {
+	if ($("#progId").val() == "") {
+		alertWarning("促销ID不能为空");
+		return;
+	}
+
+	showLoading();
+	$("#pageNumber").val(pageNumber);
+	$.post([[@{/programStatus/listJson}]], $("#queryForm").serialize(), function(r) {
+		refreshPageData(r);
+		hideLoading();
+		
+		$("#progMsg").text(r.string);
+	});
+}
+
+
+</script>
+</head>
+
+<body>
+<div th:replace="common/fragment/common::pageList('促销状态变更历史')"> 
+	<div th:fragment="queryFragment">
+		<input type="text" class="form-control input-sm" id="progId" name="progId" placeholder="请输入促销ID" style="width:200px;" onkeyup="this.value=this.value.replace(/\D/g,'')">
+		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
+		
+		<span id="progMsg"></span>
+	</div>
+	<table th:fragment="listFragment">
+	<tr>
+		<th class="w-id">ID</th>
+		<th class="w-id">状态</th>
+		<th class="w-time">变更时间</th>
+		<th class="w-id">变更人</th>
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td>{{v.historyProgStatusId}}</td>
+		<td>{{v.historyProgStatusDesc}}</td>
+		<td>{{v.created}}</th>
+		<td>{{v.creator}}</th>
+	</tr>
+	{{/each}}
+	</script>
+	</table>
+</div>
+
+
+
+</body>
+</html>
+

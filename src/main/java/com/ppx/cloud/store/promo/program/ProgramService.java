@@ -22,8 +22,8 @@ public class ProgramService extends MyDaoSupport {
 				.addAnd("POLICY_TYPE like ?", bean.getPolicyType())
 				.addAnd("PROG_NAME like ?", "%", bean.getProgName(), "%");
 		
-		StringBuilder cSql = new StringBuilder("select count(*) from program where RECORD_STATUS >= ?").append(c);
-		StringBuilder qSql = new StringBuilder("select * from program where RECORD_STATUS >= ?").append(c);
+		StringBuilder cSql = new StringBuilder("select count(*) from program where PROG_STATUS >= ?").append(c);
+		StringBuilder qSql = new StringBuilder("select * from program where PROG_STATUS >= ?").append(c);
 		c.addPrePara(1);
 		
 		List<Program> list = queryPage(Program.class, page, cSql, qSql, c.getParaList());
@@ -47,6 +47,6 @@ public class ProgramService extends MyDaoSupport {
 	}
 	
 	public int deleteProgram(Integer id) {
-		return getJdbcTemplate().update("update program set RECORD_STATUS = ? where PROG_ID = ?", 0, id);
+		return getJdbcTemplate().update("update program set PROG_STATUS = ? where PROG_ID = ?", 0, id);
 	}
 }

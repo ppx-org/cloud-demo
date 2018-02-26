@@ -36,7 +36,7 @@ public class Program {
 	
 	private Date created;
 	
-	private Integer recordStatus;
+	private Integer progStatus;
 	
 	private Integer progImgX;
 
@@ -129,16 +129,16 @@ public class Program {
 		this.created = created;
 	}
 
-	public Integer getRecordStatus() {
-		return recordStatus;
+	public Integer getProgStatus() {
+		return progStatus;
 	}
 
-	public void setRecordStatus(Integer recordStatus) {
-		this.recordStatus = recordStatus;
+	public void setProgStatus(Integer progStatus) {
+		this.progStatus = progStatus;
 	}
 
-	public String getRecordStatusDesc() {
-		return Dict.getProgStatusDesc(this.recordStatus);
+	public String getProgStatusDesc() {
+		return Dict.getProgStatusDesc(this.progStatus);
 	}
 
 	public Integer getProgImgX() {

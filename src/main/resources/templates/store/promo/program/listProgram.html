@@ -155,27 +155,32 @@ function stop(progId, obj) {
 }
 
 template.config("escape", false);
-template.helper('getStatusDesc', function(progId, recordStatus, recordStatusDesc) {
-	return getStatusDesc(progId, recordStatus, recordStatusDesc);
+template.helper('getStatusDesc', function(progId, progStatus, progStatusDesc) {
+	return getStatusDesc(progId, progStatus, progStatusDesc);
 })
 
-function getStatusDesc(progId, recordStatus, recordStatusDesc) {
+function getStatusDesc(progId, progStatus, progStatusDesc) {
+	var r = "";
+	
+	var history = '&nbsp;&nbsp;<a href="javascript:viewStatusHistory(' + progId + ')">[状态历史]</a>'
+	
 	var start = '<a href="#" onclick="start(' + progId + ', this)">[启动]</a>';
 	var pause = '<a href="#" onclick="pause(' + progId + ', this)">[暂停]</a>';
 	var stop = '<a href="#" onclick="stop(' + progId + ', this)">[停止]</a>';
 	
-	if (recordStatus == 1) return recordStatusDesc + start;
-	if (recordStatus == 2) return recordStatusDesc + pause + stop;
-	if (recordStatus == 3) return recordStatusDesc + start;
-	if (recordStatus == 4) return recordStatusDesc + start;
+	if (progStatus == 1 || progStatus == 3 || progStatus == 4) {
+		r = progStatusDesc + start;
+	}
+	if (progStatus == 2) {
+		r = progStatusDesc + pause + stop;
+	}
+	return r + history;
 }
 
 function getStatusDescByStr(string) {
 	var s = string.split(",");
 	return getStatusDesc(s[0], s[1], s[2]);
 }
-
-
 
 function addImgChange() {
 	var x = new Number($("#addProgImgX").val());
@@ -197,6 +202,10 @@ $(function() {
 	var blankImg = "url(" + href[0] + "//" + href[2] + contextPath + "static/img/blank.png)";
 	$(".progImgUrl").css("background-image", [[${imgSrc}]] == '-1' ? blankImg : "url(" + [[${imgSrc}]] + ")");
 });
+
+function viewStatusHistory(progId) {
+	open(contextPath + 'programStatus/listProgramStatus?progId=' + progId);
+}
 </script>
 
 
@@ -245,7 +254,7 @@ $(function() {
 		<td class="w-id">{{getPolicyTypeName(v.policyType)}}</td>
 		<td class="w-id">{{v.policyArgsDesc}}</td>
 		<td class="w-time">{{v.created}}</td>
-		<td class="w-action">{{getStatusDesc(v.progId, v.recordStatus, v.recordStatusDesc)}}</td>
+		<td class="w-action">{{getStatusDesc(v.progId, v.progStatus, v.progStatusDesc)}}</td>
 		<td class="w-action-m">
 			<a href="#" onclick="remove({{v.progId}})">[删除]</a>&nbsp;&nbsp;
 			<a href="#" onclick="edit({{v.progId}}, {{v.progImgX}}, {{v.progImgY}})">[修改]</a>&nbsp;&nbsp;

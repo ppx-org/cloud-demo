@@ -7,28 +7,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
+import com.ppx.cloud.grant.common.GrantContext;
 import com.ppx.cloud.store.common.dictionary.Dict;
+import com.ppx.cloud.store.promo.statushistory.ProgramStatus;
 
 @Service
-public class ProgramIndexService extends MyDaoSupport { 
-	private final int START_STATUS = 2;
+public class ProgramIndexService extends MyDaoSupport {
+	private final int INIT_STATUS = 1;
+	private final int RUNNING_STATUS = 2;
 	private final int PAUSE_STATUS = 3;
 	private final int STOP_STATUS = 4;
 	
 	private int getStatusForUpdate(Integer progId) {
-		String sql = "select RECORD_STATUS from  program where PROG_ID = ? for update";
+		String sql = "select PROG_STATUS from program where PROG_ID = ? for update";
 		return getJdbcTemplate().queryForObject(sql, Integer.class, progId);
 	}
 	
 	
 	private int updateStatus(Integer prodId, Integer status) {
-		String sql = "update program set RECORD_STATUS = ? where PROG_ID = ?";
+		String sql = "update program set PROG_STATUS = ? where PROG_ID = ?";
 		return getJdbcTemplate().update(sql, status, prodId);
 	}
 	
 	@Transactional
 	public String start(Integer progId) {
-		if (getStatusForUpdate(progId) == START_STATUS) return "-1";
+		if (getStatusForUpdate(progId) == INIT_STATUS) return "-1";
 		
 		Program prog = getJdbcTemplate().queryForObject("select * from program where PROG_ID = ?",
 				BeanPropertyRowMapper.newInstance(Program.class), progId);	
@@ -48,27 +51,48 @@ public class ProgramIndexService extends MyDaoSupport {
 			default:return "-2";
 		}
 		
-		updateStatus(progId, START_STATUS);
-		return progId + "," + START_STATUS + "," + Dict.getProgStatusDesc(START_STATUS);
+		updateStatus(progId, RUNNING_STATUS);
+		
+		ProgramStatus statusHistory = new ProgramStatus();
+		statusHistory.setProgId(progId);
+		statusHistory.setHistoryProgStatus(RUNNING_STATUS);
+		int creator = GrantContext.getLoginAccount().getAccountId();
+		statusHistory.setCreator(creator);
+		insert(statusHistory);
+		
+		return progId + "," + RUNNING_STATUS + "," + Dict.getProgStatusDesc(RUNNING_STATUS);
 	}
 	
 	@Transactional
 	public String pause(Integer progId) {
-		if (getStatusForUpdate(progId) != START_STATUS) return "-1";
+		if (getStatusForUpdate(progId) != RUNNING_STATUS) return "-1";
 		
 		updateStatus(progId, PAUSE_STATUS);
+		
+		ProgramStatus statusHistory = new ProgramStatus();
+		statusHistory.setProgId(progId);
+		statusHistory.setHistoryProgStatus(PAUSE_STATUS);
+		int creator = GrantContext.getLoginAccount().getAccountId();
+		statusHistory.setCreator(creator);
+		insert(statusHistory);
 		return progId + "," + PAUSE_STATUS + "," + Dict.getProgStatusDesc(PAUSE_STATUS);
 	}
 	
 	@Transactional
 	public String stop(Integer progId) {
-		if (getStatusForUpdate(progId) != START_STATUS) return "-1";
+		if (getStatusForUpdate(progId) != RUNNING_STATUS) return "-1";
 		
 		// 删除索引
 		String deleteSql = "delete from program_index where PROG_ID = ?";
 		getJdbcTemplate().update(deleteSql, progId);
 		
 		updateStatus(progId, STOP_STATUS);
+		ProgramStatus statusHistory = new ProgramStatus();
+		statusHistory.setProgId(progId);
+		statusHistory.setHistoryProgStatus(STOP_STATUS);
+		int creator = GrantContext.getLoginAccount().getAccountId();
+		statusHistory.setCreator(creator);
+		insert(statusHistory);
 		return progId + "," + STOP_STATUS + "," + Dict.getProgStatusDesc(STOP_STATUS);
 	}
 	
@@ -93,7 +117,7 @@ public class ProgramIndexService extends MyDaoSupport {
 	private int startProduct(Program prog) {
 		String productSql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY) " + 
 				"select ?, pp.PROG_ID, pp.PROD_ID, ?, ?, ?, ? " + 
-				"from program_product pp join program p on pp.PROG_ID = ? where p.MERCHANT_ID = -1 and RECORD_STATUS = 1";
+				"from program_product pp join program p on pp.PROG_ID = ? where p.MERCHANT_ID = -1 and PROG_STATUS = 1";
 		int r = getJdbcTemplate().update(productSql, prog.getMerchantId(), prog.getProgBegin(), prog.getProgEnd(),
 				prog.getProgPrio(), prog.getPolicyArgs(), prog.getProgId());
 		return r;
@@ -171,7 +195,7 @@ public class ProgramIndexService extends MyDaoSupport {
 		
 		String categorySql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY, CAT_ID) " + 
 				" select p.MERCHANT_ID, pc.PROG_ID, ?, p.PROG_BEGIN, p.PROG_END, p.PROG_PRIO, p.POLICY_ARGS, pc.CAT_ID " +
-				" from program_category pc join program p on (pc.CAT_ID = ? or pc.CAT_ID = ?) and pc.PROG_ID = p.PROG_ID and p.RECORD_STATUS = 2 and to_days(p.PROG_END) >= to_days(now()) ";
+				" from program_category pc join program p on (pc.CAT_ID = ? or pc.CAT_ID = ?) and pc.PROG_ID = p.PROG_ID and p.PROG_STATUS = 2 and to_days(p.PROG_END) >= to_days(now()) ";
 		getJdbcTemplate().update(categorySql, prodId, catId, mainCatId);
 		
 		
@@ -181,7 +205,7 @@ public class ProgramIndexService extends MyDaoSupport {
 			
 			String brandSql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY, BRAND_ID) " + 
 					" select p.MERCHANT_ID, b.PROG_ID, ?, p.PROG_BEGIN, p.PROG_END, p.PROG_PRIO, p.POLICY_ARGS " +
-					" from program_brand b join program p on b.BRAND_ID = ? and pc.PROG_ID = p.PROG_ID and p.RECORD_STATUS = 2 and to_days(p.PROG_END) >= to_days(now()) ";
+					" from program_brand b join program p on b.BRAND_ID = ? and pc.PROG_ID = p.PROG_ID and p.PROG_STATUS = 2 and to_days(p.PROG_END) >= to_days(now()) ";
 			 getJdbcTemplate().update(brandSql, prodId, brandId);
 		}
 		return 1;
