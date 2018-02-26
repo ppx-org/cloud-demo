@@ -1,1 +1,3 @@
-https://github.com/demi520/wxapp-qrcode
+
+code: https://github.com/demi520/wxapp-qrcode
+
