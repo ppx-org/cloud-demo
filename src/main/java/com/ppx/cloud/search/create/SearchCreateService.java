@@ -261,10 +261,13 @@ public class SearchCreateService extends MyDaoSupport {
 		String sql = "select STORE_ID from store where MERCHANT_ID = ?";
 		List<Integer> storeIdList = getJdbcTemplate().queryForList(sql, Integer.class, merchantId);
 		
-		String prodSql = "select (select INDEX_ID from " + orderType + " where PROD_ID = product.PROD_ID) from product where REPO_ID in (select REPO_ID from store_map_repo where STORE_ID = ?)";
+		// 加上条件是上架的产品
+		String prodSql = "select (select INDEX_ID from " + orderType + " where PROD_ID = product.PROD_ID)"
+				+ " from product where REPO_ID in (select REPO_ID from store_map_repo where STORE_ID = ?) and PROD_STATUS = ?";
 		for (Integer storeId : storeIdList) {
 			BitSet storeBs = new BitSet();
-			List<Integer> prodIdList = getJdbcTemplate().queryForList(prodSql, Integer.class, storeId);
+			// 2:上架
+			List<Integer> prodIdList = getJdbcTemplate().queryForList(prodSql, Integer.class, storeId, 2);
 			for (Integer prodId : prodIdList) {
 				storeBs.set(prodId);
 			}
