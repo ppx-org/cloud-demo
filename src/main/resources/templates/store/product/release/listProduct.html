@@ -5,12 +5,9 @@
 
 <link th:replace="common/fragment/common::common"/>
 <link th:replace="common/fragment/common::validation"/>
+<link th:replace="common/fragment/common::file"/>
 
 <script type="text/javascript" th:inline="javascript">
-
-/**
- * onShelves时，需要暂停分类和品牌促销,或程序判断?
- */
 
 $(function() {
 	refreshPageData([[${listJson}]]);
@@ -94,6 +91,26 @@ function catChange(obj) {
 	var mainCatId = $("#catId option[value=" + obj.value + "]").attr("data-mainCatId");
 	$("#catId").attr("name", mainCatId == -1 ? "mainCatId" : "catId");
 }
+
+
+function exportExcel() {
+	showLoading();
+	$("#pageNumber").val(1);
+	$.post([[@{/product/exportProduct}]], $("#queryForm").serialize(), function(r) {
+		var trHtml = "<tr><th>产品ID</th><th>产品标题</th></tr>";
+		if (r.arrayList) {
+			r.arrayList.forEach(function(v, index, array) {
+				  trHtml += '<tr><td>' + v.prodId + '</td><td>' + v.prodTitle + '</td></tr>';
+			});
+		}
+		
+		tableToExcel(trHtml, "产品列表");
+		hideLoading();
+	});
+}
+
+
+
 </script>
 
 <style>
@@ -136,6 +153,8 @@ function catChange(obj) {
 			<input type="text" class="form-control input-sm" name="prodTitle" placeholder="请输入标题" style="width:200px;">
 			
 			<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
+			||||
+			<button type="button" class="btn btn-default btn-sm" onclick="exportExcel();">导出excel</button>
 		</div>
 		
 	</div>

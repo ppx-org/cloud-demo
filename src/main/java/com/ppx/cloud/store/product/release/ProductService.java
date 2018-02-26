@@ -1,7 +1,9 @@
 package com.ppx.cloud.store.product.release;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -27,8 +29,17 @@ public class ProductService extends MyDaoSupport {
 	@Autowired
 	private ProgramIndexService programIndexService;
 	
-	
 	public PageList<Product> listProduct(Page page, Product bean) {
+		Map<String, Object> map = queryProduct(bean);
+		StringBuilder cSql = (StringBuilder)map.get("cSql");
+		StringBuilder qSql = (StringBuilder)map.get("qSql");
+		MyCriteria c = (MyCriteria)map.get("c");
+		
+		List<Product> list = queryPage(Product.class, page, cSql, qSql, c.getParaList());
+		return new PageList<Product>(list, page);
+	}
+	
+	private Map<String, Object> queryProduct(Product bean) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
 		MyCriteria c = createCriteria("and")
@@ -48,9 +59,24 @@ public class ProductService extends MyDaoSupport {
 		
 		c.addPrePara(merchantId);
 		
-		List<Product> list = queryPage(Product.class, page, cSql, qSql, c.getParaList());
-		return new PageList<Product>(list, page);
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("cSql", cSql);
+		returnMap.put("qSql", qSql);
+		returnMap.put("c", c);
+		
+		return returnMap;
 	}
+	
+	public List<Product> exportProduct(Product bean) {
+		Map<String, Object> map = queryProduct(bean);
+		StringBuilder qSql = (StringBuilder)map.get("qSql");
+		MyCriteria c = (MyCriteria)map.get("c");
+		
+		List<Product> r = (List<Product>)super.getJdbcTemplate().query(qSql.toString(), 
+				BeanPropertyRowMapper.newInstance(Product.class), c.getParaList().toArray());
+		return r;
+	}
+	
 	
 	@Transactional
 	public int insertProduct(Product prod, ProductDetail detail, String prodImgSrc,

@@ -168,10 +168,11 @@ public class ProductController {
 		return ControllerReturn.ok(r, statusDesc);
 	}
 	
-	
-	
-	
-	
+	@PostMapping @ResponseBody
+	public Map<String, Object> exportProduct(Product bean) {
+		List<Product> list = serv.exportProduct(bean);
+		return ControllerReturn.ok(list);
+	}
 	
 }
 
