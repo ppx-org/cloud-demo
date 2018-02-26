@@ -34,6 +34,18 @@ public class SearchLastUpdated {
 		this.prodLastUpdated = prodLastUpdated;
 	}
 	
+	public long getProgLastUpdatedView() {
+		if (progLastUpdated != null) {
+			return (new Date().getTime() - progLastUpdated.getTime()) / 1000 / 60;
+		}
+		return 0;
+	}
 	
+	public long getProdLastUpdatedView() {
+		if (prodLastUpdated != null) {
+			return (new Date().getTime() - prodLastUpdated.getTime()) / 1000 / 60;
+		}
+		return 0;
+	}
 	
 }

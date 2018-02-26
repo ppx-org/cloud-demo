@@ -53,7 +53,8 @@ create table search_version
 	CREATE_END		datetime,
 	VERSION_STATUS  tinyint(1) NOT NULL DEFAULT 1,
 	CREATE_INFO		varchar(1024),
-	UPDATED 		datetime,
+	UPDATED 		datetime NOT NULL,
+	UPDATOR			int(11) NOT NULL,
 	primary key (MERCHANT_ID, VERSION_NAME)
 );
 

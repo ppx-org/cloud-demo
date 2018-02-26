@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,11 +23,13 @@ public class SearchCreateService extends MyDaoSupport {
 	// 2, "已生成"; 3, "使用中"
 	@Transactional
 	public int useIndex(String versionName) {
+		int updator = GrantContext.getLoginAccount().getAccountId();
+		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		String otherSql = "update search_version set UPDATED = now(), VERSION_STATUS = ? where MERCHANT_ID = ? and VERSION_STATUS = ?";
-		getJdbcTemplate().update(otherSql, 2, merchantId, 3);
-		String updateStatus = "update search_version set UPDATED = now(), VERSION_STATUS = ? where MERCHANT_ID = ? and VERSION_NAME = ?";
-		getJdbcTemplate().update(updateStatus, 3, merchantId, versionName);
+		String otherSql = "update search_version set UPDATED = now(), UPDATOR = ?, VERSION_STATUS = ? where MERCHANT_ID = ? and VERSION_STATUS = ?";
+		getJdbcTemplate().update(otherSql, updator, 2, merchantId, 3);
+		String updateStatus = "update search_version set UPDATED = now(), UPDATOR = ?, VERSION_STATUS = ? where MERCHANT_ID = ? and VERSION_NAME = ?";
+		getJdbcTemplate().update(updateStatus, updator, 3, merchantId, versionName);
 		return 1;
 		
 	}
@@ -99,7 +100,6 @@ public class SearchCreateService extends MyDaoSupport {
 			t = System.currentTimeMillis();
 			
 			
-			
 			// 提示信息
 			resultMap.putAll(map1);
 			resultMap.putAll(map2);
@@ -121,52 +121,12 @@ public class SearchCreateService extends MyDaoSupport {
 			e.printStackTrace();
 		}
 		
-		System.out.println("out:" + createInfo);
-		
-		
-				
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		int updator = GrantContext.getLoginAccount().getAccountId();
 		// 2, "已生成"; 3, "使用中"
 		String endUpdateSql = "update search_version join (select if (count(*) >= 1, 2, 3) STATUS from search_version " +
-			"where MERCHANT_ID = ? and VERSION_STATUS = ?) t set CREATE_END = now(), UPDATED = now()," +
+			"where MERCHANT_ID = ? and VERSION_STATUS = ?) t set CREATE_END = now(), UPDATED = now(), UPDATOR = ?," +
 			"VERSION_STATUS = t.STATUS, CREATE_INFO = ? where MERCHANT_ID = ? and VERSION_NAME = ?";
-		getJdbcTemplate().update(endUpdateSql, merchantId, 3, createInfo, merchantId, versionName);
+		getJdbcTemplate().update(endUpdateSql, merchantId, 3, updator, createInfo, merchantId, versionName);
 		
 		return 1;
 	}
@@ -474,28 +434,7 @@ public class SearchCreateService extends MyDaoSupport {
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 		
 		
 		
@@ -541,51 +480,10 @@ public class SearchCreateService extends MyDaoSupport {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
 	
 }
+
+
+

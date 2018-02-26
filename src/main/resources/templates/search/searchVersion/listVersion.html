@@ -45,6 +45,11 @@ function viewDetail(obj) {
 	$("#viewDetail").modal("show");
 }
 
+template.helper('getUpdated', function(updated) {
+	var dif = Math.floor((new Date() - new Date(updated).getTime()) / 1000 / 60);
+	return updated + "(" + dif + "分钟前)";
+})
+
 </script>
 </head>
 
@@ -52,8 +57,8 @@ function viewDetail(obj) {
 <div class="page-list-body">
 	<div class="page-list-query">
 		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>搜索版本管理</span>
-			(产品状态最后更新时间：<span th:text="${lastUpdate.prodLastUpdated}"></span>
-			促销状态最后更新时间：<span th:text="${lastUpdate.progLastUpdated}"></span>)
+			(产品状态最后更新时间：<span th:text="${lastUpdate.prodLastUpdated}"></span>(<span th:text="${lastUpdate.prodLastUpdatedView}"></span>分钟前)
+			促销状态最后更新时间：<span th:text="${lastUpdate.progLastUpdated}"></span>(<span th:text="${lastUpdate.progLastUpdatedView}"></span>分钟前))
 		</div>
 	</div>
 	<table class="page-list-table table table-bordered table-condensed">
@@ -72,7 +77,7 @@ function viewDetail(obj) {
 		<td class="w-id">{{v.versionName}}</td>
 		<td class="w-time">{{v.createBegin}}</td>
 		<td class="w-time">{{v.createEnd}}</td>
-		<td class="w-id">{{v.updated}}</td>
+		<td class="w-title-s">{{getUpdated(v.updated)}}</td>
 		<td class="w-id">{{v.spendTime}}s</td>
 		<td class="w-id">{{v.versionStatusDesc}}</td>		
 		<td class="w-action">

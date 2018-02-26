@@ -19,6 +19,8 @@ public class SearchVersion {
 	private String createInfo;
 	
 	private Date updated;
+	
+	private Integer updator;
 
 	public Integer getMerchantId() {
 		return merchantId;
@@ -86,5 +88,14 @@ public class SearchVersion {
 		}
 		return null;
 	}
+
+	public Integer getUpdator() {
+		return updator;
+	}
+
+	public void setUpdator(Integer updator) {
+		this.updator = updator;
+	}
+	
 	
 }
