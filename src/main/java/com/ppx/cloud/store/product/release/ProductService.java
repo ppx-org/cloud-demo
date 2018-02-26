@@ -203,7 +203,6 @@ public class ProductService extends MyDaoSupport {
 	// 3:下架
 	@Transactional
 	public int offShelves(Integer prodId) {
-		programIndexService.removeProgramIndex(prodId);
 		
 		ChangeStatus changeStatus = new ChangeStatus();
 		changeStatus.setProdId(prodId);

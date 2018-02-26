@@ -158,7 +158,7 @@ public class ProgramIndexService extends MyDaoSupport {
 	
 	
 	
-	// onShelves时
+	// onShelves时(offShelves时不删除，通过端口状态判断搜索)
 	public int addProgramIndex(Integer prodId) {
 		String prodSql = "select CAT_ID, MAIN_CAT_ID from product where PROD_ID = ?";
 		Map<String, Object> prodMap = getJdbcTemplate().queryForMap(prodSql, prodId);
@@ -166,8 +166,8 @@ public class ProgramIndexService extends MyDaoSupport {
 		Integer mainCatId = (Integer)prodMap.get("MAIN_CAT_ID");
 		Integer brandId = (Integer)prodMap.get("BRAND_ID");
 		
-		// @TODO 存在就不新增
-		String countSql = "";
+		String deleteCatSql = "delete from program_index where PROD_ID = ? and (CAT_ID = ? or CAT_ID = ?)";
+		getJdbcTemplate().update(deleteCatSql, prodId, catId, mainCatId);
 		
 		String categorySql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY, CAT_ID) " + 
 				" select p.MERCHANT_ID, pc.PROG_ID, ?, p.PROG_BEGIN, p.PROG_END, p.PROG_PRIO, p.POLICY_ARGS, pc.CAT_ID " +
@@ -176,6 +176,9 @@ public class ProgramIndexService extends MyDaoSupport {
 		
 		
 		if (brandId != null) {
+			String deleteBrandSql = "delete from program_index where PROD_ID = ? and BRAND_ID = ?)";
+			getJdbcTemplate().update(deleteBrandSql, prodId, brandId);
+			
 			String brandSql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY, BRAND_ID) " + 
 					" select p.MERCHANT_ID, b.PROG_ID, ?, p.PROG_BEGIN, p.PROG_END, p.PROG_PRIO, p.POLICY_ARGS " +
 					" from program_brand b join program p on b.BRAND_ID = ? and pc.PROG_ID = p.PROG_ID and p.RECORD_STATUS = 2 and to_days(p.PROG_END) >= to_days(now()) ";
@@ -185,18 +188,7 @@ public class ProgramIndexService extends MyDaoSupport {
 	}
 	
 	
-	// offShelves时
-	public int removeProgramIndex(Integer prodId) {
-		String prodSql = "select CAT_ID, MAIN_CAT_ID, BRAND_ID from product where PROD_ID = ?";
-		Map<String, Object> prodMap = getJdbcTemplate().queryForMap(prodSql, prodId);
-		Integer catId = (Integer)prodMap.get("CAT_ID");
-		Integer mainCatId = (Integer)prodMap.get("MAIN_CAT_ID");
-		Integer brandId = (Integer)prodMap.get("BRAND_ID");
-		
-		String deleteSql = "delete from program_index where PROD_ID = ? and (CAT_ID = ? or CAT_ID = ? or BRAND_ID = ?)";
-		int r = getJdbcTemplate().update(deleteSql, prodId, catId, mainCatId, brandId);
-		return r;
-	}
+
 	
 
 	
