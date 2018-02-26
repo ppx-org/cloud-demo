@@ -13,10 +13,6 @@ function refreshData(data) {
 	$("#" + pageTemplateId).parent().append(template(pageTemplateId, data));
 }
 
-$(function() {
-	refreshData([[${listJson}]]);
-});
-
 function query() {
 	showLoading();
 	$.post([[@{/theme/listJson}]], "status=" + $("[name=status]:checked").val(), function(r) {
@@ -131,9 +127,17 @@ function editImgChange() {
 	$("#editThemeImg").css("background-position", "-" + 100*x + "px -" + 100*y +"px")
 }
 
+
+$(function() {
+	refreshData([[${listJson}]]);
+	
+	var href = location.href.split("/");
+	var blankImg = "url(" + href[0] + "//" + href[2] + contextPath + "static/img/blank.png)";
+	$(".themeImgUrl").css("background-image", [[${imgSrc}]] == '-1' ? blankImg : "url(" + [[${imgSrc}]] + ")");
+});
+
 </script>
 <style th:inline="text">
-.themeImgUrl {background-image: url("[[${imgSrc}]]");}
 .themeImgList {background-size:250px 250px;width:50px;height:50px;margin:0 auto;}
 .themeImg {width:100px;height:100px;margin:0 auto;}
 </style>

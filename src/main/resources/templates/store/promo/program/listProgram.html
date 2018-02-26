@@ -9,9 +9,7 @@
 
 
 <script type="text/javascript" th:inline="javascript">
-$(function() {
-	refreshPageData([[${listJson}]]);
-});
+
 
 function queryPage(pageNumber) {
 	showLoading();
@@ -190,11 +188,19 @@ function editImgChange() {
 	var y = new Number($("#editProgImgY").val());
 	$("#editProgImg").css("background-position", "-" + 100*x + "px -" + 100*y +"px")
 }
+
+
+$(function() {
+	refreshPageData([[${listJson}]]);
+	
+	var href = location.href.split("/");
+	var blankImg = "url(" + href[0] + "//" + href[2] + contextPath + "static/img/blank.png)";
+	$(".progImgUrl").css("background-image", [[${imgSrc}]] == '-1' ? blankImg : "url(" + [[${imgSrc}]] + ")");
+});
 </script>
 
 
 <style th:inline="text">
-.progImgUrl {background-image: url("[[${imgSrc}]]");}
 .progImgList {background-size:250px 250px;width:50px;height:50px;margin:0 auto;}
 .progImg {width:100px;height:100px;margin:0 auto;}
 </style>

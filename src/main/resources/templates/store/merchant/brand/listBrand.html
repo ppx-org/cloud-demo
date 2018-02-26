@@ -13,10 +13,6 @@ function refreshData(data) {
 	$("#" + pageTemplateId).parent().append(template(pageTemplateId, data));
 }
 
-$(function() {
-	refreshData([[${listJson}]]);
-});
-
 function query() {
 	showLoading();
 	$.post([[@{/brand/listJson}]], "status=" + $("[name=status]:checked").val(), function(r) {
@@ -129,10 +125,18 @@ function editImgChange() {
 	var y = new Number($("#editBrandImgY").val());
 	$("#editBrandImg").css("background-position", "-" + 100*x + "px -" + 100*y +"px")
 }
+
+$(function() {
+	refreshData([[${listJson}]]);
+	
+	var href = location.href.split("/");
+	var blankImg = "url(" + href[0] + "//" + href[2] + contextPath + "static/img/blank.png)";
+	$(".brandImgUrl").css("background-image", [[${imgSrc}]] == '-1' ? blankImg : "url(" + [[${imgSrc}]] + ")");
+});
+
 </script>
 
 <style th:inline="text">
-.brandImgUrl {background-image: url("[[${imgSrc}]]");}
 .brandImgList {background-size:250px 250px;width:50px;height:50px;margin:0 auto;}
 .brandImg {width:100px;height:100px;margin:0 auto;}
 </style>

@@ -3,6 +3,7 @@ package com.ppx.cloud.store.content.img;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +16,6 @@ public class ImgService extends MyDaoSupport {
 	
 	
 	public List<Img> listImg() {
-		//getJdbcTemplate().update("delete from img where MERCHANT_ID = -1");
-		
 		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();		
 		String countSql = "select count(*) from home_img where MERCHANT_ID = ?";
@@ -43,11 +42,11 @@ public class ImgService extends MyDaoSupport {
 		return 1;
 	}
 	
-	
 	public String getImgSrc(String type) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		String sql = "select IMG_SRC from home_img where MERCHANT_ID = ? and IMG_TYPE = ?";
-		return getJdbcTemplate().queryForObject(sql, String.class, merchantId, type);
+		String sql = "select ifnull(IMG_SRC, '-1') from home_img where MERCHANT_ID = ? and IMG_TYPE = ? union select -1 limit 1";
+		String r = getJdbcTemplate().queryForObject(sql, String.class, merchantId, type);
+		return r;
 	}
 	
 }
