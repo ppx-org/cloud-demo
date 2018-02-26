@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.micro.common.MGrantContext;
-import com.ppx.cloud.search.show.brand.MBrand;
 import com.ppx.cloud.search.util.BitSetUtils;
 
 

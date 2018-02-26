@@ -2,8 +2,6 @@ package com.ppx.cloud.search.show.category;
 
 import java.util.List;
 
-import com.ppx.cloud.common.jdbc.annotation.Id;
-
 public class MCategory {
 	
 	private Integer cid;

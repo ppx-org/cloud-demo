@@ -6,16 +6,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.util.DateUtils;
-import com.ppx.cloud.micro.common.MGrantContext;
-import com.ppx.cloud.search.query.bean.MQueryBean;
 import com.ppx.cloud.search.query.bean.QueryPageList;
 import com.ppx.cloud.search.util.BitSetUtils;
 import com.ppx.cloud.storecommon.page.MPage;

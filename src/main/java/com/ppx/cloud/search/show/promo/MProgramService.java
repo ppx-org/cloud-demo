@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.util.DateUtils;
 import com.ppx.cloud.micro.common.MGrantContext;
-import com.ppx.cloud.search.show.brand.MBrand;
 import com.ppx.cloud.search.util.BitSetUtils;
 
 
@@ -18,8 +17,6 @@ import com.ppx.cloud.search.util.BitSetUtils;
 public class MProgramService extends MyDaoSupport {
 	
 
-	
-	
 	public List<MProgram> listProgram() {		
 		
 		int merchantId = MGrantContext.getWxUser().getMerchantId();
