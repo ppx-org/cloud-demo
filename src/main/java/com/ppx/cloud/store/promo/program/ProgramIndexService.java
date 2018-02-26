@@ -60,6 +60,10 @@ public class ProgramIndexService extends MyDaoSupport {
 		statusHistory.setCreator(creator);
 		insert(statusHistory);
 		
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		String updateSql = "INSERT INTO search_last_updated(MERCHANT_ID,PROG_LAST_UPDATED) VALUES (?,now()) ON DUPLICATE KEY UPDATE PROG_LAST_UPDATED=now()";
+		getJdbcTemplate().update(updateSql, merchantId);
+		
 		return progId + "," + RUNNING_STATUS + "," + Dict.getProgStatusDesc(RUNNING_STATUS);
 	}
 	
@@ -93,6 +97,10 @@ public class ProgramIndexService extends MyDaoSupport {
 		int creator = GrantContext.getLoginAccount().getAccountId();
 		statusHistory.setCreator(creator);
 		insert(statusHistory);
+		
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		String updateSql = "INSERT INTO search_last_updated(MERCHANT_ID,PROG_LAST_UPDATED) VALUES (?,now()) ON DUPLICATE KEY UPDATE PROG_LAST_UPDATED=now()";
+		getJdbcTemplate().update(updateSql, merchantId);
 		return progId + "," + STOP_STATUS + "," + Dict.getProgStatusDesc(STOP_STATUS);
 	}
 	

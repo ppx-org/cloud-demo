@@ -5,7 +5,7 @@ CREATE TABLE test
 (
   TEST_ID 		int(11) not null auto_increment,
   TEST_NAME 	varchar(32) not null,
-  TEST_TIME 	timestamp not null default cURRENT_TIMESTAMP,
+  TEST_TIME 	timestamp not null default CURRENT_TIMESTAMP,
   TEST_DATE 	date default NULL,
   primary key (TEST_ID)
 );

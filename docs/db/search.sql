@@ -67,6 +67,14 @@ create table search_hot_word
 	primary key (HOT_ID)
 );
 
+create table search_last_updated
+(
+	MERCHANT_ID 		int(11) NOT NULL,
+	PROG_LAST_UPDATED 	datetime,
+	PROD_LAST_UPDATED 	datetime,
+	primary key (MERCHANT_ID)
+)
+
 
 /** TODO 存在更新，不存在插入, 超过10就删除,?异步处理 */
 create table search_last_word

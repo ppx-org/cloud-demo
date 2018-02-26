@@ -29,6 +29,8 @@ public class SearchVersionController {
 
 		mv.addObject("listJson", listJson());
 		
+		mv.addObject("lastUpdate", serv.getLastUpdated());
+		
 		return mv;
 	}
 	

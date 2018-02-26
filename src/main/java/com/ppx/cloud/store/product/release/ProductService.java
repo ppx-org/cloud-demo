@@ -197,6 +197,11 @@ public class ProductService extends MyDaoSupport {
 		
 		String sql = "update product set PROD_STATUS = ? where PROD_ID = ?";
 		getJdbcTemplate().update(sql, 2, prodId);
+		
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		String updateSql = "INSERT INTO search_last_updated(MERCHANT_ID,PROD_LAST_UPDATED) VALUES (?,now()) ON DUPLICATE KEY UPDATE PROD_LAST_UPDATED=now()";
+		getJdbcTemplate().update(updateSql, merchantId);
+		
 		return 2;
 	}
 	
@@ -213,6 +218,11 @@ public class ProductService extends MyDaoSupport {
 		
 		String sql = "update product set PROD_STATUS = ? where PROD_ID = ?";
 		getJdbcTemplate().update(sql, 3, prodId);
+		
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		String updateSql = "INSERT INTO search_last_updated(MERCHANT_ID,PROD_LAST_UPDATED) VALUES (?,now()) ON DUPLICATE KEY UPDATE PROD_LAST_UPDATED=now()";
+		getJdbcTemplate().update(updateSql, merchantId);
+		
 		return 3;
 	}
 	

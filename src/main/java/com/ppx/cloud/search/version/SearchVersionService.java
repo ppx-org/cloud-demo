@@ -12,6 +12,19 @@ import com.ppx.cloud.search.util.BitSetUtils;
 @Service
 public class SearchVersionService extends MyDaoSupport {
 	
+	public SearchLastUpdated getLastUpdated() {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		String countSql = "select count(*) from search_last_updated where MERCHANT_ID = ?";
+		int c = getJdbcTemplate().queryForObject(countSql, Integer.class, merchantId);
+		if (c == 0) {
+			return new SearchLastUpdated();
+		}
+		
+		String sql = "select * from search_last_updated where MERCHANT_ID = ?";
+		SearchLastUpdated searchLastUpdated = getJdbcTemplate().queryForObject(sql, 
+				BeanPropertyRowMapper.newInstance(SearchLastUpdated.class), merchantId);
+		return searchLastUpdated;
+	}
 	
 	public List<SearchVersion> listVersion() {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();

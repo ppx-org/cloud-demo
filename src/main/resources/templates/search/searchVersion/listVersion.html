@@ -51,7 +51,10 @@ function viewDetail(obj) {
 <body>
 <div class="page-list-body">
 	<div class="page-list-query">
-		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>搜索版本管理</span></div>
+		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>搜索版本管理</span>
+			(产品状态最后更新时间：<span th:text="${lastUpdate.prodLastUpdated}"></span>
+			促销状态最后更新时间：<span th:text="${lastUpdate.progLastUpdated}"></span>)
+		</div>
 	</div>
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
