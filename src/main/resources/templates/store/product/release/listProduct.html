@@ -133,17 +133,17 @@ function exportExcel() {
 		</select>
 		
 		<label>仓库:</label>
-		<select class="form-control" id="repoId" name="repoId">
+		<select class="form-control input-sm" id="repoId" name="repoId">
 			<option value="">全部</option><option th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${listRepo}"></option>
 		</select>
 		
 		<label>分类:</label>
-		<select class="form-control" id="catId" name="catId" onchange="catChange(this)">
+		<select class="form-control input-sm" id="catId" name="catId" onchange="catChange(this)">
 			<option value="">全部</option><option th:attr="data-mainCatId=${item.parentId}" th:value="${item.catId}" th:text="${item.catName}" th:each="item:${listCat}"></option>
 		</select>
 		
 		<label>bbbbb:</label>
-		<select class="form-control" id="brandId" name="brandId" onchange="localStorage.defaultBrandId=$(this).val()">
+		<select class="form-control input-sm" id="brandId" name="brandId" onchange="localStorage.defaultBrandId=$(this).val()">
 			<option value="">全部</option><option th:value="${item.brandId}" th:text="${item.brandName}" th:each="item:${listBrand}"></option>
 		</select>
 		

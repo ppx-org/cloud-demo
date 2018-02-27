@@ -1,12 +1,19 @@
 package com.ppx.cloud.store.product.release;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.PreparedStatementCallback;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +37,8 @@ public class ProductService extends MyDaoSupport {
 	private ProgramIndexService programIndexService;
 	
 	public PageList<Product> listProduct(Page page, Product bean) {
+		
+		
 		Map<String, Object> map = queryProduct(bean);
 		StringBuilder cSql = (StringBuilder)map.get("cSql");
 		StringBuilder qSql = (StringBuilder)map.get("qSql");
@@ -38,6 +47,16 @@ public class ProductService extends MyDaoSupport {
 		List<Product> list = queryPage(Product.class, page, cSql, qSql, c.getParaList());
 		return new PageList<Product>(list, page);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	private Map<String, Object> queryProduct(Product bean) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
