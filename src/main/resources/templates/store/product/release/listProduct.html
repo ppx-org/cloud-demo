@@ -97,13 +97,15 @@ function exportExcel() {
 	showLoading();
 	$("#pageNumber").val(1);
 	$.post([[@{/product/exportProduct}]], $("#queryForm").serialize(), function(r) {
-		var trHtml = "<tr><th>产品ID</th><th>产品标题</th></tr>";
-		if (r.arrayList) {
-			r.arrayList.forEach(function(v, index, array) {
-				  trHtml += '<tr><td>' + v.prodId + '</td><td>' + v.prodTitle + '</td></tr>';
-			});
-		}
-		
+		var th = ['产品ID', '仓库', '分类', '品牌', '产品标题', '价格', '库存', '状态'];
+		var trHtml = '<tr><th>' + th.join('</th><th>') + '</th></tr>';
+		r.arrayList.forEach(function(v) {
+			var td = [v.prodId, $("#repoId option[value=" + v.repoId + "]").text(), $("#catId option[value=" + v.catId + "]").text()];
+			td = td.concat($("#brandId option[value=" + v.brandId + "]").text());
+			td = td.concat([v.prodTitle, v.prodPrice, v.prodStock, v.prodStatusDesc]);;
+			
+			trHtml += '<tr><td>' + td.join('</td><td>') + '</td></tr>';
+		});
 		tableToExcel(trHtml, "产品列表");
 		hideLoading();
 	});
@@ -121,7 +123,7 @@ function exportExcel() {
 </head>
 
 <body>
-<div th:replace="common/fragment/common::pageList('产品管理')">
+<div th:replace="common/fragment/common::pageList('xxxx')">
 	<div th:fragment="queryFragment">
 		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
 		
@@ -140,7 +142,7 @@ function exportExcel() {
 			<option value="">全部</option><option th:attr="data-mainCatId=${item.parentId}" th:value="${item.catId}" th:text="${item.catName}" th:each="item:${listCat}"></option>
 		</select>
 		
-		<label>品牌:</label>
+		<label>bbbbb:</label>
 		<select class="form-control" id="brandId" name="brandId" onchange="localStorage.defaultBrandId=$(this).val()">
 			<option value="">全部</option><option th:value="${item.brandId}" th:text="${item.brandName}" th:each="item:${listBrand}"></option>
 		</select>
@@ -159,7 +161,7 @@ function exportExcel() {
 		
 	</div>
 	<table th:fragment="listFragment">
-	<tr>
+	<tr style="display:none">
 		<th>ID</th>
 		<th>仓库</th>
 		<th>分类</th>
@@ -172,7 +174,7 @@ function exportExcel() {
 	</tr>
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
-	<tr>
+	<tr style="display:none">
 		<td class="w-id">{{v.prodId}}</td>
 		<td class="w-id">{{getRepoName(v.repoId)}}</td>
 		<td class="w-id">{{getCatName(v.catId)}}</td>
