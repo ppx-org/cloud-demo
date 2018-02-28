@@ -23,6 +23,7 @@ import com.ppx.cloud.store.merchant.category.CategoryService;
 import com.ppx.cloud.store.merchant.repo.RepositoryService;
 import com.ppx.cloud.store.product.release.bean.Product;
 import com.ppx.cloud.store.product.release.bean.ProductDetail;
+import com.ppx.cloud.store.product.release.bean.ProductExport;
 
 
 @Controller	
@@ -54,6 +55,7 @@ public class ProductController {
 		
 		return mv;
 	}
+
 
 	@PostMapping @ResponseBody
 	public Map<String, Object> listJson(Page page, Product bean) {
@@ -174,5 +176,27 @@ public class ProductController {
 		return ControllerReturn.ok(list);
 	}
 	
+	
+	
+	// >>>>>>>>>>>>>>>>>>>>>>>>export product detail
+	
+	@GetMapping
+	public ModelAndView viewExportDetail() {
+		ModelAndView mv = new ModelAndView();
+		
+		mv.addObject("listRepo", repoServ.displayRepository());
+		mv.addObject("listCat", catServ.displayAllCat());
+		mv.addObject("listBrand", brandServ.displayBrand());
+		
+		mv.addObject("productStatusList", Dict.listProdStatus());
+		
+		return mv;
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> exportProductDetail(Product bean) {
+		List<ProductExport> list = serv.exportProductDetail(bean);
+		return ControllerReturn.ok(list);
+	}
 }
 

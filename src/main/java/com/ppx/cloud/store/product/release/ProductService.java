@@ -1,19 +1,12 @@
 package com.ppx.cloud.store.product.release;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.PreparedStatementCallback;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +18,7 @@ import com.ppx.cloud.grant.common.GrantContext;
 import com.ppx.cloud.store.product.changestatus.ChangeStatus;
 import com.ppx.cloud.store.product.release.bean.Product;
 import com.ppx.cloud.store.product.release.bean.ProductDetail;
+import com.ppx.cloud.store.product.release.bean.ProductExport;
 import com.ppx.cloud.store.product.release.bean.ProductImg;
 import com.ppx.cloud.store.product.release.bean.Sku;
 import com.ppx.cloud.store.promo.program.ProgramIndexService;
@@ -93,6 +87,22 @@ public class ProductService extends MyDaoSupport {
 		
 		List<Product> r = (List<Product>)super.getJdbcTemplate().query(qSql.toString(), 
 				BeanPropertyRowMapper.newInstance(Product.class), c.getParaList().toArray());
+		return r;
+	}
+	
+	
+	public List<ProductExport> exportProductDetail(Product bean) {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		
+		MyCriteria c = createCriteria("and").addAnd("REPO_ID = ?", bean.getRepoId());
+		String sql = "select p.*, (select concat(min(PRICE), '-', max(PRICE)) from sku where PROD_ID = p.PROD_ID) PROD_PRICE,"
+				+ " (select sum(STOCK_NUM) from sku where PROD_ID = p.PROD_ID) PROD_STOCK, d.BAR_CODE, d.PROD_POSITION, "
+				+ " (select group_concat(concat('SKU_ID:', SKU_ID, ';数量:', STOCK_NUM, ';名称:', SKU_NAME, ';价格:', PRICE) order by SKU_PRIO SEPARATOR '<BR>') from sku where PROD_ID = p.PROD_ID) SKU_MSG"
+				+ " from product p join product_detail d on p.PROD_ID = d.PROD_ID where p.MERCHANT_ID = ?" + c;
+		c.addPrePara(merchantId);
+		
+		List<ProductExport> r = (List<ProductExport>)super.getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(ProductExport.class), c.getParaList().toArray());
+		
 		return r;
 	}
 	

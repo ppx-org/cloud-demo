@@ -95,14 +95,13 @@ function catChange(obj) {
 
 function exportExcel() {
 	showLoading();
-	$("#pageNumber").val(1);
 	$.post([[@{/product/exportProduct}]], $("#queryForm").serialize(), function(r) {
-		var th = ['产品ID', '仓库', '分类', '品牌', '产品标题', '价格', '库存', '状态'];
+		var th = ['产品ID', '价格', '仓库', '分类', '品牌', '产品标题', '库存', '状态'];
 		var trHtml = '<tr><th>' + th.join('</th><th>') + '</th></tr>';
 		r.arrayList.forEach(function(v) {
-			var td = [v.prodId, $("#repoId option[value=" + v.repoId + "]").text(), $("#catId option[value=" + v.catId + "]").text()];
+			var td = [v.prodId, v.prodPrice, $("#repoId option[value=" + v.repoId + "]").text(), $("#catId option[value=" + v.catId + "]").text()];
 			td = td.concat($("#brandId option[value=" + v.brandId + "]").text());
-			td = td.concat([v.prodTitle, v.prodPrice, v.prodStock, v.prodStatusDesc]);;
+			td = td.concat([v.prodTitle, v.prodStock, v.prodStatusDesc]);;
 			
 			trHtml += '<tr><td>' + td.join('</td><td>') + '</td></tr>';
 		});
@@ -157,6 +156,8 @@ function exportExcel() {
 			<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 			||||
 			<button type="button" class="btn btn-default btn-sm" onclick="exportExcel();">导出excel</button>
+			
+			<a href="viewExportDetail" target="_blank">导出明细</a>
 		</div>
 		
 	</div>
