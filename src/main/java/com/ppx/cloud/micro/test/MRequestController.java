@@ -27,7 +27,6 @@ public class MRequestController {
 	
 	@GetMapping
 	public ModelAndView testHome(HttpServletRequest request) {
-		
 		ModelAndView mv = new ModelAndView();
 		return mv;
 	}

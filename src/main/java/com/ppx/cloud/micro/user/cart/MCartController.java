@@ -19,30 +19,17 @@ public class MCartController {
 	@Autowired
 	private MCartService serv;
 	
-	
-	
-	
 	@PostMapping @ResponseBody
 	public Map<String, Object> addSku(@RequestParam Integer skuId) {
-		
 		int r = serv.addSku(skuId);
-		
 		return ControllerReturn.ok(r);
 	}
 	
-	
-	
 	@PostMapping @ResponseBody
 	public Map<String, Object> listSku() {
-		
 		List<SkuIndex> skuIndexList = serv.listSku();
-		
-		
-		
 		return ControllerReturn.ok(skuIndexList);
 	}
-	
-	
 	
 }
 

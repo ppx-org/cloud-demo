@@ -38,7 +38,7 @@ function testRequest() {
 	*/
 	
 	// confirm
-	var json = {skuId:[1,3,4], num:[1,4,4]};
+	var json = {jsCode:"abc-value"};
 	$.post([[@{/}]] + $("#url").val(), JSON.stringify(json), function(r) {
 		$("#returnJson").text(JSON.stringify(r));
 	});
@@ -52,7 +52,7 @@ function testRequest() {
 
 
 
-<input type="text" id="url" value="MStore/listStore" style="width:300px">
+<input type="text" id="url" value="MLogin/login" style="width:300px">
 
 <button type="button" onclick="testRequest()">test</button>
 

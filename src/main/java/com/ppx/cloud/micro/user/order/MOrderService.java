@@ -28,8 +28,6 @@ import com.ppx.cloud.storecommon.price.bean.SkuIndex;
 public class MOrderService extends MyDaoSupport {
 	
 	
-	
-	
 	public MPageList<UserOrder> listMyOrder(MPage page) {
 		String openid = MGrantContext.getWxUser().getOpenid();
 		int storeId = MGrantContext.getWxUser().getStoreId();
@@ -144,8 +142,6 @@ public class MOrderService extends MyDaoSupport {
 				+ "?,?,?,?,?)";
 		
 		getJdbcTemplate().batchUpdate(insertItemSql, argsList);
-		
-		
 		
 		
 		return confirmReturn;

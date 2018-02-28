@@ -11,7 +11,7 @@ public class MLoginService extends MyDaoSupport {
 	
 	public void test() {
 		
-		System.out.println("------------------go go go----------------");
+		System.out.println("------------------test----------------");
 		
 	}
 	
