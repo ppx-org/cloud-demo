@@ -53,7 +53,6 @@ public class QueryService extends MyDaoSupport {
 		Map<String, Object> findMap = findProdId(sId, w, p, date, cId, bId, tId, gId, fast, orderType);
 		
 		
-		
 		if (p.getTotalRows() == 0) {
 			return new QueryPageList(); 
 		}
@@ -119,21 +118,7 @@ public class QueryService extends MyDaoSupport {
 		
 		
 		
-		
-		
-		
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		// 除了关键字的查询条件 >>>>>>>>>>>>>>>>>>>>>>>
-		
 		
 		BitSet fastBs = null;
 		// 查fast
@@ -165,7 +150,6 @@ public class QueryService extends MyDaoSupport {
 			BitSet promoBs = BitSetUtils.readBitSet(orderType + "/" + BitSetUtils.PATH_PROMO + "/" + date, gId + "");
 			resultBs.and(promoBs);
 		}
-		
 		
 		
 		p.setTotalRows(resultBs.cardinality());
@@ -216,8 +200,7 @@ public class QueryService extends MyDaoSupport {
 		returnMap.put("themeList", themeList);
 		
 		
-		
-		// promo statistic 改成bs从上面读
+		// promo statistic
 		List<QueryPromo> progList = new ArrayList<QueryPromo>();
 		List<Integer> progIdList = listProgId(orderType, date);		
 		for (Integer progId : progIdList) {	
@@ -294,9 +277,7 @@ public class QueryService extends MyDaoSupport {
 		
 		NamedParameterJdbcTemplate jdbc = new NamedParameterJdbcTemplate(getJdbcTemplate());
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("brandIdList", brandIdMapNum.keySet());	
-		
-		System.out.println("xxxxxxxxxxxxxxxx:" + brandIdMapNum.keySet());
+		paramMap.put("brandIdList", brandIdMapNum.keySet());
 		
 		String progSql = "select BRAND_ID BID, BRAND_NAME BN from brand where BRAND_ID in (:brandIdList) order by BRAND_PRIO";
 		
@@ -375,215 +356,12 @@ public class QueryService extends MyDaoSupport {
 		}
 		return returnList;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	// 使用在搜索词转名称再转换成ID
-	/*
-	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>cat
-	public QueryPageList queryCat(Integer storeId, QueryPage p, Integer cId) {
-		BitSet resultBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, storeId + "");
-		if (cId != null) {
-			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_CAT, cId + "");
-			resultBs.and(bs);
-		}
-		
-		
-		// statistic
-		List<QueryCategory> initCatList = new ArrayList<QueryCategory>();
-		List<Integer> catIdList = listCatId();				
-		for (Integer catId : catIdList) {	
-			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_CAT, catId + "");
-			bs.and(resultBs);
-			int n = bs.cardinality();
-			if (n != 0) initCatList.add(new QueryCategory(catId, n));
-		}
-		
-		p.setTotalRows(resultBs.cardinality());
-		List<Integer> prodIdList = BitSetUtils.bsToPage(resultBs, (p.getPageNumber() - 1) * p.getPageSize(), p.getPageSize());
-		List<QueryProduct> prodList = commonServ.listProduct(prodIdList, storeId);
-		
-		List<QueryCategory> catList = listCategory(initCatList);
-		QueryPageList queryPageList = new QueryPageList(p, prodList);
-		queryPageList.setCatList(catList);
-		
-		return queryPageList;
-	}
-	
-	
-	
-	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>brand
-	public QueryPageList queryBrand(Integer storeId, QueryPage p, Integer bId) {
-		
-		BitSet resultBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, storeId + "");
-		if (bId != null) {
-			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_BRAND, bId + "");
-			resultBs.and(bs);
-		}
-		
-		
-		// statistic
-		List<QueryBrand> initBrandList = new ArrayList<QueryBrand>();
-		List<Integer> brandIdList = listBrandId();
-		
-		BitSet totalBrandBs = new BitSet();
-		for (Integer brandId : brandIdList) {
-			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_BRAND, brandId + "");
-			totalBrandBs.or(bs);
-			bs.and(resultBs);
-			int n = bs.cardinality();
-			if (n != 0) initBrandList.add(new QueryBrand(brandId, n));
-		}
-		resultBs.and(totalBrandBs);
-		
-		
-		p.setTotalRows(resultBs.cardinality());
-		List<Integer> prodIdList = BitSetUtils.bsToPage(resultBs, (p.getPageNumber() - 1) * p.getPageSize(), p.getPageSize());
-		List<QueryProduct> prodList = commonServ.listProduct(prodIdList, storeId);
-		
-		List<QueryBrand> brandList = listBrand(initBrandList);
-		QueryPageList queryPageList = new QueryPageList(p, prodList);
-		queryPageList.setBrandList(brandList);
-		
-		return queryPageList;
-	}
 
-	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>theme
-	public QueryPageList queryTheme(Integer storeId, QueryPage p, Integer tId) {
-		
-		BitSet resultBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, storeId + "");
-		if (tId != null) {
-			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_THEME, tId + "");
-			resultBs.and(bs);
-		}
-		
-		
-		// statistic
-		List<QueryTheme> themeList = new ArrayList<QueryTheme>();
-		List<Integer> themeIdList = listThemeId();
-		
-		BitSet totalBrandBs = new BitSet();
-		for (Integer themeId : themeIdList) {
-			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_THEME, themeId + "");
-			totalBrandBs.or(bs);
-			bs.and(resultBs);
-			int n = bs.cardinality();
-			if (n != 0) themeList.add(new QueryTheme(themeId, n));
-		}
-		resultBs.and(totalBrandBs);
-		
-		
-		p.setTotalRows(resultBs.cardinality());
-		List<Integer> prodIdList = BitSetUtils.bsToPage(resultBs, (p.getPageNumber() - 1) * p.getPageSize(), p.getPageSize());
-		List<QueryProduct> prodList = commonServ.listProduct(prodIdList, storeId);
-		
-		List<QueryTheme> promoList = listTheme(themeList);
-		QueryPageList queryPageList = new QueryPageList(p, prodList);
-		queryPageList.setThemeList(promoList);
-		
-		return queryPageList;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>promo
-	public QueryPageList queryPromo(Integer storeId, String date, QueryPage p, Integer gId) {
-		
-		BitSet resultBs = BitSetUtils.readBitSet(BitSetUtils.PATH_STORE, storeId + "");
-		if (gId != null) {
-			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_PROMO + "/" + date, gId + "");
-			resultBs.and(bs);
-		}
-		
-		
-		// statistic
-		List<QueryPromo> progList = new ArrayList<QueryPromo>();
-		List<Integer> progIdList = listProgId(date);
-		
-		BitSet totalPromoBs = new BitSet();
-		for (Integer progId : progIdList) {	
-			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.PATH_PROMO + "/" + date, progId + "");
-			totalPromoBs.or(bs);
-			bs.and(resultBs);
-			int n = bs.cardinality();
-			if (n != 0) progList.add(new QueryPromo(progId, n));
-		}
-		resultBs.and(totalPromoBs);
-		
-		
-		
-		
-		p.setTotalRows(resultBs.cardinality());
-		List<Integer> prodIdList = BitSetUtils.bsToPage(resultBs, (p.getPageNumber() - 1) * p.getPageSize(), p.getPageSize());
-		List<QueryProduct> prodList = commonServ.listProduct(prodIdList, storeId);
-		
-		List<QueryPromo> promoList = listPromo(progList);
-		QueryPageList queryPageList = new QueryPageList(p, prodList);
-		queryPageList.setPromoList(promoList);
-		
-		return queryPageList;
-	}
-	*/
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }
+
+
+
+
+
+
