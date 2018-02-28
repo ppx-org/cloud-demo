@@ -1,6 +1,7 @@
 package com.ppx.cloud.micro.content.home;
 
 public class MSwiper {
+	
 	private String src;
 	
 	private String url;

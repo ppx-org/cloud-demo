@@ -28,36 +28,26 @@ public class MHomeService extends MyDaoSupport {
 		return list;
 	}
 	
-	
 	public List<MLevel> listLevel() {
 		int storeId = MGrantContext.getWxUser().getStoreId();
 		
-		String levelSql = "select LEVEL_ID, LEVEL_NAME, PROD_ID FIRST_PROD_ID from (select p.PROD_ID, p.LEVEL_ID, l.LEVEL_NAME from home_level_product p " + 
-			"join home_level l on p.LEVEL_ID = l.LEVEL_ID and l.STORE_ID = ? " + 
-			" order by l.LEVEL_PRIO, p.PROD_PRIO) t group by level_id";
+		String levelSql = "select LEVEL_ID, LEVEL_NAME, PROD_ID FIRST_PROD_ID from (select p.PROD_ID, p.LEVEL_ID, l.LEVEL_NAME from home_level_product p" + 
+			" join home_level l on p.LEVEL_ID = l.LEVEL_ID and l.STORE_ID = ? " + 
+			" order by l.LEVEL_PRIO, p.PROD_PRIO) t group by LEVEL_ID";
 		List<MLevel> list = getJdbcTemplate().query(levelSql, BeanPropertyRowMapper.newInstance(MLevel.class), storeId);
 		
 		return list;
 	}
 	
-	
-	
 	public List<MQueryProduct> listLevelProd(MPage page) {
 		Integer storeId = MGrantContext.getWxUser().getStoreId();
-		StringBuilder sb = new StringBuilder("select p.PROD_ID PID from home_level_product p join home_level l on p.LEVEL_ID = l.LEVEL_ID and l.STORE_ID = ? " + 
-			"order by l.LEVEL_PRIO, p.PROD_PRIO");
-		
-		List<Integer> prodIdList = mQueryPage(Integer.class, page, sb, storeId);
-		
+		StringBuilder sql = new StringBuilder("select p.PROD_ID PID from home_level_product p join home_level l on p.LEVEL_ID = l.LEVEL_ID and l.STORE_ID = ?" + 
+			" order by l.LEVEL_PRIO, p.PROD_PRIO");
+		List<Integer> prodIdList = mQueryPage(Integer.class, page, sql, storeId);
 		List<MQueryProduct> prodList = commonServ.listProduct(prodIdList, storeId);
-		
 		
 		return prodList;
 	}
-	
-	
-	
-	
 	
 	
 }

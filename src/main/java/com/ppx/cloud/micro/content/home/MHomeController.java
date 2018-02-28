@@ -19,7 +19,6 @@ public class MHomeController {
 	@Autowired
 	private MHomeService serv;
 	
-	// 合成一个
 	@PostMapping @ResponseBody
 	public Map<String, Object> listJson() {
 		List<MSwiper> swiperList = serv.listSwiper();
@@ -35,9 +34,8 @@ public class MHomeController {
 		
 		return returnMap;
 	}
-
 	
-	// 需求单独出来，下拉更多接口
+	// 更多时调用
 	@PostMapping @ResponseBody
 	public Map<String, Object> listLevelProd(MPage page) {
 		List<MQueryProduct> list = serv.listLevelProd(page);
