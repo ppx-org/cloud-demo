@@ -1,9 +1,9 @@
 package com.ppx.cloud.demo.module.test.liepin;
 
 import static io.webfolder.cdp.type.constant.MouseButtonType.Left;
+import static io.webfolder.cdp.type.constant.MouseEventType.MouseMoved;
 import static io.webfolder.cdp.type.constant.MouseEventType.MousePressed;
 import static io.webfolder.cdp.type.constant.MouseEventType.MouseReleased;
-import static io.webfolder.cdp.type.constant.MouseEventType.MouseMoved;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,21 +11,16 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
@@ -99,7 +94,7 @@ public class LiepinController {
 			
 			//chromeSession.evaluate("$('#verify-state').click();");
 			double offsetX = 933; // 有头 OK
-			double offsetY = 308; // 有头 OK
+			//double offsetY = 308; // 有头 OK
 			click(220 + offsetX, 275);
 			
 			
@@ -205,8 +200,8 @@ public class LiepinController {
 	    // System.out.println("........cookie:" + sendCookie);
         
 	    // https://jobads.zhaopin.com/Position/PositionAdd
-	    String addUrl = "https://jobads.zhaopin.com/Position/PositionAdd";
-	    RestTemplate restTemplate = new RestTemplate();
+//	    String addUrl = "https://jobads.zhaopin.com/Position/PositionAdd";
+//	    RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();        
         headers.add("Accept", "application/xml, text/xml, */*");
         headers.add("Content-Type", "application/x-www-form-urlencoded");
@@ -216,11 +211,11 @@ public class LiepinController {
         
         
                
-        HttpEntity<String> formEntity = new HttpEntity<String>("", headers);
-        ResponseEntity<String> r = restTemplate.exchange(addUrl, HttpMethod.GET, formEntity, String.class, "");
+//        HttpEntity<String> formEntity = new HttpEntity<String>("", headers);
+//        ResponseEntity<String> r = restTemplate.exchange(addUrl, HttpMethod.GET, formEntity, String.class, "");
 		
         
-		String str = r.getBody();
+//		String str = r.getBody();
 		//System.out.println("xxxxxxxxxxxxxxxxx:body:" + str);
 		
 		List<Cookie> lastCookieList = chromeSession.getCommand().getPage().getCookies();

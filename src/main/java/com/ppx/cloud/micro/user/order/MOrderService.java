@@ -127,7 +127,7 @@ public class MOrderService extends MyDaoSupport {
 		
 		// minus stock
 		String stockSql = "update sku set STOCK_NUM = STOCK_NUM - ? where SKU_ID = ?";
-		int[] stockR = getJdbcTemplate().batchUpdate(stockSql, stockArgsList);
+		getJdbcTemplate().batchUpdate(stockSql, stockArgsList);
 		
 		
 		//  order item
@@ -143,7 +143,7 @@ public class MOrderService extends MyDaoSupport {
 				+ "ITEM_NUM, ITEM_TITLE, ITEM_SKU, ITEM_IMG, ITEM_PROMO) values(?,?,?,?,?,"
 				+ "?,?,?,?,?)";
 		
-		int itemR[] = getJdbcTemplate().batchUpdate(insertItemSql, argsList);
+		getJdbcTemplate().batchUpdate(insertItemSql, argsList);
 		
 		
 		

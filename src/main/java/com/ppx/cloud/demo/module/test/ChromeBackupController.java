@@ -3,7 +3,6 @@ package com.ppx.cloud.demo.module.test;
 import static io.webfolder.cdp.type.constant.MouseButtonType.Left;
 import static io.webfolder.cdp.type.constant.MouseEventType.MousePressed;
 import static io.webfolder.cdp.type.constant.MouseEventType.MouseReleased;
-import static java.lang.String.format;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -185,8 +184,8 @@ public class ChromeBackupController {
 	@GetMapping @ResponseBody
 	public Map<String, Object> login(HttpServletRequest request) {
         // 登录894,446
-		double x = 190;
-		Input input = staticSession.getCommand().getInput();
+//		double x = 190;
+//		Input input = staticSession.getCommand().getInput();
         //input.dispatchMouseEvent(MousePressed, 894d - x, 684d, null, null, Left, 1, null, null);
         //input.dispatchMouseEvent(MouseReleased, 894d - x, 684d, null, null, Left, 1, null, null);
         

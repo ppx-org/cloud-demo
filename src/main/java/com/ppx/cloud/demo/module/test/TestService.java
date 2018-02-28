@@ -38,7 +38,7 @@ public class TestService extends MyDaoSupport {
 		int c = jdbc.queryForObject("select :para", paraMap, Integer.class);
 		System.out.println("ccccccccc:" + c);
 		
-		List<Integer> list = jdbc.queryForList("select :para union select 200", paraMap, Integer.class);
+		jdbc.queryForList("select :para union select 200", paraMap, Integer.class);
 	
 		
 		System.out.println("------------------end");

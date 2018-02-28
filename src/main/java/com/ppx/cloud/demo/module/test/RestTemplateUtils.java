@@ -22,6 +22,7 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+@SuppressWarnings("deprecation")
 public class RestTemplateUtils {
 
 	public static RestTemplate getRestTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException, Exception {
@@ -31,15 +32,13 @@ public class RestTemplateUtils {
         return restTemplate;
     }
 	
-	@SuppressWarnings("deprecation")
 	private static CloseableHttpClient acceptsUntrustedCertsHttpClient(boolean isRedirect) throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
         HttpClientBuilder b = HttpClientBuilder.create();
         if (isRedirect) {
         	b.disableAutomaticRetries(); // 关闭自动处理重定向
             b.setRedirectStrategy(new LaxRedirectStrategy()); // 利用LaxRedirectStrategy处理POST重定向问题
         }
-        @SuppressWarnings("deprecation")
-		SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
+        SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
             public boolean isTrusted(X509Certificate[] arg0, String arg1) {
                 return true;
             }
