@@ -1,0 +1,90 @@
+安装步骤
+1.配置MongoDB的yum源
+创建yum源文件：
+vim /etc/yum.repos.d/mongodb-org-3.4.repo
+
+添加以下内容：
+[mongodb-org-3.4]  
+name=MongoDB Repository  
+baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.4/x86_64/  
+gpgcheck=1  
+enabled=1  
+gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
+
+这里可以修改 gpgcheck=0, 省去gpg验证
+安装之前先更新所有包 ：yum update （可选操作）
+2.安装MongoDB
+安装命令：
+yum -y install mongodb-org
+
+安装完成后
+查看mongo安装位置
+ whereis mongod
+
+查看修改配置文件 ： 
+vim /etc/mongod.conf
+
+3.启动MongoDB 
+启动mongodb ：
+systemctl start mongod.service
+
+停止mongodb ：
+systemctl stop mongod.service
+
+查到mongodb的状态：
+systemctl status mongod.service
+
+4.外网访问需要关闭防火墙：
+CentOS 7.0默认使用的是firewall作为防火墙，这里改为iptables防火墙。
+关闭firewall：
+systemctl stop firewalld.service #停止firewall
+systemctl disable firewalld.service #禁止firewall开机启动
+
+
+5.设置开机启动
+systemctl enable mongod.service
+
+6.启动Mongo shell
+命令：
+mongo
+
+查看数据库：show dbs
+
+7.设置mongodb远程访问：
+编辑mongod.conf注释bindIp,并重启mongodb.
+vim /etc/mongod.conf
+
+重启mongodb：
+systemctl restart mongod.service
+
+
+添加账号密码
+步骤一：在未开启认证的环境下，登录到数据库
+mongo 
+
+步骤二：切换到admin数据库
+> use admin
+
+步骤三：创建管理员账号
+> db.createUser({user:"root",pwd:"123456",roles:["root"]})
+
+新增的用户在 db.system.users 中
+> db.getCollectionNames()
+[ "system.indexes", "system.users", "system.version" ]
+
+步骤四：验证用户是否创建成功
+> db.auth("root","123456")
+1
+> exit
+bye
+
+步骤五：杀掉进程，重启mongoDB服务
+ps -ef | grep mongod
+
+kill -9 pid 
+带认证模式开启Mongod
+mongod --auth --config /etc/mongod.conf
+
+
+
+
