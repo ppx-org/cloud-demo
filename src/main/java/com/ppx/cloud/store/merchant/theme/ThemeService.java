@@ -13,7 +13,6 @@ import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
-import com.ppx.cloud.demo.module.test.TestBean;
 import com.ppx.cloud.grant.common.GrantContext;
 import com.ppx.cloud.grant.service.MerchantService;
 

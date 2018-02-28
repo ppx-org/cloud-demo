@@ -1,6 +1,5 @@
 package com.ppx.cloud.micro.content.product;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;

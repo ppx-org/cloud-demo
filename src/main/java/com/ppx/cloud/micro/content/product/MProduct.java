@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.springframework.util.StringUtils;
 
-import com.ppx.cloud.storecommon.price.utils.DecodePolicy;
-
 public class MProduct {
 	
 	private Integer prodId;

@@ -43,7 +43,7 @@ public class ChangeStockService extends MyDaoSupport {
 		
 		// 变更库存
 		String updateSql = "update sku set STOCK_NUM = STOCK_NUM + ? where SKU_ID = ?";
-		int r = getJdbcTemplate().update(updateSql, stockChange.getChangeNum(), stockChange.getSkuId());
+		getJdbcTemplate().update(updateSql, stockChange.getChangeNum(), stockChange.getSkuId());
 		
 		String getSql = "select STOCK_NUM from sku where SKU_ID = ?";
 		int stock = getJdbcTemplate().queryForObject(getSql, Integer.class, stockChange.getSkuId());

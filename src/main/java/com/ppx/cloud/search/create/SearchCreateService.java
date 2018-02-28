@@ -202,7 +202,7 @@ public class SearchCreateService extends MyDaoSupport {
 		}
 
 		
-		int r[] = getJdbcTemplate().batchUpdate(insertSql, argsList);
+		getJdbcTemplate().batchUpdate(insertSql, argsList);
 		
 		returnMap.put("productSize", prodList.size());
 		return returnMap;

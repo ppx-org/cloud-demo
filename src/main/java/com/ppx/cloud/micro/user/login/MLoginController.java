@@ -1,7 +1,6 @@
 package com.ppx.cloud.micro.user.login;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpEntity;

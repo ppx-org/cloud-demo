@@ -3,7 +3,6 @@ package com.ppx.cloud.store.content.img;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +38,7 @@ public class ImgService extends MyDaoSupport {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		String sql = "update home_img set IMG_SRC = ? where MERCHANT_ID = ? and IMG_TYPE = ?";
 		int r = getJdbcTemplate().update(sql, src, merchantId, type);
-		return 1;
+		return r;
 	}
 	
 	public String getImgSrc(String type) {

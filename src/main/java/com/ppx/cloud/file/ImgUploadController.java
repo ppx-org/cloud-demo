@@ -22,8 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.grant.common.GrantContext;
 
-import net.coobird.thumbnailator.Thumbnails;
-
 @Controller
 public class ImgUploadController {
 
