@@ -94,6 +94,8 @@ public class ProductService extends MyDaoSupport {
 	public List<ProductExport> exportProductDetail(Product bean) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
+		
+		
 		MyCriteria c = createCriteria("and").addAnd("REPO_ID = ?", bean.getRepoId());
 		String sql = "select p.*, (select concat(min(PRICE), '-', max(PRICE)) from sku where PROD_ID = p.PROD_ID) PROD_PRICE,"
 				+ " (select sum(STOCK_NUM) from sku where PROD_ID = p.PROD_ID) PROD_STOCK, d.BAR_CODE, d.PROD_POSITION, "

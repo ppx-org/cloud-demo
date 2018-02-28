@@ -1,5 +1,8 @@
 
 code: https://github.com/demi520/wxapp-qrcode
 
+初始化SQL
+
+
 
 

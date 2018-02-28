@@ -20,7 +20,7 @@ public class LoginService extends MyDaoSupport {
 			merchantMap.put("ACCOUNT_ID", -1);
 			merchantMap.put("LOGIN_ACCOUNT", a);
 			merchantMap.put("MERCHANT_ID", -1);
-			merchantMap.put("MERCHANT_NAME", "super administrator");
+			merchantMap.put("MERCHANT_NAME", "超级管理员");
 			return merchantMap;
 		}
 		
