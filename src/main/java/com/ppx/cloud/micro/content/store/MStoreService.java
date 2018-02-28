@@ -14,9 +14,9 @@ public class MStoreService extends MyDaoSupport {
 	public List<MStore> listStore() {
 		int merchantId = MGrantContext.getWxUser().getMerchantId();
 		
-		String sql = "select s.STORE_ID ID, s.STORE_NAME NAME, s.STORE_NO NO, r.REPO_ADDRESS ADDR,  "
-				+ " s.STORE_LNG LNG, s.STORE_LAT LAT, s.STORE_PHONE PHONE, s.STORE_IMG IMG from store s left join repository r "
-				+ "on s.STORE_ID = r.REPO_ID where s.MERCHANT_ID = ? and s.RECORD_STATUS = ? order by s.STORE_ID desc";
+		String sql = "select s.STORE_ID ID, s.STORE_NAME NAME, s.STORE_NO NO, r.REPO_ADDRESS ADDR,"
+				+ " s.STORE_LNG LNG, s.STORE_LAT LAT, s.STORE_PHONE PHONE, s.STORE_IMG IMG from store s left join repository r"
+				+ " on s.STORE_ID = r.REPO_ID where s.MERCHANT_ID = ? and s.RECORD_STATUS = ? order by s.STORE_ID desc";
 		List<MStore> list = getJdbcTemplate().query(sql,  BeanPropertyRowMapper.newInstance(MStore.class), merchantId, 1);
 		
 		return list;

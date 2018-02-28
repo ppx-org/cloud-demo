@@ -1,12 +1,7 @@
 package com.ppx.cloud.micro.content.store;
 
-import com.ppx.cloud.common.jdbc.annotation.Id;
-import com.ppx.cloud.common.jdbc.annotation.Table;
-
-@Table(name = "store")
 public class MStore {
 
-	@Id
 	private Integer id;
 
 	private String name;

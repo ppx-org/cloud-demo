@@ -1,6 +1,5 @@
 package com.ppx.cloud.micro.search;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +18,10 @@ public class MSearchController {
 	
 	@PostMapping @ResponseBody
 	public Map<String, Object> listWord() {
-		List<String> lastWordList = serv.listLastWord();
-		List<String> hotWordList = serv.listHotWord();
 		
 		Map<String, Object> returnMap = ControllerReturn.ok();
-		returnMap.put("lastWordList", lastWordList);
-		returnMap.put("hotWordList", hotWordList);
+		returnMap.put("lastWordList", serv.listLastWord());
+		returnMap.put("hotWordList", serv.listHotWord());
 		
 		return returnMap;
 	}
