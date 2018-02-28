@@ -14,6 +14,7 @@ public class MGrantFilterUtils {
 	
 	public static WxUser getLoginUser(HttpServletRequest request) {
 		
+		
 		String PPXTOKEN = request.getHeader("PPXTOKEN");
 		String storeId = request.getHeader("storeId");
 		String merchantId = request.getHeader("merchantId");

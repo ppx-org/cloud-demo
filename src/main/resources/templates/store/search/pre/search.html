@@ -109,25 +109,33 @@ $(function() {
 	else {
 		localStorage.defaultStoreId = $("#sId").val();
 	}
+	
+	if  (localStorage.defaultDate) {
+		$("#d option[value=" + localStorage.defaultDate + "]").attr("selected", true);
+	}
+	else {
+		localStorage.defaultDate = $("#d").val();
+	}
 });
 
 function storeChange(obj) {
 	localStorage.defaultStoreId = $(obj).val();
 }
+
+function dateChange(obj) {
+	localStorage.defaultDate = $(obj).val();
+}
+
 </script>
 
 <style>
 #filter a {padding-left:8px}
-.page-list-title {display: none;}
 .selected {color:white;background-color: blue;}
 </style>
 
 </head>
 
 <body>
-<ul th:replace="store/search/pre/preCommon::head"></ul>
-<script type="text/javascript">$("#search").tab('show')</script>
-
 <div th:replace="common/fragment/common::pageList('搜索测试')">
 	<div th:fragment="queryFragment">
 		<input type="hidden" id="fast" name="fast">
@@ -143,6 +151,7 @@ function storeChange(obj) {
 		</select>
 		
 		<select class="form-control input-sm" id="sId" name="sId" onchange="storeChange(this)">
+			<option value="-1">请选择店铺</option>
 			<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
 		</select>
 		<input type="text" class="form-control input-sm" id="w" name="w" placeholder="请输入搜索词" style="width:200px;" value="招聘">
@@ -169,9 +178,21 @@ function storeChange(obj) {
 	</td>
 	</tr>
 	
-	<tr th:replace="store/search/pre/preCommon::prod"></tr>
-	
-	
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr style="height:110px;">
+		<td class="w-id">
+			<img src="" style="width:80px;height:80px">
+		</td>
+		<td class="w-id">
+			<div>{{v.t}}</div>
+			<div style="color:green">{{if v.f == 0}}2小时提货{{else}}立即{{/if}}</div>
+			<div style="color:red">¥{{v.p}}</div>
+			<div style="color:red"><span>{{v.promo}}</span></div>
+		</td>
+	</tr>
+	{{/each}}
+	</script>
 	</table>
 </div>
 

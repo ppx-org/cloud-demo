@@ -42,7 +42,6 @@ public class GrantInterceptor implements HandlerInterceptor {
 				
 				return false;
 			}
-			
 			MGrantContext.setWxUser(u);
 			return true;
 		}

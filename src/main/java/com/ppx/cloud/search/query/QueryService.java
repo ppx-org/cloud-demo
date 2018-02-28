@@ -3,9 +3,11 @@ package com.ppx.cloud.search.query;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -13,7 +15,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.ppx.cloud.common.controller.ControllerContext;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
+import com.ppx.cloud.micro.common.MGrantContext;
+import com.ppx.cloud.monitor.AccessLog;
+import com.ppx.cloud.monitor.AccessUtils;
 import com.ppx.cloud.search.query.bean.QueryBrand;
 import com.ppx.cloud.search.query.bean.QueryCategory;
 import com.ppx.cloud.search.query.bean.QueryPageList;
@@ -356,7 +362,27 @@ public class QueryService extends MyDaoSupport {
 		}
 		return returnList;
 	}
-
+	
+	
+	public void insertSearchHistory(String openid, String w) {
+		AccessLog log = new AccessLog();
+		log.setUri("asyn");
+		log.setBeginTime(new Date());
+		log.setIp("127.0.0.0");
+		ControllerContext.setAccessLog(log);
+		try {
+			String sql = "r"
+					+ " ON DUPLICATE KEY UPDATE CREATED = now()";
+			getJdbcTemplate().update(sql, openid, w, openid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		AccessLog accessLog = ControllerContext.getAccessLog();
+		accessLog.setSpendTime(System.currentTimeMillis() - accessLog.getBeginTime().getTime());
+		AccessUtils.writeQueue(accessLog);
+		
+		
+	}
 	
 }
 

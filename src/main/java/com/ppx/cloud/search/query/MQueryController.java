@@ -2,6 +2,7 @@ package com.ppx.cloud.search.query;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.util.DateUtils;
@@ -26,9 +28,22 @@ public class MQueryController {
 	@Autowired
 	private QueryService serv;
 	
+	@Autowired
+	private WebApplicationContext app;
+	
 	// 移动端接口
 	@PostMapping @ResponseBody
 	public Map<String, Object> q(@RequestBody MQueryBean b) {
+		if (!StringUtils.isEmpty(b.getW())) {
+			// 异步插入搜索历史
+			String openid = MGrantContext.getWxUser().getOpenid();
+			CompletableFuture.runAsync(() -> {
+				//QueryService s = app.getBean(QueryService.class);	
+				serv.insertSearchHistory(openid, b.getW());
+			});
+		}
+		
+		
 		Integer sId = MGrantContext.getWxUser().getStoreId();
 		
 		// 分类少的时候可以放开
