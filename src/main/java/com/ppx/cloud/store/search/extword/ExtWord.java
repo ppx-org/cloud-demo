@@ -3,7 +3,7 @@ package com.ppx.cloud.store.search.extword;
 import com.ppx.cloud.common.jdbc.annotation.Table;
 
 
-@Table(name="SEARCH_EXT_WORD")
+@Table(name="search_ext_word")
 public class ExtWord {
 	
 	private Integer merchantId;

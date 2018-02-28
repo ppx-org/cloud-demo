@@ -4,7 +4,7 @@ import com.ppx.cloud.common.jdbc.annotation.Id;
 import com.ppx.cloud.common.jdbc.annotation.Table;
 
 
-@Table(name="SEARCH_HOT_WORD")
+@Table(name="search_hot_word")
 public class HotWord {
 	
 	@Id

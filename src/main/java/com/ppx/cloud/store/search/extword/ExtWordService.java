@@ -32,45 +32,12 @@ public class ExtWordService extends MyDaoSupport {
 		bean.setMerchantId(merchantId);
 		return insert(bean, "MERCHANT_ID", "EXT_WORD");
 	}
-
 	
 	public int deleteExtWord(String id) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		return getJdbcTemplate().update("delete from search_ext_word where MERCHANT_ID = ? and EXT_WORD = ?", merchantId, id);
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
+
+

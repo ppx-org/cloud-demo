@@ -16,9 +16,7 @@ public class HotWordService extends MyDaoSupport {
 	
 	public List<HotWord> listHotWord(Integer storeId) {
 		String sql = "select * from search_hot_word where STORE_ID = ? order by HOT_PRIO";
-		
 		List<HotWord> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(HotWord.class), storeId);
-		
 		return list;
 	}
 	
@@ -62,7 +60,6 @@ public class HotWordService extends MyDaoSupport {
 	}
 	
 	
-	
 	@Transactional
 	public int up(Integer storeId, Integer id) {
 		lockMerchant();
@@ -74,7 +71,6 @@ public class HotWordService extends MyDaoSupport {
 		int upId = -1;
 		int upPrio = -1;
 		for (HotWord b : list) {
-			
 			if (b.getHotId() == id) {
 				prio = b.getHotPrio();
 				break;

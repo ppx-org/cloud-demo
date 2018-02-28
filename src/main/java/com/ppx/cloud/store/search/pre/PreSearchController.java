@@ -18,9 +18,7 @@ public class PreSearchController {
 	@GetMapping
 	public ModelAndView search() {
 		ModelAndView mv = new ModelAndView();
-		
 		mv.addObject("storeList", storeServ.listStore());
-		
 		return mv;
 	}
 

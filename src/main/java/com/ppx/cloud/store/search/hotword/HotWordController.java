@@ -27,8 +27,6 @@ public class HotWordController {
 	@GetMapping
 	public ModelAndView listHotWord() {
 		ModelAndView mv = new ModelAndView();
-	
-		
 		mv.addObject("storeList", storeServ.listStore());
 		return mv;
 	}
