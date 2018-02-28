@@ -8,7 +8,7 @@ create table search_normal_v1
 	MERCHANT_ID int(11) NOT NULL,
 	WORDS 		varchar(256) NOT NULL,
 	primary key (PROD_ID)
-);
+) comment='综合排序搜索v1';
 
 create table search_normal_v2
 (
@@ -17,7 +17,7 @@ create table search_normal_v2
 	MERCHANT_ID int(11) NOT NULL,
 	WORDS 		varchar(256) NOT NULL,
 	primary key (PROD_ID)
-);
+) comment='综合排序搜索v2';
 
 create table search_new_v1
 (
@@ -26,7 +26,7 @@ create table search_new_v1
 	MERCHANT_ID int(11) NOT NULL,
 	WORDS 		varchar(256) NOT NULL,
 	primary key (PROD_ID)
-);
+) comment='最新排序搜索v1';
 
 create table search_new_v2
 (
@@ -35,7 +35,7 @@ create table search_new_v2
 	MERCHANT_ID int(11) NOT NULL,
 	WORDS 		varchar(256) NOT NULL,
 	primary key (PROD_ID)
-);
+) comment='最新排序搜索v2';
 
 
 create table search_ext_word
@@ -74,7 +74,7 @@ create table search_last_updated
 	PROG_LAST_UPDATED 	datetime,
 	PROD_LAST_UPDATED 	datetime,
 	primary key (MERCHANT_ID)
-);
+) comment='产品或促销最后变更时间';
 
 
 /** TODO 存在更新，不存在插入, 超过10就删除,?异步处理 */
@@ -84,7 +84,7 @@ create table search_last_word
 	LAST_WORD	varchar(32) NOT NULL,
 	CREATED  	timestamp not null default CURRENT_TIMESTAMP,
 	primary key (OPENID, LAST_WORD)
-);
+) comment='搜索历史';
 
 
 

@@ -1,3 +1,21 @@
+/** 创建表的时候写注释
+create table test1
+(
+field_name int comment '字段的注释'
+) comment='表的注释';
+*/
+
+
+
+
+
+
+
+
+
+
+
+
 
 /** ----------------- content/home ----------------- */
 
