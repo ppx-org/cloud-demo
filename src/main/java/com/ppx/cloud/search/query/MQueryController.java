@@ -16,6 +16,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.util.DateUtils;
 import com.ppx.cloud.micro.common.MGrantContext;
+import com.ppx.cloud.micro.common.WxUser;
 import com.ppx.cloud.search.query.bean.MQueryBean;
 import com.ppx.cloud.search.query.bean.QueryPageList;
 import com.ppx.cloud.search.util.BitSetUtils;
@@ -28,18 +29,14 @@ public class MQueryController {
 	@Autowired
 	private QueryService serv;
 	
-	@Autowired
-	private WebApplicationContext app;
-	
 	// 移动端接口
 	@PostMapping @ResponseBody
 	public Map<String, Object> q(@RequestBody MQueryBean b) {
 		if (!StringUtils.isEmpty(b.getW())) {
 			// 异步插入搜索历史
-			String openid = MGrantContext.getWxUser().getOpenid();
+			WxUser u = MGrantContext.getWxUser();
 			CompletableFuture.runAsync(() -> {
-				//QueryService s = app.getBean(QueryService.class);	
-				serv.insertSearchHistory(openid, b.getW());
+				serv.insertSearchHistory(u.getStoreId(), u.getOpenid(), b.getW());
 			});
 		}
 		

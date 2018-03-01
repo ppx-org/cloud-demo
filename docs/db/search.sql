@@ -76,15 +76,23 @@ create table search_last_updated
 	primary key (MERCHANT_ID)
 ) comment='产品或促销最后变更时间';
 
-
-/** TODO 存在更新，不存在插入, 超过10就删除,?异步处理 */
 create table search_last_word
 (
 	OPENID		varchar(32) NOT NULL,
 	LAST_WORD	varchar(32) NOT NULL,
 	CREATED  	timestamp not null default CURRENT_TIMESTAMP,
 	primary key (OPENID, LAST_WORD)
-) comment='搜索历史';
+) comment='搜索最近记录';
+
+create table search_history_word
+(
+	HIS_ID		 int(11) NOT NULL auto_increment,
+	STORE_ID	 int(11) NOT NULL,
+	OPENID		 varchar(32) NOT NULL,
+	HIS_WORD	 varchar(32) NOT NULL,
+	CREATED  	 timestamp not null default CURRENT_TIMESTAMP,
+	primary key (HIS_ID)
+) comment='搜索历史记录';
 
 
 

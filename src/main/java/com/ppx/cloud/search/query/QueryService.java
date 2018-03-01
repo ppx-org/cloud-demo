@@ -7,17 +7,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.ppx.cloud.common.controller.ControllerContext;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
-import com.ppx.cloud.micro.common.MGrantContext;
 import com.ppx.cloud.monitor.AccessLog;
 import com.ppx.cloud.monitor.AccessUtils;
 import com.ppx.cloud.search.query.bean.QueryBrand;
@@ -364,24 +363,36 @@ public class QueryService extends MyDaoSupport {
 	}
 	
 	
-	public void insertSearchHistory(String openid, String w) {
+	public void insertSearchHistory(Integer storeId, String openid, String w) {
+		
 		AccessLog log = new AccessLog();
-		log.setUri("asyn");
+		log.setUri("asyn insertSearchHistory");
 		log.setBeginTime(new Date());
 		log.setIp("127.0.0.0");
 		ControllerContext.setAccessLog(log);
 		try {
-			String sql = "r"
-					+ " ON DUPLICATE KEY UPDATE CREATED = now()";
-			getJdbcTemplate().update(sql, openid, w, openid);
+			String insertSql = "insert into search_history_word(OPENID, STORE_ID, HIS_WORD) values(?, ?, ?)"; 
+			getJdbcTemplate().update(insertSql, openid, w);
+			
+			String selectSql = "select ifnull((select LAST_WORD from search_last_word where OPENID = ?"
+					+ " and CREATED = (select min(CREATED) from search_last_word where OPENID = ?)"
+					+ " and (select count(*) from search_last_word where OPENID = ?) > ?), '') LAST_WORD";
+			String deleteLastWord = getJdbcTemplate().queryForObject(selectSql, String.class, openid, openid, openid, 3);
+			
+			if (!StringUtils.isEmpty(deleteLastWord)) {
+				String deleteSql = "delete from search_last_word where OPENID = ? and LAST_WORD = ?";
+				getJdbcTemplate().update(deleteSql, openid, deleteLastWord);
+			}
+			
+			String insertLastSql = "insert into search_last_word(OPENID, LAST_WORD) values(?,?) on duplicate key update CREATED = now()";
+			getJdbcTemplate().update(insertLastSql, openid, w);
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		AccessLog accessLog = ControllerContext.getAccessLog();
-		accessLog.setSpendTime(System.currentTimeMillis() - accessLog.getBeginTime().getTime());
-		AccessUtils.writeQueue(accessLog);
-		
-		
+		log.setSpendTime(System.currentTimeMillis() - log.getBeginTime().getTime());
+		AccessUtils.writeQueue(log);
 	}
 	
 }
