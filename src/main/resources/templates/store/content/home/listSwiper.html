@@ -13,7 +13,9 @@ function refreshData(data) {
 }
 
 $(function() {
-	query();
+	if ($("#storeId").val() != null) {
+		query();
+	}
 });
 
 function query() {
