@@ -1,0 +1,12 @@
+
+// script
+cd D:\Program Files\MongoDB\Server\3.4\bin
+mongoexport -d ppx-config-dev -c grant_counters -o grant_counters.json
+mongoexport -d ppx-config-dev -c grant_resource -o grant_resource.json
+mongoexport -d ppx-config-dev -c grant_resource -o grant_resource_uri.json
+mongoexport -d ppx-config-dev -c grant_resource -o grant_uri_index.json
+
+
+
+
+
