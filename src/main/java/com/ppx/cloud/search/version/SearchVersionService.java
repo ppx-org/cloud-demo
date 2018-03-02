@@ -33,9 +33,10 @@ public class SearchVersionService extends MyDaoSupport {
 		int c = getJdbcTemplate().queryForObject(countSql, Integer.class, merchantId);
 		
 		if (c == 0) {
-			String insertSql = "insert into search_version(MERCHANT_ID, VERSION_NAME) values(?, ?)";
-			getJdbcTemplate().update(insertSql, merchantId, "v1");
-			getJdbcTemplate().update(insertSql, merchantId, "v2");
+			int updator = GrantContext.getLoginAccount().getAccountId();
+			String insertSql = "insert into search_version(MERCHANT_ID, VERSION_NAME, UPDATED, UPDATOR) values(?, ?, now(), ?)";
+			getJdbcTemplate().update(insertSql, merchantId, "v1", updator);
+			getJdbcTemplate().update(insertSql, merchantId, "v2", updator);
 		}
 		
 		String querySql = "select * from search_version where MERCHANT_ID = ?";

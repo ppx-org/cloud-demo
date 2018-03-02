@@ -11,7 +11,6 @@
 $(function() {
 });
 
-
 function exportExcel() {
 	showLoading();
 	$.post([[@{/product/exportProductDetail}]], $("#queryForm").serialize(), function(r) {
@@ -29,8 +28,6 @@ function exportExcel() {
 	});
 }
 
-
-
 </script>
 
 <style>
@@ -40,7 +37,7 @@ function exportExcel() {
 </head>
 
 <body>
-<div th:replace="common/fragment/common::pageList('xxxx')">
+<div th:replace="common/fragment/common::pageList('产品明细导出')">
 	<div th:fragment="queryFragment">
 		
 		<label>仓库:</label>
@@ -60,7 +57,7 @@ function exportExcel() {
 			<option value="">全部</option><option th:value="${item.brandId}" th:text="${item.brandName}" th:each="item:${listBrand}"></option>
 		</select>
 		
-		<button type="button" class="btn btn-default btn-sm" onclick="exportExcel();">xxxxxxxxxxx</button>
+		<button type="button" class="btn btn-default btn-sm" onclick="exportExcel();">导出产品明细</button>
 	
 	</div>
 	<table th:fragment="listFragment">
