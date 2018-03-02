@@ -54,7 +54,7 @@ template.helper('actionHtml', function(orderId, orderStatus) {
 </head>
 
 <body>
-<div th:replace="common/fragment/common::pageList('stOr')">
+<div th:replace="common/fragment/common::pageList('店铺订单')">
 	<div th:fragment="queryFragment">
 		<label>st:</label>
 		<select class="form-control input-sm" name="storeId">
@@ -68,12 +68,12 @@ template.helper('actionHtml', function(orderId, orderStatus) {
 		</select>
 		
 		<label>oID:</label>
-		<input type="text" class="form-control input-sm" name="orderId" placeholder="请输入oID" style="width:100px;" value="">
+		<input type="text" class="form-control input-sm" name="orderId" placeholder="请输入订单ID" style="width:100px;" value="">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
-		<th>oID</th>
+		<th>订单ID</th>
 		<th>title</th>
 		<th>操作</th>
 	</tr>
