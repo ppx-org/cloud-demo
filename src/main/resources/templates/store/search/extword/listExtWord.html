@@ -55,7 +55,7 @@ function remove(id) {
 </head>
 
 <body>
-<div th:replace="common/fragment/common::pageList('分词管理')">
+<div th:replace="common/fragment/common::pageList('扩展词管理')">
 	<div th:fragment="queryFragment">
 		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
 		<input type="text" class="form-control input-sm" name="extWord" placeholder="请输入分词" style="width:200px;">
@@ -81,7 +81,7 @@ function remove(id) {
 
 <div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>分词：</label>
+		<label class="col-sm-3 control-label"><span class="required">*</span>扩展词：</label>
 		<div class="col-sm-7"><input type="text" name="extWord" class="form-control validate[required]" maxlength="32"></div>
 	</div>
 </div>
