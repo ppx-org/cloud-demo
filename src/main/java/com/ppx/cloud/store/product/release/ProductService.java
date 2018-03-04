@@ -31,8 +31,6 @@ public class ProductService extends MyDaoSupport {
 	private ProgramIndexService programIndexService;
 	
 	public PageList<Product> listProduct(Page page, Product bean) {
-		
-		
 		Map<String, Object> map = queryProduct(bean);
 		StringBuilder cSql = (StringBuilder)map.get("cSql");
 		StringBuilder qSql = (StringBuilder)map.get("qSql");
@@ -41,16 +39,6 @@ public class ProductService extends MyDaoSupport {
 		List<Product> list = queryPage(Product.class, page, cSql, qSql, c.getParaList());
 		return new PageList<Product>(list, page);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	private Map<String, Object> queryProduct(Product bean) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
@@ -63,12 +51,11 @@ public class ProductService extends MyDaoSupport {
 			.addAnd("BRAND_ID = ?", bean.getBrandId())
 			.addAnd("PROD_ID = ?", bean.getProdId())
 			.addAnd("PROD_TITLE like ?", "%", bean.getProdTitle(), "%");
-			
 		
 		String whereSql = " where p.MERCHANT_ID = ?";
 		StringBuilder cSql = new StringBuilder("select count(*) from product p").append(whereSql).append(c);
 		StringBuilder qSql = new StringBuilder("select p.*, (select concat(min(PRICE), '-', max(PRICE)) from sku where PROD_ID = p.PROD_ID) PROD_PRICE,"
-				+ " (select sum(STOCK_NUM) from sku where PROD_ID = p.PROD_ID) PROD_STOCK from product p").append(whereSql).append(c);
+				+ " (select sum(STOCK_NUM) from sku where PROD_ID = p.PROD_ID) PROD_STOCK from product p").append(whereSql).append(c).append(" order by p.PROD_ID desc");
 		
 		c.addPrePara(merchantId);
 		
@@ -90,11 +77,8 @@ public class ProductService extends MyDaoSupport {
 		return r;
 	}
 	
-	
 	public List<ProductExport> exportProductDetail(Product bean) {
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		
-		
 		
 		MyCriteria c = createCriteria("and").addAnd("REPO_ID = ?", bean.getRepoId());
 		String sql = "select p.*, (select concat(min(PRICE), '-', max(PRICE)) from sku where PROD_ID = p.PROD_ID) PROD_PRICE,"
@@ -113,6 +97,7 @@ public class ProductService extends MyDaoSupport {
 	public int insertProduct(Product prod, ProductDetail detail, String prodImgSrc,
 			Integer[] stockNum, Float[] price, String[] skuName, String[] skuImgSrc) {
 		
+		int creator = GrantContext.getLoginAccount().getAccountId();
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
 		
 		// 第一个SKU
@@ -136,8 +121,19 @@ public class ProductService extends MyDaoSupport {
 		}
 		if (!skuArgList.isEmpty()) {
 			String insertSkuSql = "insert into sku(PROD_ID, STOCK_NUM, SKU_PRIO, PRICE, SKU_NAME, SKU_IMG_SRC) values(?,?,?,?,?,?)";
-			getJdbcTemplate().batchUpdate(insertSkuSql, skuArgList);
+			getJdbcTemplate().batchUpdate(insertSkuSql, skuArgList);	
 		}
+		
+		// >>>>>>>>>>>>>>>>>>>>>>历史变量记录
+		// change_stock
+		String insertChangeStock = "insert into change_stock(SKU_ID, CHANGE_NUM, CHANGE_TYPE, CREATOR) select SKU_ID, STOCK_NUM, 1, ? from sku where PROD_ID = ?";
+		getJdbcTemplate().update(insertChangeStock, creator, prodId);
+		
+		// change_price
+		String insertChangePrice = "insert into change_price(SKU_ID, CHANGE_PRICE, CREATOR) select SKU_ID, PRICE, ? from sku where PROD_ID = ?";
+		getJdbcTemplate().update(insertChangePrice, creator, prodId);
+		
+		
 		
 		// product
 		prod.setProdId(prodId);
@@ -146,7 +142,6 @@ public class ProductService extends MyDaoSupport {
 		
 		// detail
 		detail.setProdId(prodId);
-		int creator = GrantContext.getLoginAccount().getAccountId();
 		detail.setCreator(creator);
 		insert(detail);
 		
