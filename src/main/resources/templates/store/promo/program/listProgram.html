@@ -51,6 +51,7 @@ function edit(id, x, y) {
 		$("#editProgImgX option[value=" + x + "]").attr("selected", true);
 		$("#editProgImgY option[value=" + y + "]").attr("selected", true);
 		editImgChange();
+		refreshProgImg();
 		$('#edit').modal('show');
 	});
 	
@@ -70,14 +71,17 @@ function remove(id) {
 	var callback = function () {
 		showLoading();
 		$.post([[@{/program/deleteProgram}]], "id=" + id, function(r) {
-			if (r.result == 1) {
+			if (r.result == 0) {
+				alertWarning("删除失败，未启动或停止的促销不能删除");
+				hideLoading();
+			}
+			else if (r.result == 1) {
 				queryPage(1);
 			}
-		});	
+		});
 	}
 	confirm(id, callback);
 }
-
 
 template.helper('getPolicyTypeName', function(policyType) {
 	return $("#queryPolicyType [value=" + policyType + "]").text();
@@ -96,7 +100,6 @@ function initPolicyArgs() {
 
 function policyTypeChange(obj) {
 	initPolicyArgs();
-	
 	
 	var policy = $("#" + $(obj).val() + "Policy");
 	if ($(obj).val() == "Change") {
@@ -168,11 +171,14 @@ function getStatusDesc(progId, progStatus, progStatusDesc) {
 	var pause = '<a href="#" onclick="pause(' + progId + ', this)">[暂停]</a>';
 	var stop = '<a href="#" onclick="stop(' + progId + ', this)">[停止]</a>';
 	
-	if (progStatus == 1 || progStatus == 3 || progStatus == 4) {
+	if (progStatus == 1 || progStatus == 4) {
 		r = progStatusDesc + start;
 	}
-	if (progStatus == 2) {
-		r = progStatusDesc + pause + stop;
+	else if (progStatus == 3) {
+		r = progStatusDesc + start + '&nbsp;&nbsp;' + stop;
+	}
+	else if (progStatus == 2) {
+		r = '<span style="color:red">' + progStatusDesc + '</span>' + pause + '&nbsp;&nbsp;' + stop;
 	}
 	return r + history;
 }
@@ -197,11 +203,15 @@ function editImgChange() {
 
 $(function() {
 	refreshPageData([[${listJson}]]);
-	
+	refreshProgImg();
+});
+
+function refreshProgImg() {
 	var href = location.href.split("/");
 	var blankImg = "url(" + href[0] + "//" + href[2] + contextPath + "static/img/blank.png)";
 	$(".progImgUrl").css("background-image", [[${imgSrc}]] == '-1' ? blankImg : "url(" + [[${imgSrc}]] + ")");
-});
+}
+
 
 function viewStatusHistory(progId) {
 	open(contextPath + 'programStatus/listProgramStatus?progId=' + progId);
@@ -232,14 +242,14 @@ function viewStatusHistory(progId) {
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
-		<th>ID</th>
+		<th>促销ID</th>
 		<th>方案名称</th>
 		<th>开始日期</th>
 		<th>结束日期</th>
 		<th>排序</th>
 		<th>促销类型</th>
-		<th>args</th>
-		<th>TIME</th>
+		<th>参数</th>
+		<th>创建时间</th>
 		<th>状态</th>
 		<th>操作</th>
 	</tr>
@@ -254,7 +264,7 @@ function viewStatusHistory(progId) {
 		<td class="w-id">{{getPolicyTypeName(v.policyType)}}</td>
 		<td class="w-id">{{v.policyArgsDesc}}</td>
 		<td class="w-time">{{v.created}}</td>
-		<td class="w-action">{{getStatusDesc(v.progId, v.progStatus, v.progStatusDesc)}}</td>
+		<td class="w-action-m">{{getStatusDesc(v.progId, v.progStatus, v.progStatusDesc)}}</td>
 		<td class="w-action-m">
 			<a href="#" onclick="remove({{v.progId}})">[删除]</a>&nbsp;&nbsp;
 			<a href="#" onclick="edit({{v.progId}}, {{v.progImgX}}, {{v.progImgY}})">[修改]</a>&nbsp;&nbsp;
@@ -319,7 +329,7 @@ function viewStatusHistory(progId) {
 <div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 780)">
 	<script id="editTemplate" type="text/html">
 	<div class="form-group">
-		<label class="col-sm-2 control-label">ID：</label>
+		<label class="col-sm-2 control-label">促销ID：</label>
 		<div class="col-sm-4"><input type="text" name="progId" value="{{program.progId}}" class="form-control" readonly></div>
 		<label class="col-sm-2 control-label"><span class="required">*</span>方案名称：</label>
 		<div class="col-sm-4"><input type="text" name="progName" value="{{program.progName}}" class="form-control validate[required]" maxlength="32"></div>

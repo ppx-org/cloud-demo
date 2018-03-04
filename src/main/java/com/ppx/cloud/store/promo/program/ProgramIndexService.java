@@ -13,7 +13,7 @@ import com.ppx.cloud.store.promo.statushistory.ProgramStatus;
 
 @Service
 public class ProgramIndexService extends MyDaoSupport {
-	private final int INIT_STATUS = 1;
+	//private final int INIT_STATUS = 1;
 	private final int RUNNING_STATUS = 2;
 	private final int PAUSE_STATUS = 3;
 	private final int STOP_STATUS = 4;
@@ -31,7 +31,8 @@ public class ProgramIndexService extends MyDaoSupport {
 	
 	@Transactional
 	public String start(Integer progId) {
-		if (getStatusForUpdate(progId) == INIT_STATUS) return "-1";
+		int currentStatus = getStatusForUpdate(progId);
+		if (currentStatus == RUNNING_STATUS) return "-1";
 		
 		Program prog = getJdbcTemplate().queryForObject("select * from program where PROG_ID = ?",
 				BeanPropertyRowMapper.newInstance(Program.class), progId);	
@@ -84,7 +85,8 @@ public class ProgramIndexService extends MyDaoSupport {
 	
 	@Transactional
 	public String stop(Integer progId) {
-		if (getStatusForUpdate(progId) != RUNNING_STATUS) return "-1";
+		int currentStatus = getStatusForUpdate(progId);
+		if (currentStatus != RUNNING_STATUS && currentStatus != PAUSE_STATUS) return "-1";
 		
 		// 删除索引
 		String deleteSql = "delete from program_index where PROG_ID = ?";

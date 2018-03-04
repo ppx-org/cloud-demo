@@ -131,7 +131,7 @@ function validate() {
 <div th:replace="common/fragment/common::pageList('产品促销')">
 	<div th:fragment="queryFragment">
 		<input type="hidden" id="progId" name="progId" th:value="${prog.progId}">
-		<button type="button" th:if="${prog.recordStatus != 2}" class="btn btn-success btn-sm" onclick="add()">新增</button>
+		<button type="button" th:if="${prog.progStatus != 2}" class="btn btn-success btn-sm" onclick="add()">新增</button>
 		<input type="text" class="form-control input-sm" name="prodId" placeholder="产品ID" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 		
@@ -151,7 +151,7 @@ function validate() {
 		<td class="w-id">{{v.prodId}}</td>
 		<td class="w-title-m">{{v.prodTitle}}</td>
 		<td class="w-action">
-			<a href="#" th:if="${prog.recordStatus != 2}" onclick="remove('{{v.prodId}}')">[删除]</a>
+			<a href="#" th:if="${prog.progStatus != 2}" onclick="remove('{{v.prodId}}')">[删除]</a>
 		</td>
 	</tr>
 	{{/each}}

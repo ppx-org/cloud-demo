@@ -47,6 +47,12 @@ public class ProgramService extends MyDaoSupport {
 	}
 	
 	public int deleteProgram(Integer id) {
-		return getJdbcTemplate().update("update program set PROG_STATUS = ? where PROG_ID = ?", 0, id);
+		String sql = "select PROG_STATUS from program where PROG_ID = ? for update";
+		int r = getJdbcTemplate().queryForObject(sql, Integer.class, id);
+		// 1:未启动 4：停止
+		if (r == 1 || r == 4) {
+			return getJdbcTemplate().update("update program set PROG_STATUS = ? where PROG_ID = ?", 0, id);
+		}
+		return 0;
 	}
 }
