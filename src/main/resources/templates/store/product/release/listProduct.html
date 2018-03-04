@@ -116,7 +116,7 @@ function exportExcel() {
 
 <style>
 
-.page-list-table {margin-top:45px}
+.page-list-table {margin-top:40px}
 
 </style>
 </head>
@@ -148,13 +148,13 @@ function exportExcel() {
 		
 		<div style="margin:8px;">
 			<label>产品ID:</label>
-			<input type="text" class="form-control input-sm" name="prodId" placeholder="请输入产品ID" style="width:100px;">
+			<input type="text" class="form-control input-sm" name="prodId" placeholder="请输入产品ID" style="width:100px;" onkeyup="this.value=this.value.replace(/\D/g,'')">
 			
 			<label>标题:</label>	
 			<input type="text" class="form-control input-sm" name="prodTitle" placeholder="请输入标题" style="width:200px;">
 			
 			<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
-			||||
+			&nbsp;|&nbsp;
 			<button type="button" class="btn btn-default btn-sm" onclick="exportExcel();">导出excel</button>
 			
 			<a href="viewExportDetail" target="_blank">明细导出</a>
@@ -162,7 +162,7 @@ function exportExcel() {
 		
 	</div>
 	<table th:fragment="listFragment">
-	<tr style="display:none">
+	<tr>
 		<th>产品ID</th>
 		<th>仓库</th>
 		<th>分类</th>
@@ -175,7 +175,7 @@ function exportExcel() {
 	</tr>
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
-	<tr style="display:none">
+	<tr>
 		<td class="w-id">{{v.prodId}}</td>
 		<td class="w-id">{{getRepoName(v.repoId)}}</td>
 		<td class="w-id">{{getCatName(v.catId)}}</td>
