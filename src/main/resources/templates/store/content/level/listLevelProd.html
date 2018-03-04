@@ -34,7 +34,7 @@ function add() {
 		showLoading();
 		$.post([[@{/level/insertLevelProd}]], $("#addForm").serialize(), function(r) {
 			if (r.result == 0) {
-				alertWarning("不存在商品");
+				alertWarning("不存在产品");
 				hideLoading();
 			}
 			else if (r.result == -1) {
@@ -102,8 +102,8 @@ function storeChange() {
 	</div>
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
-		<th>ID</th>
-		<th>商品标题</th>
+		<th>产品ID</th>
+		<th>产品标题</th>
 		<th>排序</th>
 		<th>操作</th>
 	</tr>
