@@ -5,18 +5,6 @@ field_name int comment '字段的注释'
 ) comment='表的注释';
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
 /** ----------------- content/home ----------------- */
 
 create table home_swiper
@@ -57,6 +45,8 @@ create table home_img
 	IMG_SRC		varchar(256),
 	primary key (MERCHANT_ID, IMG_TYPE)
 );
+
+
 
 
 

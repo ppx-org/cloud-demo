@@ -17,6 +17,7 @@ function query() {
 	showLoading();
 	$.post([[@{/theme/listJson}]], "status=" + $("[name=status]:checked").val(), function(r) {
 		refreshData(r);
+		refreshThemeImg();
 		hideLoading();
 	});
 }
@@ -47,6 +48,7 @@ function edit(id, x, y) {
 		$("#editThemeImgX option[value=" + x + "]").attr("selected", true);
 		$("#editThemeImgY option[value=" + y + "]").attr("selected", true);
 		editImgChange();
+		refreshThemeImg();
 		
 		$('#edit').modal('show');
 	});
@@ -130,11 +132,14 @@ function editImgChange() {
 
 $(function() {
 	refreshData([[${listJson}]]);
-	
+	refreshThemeImg();
+});
+
+function refreshThemeImg() {
 	var href = location.href.split("/");
 	var blankImg = "url(" + href[0] + "//" + href[2] + contextPath + "static/img/blank.png)";
 	$(".themeImgUrl").css("background-image", [[${imgSrc}]] == '-1' ? blankImg : "url(" + [[${imgSrc}]] + ")");
-});
+}
 
 </script>
 <style th:inline="text">
@@ -154,7 +159,7 @@ $(function() {
 	</div>
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
-		<th>ID</th>
+		<th>专题ID</th>
 		<th>专题名称</th>
 		<th>排序</th>
 		<th>图片</th>
@@ -167,7 +172,6 @@ $(function() {
 		<td class="w-id">{{v.themeId}}</td>
 		<td class="w-title-s">{{v.themeName}}</td>
 		<td class="w-id"><div class="themeImgUrl themeImgList" style="background-position: -{{v.themeImgX * 50}}px -{{v.themeImgY * 50}}px;"></div></td>
-		<td class="w-id">{{v.recordStatus}}</td>
 		<td class="w-action">
 			{{if arrayList.length != 1 && i !== 0 && v.recordStatus == 1}}
 			<a href="#" onclick="move.top({{v.themeId}})" title="置顶" class="glyphicon glyphicon-step-backward" style="transform: rotate(90deg);"></a>
@@ -178,6 +182,7 @@ $(function() {
 			<a href="#" onclick="move.down({{v.themeId}})" title="下移" class="glyphicon glyphicon-arrow-down"></a>
 			{{/if}}					
 		</td>
+		<td class="w-id">{{if v.recordStatus == 1}}正常{{else}}删除{{/if}}</td>
 		<td class="w-action">
 		{{if v.recordStatus == 1}}
 			<a href="#" onclick="remove({{v.themeId}})">[删除]</a>&nbsp;&nbsp;

@@ -17,6 +17,7 @@ function query() {
 	showLoading();
 	$.post([[@{/brand/listJson}]], "status=" + $("[name=status]:checked").val(), function(r) {
 		refreshData(r);
+		refreshBrandImg();
 		hideLoading();
 	});
 }
@@ -38,8 +39,6 @@ function add() {
 }
 
 function edit(id, x, y) {
-	
-	
 	showLoading();
 	$.post([[@{/brand/getBrand}]], "id=" + id, function(r) {
 		hideLoading();
@@ -50,6 +49,7 @@ function edit(id, x, y) {
 		$("#editBrandImgX option[value=" + x + "]").attr("selected", true);
 		$("#editBrandImgY option[value=" + y + "]").attr("selected", true);
 		editImgChange();
+		refreshBrandImg();
 		$('#edit').modal('show');
 	});
 	
@@ -117,22 +117,25 @@ move.down = function(id) {
 function addImgChange() {
 	var x = new Number($("#addBrandImgX").val());
 	var y = new Number($("#addBrandImgY").val());
-	$("#addBrandImg").css("background-position", "-" + 100*x + "px -" + 100*y +"px")
+	$("#addBrandImg").css("background-position", "-" + 100*x + "px -" + 100*y +"px");
 }
 
 function editImgChange() {
 	var x = new Number($("#editBrandImgX").val());
 	var y = new Number($("#editBrandImgY").val());
-	$("#editBrandImg").css("background-position", "-" + 100*x + "px -" + 100*y +"px")
+	$("#editBrandImg").css("background-position", "-" + 100*x + "px -" + 100*y +"px");
 }
 
 $(function() {
 	refreshData([[${listJson}]]);
-	
+	refreshBrandImg();
+});
+
+function refreshBrandImg() {
 	var href = location.href.split("/");
 	var blankImg = "url(" + href[0] + "//" + href[2] + contextPath + "static/img/blank.png)";
 	$(".brandImgUrl").css("background-image", [[${imgSrc}]] == '-1' ? blankImg : "url(" + [[${imgSrc}]] + ")");
-});
+}
 
 </script>
 
@@ -152,7 +155,7 @@ $(function() {
 	</div>
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
-		<th>ID</th>
+		<th>品牌ID</th>
 		<th>品牌名称</th>
 		<th>图片</th>
 		<th>排序</th>
@@ -175,7 +178,7 @@ $(function() {
 			<a href="#" onclick="move.down({{v.brandId}})" title="下移" class="glyphicon glyphicon-arrow-down"></a>
 			{{/if}}					
 		</td>
-		<td class="w-id">{{v.recordStatus}}</td>
+		<td class="w-id">{{if v.recordStatus == 1}}正常{{else}}删除{{/if}}</td>
 		
 		<td class="w-action">
 		{{if v.recordStatus == 1}}

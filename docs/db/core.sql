@@ -285,3 +285,20 @@ create table user_favorite
 );
 
 
+create table import_data (
+  MERCHANT_ID 	int(11) NOT NULL,
+  ROWNUM 		int(11) NOT NULL,
+  RESULT 		int(11) NOT NULL,
+  INT_1 		int(11) DEFAULT NULL,
+  INT_2 		int(11) DEFAULT NULL,
+  NUM_1 		decimal(7,2) DEFAULT NULL,
+  NUM_2 		decimal(7,2) DEFAULT NULL,
+  CHAR_1 		varchar(32) DEFAULT NULL,
+  CHAR_2 		varchar(32) DEFAULT NULL,
+  primary key (MERCHANT_ID,ROWNUM)
+);
+
+
+
+
+
