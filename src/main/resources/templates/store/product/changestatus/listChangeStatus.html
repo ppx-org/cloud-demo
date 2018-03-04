@@ -41,12 +41,12 @@ function queryPage(pageNumber) {
 	<div th:fragment="queryFragment">
 		<input type="text" class="form-control input-sm" id="prodId" name="prodId" placeholder="请输入产品ID" style="width:200px;" onkeyup="this.value=this.value.replace(/\D/g,'')">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
-		
+		产品标题：
 		<span id="prodMsg"></span>
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
-		<th class="w-id">ID</th>
+		<th class="w-id">历史ID</th>
 		<th class="w-id">状态</th>
 		<th class="w-time">变更时间</th>
 		<th class="w-id">变更人</th>

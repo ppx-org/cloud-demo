@@ -27,7 +27,7 @@ public class ChangeStatusService extends MyDaoSupport {
 	
 	
 	public String getProdMsg(Integer prodId) {
-		String sql = "select ifnull((select concat(PROD_TITLE, ':', PROD_STATUS) from product where PROD_ID = ?), '')";
+		String sql = "select ifnull((select PROD_TITLE from product where PROD_ID = ?), '')";
 		String msg = getJdbcTemplate().queryForObject(sql, String.class, prodId);
 		return msg;
 	}

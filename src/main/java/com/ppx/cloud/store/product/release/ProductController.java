@@ -87,9 +87,13 @@ public class ProductController {
 	}
 
 	@GetMapping
-	public ModelAndView editProduct(@RequestParam(required=true) Integer prodId, @RequestParam(defaultValue="0") Integer editType) {
+	public ModelAndView editProduct(@RequestParam(required=true) Integer prodId) {
+		Product prod = serv.getProduct(prodId);
+		
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("editType", editType);
+		
+		// 0:全部修改  1:(提示:草稿或下架状态才能修改仓库、分类、标题和品牌)
+		mv.addObject("editType", prod.getProdStatus() == 2 ? 1 : 0);
 		// <select
 		mv.addObject("listRepo", repoServ.displayRepository());
 		mv.addObject("listCat", catServ.displaySubCat());
@@ -99,8 +103,6 @@ public class ProductController {
 		// stockChange
 		mv.addObject("listChangeType", Dict.listChangeStockType());
 		
-		
-		Product prod = serv.getProduct(prodId);
 		if (prod.getSkuDesc() == null) {
 			// 页面根据skuDesc是不是为""来判断是否有多个sku
 			prod.setSkuDesc("");

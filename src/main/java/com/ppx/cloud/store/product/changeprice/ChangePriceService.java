@@ -30,7 +30,7 @@ public class ChangePriceService extends MyDaoSupport {
 	
 	
 	public String getSkuMsg(Integer skuId) {
-		String sql = "select ifnull((select concat(SKU_NAME, ':', PRICE) from sku where SKU_ID = ?), '')";
+		String sql = "select ifnull((select concat(ifnull(SKU_NAME, ''), ' 价格:', PRICE) from sku where SKU_ID = ?), '')";
 		String msg = getJdbcTemplate().queryForObject(sql, String.class, skuId);
 
 		return msg;
