@@ -95,9 +95,10 @@ function storeChange() {
 <div class="page-list-body">
 	<div class="page-list-query">
 		<form id="queryForm" class="form-inline">
-			<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>test</span></div>
+			<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>楼层产品</span></div>
 			<input type="hidden" id="levelId" name="levelId" th:value="${levelId}">
 			<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
+			楼层名称:<span th:text="${levelName}"></span>
 		</form>
 	</div>
 	<table class="page-list-table table table-bordered table-condensed">
@@ -132,10 +133,10 @@ function storeChange() {
 	</table>
 </div>
 
-<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
+<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 400)">
 	<div class="form-group">
 		<input type="hidden" name="levelId" th:value="${levelId}" >
-		<label class="col-sm-3 control-label"><span class="required">*</span>id：</label>
+		<label class="col-sm-3 control-label"><span class="required">*</span>产品ID：</label>
 		<div class="col-sm-7"><input type="text" name="prodId" class="form-control validate[required,custom[integer]]" maxlength="32"></div>
 	</div>
 </div>

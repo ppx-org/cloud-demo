@@ -188,7 +188,7 @@ function upload(obj) {
 <div class="page-list-body">
 	<div class="page-list-query">
 		<form id="queryForm" class="form-inline">
-			<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>首页滚动图管理</span></div>
+			<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>首页轮播</span></div>
 			<select class="form-control input-sm" id="storeId" name="storeId" onchange="storeChange(this)">
 				<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
 			</select>
@@ -197,7 +197,7 @@ function upload(obj) {
 	</div>
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
-		<th>ID</th>
+		<th>轮播ID</th>
 		<th>图片</th>
 		<th>URL</th>
 		<th>排序</th>

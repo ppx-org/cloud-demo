@@ -30,11 +30,9 @@ public class LevelController {
 		ModelAndView mv = new ModelAndView();
 		List<Store> storeList = storeServ.listStore();
 		
-		
 		if (storeList.size() > 0) {
 			mv.addObject("listJson", listJson(storeList.get(0).getStoreId()));
 		}
-		
 		
 		mv.addObject("storeList", storeServ.listStore());
 		
@@ -92,6 +90,7 @@ public class LevelController {
 	public ModelAndView listLevelProd(@RequestParam Integer levelId) {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("levelId", levelId);
+		mv.addObject("levelName", serv.getLevel(levelId).getLevelName());
 		
 		mv.addObject("listJson", listLevelProdJson(levelId));
 		return mv;

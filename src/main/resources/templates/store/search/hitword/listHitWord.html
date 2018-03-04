@@ -27,7 +27,6 @@ function queryPage(pageNumber) {
 <body>
 <div th:replace="common/fragment/common::pageList('搜索词管理')">
 	<div th:fragment="queryFragment">
-		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
 		<select class="form-control input-sm" id="storeId" name="storeId" onchange="storeChange(this)">
 				<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
 		</select>
@@ -39,7 +38,7 @@ function queryPage(pageNumber) {
 	<tr>
 		<th>openid</th>
 		<th>搜索词</th>
-		<th>操作</th>
+		<th>搜索时间</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}

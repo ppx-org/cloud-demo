@@ -32,9 +32,9 @@ public class LevelService extends MyDaoSupport {
 		return insert(bean);
 	}
 	
-	public Level getLevel(Integer id) {
+	public Level getLevel(Integer levelId) {
 		Level bean = getJdbcTemplate().queryForObject("select * from home_level where LEVEL_ID = ?",
-				BeanPropertyRowMapper.newInstance(Level.class), id);		
+				BeanPropertyRowMapper.newInstance(Level.class), levelId);		
 		return bean;
 	}
 	

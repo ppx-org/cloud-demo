@@ -49,7 +49,7 @@ function remove(id) {
 			}
 		});	
 	}
-	confirm(id, callback);
+	confirm("确定删除" + id + "?", callback);
 }
 </script>
 </head>
@@ -58,12 +58,12 @@ function remove(id) {
 <div th:replace="common/fragment/common::pageList('扩展词管理')">
 	<div th:fragment="queryFragment">
 		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
-		<input type="text" class="form-control input-sm" name="extWord" placeholder="请输入分词" style="width:200px;">
+		<input type="text" class="form-control input-sm" name="extWord" placeholder="请输入扩展词" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
-		<th>分词</th>
+		<th>扩展词</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
@@ -79,7 +79,7 @@ function remove(id) {
 	</table>
 </div>
 
-<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
+<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 400)">
 	<div class="form-group">
 		<label class="col-sm-3 control-label"><span class="required">*</span>扩展词：</label>
 		<div class="col-sm-7"><input type="text" name="extWord" class="form-control validate[required]" maxlength="32"></div>

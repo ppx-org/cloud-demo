@@ -15,6 +15,9 @@ function refreshData(data) {
 
 $(function() {
 	//refreshData([[${listJson}]]);
+	if ($("#storeId").val() != null) {
+		query();
+	}
 });
 
 function query() {
@@ -66,7 +69,7 @@ function edit(id) {
 function remove(id) {
 	var callback = function () {
 		showLoading();
-		$.post([[@{/hotWord/deleteHotword}]], "id=" + id, function(r) {
+		$.post([[@{/hotWord/deleteHotWord}]], "id=" + id, function(r) {
 			if (r.result == 1) {
 				query();
 			}
@@ -118,7 +121,7 @@ function storeChange() {
 	</div>
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
-		<th>ID</th>
+		<th>热门词ID</th>
 		<th>热门词</th>
 		<th>排序</th>
 		<th>操作</th>
@@ -148,7 +151,7 @@ function storeChange() {
 	</table>
 </div>
 
-<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
+<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 400)">
 	<div class="form-group">
 		<input type="hidden" id="addStoreId" name="storeId">
 		<label class="col-sm-3 control-label"><span class="required">*</span>热门词：</label>
@@ -156,15 +159,15 @@ function storeChange() {
 	</div>
 </div>
 
-<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 360)">
+<div th:fragment="edit" th:replace="common/fragment/common::modal('edit', '修改', 400)">
 	<script id="editTemplate" type="text/html">
 	<div class="form-group">
-		<label class="col-sm-3 control-label">ID：</label>
-		<div class="col-sm-7"><input type="text" name="hotId" value="{{hotWord.hotId}}" class="form-control" readonly></div>
+		<label class="col-sm-4 control-label">热门词ID：</label>
+		<div class="col-sm-6"><input type="text" name="hotId" value="{{hotWord.hotId}}" class="form-control" readonly></div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label"><span class="required">*</span>NAME：</label>
-		<div class="col-sm-7"><input type="text" name="hotWord" value="{{hotWord.hotWord}}" class="form-control validate[required]" maxlength="32"></div>
+		<label class="col-sm-4 control-label"><span class="required">*</span>热门词：</label>
+		<div class="col-sm-6"><input type="text" name="hotWord" value="{{hotWord.hotWord}}" class="form-control validate[required]" maxlength="32"></div>
 	</div>
 	</script>
 </div>

@@ -100,7 +100,7 @@ function levelProduct(levelId) {
 	</div>
 	<table class="page-list-table table table-bordered table-condensed">
 	<tr>
-		<th>ID</th>
+		<th>楼层ID</th>
 		<th>楼层名称</th>
 		<th>排序</th>
 		<th>操作</th>
@@ -130,11 +130,11 @@ function levelProduct(levelId) {
 	</table>
 </div>
 
-<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 360)">
+<div th:fragment="add" th:replace="common/fragment/common::modal('add', '新增', 400)">
 	<div class="form-group">
 		<input type="hidden" id="addStoreId" name="storeId">
-		<label class="col-sm-3 control-label"><span class="required">*</span>楼层名称：</label>
-		<div class="col-sm-7"><input type="text" name="levelName" class="form-control" maxlength="32"></div>
+		<label class="col-sm-4 control-label"><span class="required">*</span>楼层名称：</label>
+		<div class="col-sm-6"><input type="text" name="levelName" class="form-control" maxlength="32"></div>
 	</div>
 </div>
 

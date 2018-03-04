@@ -37,20 +37,20 @@ function queryPage(pageNumber) {
 </head>
 
 <body>
-<div th:replace="common/fragment/common::pageList('mer权限管理')">
+<div th:replace="common/fragment/common::pageList('商户权限管理')">
 	<div th:fragment="queryFragment">
-		<label>merchantId:</label>	
+		<label>商户ID:</label>	
 		<input type="text" class="form-control input-sm" name="merchantId" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
-		<label>mer名称:</label>		
+		<label>商户名称:</label>		
 		<input type="text" class="form-control input-sm" name="merchantName" >			
 		<button class="btn btn-default btn-sm" onclick="queryPage(1);return false;"><span class="glyphicon glyphicon-search"></span>搜索</button>		
 	</div>
 	
 	<table th:fragment="listFragment">
 	<tr>
-		<th>mainAccountId</th>
-		<th>mer主账号</th> 
-		<th>mer名称</th> 
+		<th>商户主账号ID</th>
+		<th>商户主账号</th> 
+		<th>商户名称</th> 
 		<th>操作</th>                
 	</tr>
 	<script id="pageTemplate" type="text/html">
