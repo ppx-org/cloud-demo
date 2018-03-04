@@ -199,7 +199,7 @@ function upload(obj) {
 	var file = $(obj).parents(".imgTr").find("img").data("file");
 	var formData = new FormData();
 	formData.append("file", file);
-	formData.append("type", "swiper");
+	formData.append("type", "store");
 	
 	showLoading();
 	$.ajax({url:[[@{/imgUpload/showSave}]], type:"POST", contentType:false, data:formData ,processData:false,
@@ -225,7 +225,7 @@ function upload(obj) {
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
-		<th>ID</th>
+		<th>店铺ID</th>
 		<th>店铺图片</th>
 		<th>店铺名称</th>
 		<th>店铺编号</th>
@@ -288,14 +288,14 @@ function upload(obj) {
 	
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>提货开始时间：</label>
-		<div class="col-sm-3"><input type="text" name="storeLng" class="form-control validate[required]" onclick="WdatePicker({dateFmt:'HH:mm'})"></div>
+		<div class="col-sm-3"><input type="text" name="businessBegin" class="form-control validate[required]" onclick="WdatePicker({dateFmt:'HH:mm'})"></div>
 		<label class="col-sm-2 control-label"><span class="required">*</span>提货结束时间：</label>
-		<div class="col-sm-3"><input type="text" name="storeLat" class="form-control validate[required]" onclick="WdatePicker({dateFmt:'HH:mm'})"></div>
+		<div class="col-sm-3"><input type="text" name="businessEnd" class="form-control validate[required]" onclick="WdatePicker({dateFmt:'HH:mm'})"></div>
 	</div>
 	
 	<div class="form-group">
-		<label class="col-sm-2 control-label">店铺图片：</label>
-		<div class="col-sm-8"><input type="text" id="storeImg" name="storeImg" class="form-control" style="width:540px;"></div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>店铺图片：</label>
+		<div class="col-sm-8"><input type="text" id="storeImg" name="storeImg" class="form-control validate[required]" style="width:540px;"></div>
 	</div>
 	
 	<div class="form-group">
@@ -342,8 +342,8 @@ function upload(obj) {
 	</div>
 
 	<div class="form-group">
-		<label class="col-sm-2 control-label">店铺图片：</label>
-		<div class="col-sm-8"><input type="text" name="storeImg" value="{{store.storeImg}}" class="form-control" style="width:530px;"></div>
+		<label class="col-sm-2 control-label"><span class="required">*</span>店铺图片：</label>
+		<div class="col-sm-8"><input type="text" name="storeImg" value="{{store.storeImg}}" class="form-control validate[required]" style="width:530px;"></div>
 	</div>
 
 	<div class="form-group">

@@ -1,5 +1,5 @@
 
-/*
+
 document.onkeydown = function (e) {
     var ev = window.event || e;
     var code = ev.keyCode || ev.which;
@@ -9,7 +9,7 @@ document.onkeydown = function (e) {
         cancelBubble = true;
         return false;
     }
-}*/
+}
 
 function logout() {
 	var callback = function () {

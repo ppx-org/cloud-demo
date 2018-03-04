@@ -39,18 +39,18 @@ function queryPage(pageNumber) {
 </head>
 
 <body>
-<div th:replace="common/fragment/common::pageList('子账号权限管理')">
+<div th:replace="common/fragment/common::pageList('子账号权限')">
 <div th:fragment="queryFragment">
-	<label>accountId:</label>	
+	<label>子帐号ID:</label>	
 	<input type="text" class="form-control input-sm" name="accountId" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
-	<label>loginAccount:</label>		
+	<label>子帐号:</label>		
 	<input type="text" class="form-control input-sm" name="loginAccount" >			
 	<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>		
 </div>
 
 <table th:fragment="listFragment">
 <tr>
-	<th>子帐号Id</th>
+	<th>子帐号ID</th>
 	<th>子帐号</th>
 	<th>操作</th>                
 </tr>
@@ -71,7 +71,7 @@ function queryPage(pageNumber) {
 <div class="modal-content">
 	<div class="modal-header">
 		<button aria-hidden="true" class="close" data-dismiss="modal" type="button">×</button>
-		<h4 class="modal-title">授权(child：<span id="grantViewName"></span>)<input type="hidden" id="grantAccountId"></h4>
+		<h4 class="modal-title">授权(子帐号：<span id="grantViewName"></span>)<input type="hidden" id="grantAccountId"></h4>
 	</div>
       	<div class="modal-body" style="width:100%;height:400px;overflow:auto;float:left;padding-top:4px">
 		<div id="tree" style="float:left"></div>
