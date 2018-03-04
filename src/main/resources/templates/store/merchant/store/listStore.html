@@ -92,7 +92,7 @@ function repo(id) {
 		for (var i = 0; r.arrayList && i < r.arrayList.length; i++) {
 			var name = r.arrayList[i].repoName;
 			var disabled = (r.arrayList[i].repoId == id ? "disabled style='color:red'" : "");
-			var name = (r.arrayList[i].repoId == id ? name + "(位于)" : name);
+			var name = (r.arrayList[i].repoId == id ? name + "(所在店铺)" : name);
 			$("#selectedRepo").append('<option value="' + r.arrayList[i].repoId + '" ' + disabled + '>' + name + '</option>');
 		}
 	});
@@ -362,15 +362,15 @@ function upload(obj) {
 	</script>
 </div>
 
-<div th:fragment="repo" th:replace="common/fragment/common::modal('repo', '仓库设置', 560)">
+<div th:fragment="repo" th:replace="common/fragment/common::modal('repo', '仓库设置', 600)">
 	<div class="form-group">
 		<div class="col-sm-5">
-			<label>ID:<span id="seletedId"></span>关联的仓库</label>
-			<select  class="form-control" id="selectedRepo" style="width:220px" size="10" ondblclick="storeDeleteRepo(this)"></select>
+			<label>店铺ID:<span id="seletedId"></span>关联的仓库</label>
+			<select class="form-control" id="selectedRepo" style="width:250px" size="10" ondblclick="storeDeleteRepo(this)"></select>
 		</div>
 		<div class="col-sm-5">
 			<label>所有仓库(双击选择)</label>
-			<select class="form-control" style="width:220px" size="10" ondblclick="storeAddRepo(this)">
+			<select class="form-control" style="width:250px" size="10" ondblclick="storeAddRepo(this)">
 				<option th:value="${item.repoId}" th:text="${item.repoName}" th:each="item:${listRepo}"></option>
 			</select>
 		</div>

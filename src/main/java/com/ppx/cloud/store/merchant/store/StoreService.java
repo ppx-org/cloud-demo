@@ -42,10 +42,9 @@ public class StoreService extends MyDaoSupport {
 		int insertR = insert(bean, "STORE_ID");
 		if (insertR == 0) return 0;
 		
-		int id = getLastInsertId();
 		// 插入数据到关系表
 		String sql = "insert into store_map_repo(REPO_ID, STORE_ID) values(?, ?)";
-		int r = getJdbcTemplate().update(sql, id, id);
+		int r = getJdbcTemplate().update(sql, bean.getStoreId(), bean.getStoreId());
 		
 		return r;
 	}
