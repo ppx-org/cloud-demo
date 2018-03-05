@@ -1,6 +1,5 @@
 package com.ppx.cloud.store.product.prio;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
-import com.ppx.cloud.demo.module.test.TestBean;
-import com.ppx.cloud.store.merchant.store.Store;
-import com.ppx.cloud.store.merchant.store.StoreService;
 
 
 @Controller	
@@ -38,15 +34,10 @@ public class ProdPrioController {
 		return ControllerReturn.ok(list);
 	}
 	
-	@PostMapping @ResponseBody
-	public Map<String, Object> getProdPrio(@RequestParam Integer id) {
-		ProdPrio bean = serv.getProdPrio(id);
-		return ControllerReturn.ok(bean);
-	}
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> updateProdPrio(ProdPrio bean) {
-		int r = serv.updateProdPrio(bean);
+	public Map<String, Object> updateProdPrio(Integer prodId, Integer prodPrio) {
+		int r = serv.updateProdPrio(prodId, prodPrio);
 		return ControllerReturn.ok(r);
 	}
 	

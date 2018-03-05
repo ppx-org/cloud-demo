@@ -23,20 +23,26 @@ function queryPage(pageNumber) {
 
 
 function edit(id) {
-	showLoading();
-	$.post([[@{/prodPrio/getProdPrio}]], "id=" + id, function(r) {
-		hideLoading();
-		$('editProdPrio').val(r.prod.prodPrio);
-		$('#edit').modal('show');
-	});
-	
-	action = function() {
-		if (!$("#editForm").validationEngine('validate')) return;
+	$("#span" + id).hide();
+	$("#input" + id).show();
+	var text = $("#edit" + id).text();
+	if (text == "[修改]") {
+		$("#edit" + id).text("[保存]");
+	}
+	else {
+		var prodPrio = $("#input" + id).val();
+		if (prodPrio == "") {
+			alertWarning("优先级不能为空");
+			return;
+		}
 		showLoading();
-		$.post([[@{/prodPrio/updateProdPrio}]], $("#editForm").serialize(), function(r) {
+		$.post([[@{/prodPrio/updateProdPrio}]], "prodId=" + id + "&prodPrio=" + prodPrio, function(r) {
+			hideLoading();
 			if (r.result == 1) {
-				$('#edit').modal('hide');
-				queryPage(1);
+				$("#span" + id).text(prodPrio);
+				$("#input" + id).hide();
+				$("#span" + id).show();
+				$("#edit" + id).text("[修改]");
 			}
 		});
 	}
@@ -50,24 +56,26 @@ function edit(id) {
 <div th:text="#{imgPath}" style="display: none"></div>
 <div th:replace="common/fragment/common::pageList('产品优化级')">
 	<div th:fragment="queryFragment">
-		<input type="text" class="form-control input-sm" name="testName" placeholder="请输入NAME" style="width:200px;">
+		<input type="text" class="form-control input-sm" name="prodId" placeholder="请输入产品ID" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
 		<th>产品ID</th>
 		<th>产品标题</th>
-		<th>优先级</th>
+		<th data-order-name="PROD_PRIO">优先级</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
 	<tr>
 		<td class="w-id">{{v.prodId}}</td>
-		<td class="w-id">{{v.prodTitle}}</td>
-		<td class="w-id">{{v.prodPrio}}</td>
+		<td class="w-title-s">{{v.prodTitle}}</td>
+		<td class="w-id">
+			<span id="span{{v.prodId}}">{{v.prodPrio}}</span>
+			<input id="input{{v.prodId}}" type="text" value="{{v.prodPrio}}" class="form-control" maxlength="6" style="padding:0;margin:0;display:none" onkeyup="this.value=this.value.replace(/\D/g,'')"></td>
 		<td class="w-action">
-			<a href="#" onclick="edit('{{v.testId}}')">[修改]</a>
+			<a id="edit{{v.prodId}}" href="#this" onclick="edit('{{v.prodId}}')">[修改]</a>
 		</td>
 	</tr>
 	{{/each}}

@@ -4,7 +4,7 @@ public class ProdPrio {
 
 	private Integer prodId;
 	
-	private Integer prodTitle;
+	private String prodTitle;
 	
 	private Integer prodPrio;
 
@@ -16,11 +16,11 @@ public class ProdPrio {
 		this.prodId = prodId;
 	}
 
-	public Integer getProdTitle() {
+	public String getProdTitle() {
 		return prodTitle;
 	}
 
-	public void setProdTitle(Integer prodTitle) {
+	public void setProdTitle(String prodTitle) {
 		this.prodTitle = prodTitle;
 	}
 
