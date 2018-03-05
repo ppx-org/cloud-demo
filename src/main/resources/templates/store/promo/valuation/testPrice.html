@@ -122,8 +122,7 @@ function testService() {
 	if (skuId.length == 0) {
 		alertWarning("没有数据");
 		return;
-	}
-	alert(num)
+	}r
 	var para = "date=" + $("#date").val() + "&skuIdStr=" + skuId + "&numStr=" + num;
 	$.post([[@{/valuation/testSubmit}]], para, function(r) {
 		if (r.result == 1) {
