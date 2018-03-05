@@ -56,12 +56,12 @@ template.helper('actionHtml', function(orderId, orderStatus) {
 <body>
 <div th:replace="common/fragment/common::pageList('店铺订单')">
 	<div th:fragment="queryFragment">
-		<label>st:</label>
+		<label>店铺:</label>
 		<select class="form-control input-sm" name="storeId">
 			<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
 		</select>
 		
-		<label>status:</label>
+		<label>订单状态:</label>
 		<select class="form-control input-sm" id="orderStatus" name="orderStatus">
 			<option value="">全部</option>
 			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${orderStatusList}"></option>
@@ -74,7 +74,7 @@ template.helper('actionHtml', function(orderId, orderStatus) {
 	<table th:fragment="listFragment">
 	<tr>
 		<th>订单ID</th>
-		<th>title</th>
+		<th>标题</th>
 		<th>操作</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">

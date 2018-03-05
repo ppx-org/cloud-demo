@@ -116,45 +116,54 @@ function policyTypeChange(obj) {
 }
 
 function start(progId, obj) {
-	showLoading();
-	$.post([[@{/program/start}]], "progId=" + progId, function(r) {
-		hideLoading();
-		if (r.string == -1) {
-			alertWarning("状态已被更改，请刷新页面");
-		}
-		else {
-			alertSuccess();
-			$(obj).parent().html(getStatusDescByStr(r.string));
-		}
-	});
+	var callback = function () {
+		showLoading();
+		$.post([[@{/program/start}]], "progId=" + progId, function(r) {
+			hideLoading();
+			if (r.string == -1) {
+				alertWarning("状态已被更改，请刷新页面");
+			}
+			else {
+				alertSuccess();
+				$(obj).parent().html(getStatusDescByStr(r.string));
+			}
+		});
+	}
+	confirm("确定启动" + progId + "?", callback);
 }
 
 function pause(progId, obj) {
-	showLoading();
-	$.post([[@{/program/pause}]], "progId=" + progId, function(r) {
-		hideLoading();
-		if (r.string == -1) {
-			alertWarning("状态已被更改，请刷新页面");
-		}
-		else {
-			alertSuccess();
-			$(obj).parent().html(getStatusDescByStr(r.string));
-		}
-	});
+	var callback = function () {
+		showLoading();
+		$.post([[@{/program/pause}]], "progId=" + progId, function(r) {
+			hideLoading();
+			if (r.string == -1) {
+				alertWarning("状态已被更改，请刷新页面");
+			}
+			else {
+				alertSuccess();
+				$(obj).parent().html(getStatusDescByStr(r.string));
+			}
+		});
+	}
+	confirm("确定暂停" + progId + "?", callback);
 }
 
 function stop(progId, obj) {
-	showLoading();
-	$.post([[@{/program/stop}]], "progId=" + progId, function(r) {
-		hideLoading();
-		if (r.string == -1) {
-			alertWarning("状态已被更改，请刷新页面");
-		}
-		else {
-			alertSuccess();
-			$(obj).parent().html(getStatusDescByStr(r.string));
-		}
-	});
+	var callback = function () {
+		showLoading();
+		$.post([[@{/program/stop}]], "progId=" + progId, function(r) {
+			hideLoading();
+			if (r.string == -1) {
+				alertWarning("状态已被更改，请刷新页面");
+			}
+			else {
+				alertSuccess();
+				$(obj).parent().html(getStatusDescByStr(r.string));
+			}
+		});
+	}
+	confirm("确定停止" + progId + "?", callback);
 }
 
 template.config("escape", false);
@@ -165,7 +174,7 @@ template.helper('getStatusDesc', function(progId, progStatus, progStatusDesc) {
 function getStatusDesc(progId, progStatus, progStatusDesc) {
 	var r = "";
 	
-	var history = '&nbsp;&nbsp;<a href="javascript:viewStatusHistory(' + progId + ')">[状态历史]</a>'
+	var history = '&nbsp;&nbsp;<a href="javascript:viewStatusHistory(' + progId + ')">[历史]</a>'
 	
 	var start = '<a href="#" onclick="start(' + progId + ', this)">[启动]</a>';
 	var pause = '<a href="#" onclick="pause(' + progId + ', this)">[暂停]</a>';
@@ -257,15 +266,15 @@ function viewStatusHistory(progId) {
 	{{each arrayList as v i}}
 	<tr>
 		<td class="w-id">{{v.progId}}</td>
-		<td class="w-title-m">{{v.progName}}</td>
-		<td class="w-date">{{v.progBegin}}</td>
-		<td class="w-date">{{v.progEndDesc}}</td>
+		<td class="w-title-s">{{v.progName}}</td>
+		<td style="width:68px">{{v.progBegin}}</td>
+		<td style="width:68px">{{v.progEndDesc}}</td>
 		<td class="w-id">{{v.progPrio}}</td>
 		<td class="w-id">{{getPolicyTypeName(v.policyType)}}</td>
 		<td class="w-id">{{v.policyArgsDesc}}</td>
 		<td class="w-time">{{v.created}}</td>
 		<td class="w-action-m">{{getStatusDesc(v.progId, v.progStatus, v.progStatusDesc)}}</td>
-		<td class="w-action-m">
+		<td class="w-action">
 			<a href="#" onclick="remove({{v.progId}})">[删除]</a>&nbsp;&nbsp;
 			<a href="#" onclick="edit({{v.progId}}, {{v.progImgX}}, {{v.progImgY}})">[修改]</a>&nbsp;&nbsp;
 			<a href="#" onclick="conf({{v.progId}}, '{{v.policyType}}')">[配置]</a>

@@ -41,8 +41,6 @@ public class ValuationController {
 	
 	@PostMapping @ResponseBody
 	public Map<String, Object> listSku(@RequestParam @DateTimeFormat(pattern=DateUtils.DATE_PATTERN) Date date, @RequestParam String skuIdStr) {
-		
-		
 		Map<Integer, SkuIndex> skuIndexMap = new HashMap<Integer, SkuIndex>();
 		
 		String[] skuIdArray = skuIdStr.split(",");
@@ -87,17 +85,18 @@ public class ValuationController {
 		if (skuIdArray.length == 0 || skuIdArray.length != numArray.length) {
 			return ControllerReturn.ok(-1);
 		}
-		for (String id : skuIdArray) {
-			if (StringUtils.isEmpty(id)) {
+		
+		for (int i = 0; i < skuIdArray.length; i++) {
+			if (StringUtils.isEmpty(skuIdArray[i])) {
 				return ControllerReturn.ok(-1);
 			}
 			Integer skuId;
 			try {
-				skuId = Integer.parseInt(id);
+				skuId = Integer.parseInt(skuIdArray[i]);
 			} catch (Exception e) {
 				return ControllerReturn.ok(-1);
 			}
-			SkuIndex index = new SkuIndex(skuId, 1);
+			SkuIndex index = new SkuIndex(skuId, Integer.parseInt(numArray[i]));
 			skuIndexMap.put(skuId, index);
 		}
 		
@@ -107,7 +106,7 @@ public class ValuationController {
 			return ControllerReturn.ok(NO_EXIST_SKU, returnMap.get(NO_EXIST_SKU));
 		}
 		else {
-			// stat
+			// 统计
 			int totalNum = 0;
 			float totalPrice = 0f;
 			List<SkuIndex> skuList = returnMap.get(1);

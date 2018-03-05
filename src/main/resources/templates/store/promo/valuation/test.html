@@ -23,7 +23,7 @@ function query() {
 		return;
 	}
 	if ($("#stuIdStr").val() == "") {
-		alertWarning("skuId不能为空!");
+		alertWarning("SKU_ID不能为空!");
 		return;
 	}
 	
@@ -37,25 +37,22 @@ function query() {
 			 r.arrayList.forEach(function(v){
 				 skuId.push(v.skuId); 
 			 });
-			 alertWarning("id不存在:" + skuId);
+			 alertWarning("SKU_ID:" + skuId + "不存在");
 		}
 		else if (r.result == 1) {
 			skuList = r.arrayList;
 			skuList.forEach(function(v){
 				skuMap[v.skuId] = v;
 			})
-			
 			refreshSkuList(skuList);
 		}
 		hideLoading();
 	});
-	
 }
 
 function refreshSkuList(skuList) {
 	$("#listTemplate").parent().find("tr:gt(0)").remove();
 	$("#listTemplate").parent().append(template("listTemplate", skuList));
-	
 	
 	var totalNum = 0;
 	var totalPrice = 0;
@@ -82,7 +79,6 @@ function minus(obj, skuId) {
 	var num = new Number(numJObj.text()) - 1;
 	
 	if (num == 0) {
-		
 		var callback = function () {
 			var index = skuList.indexOf(skuMap[skuId]);
 			if (index > -1) {
@@ -98,8 +94,6 @@ function minus(obj, skuId) {
 		skuList = valu.count(skuList);
 		refreshSkuList(skuList);
 	}
-	
-	
 }
 
 template.helper('formatPrice', function(price) {
@@ -129,18 +123,13 @@ function testService() {
 		alertWarning("没有数据");
 		return;
 	}
+	alert(num)
 	var para = "date=" + $("#date").val() + "&skuIdStr=" + skuId + "&numStr=" + num;
 	$.post([[@{/valuation/testSubmit}]], para, function(r) {
 		if (r.result == 1) {
-			//skuList = r.arrayList;
-			//alert(JSON.stringify(r));
-			//console.log(r);
-			
 			refreshBackSkuList(r.arrayList, r.totalNum, r.totalPrice);
 		}
 	})
-	
-	// testSubmit(Date date, String skuIdStr, String numStr
 }
 
 function refreshBackSkuList(skuList, totalNum, totalPrice) {
@@ -150,6 +139,10 @@ function refreshBackSkuList(skuList, totalNum, totalPrice) {
 	$("#backTotalNum").text(totalNum);
 	$("#backTotalPrice").text(totalPrice);
 }
+
+template.helper('changeImgSrc', function(imgSrc) {
+	return [[#{imgUrl}]] + imgSrc;
+})
 </script>
 
 <style>
@@ -160,33 +153,33 @@ function refreshBackSkuList(skuList, totalNum, totalPrice) {
 <body>
 <div class="page-list-body">
 	<div class="page-list-query">
-		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span>TEST_P</div>
+		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span>测试P</div>
 		
 		<form id="queryForm" class="form-inline">
 		<label>日期:</label>
 		<input type="text" class="form-control input-sm" style="width:90px" id="date" name="date" th:value="${today}" onclick="WdatePicker()">
-		<label>Id(,):</label>
-		<input type="text" class="form-control input-sm" id="stuIdStr" name="skuIdStr" placeholder="Id(,)" value="1,2,4,5" style="width:300px;">
+		<label>SKU_ID(,分格):</label>
+		<input type="text" class="form-control input-sm" id="stuIdStr" name="skuIdStr" placeholder="Id(,)" value="1,2" style="width:300px;">
 		
-		<button type="button" class="btn btn-default btn-sm" onclick="query();"><span class="glyphicon glyphicon-plus-sign"></span>测试</button>
+		<button type="button" class="btn btn-default btn-sm" onclick="query();"><span class="glyphicon glyphicon-search"></span>测试</button>
 		</form>
 	</div>
 	<table class="table table-bordered table-condensed">
-	<tr style="display:none"><th></th></tr>
+	<tr style=""><th></th></tr>
 	<script id="listTemplate" type="text/html">
 	{{each}}
 	<tr class="{{getGroupBackground($value.progId)}}">
-		<td class="w-id"><img src="" style="width:80px; height:80px" alt="ppppp"></td>
+		<td class="w-id"><img src="{{changeImgSrc($value.skuImgSrc)}}" style="width:80px; height:80px" alt=""></td>
 		<td class="w-title-s">
 		<table>
 			<tr><td>{{$value.prodTitle}}</td></tr>
-			<tr><td>{{$value.skuName}}</td></tr>
+			<tr><td>{{$value.skuDesc}}:{{$value.skuName}}</td></tr>
 			<tr><td>{{$value.policy}}</td></tr>
 			<tr>
 				<td><!--¥-->{{formatPrice($value.price)}}
-				<a href="#" onclick="plus(this, {{$value.skuId}})" class="glyphicon glyphicon-plus-sign"></a>
+				<a href="#this" onclick="plus(this, {{$value.skuId}})" class="glyphicon glyphicon-plus-sign"></a>
 				<span class="num">{{$value.num}}</span>
-				<a href="#" onclick="minus(this, {{$value.skuId}})" class="glyphicon glyphicon-minus-sign"></a>
+				<a href="#this" onclick="minus(this, {{$value.skuId}})" class="glyphicon glyphicon-minus-sign"></a>
 				{{formatPrice($value.itemPrice)}}
 				</td>
 			</tr>
@@ -196,40 +189,39 @@ function refreshBackSkuList(skuList, totalNum, totalPrice) {
 	{{/each}}
 	</script>
 	</table>
-	<table>
-		<tr><td>共<span id="totalNum"></span>条记录  合计:<!--¥--><span id="totalPrice"></span></td><td><button type="button" class="btn btn-success btn-sm" onclick="testService()">测试后端</button></td></tr>
+	<table style="width:100%;margin-top:-15px;margin-bottom:3px;">
+		<tr style="text-align:center;"><td colspan="10">共<span id="totalNum">-</span>件产品  合计:¥<span id="totalPrice">-</span></td></tr>
 	</table>
 	
-	
+	<button type="button" class="btn btn-success btn-sm" onclick="testService()">测试后端</button>
 	
 	<!-- 后端 -->
-	<table class="table table-bordered table-condensed">
+	<table class="table table-bordered table-condensed" style="margin-top:3px;">
 	<tr>
-		<th>sId</th>
-		<th>title</th>
-		<th>sName</th>
-		<th>n</th>
-		<th>poli</th>
-		<th>p</th>
-		<th>itemp</th>
+		<th>SKU_ID</th>
+		<th>产品标题</th>
+		<th>SKU名称</th>
+		<th>数量</th>
+		<th>促销</th>
+		<th>单价</th>
+		<th>价格</th>
 	</tr>
 	<script id="backListTemplate" type="text/html">
 	{{each}}
 	<tr class="{{getGroupBackground($value.progId)}}">
 		<td>{{$value.skuId}}</td>
 		<td>{{$value.prodTitle}}</td>
-		<td>{{$value.skuName}}</td>	
-		<td>{{$value.num}}</td>	
-		<td>{{$value.policy}}</td>	
+		<td>{{$value.skuDesc}}:{{$value.skuName}}</td>
+		<td>{{$value.num}}</td>
+		<td>{{$value.policy}}</td>
 		<td>{{$value.price}}</td>
 		<td>{{$value.itemPrice}}</td>
 	</tr>
 	{{/each}}
 	</script>
 	</table>
-	
-	<table>
-		<tr><td>共<span id="backTotalNum"></span>条记录  合计:<!--¥--><span id="backTotalPrice"></span></td></tr>
+	<table style="width:100%;margin-top:-15px;margin-bottom:3px;">
+		<tr style="text-align:center;"><td>共<span id="backTotalNum">-</span>件产品  合计:¥<span id="backTotalPrice">-</span></td></tr>
 	</table>
 </div>
 
