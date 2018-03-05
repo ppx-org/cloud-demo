@@ -126,6 +126,9 @@ function dateChange(obj) {
 	localStorage.defaultDate = $(obj).val();
 }
 
+template.helper('changeImgSrc', function(imgSrc) {
+	return [[#{imgUrl}]] + imgSrc;
+})
 </script>
 
 <style>
@@ -154,7 +157,7 @@ function dateChange(obj) {
 			<option value="-1">请选择店铺</option>
 			<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
 		</select>
-		<input type="text" class="form-control input-sm" id="w" name="w" placeholder="请输入搜索词" style="width:200px;" value="招聘">
+		<input type="text" class="form-control input-sm" id="w" name="w" placeholder="请输入搜索词" style="width:200px;" value="">
 		<button type="button" class="btn btn-default btn-sm" onclick="query();"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	
@@ -180,13 +183,13 @@ function dateChange(obj) {
 	
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
-	<tr style="height:110px;">
+	<tr style="height:90px;">
 		<td class="w-id">
-			<img src="" style="width:80px;height:80px">
+			<img src="{{changeImgSrc(v.src)}}" onclick="window.open(this.src);" style="width:80px;height:80px">
 		</td>
 		<td class="w-id">
 			<div>{{v.t}}</div>
-			<div style="color:green">{{if v.f == 0}}2小时提货{{else}}立即{{/if}}</div>
+			<div style="color:green">{{if v.f == 0}}2小时提货{{else}}立即提货{{/if}}</div>
 			<div style="color:red">¥{{v.p}}</div>
 			<div style="color:red"><span>{{v.promo}}</span></div>
 		</td>
