@@ -58,8 +58,9 @@ template.helper('getUpdated', function(updated) {
 	<div class="page-list-query">
 		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>创建索引</span>
 			<span style="font-size:12px;color:gray">
-			产品状态更新时间：<span th:text="${lastUpdate.prodLastUpdated}"></span>(<span th:text="${lastUpdate.prodLastUpdatedView}"></span>分钟前);
-			促销状态更新时间：<span th:text="${lastUpdate.progLastUpdated}"></span>(<span th:text="${lastUpdate.progLastUpdatedView}"></span>分钟前)
+			产品状态更新：<span th:text="${lastUpdate.prodLastUpdated}"></span>(<span th:text="${lastUpdate.prodLastUpdatedView}"></span>分钟前);
+			产品优化级更新：<span th:text="${lastUpdate.prodPrioLastUpdated}"></span>(<span th:text="${lastUpdate.prodPrioLastUpdatedView}"></span>分钟前);
+			促销状态更新：<span th:text="${lastUpdate.progLastUpdated}"></span>(<span th:text="${lastUpdate.progLastUpdatedView}"></span>分钟前);
 			</span>
 		</div>
 	</div>

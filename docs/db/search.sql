@@ -70,9 +70,10 @@ create table search_hot_word
 
 create table search_last_updated
 (
-	MERCHANT_ID 		int(11) NOT NULL,
-	PROG_LAST_UPDATED 	datetime,
-	PROD_LAST_UPDATED 	datetime,
+	MERCHANT_ID 			int(11) NOT NULL,
+	PROG_LAST_UPDATED 		datetime,
+	PROD_LAST_UPDATED 		datetime,
+	PROD_PRIO_LAST_UPDATED 	datetime,
 	primary key (MERCHANT_ID)
 ) comment='产品或促销最后变更时间';
 

@@ -9,6 +9,8 @@ public class SearchLastUpdated {
 	private Date progLastUpdated;
 	
 	private Date prodLastUpdated;
+	
+	private Date prodPrioLastUpdated;
 
 	public int getMerchantId() {
 		return merchantId;
@@ -34,6 +36,14 @@ public class SearchLastUpdated {
 		this.prodLastUpdated = prodLastUpdated;
 	}
 	
+	public Date getProdPrioLastUpdated() {
+		return prodPrioLastUpdated;
+	}
+
+	public void setProdPrioLastUpdated(Date prodPrioLastUpdated) {
+		this.prodPrioLastUpdated = prodPrioLastUpdated;
+	}
+
 	public long getProgLastUpdatedView() {
 		if (progLastUpdated != null) {
 			return (new Date().getTime() - progLastUpdated.getTime()) / 1000 / 60;
@@ -47,5 +57,13 @@ public class SearchLastUpdated {
 		}
 		return 0;
 	}
+	
+	public long getProdPrioLastUpdatedView() {
+		if (prodPrioLastUpdated != null) {
+			return (new Date().getTime() - prodPrioLastUpdated.getTime()) / 1000 / 60;
+		}
+		return 0;
+	}
+	
 	
 }

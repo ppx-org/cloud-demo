@@ -39,6 +39,10 @@ public class ProdPrioService extends MyDaoSupport {
 	
 	
 	public int updateProdPrio(Integer prodId, Integer prodPrio) {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		String updateLastSql = "INSERT INTO search_last_updated(MERCHANT_ID,PROD_PRIO_LAST_UPDATED) VALUES (?,now()) ON DUPLICATE KEY UPDATE PROD_PRIO_LAST_UPDATED=now()";
+		getJdbcTemplate().update(updateLastSql, merchantId);
+		
 		String updateSql = "update product set PROD_PRIO = ? where PROD_ID = ?";
 		return getJdbcTemplate().update(updateSql, prodPrio, prodId);
 	}
