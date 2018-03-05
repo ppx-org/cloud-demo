@@ -32,7 +32,7 @@ public class ValuationController {
 	private final int NO_EXIST_SKU = -2;
 	
 	@GetMapping
-	public ModelAndView test() {
+	public ModelAndView testPrice() {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("today", DateUtils.today());
 		
