@@ -38,7 +38,13 @@ public class LevelService extends MyDaoSupport {
 		return bean;
 	}
 	
+	public int updateLevel(Level bean) {
+		return update(bean);
+	}
+	
+	@Transactional
 	public int deleteLevel(Integer id) {
+		getJdbcTemplate().update("delete from home_level_product where LEVEL_ID = ?", id);
 		return getJdbcTemplate().update("delete from home_level where LEVEL_ID = ?", id);
 	}
 	

@@ -29,12 +29,10 @@ public class LevelController {
 	public ModelAndView listLevel() {
 		ModelAndView mv = new ModelAndView();
 		List<Store> storeList = storeServ.listStore();
-		
+		mv.addObject("storeList", storeList);
 		if (storeList.size() > 0) {
 			mv.addObject("listJson", listJson(storeList.get(0).getStoreId()));
 		}
-		
-		mv.addObject("storeList", storeServ.listStore());
 		
 		return mv;
 	}
@@ -56,6 +54,12 @@ public class LevelController {
 		Level bean = serv.getLevel(id);
 		return ControllerReturn.ok(bean);
 	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> updateLevel(Level bean) {
+		int r = serv.updateLevel(bean);
+		return ControllerReturn.ok(r);
+	}	
     
 	@PostMapping @ResponseBody
 	public Map<String, Object> deleteLevel(@RequestParam Integer id) {
