@@ -20,7 +20,7 @@ public class ImgController {
 	private ImgService serv;
 	
 	@GetMapping
-	public ModelAndView img() {
+	public ModelAndView listImg() {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("imgList", serv.listImg());
 		return mv;
