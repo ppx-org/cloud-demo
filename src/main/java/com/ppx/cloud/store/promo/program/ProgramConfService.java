@@ -126,7 +126,7 @@ public class ProgramConfService extends MyDaoSupport {
 		
 		// result bit,1:产品ID不存在product,2:产品ID已经存在program_product
 		String importSql = "insert into import_data(MERCHANT_ID, ROWNUM, INT_1, RESULT) " +
-			"select " + merchantId + ", ?, ?, if ((select count(*) from product where PROD_ID = ? and REPO_ID in (select REPO_ID from repository where MERCHANT_ID = " + merchantId + ")) = 1,  0, 1) " +
+			"select " + merchantId + ", ?, ?, if ((select count(*) from product where PROD_ID = ? and MERCHANT_ID = " + merchantId + ") = 1, 0, 1) " +
 			"^ if ((select count(*) from program_product where PROD_ID = ? and PROG_ID = " + progId + ") != 1, 0, 2) r";
 		List<Object[]> argList = new ArrayList<Object[]>();
 		for (int i = 0; i < prodId.length; i++) {
@@ -189,7 +189,7 @@ public class ProgramConfService extends MyDaoSupport {
 		
 		// result bit,1:产品ID不存在product,2:产品ID已经存在program_special
 		String importSql = "insert into import_data(MERCHANT_ID, ROWNUM, INT_1, NUM_1, RESULT) " +
-			"select " + merchantId + ", ?, ?, ?, if ((select count(*) from product where PROD_ID = ? and REPO_ID in (select REPO_ID from repository where MERCHANT_ID = " + merchantId + ")) = 1,  0, 1) " +
+			"select " + merchantId + ", ?, ?, ?, if ((select count(*) from product where PROD_ID = ? and MERCHANT_ID = " + merchantId + ") = 1, 0, 1) " +
 			"^ if ((select count(*) from program_special where PROD_ID = ? and PROG_ID = " + progId + ") != 1, 0, 2) r";
 		List<Object[]> argList = new ArrayList<Object[]>();
 		for (int i = 0; i < prodId.length; i++) {
@@ -255,9 +255,9 @@ public class ProgramConfService extends MyDaoSupport {
 		
 		// result bit,1:产品ID不存在product,2:产品ID已经存在program_special
 		String importSql = "insert into import_data(MERCHANT_ID, ROWNUM, INT_1, INT_2, NUM_1, RESULT) " +
-			"select " + merchantId + ", ?, ?, ?, ?, if ((select count(*) from product where PROD_ID = ? and REPO_ID in (select REPO_ID from repository where MERCHANT_ID = " + merchantId + ")) = 1,  0, 1) " +
+			"select " + merchantId + ", ?, ?, ?, ?, if ((select count(*) from product where PROD_ID = ? and MERCHANT_ID = " + merchantId + ") = 1, 0, 1) " +
 			"^ if ((select count(*) from program_dependence where PROD_ID = ? and PROG_ID = " + progId + ") != 1, 0, 2) " +
-			"^ if ((select count(*) from product where PROD_ID = ? and REPO_ID in (select REPO_ID from repository where MERCHANT_ID = " + merchantId + ")) = 1,  0, 4) ";
+			"^ if ((select count(*) from product where PROD_ID = ? and  MERCHANT_ID = " + merchantId + ") = 1, 0, 4) ";
 		List<Object[]> argList = new ArrayList<Object[]>();
 		for (int i = 0; i < prodId.length; i++) {
 			Object[] arg = {i+1, prodId[i], dependProdId[i], dependPrice[i], prodId[i], prodId[i], dependProdId[i]};
@@ -326,7 +326,7 @@ public class ProgramConfService extends MyDaoSupport {
 		
 		// result bit,1:产品ID不存在product,2:产品ID已经存在program_change
 		String importSql = "insert into import_data(MERCHANT_ID, ROWNUM, INT_1, NUM_1, RESULT) " +
-			"select " + merchantId + ", ?, ?, ?, if ((select count(*) from product where PROD_ID = ? and REPO_ID in (select REPO_ID from repository where MERCHANT_ID = " + merchantId + ")) = 1,  0, 1) " +
+			"select " + merchantId + ", ?, ?, ?, if ((select count(*) from product where PROD_ID = ? and MERCHANT_ID = " + merchantId + ") = 1, 0, 1) " +
 			"^ if ((select count(*) from program_change where PROD_ID = ? and PROG_ID = " + progId + ") != 1, 0, 2) r";
 		List<Object[]> argList = new ArrayList<Object[]>();
 		for (int i = 0; i < prodId.length; i++) {
