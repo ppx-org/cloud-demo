@@ -91,12 +91,10 @@ function upload(obj) {
 		success:function(r){
 			if (r.arrayList && r.arrayList.length == 1) {
 				var src = [[#{imgUrl}]] + r.arrayList[0] + "?t=" + new Date().getTime();
-				
 				$("#" + type).css("width", "");
 				$("#" + type).css("height", "");
 				$("#" + type).attr("src", src);
 				$("#" + type).attr("title", src);
-				
 				updateImgSrc(type, src);
 			} 
 		}
@@ -149,7 +147,6 @@ function editSrc(obj) {
 		<td th:if="${img.imgType == 'brand'}">品牌</td>
 		<td th:if="${img.imgType == 'theme'}">专题</td>
 		<td th:if="${img.imgType == 'promo'}">促销</td>
-		
 		<td>
 			<div style="height:80px;overflow:hidden">
 				<img th:id="${img.imgType}" style="display:none" th:src="${img.imgSrc}" onload="img.resize(this)" onclick="img.click(this)" th:title="${img.imgSrc}">
@@ -157,7 +154,7 @@ function editSrc(obj) {
 		</td>
 		<td><a href="#" onclick="editSrc(this)" th:attr="data-type=${img.imgType}">修改图片地址</a></td>
 		<td>
-			<table border=""1 style="border-color:#DDDDDD;height:84px">
+			<table border="1" style="border-color:#DDDDDD;height:84px">
 			<tr class="imgTr">
 			<td>
 				<input type="file" accept=".jpg,.png" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
@@ -165,7 +162,6 @@ function editSrc(obj) {
 				<a href="#" style="display:none" class="uploadAction" onclick="upload(this)" th:attr="data-type=${img.imgType}" >上传</a>
 			</td>
 			</table>
-			
 		</td>
 	</tr>
 </table>
@@ -178,16 +174,8 @@ function editSrc(obj) {
 	</div>
 </div>
 
-
-
-
 </body>
 </html>
-
-
-
-
-
 
 
 

@@ -186,7 +186,7 @@ img.resize = function(img) {
 	
 	$(img).show();
 	$(img).nextAll().remove();
-	$(img).after("<span>" + initWidth + "x" + intiHeight + "</span>");
+	$(img).attr("title", initWidth + "x" + intiHeight);
 
 }
 img.remove = function(obj) {

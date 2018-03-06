@@ -113,10 +113,10 @@ template.helper('actionHtml', function(itemId, itemStatus) {
 		</select>
 		
 		<label>订单项ID:</label>
-		<input type="text" class="form-control input-sm" name="itemId" placeholder="请输入订单项ID" style="width:100px;">
+		<input type="text" class="form-control input-sm" name="itemId" placeholder="请输入订单项ID" style="width:120px;" onkeyup="this.value=this.value.replace(/\D/g,'')">
 		
 		<label>订单ID:</label>
-		<input type="text" class="form-control input-sm" name="orderId" placeholder="请输入订单ID" style="width:100px;">
+		<input type="text" class="form-control input-sm" name="orderId" placeholder="请输入订单ID" style="width:120px;" onkeyup="this.value=this.value.replace(/\D/g,'')">
 		
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>

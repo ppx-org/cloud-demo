@@ -67,8 +67,8 @@ template.helper('actionHtml', function(orderId, orderStatus) {
 			<option th:value="${item.value}" th:text="${item.name}" th:each="item:${orderStatusList}"></option>
 		</select>
 		
-		<label>oID:</label>
-		<input type="text" class="form-control input-sm" name="orderId" placeholder="请输入订单ID" style="width:100px;" value="">
+		<label>订单ID:</label>
+		<input type="text" class="form-control input-sm" name="orderId" placeholder="请输入订单ID" style="width:120px;" onkeyup="this.value=this.value.replace(/\D/g,'')">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	<table th:fragment="listFragment">
