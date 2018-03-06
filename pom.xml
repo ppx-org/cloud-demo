@@ -15,24 +15,10 @@
 		<context-path>/demo</context-path>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	
-	
-	<!--  
-	<profiles>
-		<profile>
-			<id>dev</id>
-			<properties><env>dev</env></properties>
-			<activation><activeByDefault>true</activeByDefault></activation>
-		</profile>
-		<profile>
-			<id>prod</id>
-			<properties><env>dev</env></properties>
-		</profile>
-	</profiles>
-	-->
 
 
 	<dependencies>
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
@@ -40,24 +26,20 @@
 
 
 		<!-- https://mvnrepository.com/artifact/net.coobird/thumbnailator -->
+		<!--  
 		<dependency>
 			<groupId>net.coobird</groupId>
 			<artifactId>thumbnailator</artifactId>
 			<version>0.4.8</version>
 		</dependency>
-		
-	<!-- 
-		<dependency>
-			<groupId>org.apdplat</groupId>
-			<artifactId>word</artifactId>
-			<version>1.3</version>
-		</dependency>
 		-->
+
+
 		<dependency>
-    		<groupId>com.janeluo</groupId>
-    		<artifactId>ikanalyzer</artifactId>
-    		<version>2012_u6</version>
-		</dependency>	
+			<groupId>com.janeluo</groupId>
+			<artifactId>ikanalyzer</artifactId>
+			<version>2012_u6</version>
+		</dependency>
 
 
 		<dependency>
@@ -65,36 +47,13 @@
 			<artifactId>cloud-commons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		
-		
-		<dependency>
-	   		<groupId>io.webfolder</groupId>
-	    	<artifactId>cdp4j</artifactId>
-	    	<version>2.1.5</version>
-		</dependency>
-		
-		
-		<dependency>
-    <groupId>net.sourceforge.jexcelapi</groupId>
-    <artifactId>jxl</artifactId>
-    <version>2.6.12</version>
-</dependency>
-		
-		 <!-- 
-		    <dependency>
-		      <groupId>org.jxl</groupId>
-		      <artifactId>jxl-jar</artifactId>
-		      <version>1.0</version>
-		      <scope>system</scope>
-		      <systemPath>C:/Users/LENOVO/Desktop/excel/jxl.jar</systemPath>
-		    </dependency>
-		    
-		    -->
-		
+
 		
 
-		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-devtools</artifactId> 
-			<optional>true</optional> <scope>true</scope> </dependency> -->
+		
+
+
+
 	</dependencies>
 
 
@@ -132,14 +91,11 @@
 				</executions>
 			</plugin>
 
-			<!-- <plugin> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-maven-plugin</artifactId> 
-				<configuration> <fork>true</fork> </configuration> </plugin> -->
 		</plugins>
 
 
 
-		 
-        
+
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -149,15 +105,11 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
-		
-		
-		<!-- 
-		<filters>
-			<filter>src/main/config/application.properties</filter>
-			<filter>src/main/config/messages.properties</filter>
-			<filter>src/main/config/banner.txt</filter>
-		</filters>
-		 -->
+
+
+		<!-- <filters> <filter>src/main/config/application.properties</filter> 
+			<filter>src/main/config/messages.properties</filter> <filter>src/main/config/banner.txt</filter> 
+			</filters> -->
 	</build>
 
 
