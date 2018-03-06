@@ -22,7 +22,7 @@ create table merchant_account
   RECORD_STATUS 	tinyint(1) not null default 1,
   CREATED 			timestamp not null default CURRENT_TIMESTAMP,
   primary key (ACCOUNT_ID)
-);
+) comment='商户帐号';
 
 /** MERCHANT_ID继承merchant_account.ACCOUNT_ID */
 create table merchant 
@@ -32,7 +32,7 @@ create table merchant
   RECORD_STATUS 	tinyint(1) not null default 1,
   CREATED 			timestamp not null default CURRENT_TIMESTAMP,
   primary key (MERCHANT_ID)
-);
+) comment='商户';
 
 /** index */
 create index idx_merchant_account_mer_id on merchant_account(MERCHANT_ID);
@@ -48,7 +48,7 @@ create table repository
    RECORD_STATUS        smallint not null default 1,
    CREATED              timestamp not null default CURRENT_TIMESTAMP,
    primary key (REPO_ID)
-);
+) comment='仓库';
 
 /** STORE_ID继承repository.REPO_ID */
 create table store
@@ -66,14 +66,14 @@ create table store
    RECORD_STATUS        smallint not null default 1,
    CREATED              timestamp not null default CURRENT_TIMESTAMP,
    primary key (STORE_ID)
-);
+) comment='店铺';
 
 create table store_map_repo
 (
    REPO_ID              int not null,
    STORE_ID             int not null,
    primary key (REPO_ID, STORE_ID)
-);
+) comment='店铺对应仓库';
 
 create table category
 (
@@ -87,7 +87,7 @@ create table category
    RECORD_STATUS        smallint not null default 1,
    CREATED              timestamp not null default CURRENT_TIMESTAMP,
    primary key (CAT_ID)
-);
+) comment='分类';
 
 create table brand
 (
@@ -100,7 +100,7 @@ create table brand
    RECORD_STATUS        smallint not null default 1,
    CREATED              timestamp not null default CURRENT_TIMESTAMP,
    primary key (BRAND_ID)
-);
+) comment='品牌';
 
 create table theme
 (
@@ -113,14 +113,14 @@ create table theme
    RECORD_STATUS      smallint not null default 1,
    CREATED            timestamp not null default CURRENT_TIMESTAMP,
    primary key (THEME_ID)
-);
+) comment='主题';
 
 create table theme_map_prod
 (
    THEME_ID			int not null,
    PROD_ID			int not null,
    primary key (THEME_ID, PROD_ID)
-);
+) comment='主题产品';
 
 /** ----------------- release ----------------- */
 
@@ -134,7 +134,7 @@ create table change_stock
 	CREATED         timestamp not null default CURRENT_TIMESTAMP,
 	CREATOR			int not null,
 	primary key (CHANGE_STOCK_ID)
-);
+) comment='产品库存变更历史';
 
 create table change_price
 (
@@ -145,7 +145,7 @@ create table change_price
 	CREATED         timestamp not null default CURRENT_TIMESTAMP,
 	CREATOR			int not null,
 	primary key (CHANGE_PRICE_ID)
-);
+) comment='产品价格变更历史';
 
 create table change_status 
 (
@@ -155,8 +155,7 @@ create table change_status
 	CREATED         	timestamp not null default CURRENT_TIMESTAMP,
 	CREATOR				int not null,
 	primary key (CHANGE_STATUS_ID)
-);
-
+) comment='产品状态变更历史';
 
 create table sku
 (
@@ -169,7 +168,7 @@ create table sku
    SKU_NAME				varchar(32),
    SKU_IMG_SRC          varchar(128),
    primary key (SKU_ID)
-);
+) comment='产品SKU';
 
 create table product
 (
@@ -184,7 +183,7 @@ create table product
    PROD_PRIO			int not null default 10000,
    PROD_STATUS 			tinyint(1) not null DEFAULT 1,   
    primary key (PROD_ID)
-);
+) comment='产品';
 
 create table product_detail
 (
@@ -196,7 +195,7 @@ create table product_detail
 	PROD_DESC		varchar(128),
 	PROD_ARGS		varchar(128),
 	primary key (PROD_ID)
-);
+) comment='产品明细';
 
 create table product_img
 (
@@ -205,7 +204,7 @@ create table product_img
    PROD_IMG_PRIO         int not null,
    PROD_IMG_SRC          varchar(128) not null,
    primary key (PROD_IMG_ID)
-);
+) comment='产品图片';
 
 
 
@@ -222,7 +221,7 @@ create table user_order
    PAY_PRICE            decimal(7,2) not null,
    DELIVER_CODE			varchar(32),
    primary key (ORDER_ID)
-);
+) comment='订单';
 
 create table order_item
 (
@@ -238,7 +237,7 @@ create table order_item
    ITEM_IMG             varchar(128),
    ITEM_PROMO           varchar(32),
    primary key (ITEM_ID)
-);
+) comment='订单项';
 
 create table order_item_status
 (
@@ -251,7 +250,7 @@ create table order_item_status
     DELIVER_TIME		timestamp,
     DELIVER_OPERATOR	int,
 	primary key(ITEM_ID)
-);
+) comment='订单项状态变更历史';
 
 create table order_status_history
 (	
@@ -263,7 +262,7 @@ create table order_status_history
 	OPENID			varchar(32),
 	HISTORY_COMMENT	varchar(128),
 	primary key(HISTORY_ID)
-);
+) comment='订单状态变更历史';
 
 create table user_cart 
 (
@@ -273,7 +272,7 @@ create table user_cart
 	SKU_NUM		int not null,
 	CREATED 	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	primary key (OPENID, SKU_ID)
-);
+) comment='购物车';
 
 create table user_favorite
 (
@@ -282,8 +281,7 @@ create table user_favorite
 	STORE_ID	int not null,
 	CREATED 	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	primary key (OPENID, PROD_ID)
-);
-
+) comment='收藏';
 
 create table import_data (
   MERCHANT_ID 	int(11) NOT NULL,
@@ -296,7 +294,7 @@ create table import_data (
   CHAR_1 		varchar(32) DEFAULT NULL,
   CHAR_2 		varchar(32) DEFAULT NULL,
   primary key (MERCHANT_ID,ROWNUM)
-);
+) comment='导入数据中间表';
 
 
 

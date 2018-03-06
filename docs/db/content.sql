@@ -16,7 +16,7 @@ create table home_swiper
 	SWIPER_PRIO	int not null,
 	CREATED     timestamp not null default CURRENT_TIMESTAMP,
 	primary key (SWIPER_ID)
-);
+) comment='首页轮播';
 
 create table home_level
 (
@@ -26,7 +26,7 @@ create table home_level
 	LEVEL_PRIO 	int not null,
 	CREATED     timestamp not null default CURRENT_TIMESTAMP,
 	primary key (LEVEL_ID)
-);
+) comment='首页楼层';
 
 create table home_level_product
 (
@@ -35,7 +35,7 @@ create table home_level_product
 	PROD_PRIO 	int not null,
 	CREATED     timestamp not null default CURRENT_TIMESTAMP,
 	primary key (LEVEL_ID, PROD_ID)
-);
+) comment='首页楼层产品';
 
 create table home_img
 (
@@ -44,7 +44,7 @@ create table home_img
 	IMG_PRIO	int(11) NOT NULL,
 	IMG_SRC		varchar(256),
 	primary key (MERCHANT_ID, IMG_TYPE)
-);
+) comment='首页图片,分类等合成图';
 
 
 
