@@ -16,10 +16,10 @@ public class ProgramService extends MyDaoSupport {
 	
 	
 	public PageList<Program> listProgram(Page page, Program bean) {
-		
+		page.addDefaultOrderName("PROG_ID");
 		
 		MyCriteria c = createCriteria("where")
-				.addAnd("POLICY_TYPE like ?", bean.getPolicyType())
+				.addAnd("POLICY_TYPE = ?", bean.getPolicyType())
 				.addAnd("PROG_NAME like ?", "%", bean.getProgName(), "%");
 		
 		StringBuilder cSql = new StringBuilder("select count(*) from program where PROG_STATUS >= ?").append(c);

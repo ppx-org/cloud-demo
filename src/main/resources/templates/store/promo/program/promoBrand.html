@@ -27,12 +27,8 @@ function query() {
 }
 
 
-
-
 function addProgramBrand() {
-	
 	var para = "progId=" + $("#progId").val() + "&brandId=" + $("#brandId").val();
-	
 	showLoading();
 	$.post([[@{/programConf/insertProgramBrand}]], para, function(r) {
 		if (r.result == 1) {
@@ -60,7 +56,6 @@ function remove(progId, brandId) {
 
 </script>
 
-
 <style>
 </style>
 </head>
@@ -72,17 +67,17 @@ function remove(progId, brandId) {
 		<form id="addForm" class="form-inline">
 		<div>
 		<input type="hidden" id="progId" th:value="${prog.progId}">
-		<div class="input-group">
+		<div class="input-group input-group-sm">
 			<span class="input-group-addon">品牌</span>	
 			<select class="form-control" id="brandId">
 				<option th:value="${item.brandId}" th:text="${item.brandName}" th:each="item:${listBrand}"></option>
 			</select>
 		</div>
-		<button type="button" th:if="${prog.progStatus != 2}" class="btn btn-success" onclick="addProgramBrand()">新增</button>
-		
+		<button type="button" th:if="${prog.progStatus != 2}" class="btn btn-success btn-sm" onclick="addProgramBrand()">新增</button>
 		<label>方案名称：<span th:text="${prog.progName}"></span>(<span th:text="${#dates.format(prog.progBegin, 'yyyy-MM-dd')} + '至' + ${prog.progEndDesc}"></span>)
 			促销策略:<span th:text="${prog.policyArgsDesc}"></span>
 		</label>
+		<span class="hint" th:if="${prog.progStatus == 2}">状态为进行中的促销不能配置</span>
 		
 		</div>
 		</form>

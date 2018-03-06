@@ -127,7 +127,7 @@ public class ProgramIndexService extends MyDaoSupport {
 	private int startProduct(Program prog) {
 		String productSql = "insert into program_index(MERCHANT_ID, PROG_ID, PROD_ID, INDEX_BEGIN, INDEX_END, INDEX_PRIO, INDEX_POLICY) " + 
 				"select ?, pp.PROG_ID, pp.PROD_ID, ?, ?, ?, ? " + 
-				"from program_product pp join program p on pp.PROG_ID = ? where p.MERCHANT_ID = -1 and PROG_STATUS = 1";
+				"from program_product pp where pp.PROG_ID = ?";
 		int r = getJdbcTemplate().update(productSql, prog.getMerchantId(), prog.getProgBegin(), prog.getProgEnd(),
 				prog.getProgPrio(), prog.getPolicyArgs(), prog.getProgId());
 		return r;
@@ -172,24 +172,7 @@ public class ProgramIndexService extends MyDaoSupport {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	// onShelves时(offShelves时不删除，通过端口状态判断搜索)
@@ -223,41 +206,8 @@ public class ProgramIndexService extends MyDaoSupport {
 	
 	
 
-	
 
-	
-	
-	
-	
-	
-	
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

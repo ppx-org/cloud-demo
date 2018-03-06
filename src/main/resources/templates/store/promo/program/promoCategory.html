@@ -66,18 +66,19 @@ function remove(progId, catId) {
 		<form id="addForm" class="form-inline">
 		<div>
 		<input type="hidden" id="progId" th:value="${prog.progId}">
-		<div class="input-group">
+		<div class="input-group input-group-sm">
 			<span class="input-group-addon">分类</span>	
-			<select class="form-control" id="catId">
+			<select class="form-control " id="catId">
 				<option th:value="${item.catId}" th:text="${item.catName}" th:each="item:${listCat}"></option>
 			</select>
 		</div>
 		
 		<!-- 1, "未启动" 2, "进行中" 3, "暂停" 4, "停止" -->
-		<button type="button" th:if="${prog.progStatus != 2}" class="btn btn-success" onclick="addProgramCat()">新增</button>
+		<button type="button" th:if="${prog.progStatus != 2}" class="btn btn-success btn-sm" onclick="addProgramCat()">新增</button>
 		<label>方案名称：<span th:text="${prog.progName}"></span>(<span th:text="${#dates.format(prog.progBegin, 'yyyy-MM-dd')} + '至' + ${prog.progEndDesc}"></span>)
 			促销策略:<span th:text="${prog.policyArgsDesc}"></span>
 		</label>
+		<span class="hint" th:if="${prog.progStatus == 2}">状态为进行中的促销不能配置</span>
 		
 		</div>
 		</form>
@@ -101,8 +102,6 @@ function remove(progId, catId) {
 	</script>
 	</table>
 </div>
-
-
 
 </body>
 </html>

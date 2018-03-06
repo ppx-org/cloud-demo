@@ -156,8 +156,8 @@ function validate() {
 		<button type="button" th:if="${prog.progStatus != 2}" class="btn btn-success btn-sm" onclick="add()">新增</button>
 		<input type="text" class="form-control input-sm" name="prodId" placeholder="请输入产品ID" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
-		
 		<label>方案名称：<span th:text="${prog.progName}"></span>(<span th:text="${#dates.format(prog.progBegin, 'yyyy-MM-dd')} + '至' + ${prog.progEndDesc}"></span>)</label>
+		<span class="hint" th:if="${prog.progStatus == 2}">状态为进行中的促销不能配置</span>
 	</div>
 	<table th:fragment="listFragment">
 	<tr>

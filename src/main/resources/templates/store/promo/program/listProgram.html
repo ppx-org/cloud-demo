@@ -2,14 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title></title>
-
 <link th:replace="common/fragment/common::common"/>
 <link th:replace="common/fragment/common::validation"/>
 <link th:replace="common/fragment/common::date"/>
-
-
 <script type="text/javascript" th:inline="javascript">
-
 
 function queryPage(pageNumber) {
 	showLoading();
@@ -221,7 +217,6 @@ function refreshProgImg() {
 	$(".progImgUrl").css("background-image", [[${imgSrc}]] == '-1' ? blankImg : "url(" + [[${imgSrc}]] + ")");
 }
 
-
 function viewStatusHistory(progId) {
 	open(contextPath + 'programStatus/listProgramStatus?progId=' + progId);
 }
@@ -246,8 +241,9 @@ function viewStatusHistory(progId) {
 				<option th:value="${item.value}" th:text="${item.name}" th:each="item:${listPolicy}"></option>
 			</select>
 		</div>
-		<input type="text" class="form-control input-sm" name="progName" placeholder="请输入方案名称" style="width:200px;">
+		<input type="text" class="form-control input-sm" name="progName" placeholder="请输入方案名称" style="width:120px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
+		<span class="hint">优先级:数字大的优级高;暂停:原有促销还在进行;停止:中止现有促销;</span>
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
@@ -255,7 +251,7 @@ function viewStatusHistory(progId) {
 		<th>方案名称</th>
 		<th>开始日期</th>
 		<th>结束日期</th>
-		<th>排序</th>
+		<th>优先级</th>
 		<th>促销类型</th>
 		<th>参数</th>
 		<th>创建时间</th>
