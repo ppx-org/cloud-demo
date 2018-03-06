@@ -11,10 +11,12 @@
 {"_id":12,"uri":["/preSearch/search"],"uriIndex":[11]}
 {"_id":14,"uri":["/product/listProduct"],"uriIndex":[12]}
 {"_id":16,"uri":["/program/listProgram"],"uriIndex":[13]}
-{"_id":17,"uri":["/valuation/test"],"uriIndex":[14]}
 {"_id":19,"uri":["/repoOrder/listOrderItem"],"uriIndex":[15]}
 {"_id":20,"uri":["/storeOrder/listOrder"],"uriIndex":[16]}
 {"_id":22,"uri":["/swiper/listSwiper"],"uriIndex":[17]}
 {"_id":23,"uri":["/level/listLevel"],"uriIndex":[18]}
-{"_id":24,"uri":["/img/img"],"uriIndex":[19]}
 {"_id":25,"uri":["/searchVersion/listVersion"],"uriIndex":[20]}
+{"_id":17,"uri":["/valuation/testPrice"],"uriIndex":[21]}
+{"_id":26,"uri":["/child/grantToChild"],"uriIndex":[22]}
+{"_id":27,"uri":["/prodPrio/listProdPrio"],"uriIndex":[23]}
+{"_id":24,"uri":["/img/listImg"],"uriIndex":[24]}

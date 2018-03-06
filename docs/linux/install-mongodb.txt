@@ -1,3 +1,6 @@
+注：修改bindIp bindIp:127.0.0.1
+
+
 安装步骤
 1.配置MongoDB的yum源
 创建yum源文件：
@@ -19,7 +22,7 @@ yum -y install mongodb-org
 
 安装完成后
 查看mongo安装位置
- whereis mongod
+whereis mongod
 
 查看修改配置文件 ： 
 vim /etc/mongod.conf

@@ -18,3 +18,7 @@
 {"_id":"/level/listLevel","index":18}
 {"_id":"/img/img","index":19}
 {"_id":"/searchVersion/listVersion","index":20}
+{"_id":"/valuation/testPrice","index":21}
+{"_id":"/child/grantToChild","index":22}
+{"_id":"/prodPrio/listProdPrio","index":23}
+{"_id":"/img/listImg","index":24}
