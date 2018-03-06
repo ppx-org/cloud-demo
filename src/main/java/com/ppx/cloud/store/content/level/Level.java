@@ -1,5 +1,6 @@
 package com.ppx.cloud.store.content.level;
 
+import com.ppx.cloud.common.jdbc.annotation.Column;
 import com.ppx.cloud.common.jdbc.annotation.Id;
 import com.ppx.cloud.common.jdbc.annotation.Table;
 
@@ -15,6 +16,9 @@ public class Level {
 	private String levelName;
 	
 	private Integer LevelPrio;
+	
+	@Column(readonly=true)
+	private Integer levelProdNum;
 
 	public Integer getLevelId() {
 		return levelId;
@@ -46,6 +50,14 @@ public class Level {
 
 	public void setLevelPrio(Integer levelPrio) {
 		LevelPrio = levelPrio;
+	}
+
+	public Integer getLevelProdNum() {
+		return levelProdNum;
+	}
+
+	public void setLevelProdNum(Integer levelProdNum) {
+		this.levelProdNum = levelProdNum;
 	}
 
 	

@@ -54,10 +54,11 @@ function edit(id) {
 
 <body>
 <div th:text="#{imgPath}" style="display: none"></div>
-<div th:replace="common/fragment/common::pageList('产品优化级')">
+<div th:replace="common/fragment/common::pageList('产品优先级')">
 	<div th:fragment="queryFragment">
 		<input type="text" class="form-control input-sm" name="prodId" placeholder="请输入产品ID" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
+		<span class="hint">优先级数字小的排在搜索结果前面</span>
 	</div>
 	<table th:fragment="listFragment">
 	<tr>
@@ -71,7 +72,7 @@ function edit(id) {
 	<tr>
 		<td class="w-id">{{v.prodId}}</td>
 		<td class="w-title-s">{{v.prodTitle}}</td>
-		<td class="w-id">
+		<td class="w-number">
 			<span id="span{{v.prodId}}">{{v.prodPrio}}</span>
 			<input id="input{{v.prodId}}" type="text" value="{{v.prodPrio}}" class="form-control" maxlength="6" style="padding:0;margin:0;display:none" onkeyup="this.value=this.value.replace(/\D/g,'')"></td>
 		<td class="w-action">

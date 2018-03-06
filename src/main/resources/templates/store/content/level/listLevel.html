@@ -125,6 +125,7 @@ function levelProduct(levelId) {
 	<tr>
 		<th>楼层ID</th>
 		<th>楼层名称</th>
+		<th>楼层产品数量</th>	
 		<th>排序</th>
 		<th>操作</th>
 	</tr>
@@ -133,6 +134,7 @@ function levelProduct(levelId) {
 	<tr>
 		<td class="w-id">{{v.levelId}}</td>
 		<td class="w-title-s">{{v.levelName}}</td>
+		<td class="w-number">{{v.levelProdNum}}</td>
 		<td class="w-action">
 			{{if arrayList.length != 1 && i !== 0}}
 			<a href="#" onclick="move.top({{v.levelId}})" title="置顶" class="glyphicon glyphicon-step-backward" style="transform: rotate(90deg);"></a>

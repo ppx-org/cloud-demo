@@ -57,9 +57,9 @@ template.helper('getUpdated', function(updated) {
 <div class="page-list-body">
 	<div class="page-list-query">
 		<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span>创建索引</span>
-			<span style="font-size:12px;color:gray">
+			<span class="hint">
 			产品状态更新：<span th:text="${lastUpdate.prodLastUpdated}"></span>(<span th:text="${lastUpdate.prodLastUpdatedView}"></span>分钟前);
-			产品优化级更新：<span th:text="${lastUpdate.prodPrioLastUpdated}"></span>(<span th:text="${lastUpdate.prodPrioLastUpdatedView}"></span>分钟前);
+			产品优先级更新：<span th:text="${lastUpdate.prodPrioLastUpdated}"></span>(<span th:text="${lastUpdate.prodPrioLastUpdatedView}"></span>分钟前);
 			促销状态更新：<span th:text="${lastUpdate.progLastUpdated}"></span>(<span th:text="${lastUpdate.progLastUpdatedView}"></span>分钟前);
 			</span>
 		</div>
@@ -81,9 +81,9 @@ template.helper('getUpdated', function(updated) {
 		<td class="w-time">{{v.createBegin}}</td>
 		<td class="w-time">{{v.createEnd}}</td>
 		<td class="w-title-s">{{getUpdated(v.updated)}}</td>
-		<td class="w-id">{{v.spendTime}}s</td>
+		<td class="w-id">{{v.spendTime}}秒</td>
 		<td class="w-id">{{v.versionStatusDesc}}</td>		
-		<td class="w-action">
+		<td class="w-action-m">
 			{{if v.versionStatus == 1}}<a href="javascript:createIndex('{{v.versionName}}')">重建索引</a>&nbsp;&nbsp;{{/if}}
 			{{if v.versionStatus == 2}}
 				<a href="javascript:createIndex('{{v.versionName}}')">重建索引</a>&nbsp;&nbsp;

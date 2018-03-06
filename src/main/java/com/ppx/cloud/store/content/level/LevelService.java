@@ -15,7 +15,8 @@ public class LevelService extends MyDaoSupport {
 	
 	
 	public List<Level> listLevel(Integer storeId) {
-		String sql = "select * from home_level where STORE_ID = ? order by LEVEL_PRIO";
+		String sql = "select l.*, (select count(*) from home_level_product where LEVEL_ID = l.LEVEL_ID) LEVEL_PROD_NUM"
+				+ " from home_level l where STORE_ID = ? order by LEVEL_PRIO";
 		
 		List<Level> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(Level.class), storeId);
 		
