@@ -23,10 +23,7 @@ function add() {
 	
 	action = function() {
 		if (!$("#addForm,#policyArgsForm").validationEngine('validate')) return;
-		
 		$("#policyArgs").val(getPolicyArgs($("#policyType").val()));
-		
-		
 		showLoading();
 		$.post([[@{/program/insertProgram}]], $("#addForm").serialize(), function(r) {
 			if (r.result == 1) {
@@ -287,7 +284,7 @@ function viewStatusHistory(progId) {
 		<label class="col-sm-2 control-label"><span class="required">*</span>方案名称：</label>
 		<div class="col-sm-4"><input type="text" name="progName" class="form-control validate[required]" maxlength="32"></div>
 		<label class="col-sm-2 control-label"><span class="required">*</span>优先级：</label>
-		<div class="col-sm-4"><input type="text" name="progPrio" class="form-control validate[required,custom[integer]]" maxlength="32"></div>
+		<div class="col-sm-4"><input type="text" name="progPrio" class="form-control validate[required,custom[integer]]" maxlength="6" value="1"></div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>开始日期：</label>
@@ -360,9 +357,6 @@ function viewStatusHistory(progId) {
 	</div>
 	</script>
 </div>
-
-
-
 
 </body>
 </html>
