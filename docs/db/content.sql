@@ -17,6 +17,7 @@ create table home_swiper
 	CREATED     timestamp not null default CURRENT_TIMESTAMP,
 	primary key (SWIPER_ID)
 ) comment='首页轮播';
+create index idx_home_swiper_store_id on home_swiper(STORE_ID);
 
 create table home_level
 (
@@ -27,6 +28,7 @@ create table home_level
 	CREATED     timestamp not null default CURRENT_TIMESTAMP,
 	primary key (LEVEL_ID)
 ) comment='首页楼层';
+create index idx_home_level_store_id on home_level(STORE_ID);
 
 create table home_level_product
 (
