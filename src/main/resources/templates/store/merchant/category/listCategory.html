@@ -245,7 +245,7 @@ function refreshCatImg() {
 		<td class="w-id">{{v.catId}}</td>
 		<td class="w-title-s" style="text-align:left">{{v.catName}}{{if v.children}}&nbsp;&nbsp;<a href="#" onclick="javascript:toggleMain(this, {{v.catId}})">[折叠]</a>{{/if}}</td>
 		<td class="w-id"></td>
-		<td class="w-id">{{v.recordStatus}}</td>
+		<td class="w-id">{{if v.recordStatus == 1}}正常{{else}}删除{{/if}}</td>
 		<td class="w-id">
 			{{if !(v.isFirst && v.isLast) && v.recordStatus == 1}} 
 				{{if !v.isLast}}<a href="javascript:move.down({{v.catId}})">[下移]</a>&nbsp;&nbsp;<a href="javascript:move.last({{v.catId}})">[置底]</a>{{/if}}
