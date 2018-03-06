@@ -16,6 +16,7 @@ create table program (
   CREATED 			timestamp not null default CURRENT_TIMESTAMP,
   primary key (PROG_ID)
 ) comment='促销方案';
+create index idx_program_merchant_id on program(MERCHANT_ID);
 
 create table program_status_history
 (	
@@ -26,6 +27,7 @@ create table program_status_history
   CREATOR					int,
   primary key(HISTORY_PROG_STATUS_ID)
 ) comment='促销状态变更历史';
+create index idx_program_his_prog_id on program_status_history(PROG_ID);
 
 create table program_category
 (

@@ -49,6 +49,7 @@ create table repository
    CREATED              timestamp not null default CURRENT_TIMESTAMP,
    primary key (REPO_ID)
 ) comment='仓库';
+create index idx_repository_merchant_id on repository(MERCHANT_ID);
 
 /** STORE_ID继承repository.REPO_ID */
 create table store
@@ -67,6 +68,7 @@ create table store
    CREATED              timestamp not null default CURRENT_TIMESTAMP,
    primary key (STORE_ID)
 ) comment='店铺';
+create index idx_store_merchant_id on store(MERCHANT_ID);
 
 create table store_map_repo
 (
@@ -88,6 +90,8 @@ create table category
    CREATED              timestamp not null default CURRENT_TIMESTAMP,
    primary key (CAT_ID)
 ) comment='分类';
+create index idx_category_merchant_id on category(MERCHANT_ID);
+create index idx_category_parent_id on category(PARENT_ID);
 
 create table brand
 (
@@ -101,6 +105,7 @@ create table brand
    CREATED              timestamp not null default CURRENT_TIMESTAMP,
    primary key (BRAND_ID)
 ) comment='品牌';
+create index idx_brand_merchant_id on brand(MERCHANT_ID);
 
 create table theme
 (
@@ -114,6 +119,7 @@ create table theme
    CREATED            timestamp not null default CURRENT_TIMESTAMP,
    primary key (THEME_ID)
 ) comment='主题';
+create index idx_theme_merchant_id on theme(MERCHANT_ID);
 
 create table theme_map_prod
 (
@@ -135,6 +141,7 @@ create table change_stock
 	CREATOR			int not null,
 	primary key (CHANGE_STOCK_ID)
 ) comment='产品库存变更历史';
+create index idx_change_stock_prod_id on change_stock(SKU_ID);
 
 create table change_price
 (
@@ -146,6 +153,7 @@ create table change_price
 	CREATOR			int not null,
 	primary key (CHANGE_PRICE_ID)
 ) comment='产品价格变更历史';
+create index idx_change_price_prod_id on change_price(SKU_ID);
 
 create table change_status 
 (
@@ -156,6 +164,7 @@ create table change_status
 	CREATOR				int not null,
 	primary key (CHANGE_STATUS_ID)
 ) comment='产品状态变更历史';
+create index idx_change_status_prod_id on change_status(PROD_ID);
 
 create table sku
 (
@@ -169,6 +178,7 @@ create table sku
    SKU_IMG_SRC          varchar(128),
    primary key (SKU_ID)
 ) comment='产品SKU';
+create index idx_sku_prod_id on sku(PROD_ID);
 
 create table product
 (
@@ -184,6 +194,10 @@ create table product
    PROD_STATUS 			tinyint(1) not null DEFAULT 1,   
    primary key (PROD_ID)
 ) comment='产品';
+create index idx_product_merchant_id on product(MERCHANT_ID);
+create index idx_product_cat_id on product(CAT_ID);
+create index idx_product_repo_id on product(REPO_ID);
+create index idx_product_prod_status on product(PROD_STATUS);
 
 create table product_detail
 (
@@ -205,7 +219,7 @@ create table product_img
    PROD_IMG_SRC          varchar(128) not null,
    primary key (PROD_IMG_ID)
 ) comment='产品图片';
-
+create index idx_product_img_prod_id on product_img(PROD_ID);
 
 
 /** ----------------- user ----------------- */
@@ -222,6 +236,8 @@ create table user_order
    DELIVER_CODE			varchar(32),
    primary key (ORDER_ID)
 ) comment='订单';
+create index idx_user_order_openid on user_order(OPENID);
+create index idx_user_order_store_id on user_order(STORE_ID);
 
 create table order_item
 (
@@ -238,6 +254,8 @@ create table order_item
    ITEM_PROMO           varchar(32),
    primary key (ITEM_ID)
 ) comment='订单项';
+create index idx_order_item_order_id on order_item(ORDER_ID);
+create index idx_order_item_prod_id on order_item(PROD_ID);
 
 create table order_item_status
 (
@@ -263,6 +281,7 @@ create table order_status_history
 	HISTORY_COMMENT	varchar(128),
 	primary key(HISTORY_ID)
 ) comment='订单状态变更历史';
+create index idx_order_his_order_id on order_status_history(ORDER_ID);
 
 create table user_cart 
 (
@@ -293,7 +312,7 @@ create table import_data (
   NUM_2 		decimal(7,2) DEFAULT NULL,
   CHAR_1 		varchar(32) DEFAULT NULL,
   CHAR_2 		varchar(32) DEFAULT NULL,
-  primary key (MERCHANT_ID,ROWNUM)
+  primary key (MERCHANT_ID, ROWNUM)
 ) comment='导入数据中间表';
 
 
