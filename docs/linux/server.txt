@@ -1,3 +1,7 @@
+# 停止服务 apache
+$ sudo systemctl stop httpd.service
+
+
 
 micro:2018-04-05 12:43到期 BBBBBBIbg2OO1zM
 会话:123.207.37.158 (公)10.104.121.112 (内)
