@@ -84,8 +84,10 @@ public class ChildService extends MyDaoSupport {
 		return getJdbcTemplate().update(sql, GrantUtils.getMD5Password(loginPassword), id, merchantId);
 	}
 
-	public int deleteMerchant(Integer id) {
-		return getJdbcTemplate().update("update merchant set RECORD_STATUS = 0 where MERCHANT_ID = ?", id);
+	public int deleteChild(Integer id) {
+		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		// 只能删除
+		return getJdbcTemplate().update("update merchant_account set RECORD_STATUS = ? where ACCOUNT_ID = ? and MERCHANT_ID = ?", 0, id , merchantId);
 	}
 	
 	

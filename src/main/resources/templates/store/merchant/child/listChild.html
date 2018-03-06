@@ -108,7 +108,7 @@ function remove(id) {
 <div th:replace="common/fragment/common::pageList('子账号管理')">
 	<div th:fragment="queryFragment">
 		<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
-		<input type="text" class="form-control input-sm" name="loginAccount" placeholder="子帐号" style="width:200px;">
+		<input type="text" class="form-control input-sm" name="loginAccount" placeholder="请输入子帐号" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	<table th:fragment="listFragment">

@@ -66,7 +66,7 @@ public class ChildController {
     
 	@PostMapping @ResponseBody
 	public Map<String, Object> deleteChild(Integer id) {
-		int r = serv.deleteMerchant(id);
+		int r = serv.deleteChild(id);
 		return ControllerReturn.ok(r);
 	}
 	
