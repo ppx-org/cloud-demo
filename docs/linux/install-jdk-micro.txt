@@ -3,6 +3,6 @@
 2.解压:tar -zxvf jdk-8u131-linux-x64.tar.gz
 
 >>>>>>>>>>>micro
-nohup /home/deng/jdk-8u131-linux-x64/bin/java -server -Xmx512m -Xms256m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/home/deng/log/OutOfMemory.dump -jar -Dspring.profiles.active=prod /home/deng/cloud-demo-0.0.1-SNAPSHOT.jar  >> /home/deng/log/cloud_`date +"%Y%m%d"`.log
+nohup /home/deng/jdk1.8.0_131/bin/java -server -Xmx512m -Xms256m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/home/deng/log/OutOfMemory.dump -jar -Dspring.profiles.active=prod /home/deng/cloud-demo-0.0.1-SNAPSHOT.jar >> /home/deng/log/cloud_`date +"%Y%m%d"`.log
 
 
