@@ -21,12 +21,10 @@ import com.ppx.cloud.micro.common.MGrantContext;
  */
 public class BitSetUtils {
 	
-	public static final String ORDER_NORMAL = "search_normal_";
+	public static final String ORDER_NORMAL = "search_normal";
 	
-	public static final String ORDER_NEW = "search_new_";
+	public static final String ORDER_NEW = "search_new";
 	
-	
-
 	public static final String PATH_STORE = "store";
 	
 	public static final String PATH_TITLE = "title";
@@ -38,18 +36,6 @@ public class BitSetUtils {
 	public static final String PATH_THEME = "theme";
 	
 	public static final String PATH_PROMO = "promo";
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	private static Map<Integer, String> versionMap = new HashMap<Integer, String>();
@@ -74,24 +60,22 @@ public class BitSetUtils {
 		return merchantId;
 	}
 	
-	//  file.searchPath
+	// file.searchPath
 	private static String getSearchPath() {
 		return System.getProperty("file.searchPath");
 	}
 	
-	public static String getRealPath(String path) {
-		
-		return getSearchPath() + getMerchantId() + "/" + getCurrentVersionName() + "/" + path + "/";
+	public static String getRealPath(String versionName, String path) {
+		return getSearchPath() + getMerchantId() + "/" + versionName + "/" + path + "/";
 	}
 	
-	
-	public static Map<String, Integer> removeVersionPath() {
+	public static Map<String, Integer> removeVersionPath(String versionName) {
 		Map<String, Integer> countMap = new HashMap<String, Integer>();
 		countMap.put("removeFile", 0);
 		countMap.put("removeFolder", 0);
 		
 		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		String path = getSearchPath() + merchantId + "/" + getCurrentVersionName();
+		String path = getSearchPath() + merchantId + "/" + versionName;
 		File pathFile = new File(path);
 		if (pathFile.exists()) {
 			deleteAllFilesOfDir(pathFile, countMap);
@@ -116,8 +100,8 @@ public class BitSetUtils {
 	    countMap.put("removeFolder", countMap.get("removeFolder") + 1);
 	} 
 	
-	public static int initPath(String path) {
-		String realPath = getRealPath(path);
+	public static int initPath(String versionName, String path) {
+		String realPath = getRealPath(versionName, path);
 		
 		// 不存目录就创建
 		File pathFile = new File(realPath);
@@ -127,8 +111,8 @@ public class BitSetUtils {
 		return 1;
 	}
 	
-	public static int writeBitSet(String path, String w, BitSet bs) {	
-		String realPath = getRealPath(path);
+	public static int writeBitSet(String versionName, String path, String w, BitSet bs) {	
+		String realPath = getRealPath(versionName, path);
 		
 		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(realPath + "_" + w))) {
 			out.writeObject(bs);	
@@ -139,8 +123,8 @@ public class BitSetUtils {
 		return 1;
 	}
 	
-	public static BitSet readBitSet(String path, String w) {
-		String realPath = getRealPath(path);
+	public static BitSet readBitSet(String versionName, String path, String w) {
+		String realPath = getRealPath(versionName, path);
 		
 		File f = new File(realPath + "_" + w);
 		if (!f.exists()) return new BitSet();
@@ -152,7 +136,6 @@ public class BitSetUtils {
 		}
 		return new BitSet();
 	}
-	
 	
 	// 从BitSet toString改造
 	public static List<Integer> bsToPage(BitSet bs, int begin, int len) {
@@ -186,12 +169,8 @@ public class BitSetUtils {
         }
         return returnList;
     }
-	
-	
 
 
-	
-	
-	
 	
 }
+

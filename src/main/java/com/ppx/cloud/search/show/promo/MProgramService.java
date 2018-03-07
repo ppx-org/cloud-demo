@@ -28,11 +28,11 @@ public class MProgramService extends MyDaoSupport {
 		List<MProgram> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(MProgram.class), merchantId);
 		// 加上本店的
 		String normalPath = BitSetUtils.ORDER_NORMAL + BitSetUtils.getCurrentVersionName();
-		BitSet storeBs = BitSetUtils.readBitSet(normalPath + "/" + BitSetUtils.PATH_STORE, storeId + "");
+		BitSet storeBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_STORE, storeId + "");
 		
 		List<MProgram> returnList = new ArrayList<MProgram>();
 		for (MProgram t : list) {
-			BitSet bs = BitSetUtils.readBitSet(normalPath + "/" + BitSetUtils.PATH_PROMO + "/" + DateUtils.today(), t.getGid() + "");
+			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_PROMO + "/" + DateUtils.today(), t.getGid() + "");
 
 			bs.and(storeBs);
 			if (bs != null && bs.cardinality() != 0) {

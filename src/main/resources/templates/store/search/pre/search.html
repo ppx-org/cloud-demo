@@ -12,7 +12,7 @@ function queryPage(pageNumber) {
 	$("#pageNumber").val(pageNumber);
 	showLoading();
 	
-	$.get([[@{/query/pcQuery}]], $("#queryForm").serialize(), function(r) {
+	$.get([[#{searchUrl}]] + 'query/pcQuery', $("#queryForm").serialize(), function(r) {
 		refreshPageData(r);
 		
 		$("#fastView").empty();

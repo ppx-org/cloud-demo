@@ -27,12 +27,12 @@ public class MBrandService extends MyDaoSupport {
 		
 		// 加上本店的
 		String normalPath = BitSetUtils.ORDER_NORMAL + BitSetUtils.getCurrentVersionName();
-		BitSet storeBs = BitSetUtils.readBitSet(normalPath + "/" + BitSetUtils.PATH_STORE, storeId + "");
+		BitSet storeBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_STORE, storeId + "");
 		
 		List<MBrand> returnList = new ArrayList<MBrand>();
 		
 		for (MBrand b : list) {
-			BitSet bs = BitSetUtils.readBitSet(normalPath + "/" + BitSetUtils.PATH_CAT, b.getBid() + "");
+			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_CAT, b.getBid() + "");
 			bs.and(storeBs);
 			if (bs != null && bs.cardinality() != 0) {
 				b.setN(bs.cardinality());
