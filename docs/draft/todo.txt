@@ -1,4 +1,9 @@
 
+
+
+移动端接口用代理方式
+
+
 code: https://github.com/demi520/wxapp-qrcode
 
 
