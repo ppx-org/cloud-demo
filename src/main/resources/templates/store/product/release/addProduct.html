@@ -71,7 +71,7 @@ function uploadImg(callback) {
 		formData.append("type", "prod");
 	});
 	
-	$.ajax({url:[[@{/imgUpload/prodSave}]], type:"POST", contentType:false, data:formData ,processData:false,
+	$.ajax({url:[[#{imgUrl}]] + '../imgUpload/prodSave', type:"POST", contentType:false, data:formData ,processData:false,
 		success:function(r){
 			var len = r.arrayList.length;
 			if ($(".uploadImg").length != len) {
@@ -111,6 +111,8 @@ $(function() {
 .imgTd img {cursor:pointer;}
 .imgTd .glyphicon {font-size:18px;cursor:pointer;}
 #skuTable>tbody>tr>td {height:82px;vertical-align:middle;padding:0;text-align:center;}
+
+.form-group {min-width:1400px}
 </style>
 
 </head>
