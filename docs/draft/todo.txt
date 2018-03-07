@@ -4,6 +4,9 @@ code: https://github.com/demi520/wxapp-qrcode
 
 
 
+体验:
+搜索维护时提示系统忙
+图片服务出问题时，提示
 
 
 
