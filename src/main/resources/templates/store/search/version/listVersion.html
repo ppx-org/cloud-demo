@@ -27,14 +27,14 @@ function query() {
 
 function createIndex(versionName) {
 	showLoading();
-	$.post([[@{/searchCreate/createIndex}]], "versionName=" + versionName, function(r) {
+	$.post([[#{searchUrl}]] + 'searchCreate/createIndex', "versionName=" + versionName, function(r) {
 		query();
 	});
 }
 
 function useIndex(versionName) {
 	showLoading();
-	$.post([[@{/searchCreate/useIndex}]], "versionName=" + versionName, function(r) {
+	$.post([[#{searchUrl}]] + 'searchCreate/useIndex', "versionName=" + versionName, function(r) {
 		query();
 	});
 }

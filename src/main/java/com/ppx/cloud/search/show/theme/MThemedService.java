@@ -28,11 +28,11 @@ public class MThemedService extends MyDaoSupport {
 		List<MTheme> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(MTheme.class), merchantId, 1);
 		// 加上本店的
 		String normalPath = BitSetUtils.ORDER_NORMAL + BitSetUtils.getCurrentVersionName();
-		BitSet storeBs = BitSetUtils.readBitSet(normalPath + "/" + BitSetUtils.PATH_STORE, storeId + "");
+		BitSet storeBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_STORE, storeId + "");
 		
 		List<MTheme> returnList = new ArrayList<MTheme>();
 		for (MTheme t : list) {
-			BitSet bs = BitSetUtils.readBitSet(normalPath + "/" + BitSetUtils.PATH_CAT, t.getTid() + "");
+			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_CAT, t.getTid() + "");
 			bs.and(storeBs);
 			if (bs != null && bs.cardinality() != 0) {
 				t.setN(bs.cardinality());

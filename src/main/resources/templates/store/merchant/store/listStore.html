@@ -202,7 +202,7 @@ function upload(obj) {
 	formData.append("type", "store");
 	
 	showLoading();
-	$.ajax({url:[[@{/imgUpload/showSave}]], type:"POST", contentType:false, data:formData ,processData:false,
+	$.ajax({url:[[#{imgUrl}]] + '../imgUpload/showSave', type:"POST", contentType:false, data:formData ,processData:false,
 		success:function(r){
 			if (r.arrayList && r.arrayList.length == 1) {
 				var url = [[#{imgUrl}]] + r.arrayList[0];

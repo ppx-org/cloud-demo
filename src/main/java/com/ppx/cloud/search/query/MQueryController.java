@@ -57,8 +57,7 @@ public class MQueryController {
 			Integer gId, Integer fast, Integer o) {
 		
 		
-		String orderType = StringUtils.isEmpty(o) || o == 0 ? BitSetUtils.ORDER_NORMAL + BitSetUtils.getCurrentVersionName() 
-			: BitSetUtils.ORDER_NEW + BitSetUtils.getCurrentVersionName();
+		String orderType = StringUtils.isEmpty(o) || o == 0 ? BitSetUtils.ORDER_NORMAL : BitSetUtils.ORDER_NEW;
 
 		String date = (StringUtils.isEmpty(o) || d == 0 ? DateUtils.today() : DateUtils.tomorrow());
 		QueryPageList bean = serv.query(sId, w, p, date, cId, bId, tId, gId, fast, orderType);

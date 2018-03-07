@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.ppx.cloud.common.controller.ControllerContext;
 import com.ppx.cloud.monitor.AccessLog;
 import com.ppx.cloud.monitor.AccessUtils;
-import com.ppx.cloud.search.version.SearchVersionService;
+import com.ppx.cloud.search.create.SearchCreateService;
 
 
 /**
@@ -23,7 +23,7 @@ public class InitListener implements ApplicationListener<ContextRefreshedEvent> 
 	
 	
 	@Autowired
-	private SearchVersionService searchVersionService;
+	private SearchCreateService searchCreateService;
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event)  {
@@ -33,7 +33,7 @@ public class InitListener implements ApplicationListener<ContextRefreshedEvent> 
 		log.setIp("127.0.0.0");
 		ControllerContext.setAccessLog(log);
 		
-		searchVersionService.initVersion();
+		searchCreateService.initVersion();
 		
 		AccessLog accessLog = ControllerContext.getAccessLog();
 		accessLog.setSpendTime(System.currentTimeMillis() - accessLog.getBeginTime().getTime());

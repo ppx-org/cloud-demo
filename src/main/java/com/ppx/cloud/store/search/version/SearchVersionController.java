@@ -1,4 +1,4 @@
-package com.ppx.cloud.search.version;
+package com.ppx.cloud.store.search.version;
 
 import java.util.List;
 import java.util.Map;

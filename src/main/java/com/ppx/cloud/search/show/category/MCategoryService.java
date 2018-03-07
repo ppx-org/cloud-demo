@@ -36,13 +36,13 @@ public class MCategoryService extends MyDaoSupport {
 		
 		// 加上本店的
 		String normalPath = BitSetUtils.ORDER_NORMAL + BitSetUtils.getCurrentVersionName();
-		BitSet storeBs = BitSetUtils.readBitSet(normalPath + "/" + BitSetUtils.PATH_STORE, storeId + "");
+		BitSet storeBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_STORE, storeId + "");
 		
 		
 		List<MCategory> returnList = new ArrayList<MCategory>();
 		for (MCategory c : list) {
 			if (c.getPid() == -1) {
-				BitSet bs = BitSetUtils.readBitSet(normalPath + "/" + BitSetUtils.PATH_CAT, c.getCid() + "");
+				BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_CAT, c.getCid() + "");
 				bs.and(storeBs);
 				if (bs != null && bs.cardinality() != 0) {
 					c.setN(bs.cardinality());
@@ -61,7 +61,7 @@ public class MCategoryService extends MyDaoSupport {
 		for (MCategory c : list) {
 			if (c.getPid() == pid) {
 				String normalPath = BitSetUtils.ORDER_NORMAL + BitSetUtils.getCurrentVersionName();
-				BitSet bs = BitSetUtils.readBitSet(normalPath + "/" + BitSetUtils.PATH_CAT, c.getCid() + "");
+				BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_CAT, c.getCid() + "");
 				bs.and(storeBs);
 				if (bs != null && bs.cardinality() != 0) {
 					c.setN(bs.cardinality());
