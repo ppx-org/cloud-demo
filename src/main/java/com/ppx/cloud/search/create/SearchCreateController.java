@@ -22,7 +22,6 @@ public class SearchCreateController {
 		
 		int r = serv.createIndex(versionName);
 		
-		
 		return ControllerReturn.ok(r);
 	}
 	
@@ -31,20 +30,9 @@ public class SearchCreateController {
 
 		int r = serv.useIndex(versionName);
 		
-		
 		return ControllerReturn.ok(r);
 	}
 	
-	
-	
-//	@GetMapping @ResponseBody
-//	public Map<String, Object> test() {
-//		Map map = serv.initSearchSpecial();
-//		System.out.println("out:" + map);
-//		
-//		
-//		return ControllerReturn.ok(map);
-//	}
 	
 	
 }

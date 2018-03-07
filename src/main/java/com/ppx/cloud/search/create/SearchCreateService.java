@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import com.ppx.cloud.common.util.DateUtils;
 import com.ppx.cloud.grant.common.GrantContext;
 import com.ppx.cloud.search.util.BitSetUtils;
 import com.ppx.cloud.search.util.WordUtils;
+import com.ppx.cloud.store.search.version.SearchVersion;
 
 @Repository
 public class SearchCreateService extends MyDaoSupport {
@@ -30,6 +32,9 @@ public class SearchCreateService extends MyDaoSupport {
 		getJdbcTemplate().update(otherSql, updator, 2, merchantId, 3);
 		String updateStatus = "update search_version set UPDATED = now(), UPDATOR = ?, VERSION_STATUS = ? where MERCHANT_ID = ? and VERSION_NAME = ?";
 		getJdbcTemplate().update(updateStatus, updator, 3, merchantId, versionName);
+		
+		BitSetUtils.setVersionMap(merchantId, versionName);
+		
 		return 1;
 		
 	}
@@ -45,8 +50,6 @@ public class SearchCreateService extends MyDaoSupport {
 		
 		long t = System.currentTimeMillis();
 		Map<String, Integer> spendMap = new LinkedHashMap<String, Integer>();
-	
-		BitSetUtils.setVersionMap(merchantId, versionName);
 		
 		
 		Map<String, Integer> resultMap = new LinkedHashMap<String, Integer>();
@@ -481,6 +484,15 @@ public class SearchCreateService extends MyDaoSupport {
 	
 	
 
+	// 初始化版本
+	public void initVersion() {
+		// 3:使用中
+		String sql = "select MERCHANT_ID, VERSION_NAME from search_version where VERSION_STATUS = ?";
+		List<SearchVersion> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(SearchVersion.class), 3);
+		for (SearchVersion v : list) {
+			BitSetUtils.setVersionMap(v.getMerchantId(), v.getVersionName());
+		}
+	}
 
 	
 }
