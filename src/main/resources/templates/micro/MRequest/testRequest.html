@@ -38,7 +38,7 @@ function testRequest() {
 	*/
 	
 	// confirm
-	var json = {w:"招聘"};
+	var json = {jsCode:"013UgqcP13Q6V21gOtcP1DLAcP1UgqcO"};
 	$.post([[@{/}]] + $("#url").val(), JSON.stringify(json), function(r) {
 		$("#returnJson").text(JSON.stringify(r));
 	});
@@ -52,7 +52,7 @@ function testRequest() {
 
 
 
-<input type="text" id="url" value="MQuery/q" style="width:300px">
+<input type="text" id="url" value="MLogin/login" style="width:300px">
 
 <button type="button" onclick="testRequest()">test</button>
 

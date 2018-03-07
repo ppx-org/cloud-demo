@@ -54,13 +54,13 @@ public class MLoginController {
 		String session_key = "";
 		try {
 			Map<?, ?> map = new ObjectMapper().readValue(r.getBody(), Map.class);
-//			if (map.get("errcode") != null) {
-//				// 微信端登录异常
-//				Map<String, Object> returnMap = ControllerReturn.ok(-1);
-//				returnMap.put("errcode", map.get("errcode"));
-//				returnMap.put("errmsg", map.get("errmsg"));
-//				return returnMap;
-//			}
+			if (map.get("errcode") != null) {
+				// 微信端登录异常
+				Map<String, Object> returnMap = ControllerReturn.ok(-1);
+				returnMap.put("errcode", map.get("errcode"));
+				returnMap.put("errmsg", map.get("errmsg"));
+				return returnMap;
+			}
 			openid = (String)map.get("openid");
 			session_key = (String)map.get("session_key");
 		} catch (Exception e) {
