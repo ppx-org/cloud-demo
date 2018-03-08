@@ -1,4 +1,4 @@
-package com.ppx.cloud.store.promo.valuation;
+package com.ppx.cloud.store.promo.test;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -17,18 +17,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.util.DateUtils;
-import com.ppx.cloud.storecommon.price.bean.SkuIndex;
-import com.ppx.cloud.storecommon.price.service.PriceCommonService;
+import com.ppx.cloud.demo.common.price.bean.SkuIndex;
+import com.ppx.cloud.demo.common.price.service.PriceCommonService;
 
 
 @Controller	
-public class ValuationController {
+public class TestPriceController {
 	
 	@Autowired
 	private PriceCommonService priceServ;
-	
-	
-	
+
 	private final int NO_EXIST_SKU = -2;
 	
 	@GetMapping

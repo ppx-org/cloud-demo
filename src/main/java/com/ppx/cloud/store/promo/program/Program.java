@@ -9,8 +9,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ppx.cloud.common.jdbc.annotation.Id;
 import com.ppx.cloud.common.util.DateUtils;
+import com.ppx.cloud.demo.common.price.utils.DecodePolicy;
 import com.ppx.cloud.store.common.dictionary.Dict;
-import com.ppx.cloud.storecommon.price.utils.DecodePolicy;
 
 public class Program {
 

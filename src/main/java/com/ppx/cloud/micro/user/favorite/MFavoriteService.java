@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
+import com.ppx.cloud.demo.common.query.QueryProduct;
+import com.ppx.cloud.demo.common.query.QueryCommonService;
 import com.ppx.cloud.micro.common.MGrantContext;
 import com.ppx.cloud.micro.common.WxUser;
-import com.ppx.cloud.storecommon.query.bean.MQueryProduct;
-import com.ppx.cloud.storecommon.query.service.QueryCommonService;
 
 
 @Service
@@ -29,13 +29,13 @@ public class MFavoriteService extends MyDaoSupport {
 	
 	
 	
-	public List<MQueryProduct> listProduct() {
+	public List<QueryProduct> listProduct() {
 		WxUser u = MGrantContext.getWxUser();
 		
 		String sql = "select PROD_ID from user_favorite where OPENID = ? and STORE_ID = ? order by CREATED desc";
 		List<Integer> prodIdList = getJdbcTemplate().queryForList(sql, Integer.class, u.getOpenid(), u.getStoreId());
 		
-		List<MQueryProduct> list = queryServ.listProduct(prodIdList, u.getStoreId());
+		List<QueryProduct> list = queryServ.listProduct(prodIdList, u.getStoreId());
 		return list;
 	}
 	

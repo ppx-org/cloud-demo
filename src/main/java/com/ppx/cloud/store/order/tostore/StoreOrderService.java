@@ -14,10 +14,10 @@ import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.page.Page;
 import com.ppx.cloud.common.page.PageList;
+import com.ppx.cloud.demo.common.order.OrderItem;
+import com.ppx.cloud.demo.common.order.OrderStatusHistory;
+import com.ppx.cloud.demo.common.order.UserOrder;
 import com.ppx.cloud.grant.common.GrantContext;
-import com.ppx.cloud.storecommon.order.bean.OrderItem;
-import com.ppx.cloud.storecommon.order.bean.OrderStatusHistory;
-import com.ppx.cloud.storecommon.order.bean.UserOrder;
 
 @Service
 public class StoreOrderService extends MyDaoSupport {

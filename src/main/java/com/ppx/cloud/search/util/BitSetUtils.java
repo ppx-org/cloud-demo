@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ppx.cloud.grant.common.GrantContext;
-import com.ppx.cloud.micro.common.MGrantContext;
+import com.ppx.cloud.search.common.SGrantContext;
 
 /**
  * 文件名加"_"防止命名冲突
@@ -40,24 +40,16 @@ public class BitSetUtils {
 	
 	private static Map<Integer, String> versionMap = new HashMap<Integer, String>();
 	
-	public static void setVersionMap(int merchantId, String versionName) {
-		versionMap.put(merchantId, versionName);
+	public static void setVersionMap(int mId, String versionName) {
+		versionMap.put(mId, versionName);
 	}	
 	
 	public static String getCurrentVersionName() {
-		return versionMap.get(getMerchantId());
+		return versionMap.get(getmId());
 	}
 	
-	private static int getMerchantId() {
-		// 支持电脑和移动端
-		int merchantId = -1;
-		if (GrantContext.getLoginAccount() != null) {
-			merchantId = GrantContext.getLoginAccount().getMerchantId();
-		}
-		else {
-			merchantId = MGrantContext.getWxUser().getMerchantId();
-		}
-		return merchantId;
+	private static int getmId() {
+		return SGrantContext.getSession().getmId();
 	}
 	
 	// file.searchPath
@@ -66,7 +58,7 @@ public class BitSetUtils {
 	}
 	
 	public static String getRealPath(String versionName, String path) {
-		return getSearchPath() + getMerchantId() + "/" + versionName + "/" + path + "/";
+		return getSearchPath() + getmId() + "/" + versionName + "/" + path + "/";
 	}
 	
 	public static Map<String, Integer> removeVersionPath(String versionName) {

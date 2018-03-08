@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
-import com.ppx.cloud.storecommon.page.MPage;
-import com.ppx.cloud.storecommon.query.bean.MQueryProduct;
+import com.ppx.cloud.common.page.MPage;
+import com.ppx.cloud.demo.common.query.QueryProduct;
 
 
 @Controller	
@@ -24,7 +24,7 @@ public class MHomeController {
 		List<MSwiper> swiperList = serv.listSwiper();
 		List<MLevel> levelList = serv.listLevel();
 		MPage page = new MPage();
-		List<MQueryProduct> prodList = serv.listLevelProd(page);
+		List<QueryProduct> prodList = serv.listLevelProd(page);
 		
 		Map<String, Object> returnMap = ControllerReturn.ok();
 		returnMap.put("swiperList", swiperList);
@@ -38,7 +38,7 @@ public class MHomeController {
 	// 更多时调用
 	@PostMapping @ResponseBody
 	public Map<String, Object> listLevelProd(MPage page) {
-		List<MQueryProduct> list = serv.listLevelProd(page);
+		List<QueryProduct> list = serv.listLevelProd(page);
 		return ControllerReturn.ok(list);
 	}
 	

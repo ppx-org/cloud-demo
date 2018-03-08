@@ -16,6 +16,9 @@ import org.springframework.util.StringUtils;
 
 import com.ppx.cloud.common.controller.ControllerContext;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
+import com.ppx.cloud.common.page.MPage;
+import com.ppx.cloud.demo.common.query.QueryCommonService;
+import com.ppx.cloud.demo.common.query.QueryProduct;
 import com.ppx.cloud.monitor.AccessLog;
 import com.ppx.cloud.monitor.AccessUtils;
 import com.ppx.cloud.search.query.bean.QueryBrand;
@@ -25,13 +28,10 @@ import com.ppx.cloud.search.query.bean.QueryPromo;
 import com.ppx.cloud.search.query.bean.QueryTheme;
 import com.ppx.cloud.search.util.BitSetUtils;
 import com.ppx.cloud.search.util.WordUtils;
-import com.ppx.cloud.storecommon.page.MPage;
-import com.ppx.cloud.storecommon.query.bean.MQueryProduct;
-import com.ppx.cloud.storecommon.query.service.QueryCommonService;
 
 
 @Service
-public class QueryService extends MyDaoSupport {
+public class SQueryService extends MyDaoSupport {
 	
 	@Autowired
 	private QueryCommonService commonServ;
@@ -51,10 +51,10 @@ public class QueryService extends MyDaoSupport {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public QueryPageList query(Integer sId, String w, MPage p, String date, Integer cId, Integer bId, Integer tId, Integer gId, Integer fast
-			, String orderType) {
+	public QueryPageList query(Integer mId, Integer sId, String w, MPage p, String date, Integer cId, 
+			Integer bId, Integer tId, Integer gId, Integer fast, String orderType) {
 		
-		Map<String, Object> findMap = findProdId(sId, w, p, date, cId, bId, tId, gId, fast, orderType);
+		Map<String, Object> findMap = findProdId(mId, sId, w, p, date, cId, bId, tId, gId, fast, orderType);
 				
 		if (p.getTotalRows() == 0) {
 			return new QueryPageList(); 
@@ -64,7 +64,7 @@ public class QueryService extends MyDaoSupport {
 			List<Integer> newProdIdList = changeProdId(BitSetUtils.getCurrentVersionName(), (List<Integer>)findMap.get("prodIdList"), orderType);
 			findMap.put("prodIdList", newProdIdList);
 			
-			List<MQueryProduct> prodList = commonServ.listProduct(newProdIdList, sId);
+			List<QueryProduct> prodList = commonServ.listProduct(newProdIdList, sId);
 			
 			// cat
 			List<QueryCategory> catInitList = (List<QueryCategory>)findMap.get("catList");
@@ -87,7 +87,7 @@ public class QueryService extends MyDaoSupport {
 		}
 	}
 	
-	private Map<String, Object> findProdId(Integer sId, String w, MPage p, String date, 
+	private Map<String, Object> findProdId(Integer mId, Integer sId, String w, MPage p, String date, 
 			Integer cId, Integer bId, Integer tId, Integer gId, Integer fast, String orderType) {
 		
 		Map<String, Object> returnMap = new HashMap<String, Object>();

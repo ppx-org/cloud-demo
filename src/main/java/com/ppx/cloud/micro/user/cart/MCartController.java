@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
-import com.ppx.cloud.storecommon.price.bean.SkuIndex;
+import com.ppx.cloud.demo.common.price.bean.SkuIndex;
 
 
 @Controller	

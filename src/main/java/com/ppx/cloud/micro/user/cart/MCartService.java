@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
+import com.ppx.cloud.demo.common.price.bean.SkuIndex;
+import com.ppx.cloud.demo.common.price.service.PriceCommonService;
 import com.ppx.cloud.micro.common.MGrantContext;
 import com.ppx.cloud.micro.common.WxUser;
-import com.ppx.cloud.storecommon.price.bean.SkuIndex;
-import com.ppx.cloud.storecommon.price.service.PriceCommonService;
 
 
 @Service

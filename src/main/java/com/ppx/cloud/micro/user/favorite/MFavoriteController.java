@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
-import com.ppx.cloud.storecommon.query.bean.MQueryProduct;
+import com.ppx.cloud.demo.common.query.QueryProduct;
 
 
 @Controller	
@@ -31,7 +31,7 @@ public class MFavoriteController {
 	@PostMapping @ResponseBody
 	public Map<String, Object> listProduct() {
 		
-		List<MQueryProduct> list = serv.listProduct();
+		List<QueryProduct> list = serv.listProduct();
 		return ControllerReturn.ok(list);
 		
 	}

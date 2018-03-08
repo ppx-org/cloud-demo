@@ -26,7 +26,11 @@ public class GrantInterceptor implements HandlerInterceptor {
 		
 		String contextPath = request.getContextPath();
 		String uri = request.getRequestURI().replace(contextPath, "");
-
+		
+		// search
+		if (uri.startsWith("/S")) {
+			return true;
+		}
 		
 		// wx micro
 		if (uri.startsWith("/M")) {
@@ -37,9 +41,7 @@ public class GrantInterceptor implements HandlerInterceptor {
 			WxUser u = MGrantFilterUtils.getLoginUser(request);
 			if (u == null) {
 				// 未登录
-				
 				ControllerReturn.returnErrorJson(response, -9, "no login");
-				
 				return false;
 			}
 			MGrantContext.setWxUser(u);

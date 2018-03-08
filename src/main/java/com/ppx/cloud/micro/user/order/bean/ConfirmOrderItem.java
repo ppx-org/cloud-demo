@@ -2,7 +2,7 @@ package com.ppx.cloud.micro.user.order.bean;
 
 import java.util.List;
 
-import com.ppx.cloud.storecommon.price.bean.SkuIndex;
+import com.ppx.cloud.demo.common.price.bean.SkuIndex;
 
 
 public class ConfirmOrderItem {
