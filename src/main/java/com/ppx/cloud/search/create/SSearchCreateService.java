@@ -15,19 +15,19 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.util.DateUtils;
-import com.ppx.cloud.grant.common.GrantContext;
+import com.ppx.cloud.search.common.SGrantContext;
 import com.ppx.cloud.search.util.BitSetUtils;
 import com.ppx.cloud.search.util.WordUtils;
 import com.ppx.cloud.store.search.version.SearchVersion;
 
 @Repository
-public class SearchCreateService extends MyDaoSupport {
+public class SSearchCreateService extends MyDaoSupport {
 	// 2, "已生成"; 3, "使用中"
 	@Transactional
 	public int useIndex(String versionName) {
-		int updator = GrantContext.getLoginAccount().getAccountId();
+		int updator = SGrantContext.getSession().getAccountId();
 		
-		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		int merchantId = SGrantContext.getSession().getmId();
 		String otherSql = "update search_version set UPDATED = now(), UPDATOR = ?, VERSION_STATUS = ? where MERCHANT_ID = ? and VERSION_STATUS = ?";
 		getJdbcTemplate().update(otherSql, updator, 2, merchantId, 3);
 		String updateStatus = "update search_version set UPDATED = now(), UPDATOR = ?, VERSION_STATUS = ? where MERCHANT_ID = ? and VERSION_NAME = ?";
@@ -45,7 +45,7 @@ public class SearchCreateService extends MyDaoSupport {
 	@Transactional
 	public int createIndex(String versionName) {
 		
-		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		int merchantId = SGrantContext.getSession().getmId();
 		//String 
 		String beginUpdateSql = "update search_version set CREATE_BEGIN = now() where MERCHANT_ID = ? and VERSION_NAME = ?";
 		getJdbcTemplate().update(beginUpdateSql, merchantId, versionName);
@@ -126,7 +126,7 @@ public class SearchCreateService extends MyDaoSupport {
 			e.printStackTrace();
 		}
 		
-		int updator = GrantContext.getLoginAccount().getAccountId();
+		int updator = SGrantContext.getSession().getAccountId();
 		// 2, "已生成"; 3, "使用中"
 		String endUpdateSql = "update search_version join (select if (count(*) >= 1, 2, 3) STATUS from search_version " +
 			"where MERCHANT_ID = ? and VERSION_STATUS = ?) t set CREATE_END = now(), UPDATED = now(), UPDATOR = ?," +
@@ -178,7 +178,7 @@ public class SearchCreateService extends MyDaoSupport {
 	public Map<String, Integer> initSearchWords(String versionName, String orderType) {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
-		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		int merchantId = SGrantContext.getSession().getmId();
 	
 		String extSql = "select group_concat(EXT_WORD) from search_ext_word where MERCHANT_ID = ?";
 		String extWords = getJdbcTemplate().queryForObject(extSql, String.class, merchantId);
@@ -218,7 +218,7 @@ public class SearchCreateService extends MyDaoSupport {
 		String path = orderType + "/" + BitSetUtils.PATH_STORE;
 		BitSetUtils.initPath(versionName, path);
 		
-		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		int merchantId = SGrantContext.getSession().getmId();
 		
 		String sql = "select STORE_ID from store where MERCHANT_ID = ?";
 		List<Integer> storeIdList = getJdbcTemplate().queryForList(sql, Integer.class, merchantId);
@@ -262,7 +262,7 @@ public class SearchCreateService extends MyDaoSupport {
 		
 		String path = orderType + "/" + BitSetUtils.PATH_TITLE;
 		BitSetUtils.initPath(versionName, path);
-		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		int merchantId = SGrantContext.getSession().getmId();
 		
 		Map<String, BitSet> wordMap = new HashMap<String, BitSet>();		
 		String sql = "select INDEX_ID, WORDS from " + orderType + "_" + versionName + " where MERCHANT_ID = ?";
@@ -298,7 +298,7 @@ public class SearchCreateService extends MyDaoSupport {
 		
 		String path = orderType + "/" + BitSetUtils.PATH_CAT;
 		BitSetUtils.initPath(versionName, path);
-		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		int merchantId = SGrantContext.getSession().getmId();
 		
 		// 创建子类索引
 		String subCatSql = "select CAT_ID from category where MERCHANT_ID = ? and PARENT_ID != ? and RECORD_STATUS = ?";
@@ -345,7 +345,7 @@ public class SearchCreateService extends MyDaoSupport {
 		
 		String path = orderType + "/" + BitSetUtils.PATH_BRAND;
 		BitSetUtils.initPath(versionName, path);
-		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		int merchantId = SGrantContext.getSession().getmId();
 		
 		String brandSql =  "select BRAND_ID from brand where MERCHANT_ID = ? and RECORD_STATUS = ?";	
 		List<Integer> brandList =  getJdbcTemplate().queryForList(brandSql, Integer.class, merchantId, 1);
@@ -371,7 +371,7 @@ public class SearchCreateService extends MyDaoSupport {
 		
 		String path = orderType + "/" + BitSetUtils.PATH_THEME;
 		BitSetUtils.initPath(versionName, path);
-		int merchantId = GrantContext.getLoginAccount().getMerchantId();
+		int merchantId = SGrantContext.getSession().getmId();
 		
 		String themeSql =  "select THEME_ID from theme where MERCHANT_ID = ? and RECORD_STATUS = ?";	
 		List<Integer> themeList =  getJdbcTemplate().queryForList(themeSql, Integer.class, merchantId, 1);
@@ -414,9 +414,7 @@ public class SearchCreateService extends MyDaoSupport {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		
 		// 处理promo索引
-		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		
-		
+		int merchantId = SGrantContext.getSession().getmId();
 		
 		
 		// >>>>>>>>>>>>>>>>>>>>>>>>>today
@@ -430,10 +428,6 @@ public class SearchCreateService extends MyDaoSupport {
 				"MERCHANT_ID = ? and DATE_SUB(curdate(),INTERVAL -1 DAY) between INDEX_BEGIN and INDEX_END order by INDEX_PRIO desc) t group by t.PROD_ID";
 		List<Map<String, Object>> tomorrowList = getJdbcTemplate().queryForList(tomorrowSql, merchantId);
 		createDateProme(versionName, orderType, DateUtils.tomorrow(), tomorrowList);
-		
-		
-		
-		
 		
 		
 		

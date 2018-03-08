@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.ppx.cloud.common.controller.ControllerContext;
 import com.ppx.cloud.monitor.AccessLog;
 import com.ppx.cloud.monitor.AccessUtils;
-import com.ppx.cloud.search.create.SearchCreateService;
+import com.ppx.cloud.search.create.SSearchCreateService;
 
 
 /**
@@ -23,7 +23,7 @@ public class InitListener implements ApplicationListener<ContextRefreshedEvent> 
 	
 	
 	@Autowired
-	private SearchCreateService searchCreateService;
+	private SSearchCreateService searchCreateService;
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event)  {

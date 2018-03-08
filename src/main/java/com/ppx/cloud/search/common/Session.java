@@ -8,6 +8,7 @@ public class Session {
 	
 	private String openid;
 	
+	private Integer accountId;
 
 	public Integer getmId() {
 		return mId;
@@ -31,6 +32,14 @@ public class Session {
 
 	public void setOpenid(String openid) {
 		this.openid = openid;
+	}
+
+	public Integer getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(Integer accountId) {
+		this.accountId = accountId;
 	}
 
 	
