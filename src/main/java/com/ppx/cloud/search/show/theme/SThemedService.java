@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
-import com.ppx.cloud.search.common.SGrantContext;
 import com.ppx.cloud.search.common.Session;
 import com.ppx.cloud.search.util.BitSetUtils;
 
