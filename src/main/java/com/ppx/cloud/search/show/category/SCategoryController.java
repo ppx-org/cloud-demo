@@ -1,4 +1,4 @@
-package com.ppx.cloud.search.show.promo;
+package com.ppx.cloud.search.show.category;
 
 import java.util.List;
 import java.util.Map;
@@ -9,19 +9,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
+import com.ppx.cloud.search.common.Session;
 
 
 @Controller	
-public class MProgramController {
+public class SCategoryController {
 	
 	@Autowired
-	private MProgramService serv;
-
+	private SCategoryService serv;
+	
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> listProgram() {
-		
-		List<MProgram> list = serv.listProgram();
+	public Map<String, Object> listCategory(Session s) {
+	
+		List<SCategory> list = serv.listCategory(s);
 		
 		return ControllerReturn.ok(list);
 	}

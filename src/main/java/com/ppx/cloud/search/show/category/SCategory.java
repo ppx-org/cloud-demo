@@ -2,7 +2,7 @@ package com.ppx.cloud.search.show.category;
 
 import java.util.List;
 
-public class MCategory {
+public class SCategory {
 	
 	private Integer cid;
 	
@@ -16,7 +16,7 @@ public class MCategory {
 	
 	private Integer y;
 	
-	private List<MCategory> children;
+	private List<SCategory> children;
 
 	public Integer getCid() {
 		return cid;
@@ -42,11 +42,11 @@ public class MCategory {
 		this.cn = cn;
 	}
 
-	public List<MCategory> getChildren() {
+	public List<SCategory> getChildren() {
 		return children;
 	}
 
-	public void setChildren(List<MCategory> children) {
+	public void setChildren(List<SCategory> children) {
 		this.children = children;
 	}
 

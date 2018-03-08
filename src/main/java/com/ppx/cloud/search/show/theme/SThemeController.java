@@ -1,4 +1,4 @@
-package com.ppx.cloud.search.show.category;
+package com.ppx.cloud.search.show.theme;
 
 import java.util.List;
 import java.util.Map;
@@ -9,19 +9,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
+import com.ppx.cloud.search.common.Session;
 
 
 @Controller	
-public class MCategoryController {
+public class SThemeController {
 	
 	@Autowired
-	private MCategoryService serv;
-	
+	private SThemedService serv;
+
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> listCategory() {
-	
-		List<MCategory> list = serv.listCategory();
+	public Map<String, Object> listTheme(Session s) {
+		
+		List<STheme> list = serv.listTheme(s);
 		
 		return ControllerReturn.ok(list);
 	}

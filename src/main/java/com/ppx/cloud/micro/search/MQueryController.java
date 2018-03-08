@@ -22,10 +22,51 @@ public class MQueryController {
 	@RequestMapping @ResponseBody
 	public void query(HttpServletRequest request, HttpServletResponse response) {
 		int mId = MGrantContext.getWxUser().getMerchantId();
-		String queryString = request.getQueryString() + "&mId=" + mId;
+		int sId = MGrantContext.getWxUser().getStoreId();
+		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
 		String json = new RestTemplate().getForObject(searchUrl + "SQuery/query?" + queryString, String.class, "");
 		ControllerReturn.returnJson(response, json);
 	}
 	
+	@RequestMapping @ResponseBody
+	public void listBrand(HttpServletRequest request, HttpServletResponse response) {
+		int mId = MGrantContext.getWxUser().getMerchantId();
+		int sId = MGrantContext.getWxUser().getStoreId();
+		
+		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
+		String json = new RestTemplate().getForObject(searchUrl + "SBrand/listBrand?" + queryString, String.class, "");
+		ControllerReturn.returnJson(response, json);
+	}
+	
+	
+	@RequestMapping @ResponseBody
+	public void listCategory(HttpServletRequest request, HttpServletResponse response) {
+		int mId = MGrantContext.getWxUser().getMerchantId();
+		int sId = MGrantContext.getWxUser().getStoreId();
+		
+		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
+		String json = new RestTemplate().getForObject(searchUrl + "SCategory/listCategory?" + queryString, String.class, "");
+		ControllerReturn.returnJson(response, json);
+	}
+	
+	@RequestMapping @ResponseBody
+	public void listProgram(HttpServletRequest request, HttpServletResponse response) {
+		int mId = MGrantContext.getWxUser().getMerchantId();
+		int sId = MGrantContext.getWxUser().getStoreId();
+		
+		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
+		String json = new RestTemplate().getForObject(searchUrl + "SProgram/listProgram?" + queryString, String.class, "");
+		ControllerReturn.returnJson(response, json);
+	}
+	
+	@RequestMapping @ResponseBody
+	public void listTheme(HttpServletRequest request, HttpServletResponse response) {
+		int mId = MGrantContext.getWxUser().getMerchantId();
+		int sId = MGrantContext.getWxUser().getStoreId();
+		
+		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
+		String json = new RestTemplate().getForObject(searchUrl + "STheme/listTheme?" + queryString, String.class, "");
+		ControllerReturn.returnJson(response, json);
+	}
 }
 

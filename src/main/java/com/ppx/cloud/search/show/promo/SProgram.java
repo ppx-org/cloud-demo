@@ -1,31 +1,31 @@
-package com.ppx.cloud.search.show.brand;
+package com.ppx.cloud.search.show.promo;
 
-public class MBrand {
+public class SProgram {
 	
-	private Integer bid;
+	private Integer gid;
 	
-	private String bn;
+	private String gn;
 	
 	private Integer n;
 	
 	private Integer x;
 	
-	private Integer y; 
+	private Integer y;
 
-	public Integer getBid() {
-		return bid;
+	public Integer getGid() {
+		return gid;
 	}
 
-	public void setBid(Integer bid) {
-		this.bid = bid;
+	public void setGid(Integer gid) {
+		this.gid = gid;
 	}
 
-	public String getBn() {
-		return bn;
+	public String getGn() {
+		return gn;
 	}
 
-	public void setBn(String bn) {
-		this.bn = bn;
+	public void setGn(String gn) {
+		this.gn = gn;
 	}
 
 	public Integer getN() {
@@ -51,8 +51,6 @@ public class MBrand {
 	public void setY(Integer y) {
 		this.y = y;
 	}
-
-	
 	
 	
 	

@@ -1,6 +1,6 @@
 package com.ppx.cloud.search.show.theme;
 
-public class MTheme {
+public class STheme {
 	
 	private Integer tid;
 	

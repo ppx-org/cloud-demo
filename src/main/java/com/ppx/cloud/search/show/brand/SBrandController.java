@@ -1,4 +1,4 @@
-package com.ppx.cloud.search.show.theme;
+package com.ppx.cloud.search.show.brand;
 
 import java.util.List;
 import java.util.Map;
@@ -9,20 +9,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
+import com.ppx.cloud.search.common.Session;
 
 
 @Controller	
-public class MThemeController {
+public class SBrandController {
 	
 	@Autowired
-	private MThemedService serv;
+	private SBrandService serv;
 
 	
 	@PostMapping @ResponseBody
-	public Map<String, Object> listTheme() {
+	public Map<String, Object> listBrand(Session s) {
 		
-		List<MTheme> list = serv.listTheme();
-		
+		List<SBrand> list = serv.listBrand(s);
 		return ControllerReturn.ok(list);
 	}
 	
