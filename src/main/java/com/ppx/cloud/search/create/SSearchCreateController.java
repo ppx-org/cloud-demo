@@ -5,7 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -20,7 +20,7 @@ public class SSearchCreateController {
 	@Autowired
 	private SSearchCreateService serv;
 	
-	@PostMapping @ResponseBody
+	@GetMapping @ResponseBody
 	public Map<String, Object> createIndex(Session s, @RequestParam(required=true) String versionName) {
 		if (StringUtils.isEmpty(s.getmId()) || StringUtils.isEmpty(s.getAccountId())) {
 			return ControllerReturn.fail(100, "mId or accountId is null");
@@ -31,7 +31,7 @@ public class SSearchCreateController {
 		return ControllerReturn.ok(r);
 	}
 	
-	@PostMapping @ResponseBody
+	@GetMapping @ResponseBody
 	public Map<String, Object> useIndex(Session s, @RequestParam(required=true) String versionName) {
 		if (StringUtils.isEmpty(s.getmId()) || StringUtils.isEmpty(s.getAccountId())) {
 			return ControllerReturn.fail(100, "mId or accountId is null");
