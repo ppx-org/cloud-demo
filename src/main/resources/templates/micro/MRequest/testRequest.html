@@ -11,9 +11,9 @@ $(function() {
 });
 
 function testRequest() {
-	var PPXTOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvcGVuaWQiOiJvRDFuNjBIWkhXQmE2dWNXU2RZNTBITldQZnE0Iiwic2Vzc2lvbl9rZXkiOiJUQW5jcU1EUlRoTlpxZUVzbWIzeHJRPT0iLCJpYXQiOjE1MTU0NjgzMTd9.FYiDa1kF8mV5cBWM6YPVC5nFPow7qpwm9muEHTKDl0E";
+	var PPXTOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvcGVuaWQiOiJvRDFuNjBIWkhXQmE2dWNXU2RZNTBITldQZnE0Iiwic2Vzc2lvbl9rZXkiOiJzZXNzaW9uX2tleV92YWx1ZSIsImlhdCI6MTUyMDU5MTYzM30.fn1-4J5VSL_NFjyp7QaKukVLfXkUpCDBg2ORVWM685g";
 	var storeId = 1;
-	var merchantId = -1;
+	var merchantId = 1;
 	$.ajaxSetup({headers:{"content-type":"application/json", "storeId":storeId, "merchantId":merchantId, "PPXTOKEN":PPXTOKEN}});
 	
 	/*
@@ -39,6 +39,8 @@ function testRequest() {
 	
 	// confirm
 	var json = {jsCode:"013UgqcP13Q6V21gOtcP1DLAcP1UgqcO"};
+	json = {};
+	
 	$.post([[@{/}]] + $("#url").val(), JSON.stringify(json), function(r) {
 		$("#returnJson").text(JSON.stringify(r));
 	});
@@ -51,8 +53,11 @@ function testRequest() {
 <body>
 
 
+<!-- 
+MLogin/login
+-->
 
-<input type="text" id="url" value="MLogin/login" style="width:300px">
+<input type="text" id="url" value="MQuery/query" style="width:300px">
 
 <button type="button" onclick="testRequest()">test</button>
 

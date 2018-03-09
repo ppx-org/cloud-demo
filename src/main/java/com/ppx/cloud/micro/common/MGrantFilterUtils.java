@@ -1,5 +1,7 @@
 package com.ppx.cloud.micro.common;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.util.StringUtils;
@@ -11,10 +13,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 public class MGrantFilterUtils {
 	
-	
 	public static WxUser getLoginUser(HttpServletRequest request) {
-		
-		
+
 		String PPXTOKEN = request.getHeader("PPXTOKEN");
 		String storeId = request.getHeader("storeId");
 		String merchantId = request.getHeader("merchantId");
@@ -23,7 +23,6 @@ public class MGrantFilterUtils {
 		if (StringUtils.isEmpty(PPXTOKEN)) {
 			return null;
 		}
-		
 		
 		WxUser u = new WxUser();
 		try {
@@ -38,18 +37,29 @@ public class MGrantFilterUtils {
 			u.setMerchantId(Integer.parseInt(merchantId));
 			return u;
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		}
-		// 
 		
-		
-		System.out.println("..........PPXTOKEN:" + PPXTOKEN);
-		
+		// 登录失败
 		
 		u.setOpenid("oD1n60HZHWBa6ucWSdY50HNWPfq4");
-		u.setStoreId(1);
+		u.setStoreId(-1);
 		u.setMerchantId(-1);
 		
 		return u;	
+	}
+	
+	public static void main(String[] args) {
+		String token = "";
+		try {
+		    Algorithm algorithm = Algorithm.HMAC256("JWTPASSWORDPASS");
+		    token = JWT.create().withIssuedAt(new Date())
+		    		.withClaim("openid", "oD1n60HZHWBa6ucWSdY50HNWPfq4")
+		    		.withClaim("session_key", "session_key_value")
+		    		.sign(algorithm);
+			 System.out.println("......token:" + token);	
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 }
