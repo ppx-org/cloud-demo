@@ -45,7 +45,6 @@ public class BitSetUtils {
 	}	
 	
 	public static String getCurrentVersionName() {
-		System.out.println("xxxxxmid:" + getmId());
 		return versionMap.get(getmId());
 	}
 	
