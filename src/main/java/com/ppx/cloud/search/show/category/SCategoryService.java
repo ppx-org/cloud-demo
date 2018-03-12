@@ -35,9 +35,8 @@ public class SCategoryService extends MyDaoSupport {
 		List<SCategory> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(SCategory.class), merchantId, 1);	
 		
 		// 加上本店的
-		String normalPath = BitSetUtils.ORDER_NORMAL + BitSetUtils.getCurrentVersionName();
+		String normalPath = BitSetUtils.ORDER_NORMAL;
 		BitSet storeBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_STORE, storeId + "");
-		
 		
 		List<SCategory> returnList = new ArrayList<SCategory>();
 		for (SCategory c : list) {
@@ -60,7 +59,7 @@ public class SCategoryService extends MyDaoSupport {
 		List<SCategory> returnList = new ArrayList<SCategory>();
 		for (SCategory c : list) {
 			if (c.getPid() == pid) {
-				String normalPath = BitSetUtils.ORDER_NORMAL + BitSetUtils.getCurrentVersionName();
+				String normalPath = BitSetUtils.ORDER_NORMAL;
 				BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_CAT, c.getCid() + "");
 				bs.and(storeBs);
 				if (bs != null && bs.cardinality() != 0) {

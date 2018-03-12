@@ -23,7 +23,8 @@ public class MQueryController {
 	public void query(HttpServletRequest request, HttpServletResponse response) {
 		int mId = MGrantContext.getWxUser().getMerchantId();
 		int sId = MGrantContext.getWxUser().getStoreId();
-		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
+		String openid = MGrantContext.getWxUser().getOpenid();
+		String queryString = "mId=" + mId + "&sId=" + sId + "&openid=" + openid;
 		String json = new RestTemplate().getForObject(searchUrl + "SQuery/query?" + queryString, String.class);
 		ControllerReturn.returnJson(response, json);
 	}
@@ -32,8 +33,9 @@ public class MQueryController {
 	public void listCategory(HttpServletRequest request, HttpServletResponse response) {
 		int mId = MGrantContext.getWxUser().getMerchantId();
 		int sId = MGrantContext.getWxUser().getStoreId();
+		String openid = MGrantContext.getWxUser().getOpenid();
 		
-		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
+		String queryString = "mId=" + mId + "&sId=" + sId + "&openid=" + openid;
 		String json = new RestTemplate().getForObject(searchUrl + "SCategory/listCategory?" + queryString, String.class);
 		ControllerReturn.returnJson(response, json);
 	}
@@ -42,8 +44,9 @@ public class MQueryController {
 	public void listBrand(HttpServletRequest request, HttpServletResponse response) {
 		int mId = MGrantContext.getWxUser().getMerchantId();
 		int sId = MGrantContext.getWxUser().getStoreId();
+		String openid = MGrantContext.getWxUser().getOpenid();
 		
-		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
+		String queryString = "mId=" + mId + "&sId=" + sId + "&openid=" + openid;
 		String json = new RestTemplate().getForObject(searchUrl + "SBrand/listBrand?" + queryString, String.class);
 		ControllerReturn.returnJson(response, json);
 	}
@@ -52,8 +55,9 @@ public class MQueryController {
 	public void listProgram(HttpServletRequest request, HttpServletResponse response) {
 		int mId = MGrantContext.getWxUser().getMerchantId();
 		int sId = MGrantContext.getWxUser().getStoreId();
+		String openid = MGrantContext.getWxUser().getOpenid();
 		
-		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
+		String queryString = "mId=" + mId + "&sId=" + sId + "&openid=" + openid;
 		String json = new RestTemplate().getForObject(searchUrl + "SProgram/listProgram?" + queryString, String.class);
 		ControllerReturn.returnJson(response, json);
 	}
@@ -62,8 +66,9 @@ public class MQueryController {
 	public void listTheme(HttpServletRequest request, HttpServletResponse response) {
 		int mId = MGrantContext.getWxUser().getMerchantId();
 		int sId = MGrantContext.getWxUser().getStoreId();
+		String openid = MGrantContext.getWxUser().getOpenid();
 		
-		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
+		String queryString = "mId=" + mId + "&sId=" + sId + "&openid=" + openid;
 		String json = new RestTemplate().getForObject(searchUrl + "STheme/listTheme?" + queryString, String.class);
 		ControllerReturn.returnJson(response, json);
 	}
