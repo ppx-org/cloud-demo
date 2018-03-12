@@ -113,6 +113,10 @@ public class BitSetUtils {
 		return 1;
 	}
 	
+	public static BitSet readBitSet(String versionName, String path, Integer w) {
+		return readBitSet(versionName, path, w);
+	}
+	
 	public static BitSet readBitSet(String versionName, String path, String w) {
 		String realPath = getRealPath(versionName, path);
 		

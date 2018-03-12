@@ -24,24 +24,21 @@ public class SCategoryService extends MyDaoSupport {
 	 * 
 	 * @return
 	 */
-	public List<SCategory> listCategory(Session s) {		
-		
-		int merchantId = s.getmId();
-		int storeId = s.getsId();
+	public List<SCategory> listCategory(Session s) {
 		
 		String sql = "select CAT_ID CID, PARENT_ID PID, CAT_NAME CN, CAT_IMG_X X, CAT_IMG_Y Y from category"
 				+ " where MERCHANT_ID = ? and RECORD_STATUS = ? order by CAT_PRIO";
 		
-		List<SCategory> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(SCategory.class), merchantId, 1);	
+		List<SCategory> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(SCategory.class), s.getmId(), 1);	
 		
 		// 加上本店的
 		String normalPath = BitSetUtils.ORDER_NORMAL;
-		BitSet storeBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_STORE, storeId + "");
+		BitSet storeBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_STORE, s.getsId());
 		
 		List<SCategory> returnList = new ArrayList<SCategory>();
 		for (SCategory c : list) {
 			if (c.getPid() == -1) {
-				BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_CAT, c.getCid() + "");
+				BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_CAT, c.getCid());
 				bs.and(storeBs);
 				if (bs != null && bs.cardinality() != 0) {
 					c.setN(bs.cardinality());
@@ -60,7 +57,7 @@ public class SCategoryService extends MyDaoSupport {
 		for (SCategory c : list) {
 			if (c.getPid() == pid) {
 				String normalPath = BitSetUtils.ORDER_NORMAL;
-				BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_CAT, c.getCid() + "");
+				BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_CAT, c.getCid());
 				bs.and(storeBs);
 				if (bs != null && bs.cardinality() != 0) {
 					c.setN(bs.cardinality());

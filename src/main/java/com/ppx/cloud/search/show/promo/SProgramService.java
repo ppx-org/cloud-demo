@@ -17,18 +17,15 @@ import com.ppx.cloud.search.util.BitSetUtils;
 public class SProgramService extends MyDaoSupport {
 	
 
-	public List<SProgram> listProgram(Session s) {		
-		
-		int merchantId = s.getmId();
-		int storeId = s.getsId();
+	public List<SProgram> listProgram(Session s) {
 		
 		String sql = "select PROG_ID GID, PROG_NAME GN, PROG_IMG_X X, PROG_IMG_Y  Y from program " +
-				" where MERCHANT_ID = ? and curdate() between PROG_BEGIN and PROG_END order by PROG_PRIO";
-		
-		List<SProgram> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(SProgram.class), merchantId);
+				" where MERCHANT_ID = ? and PROG_STATUS = ? and curdate() between PROG_BEGIN and PROG_END order by PROG_PRIO";
+		// 2:进行中
+		List<SProgram> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(SProgram.class), s.getmId(), 2);
 		// 加上本店的
 		String normalPath = BitSetUtils.ORDER_NORMAL;
-		BitSet storeBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_STORE, storeId + "");
+		BitSet storeBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_STORE, s.getsId());
 		
 		List<SProgram> returnList = new ArrayList<SProgram>();
 		for (SProgram t : list) {
@@ -43,6 +40,14 @@ public class SProgramService extends MyDaoSupport {
 		
 		return returnList;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
