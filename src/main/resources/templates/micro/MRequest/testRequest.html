@@ -18,7 +18,8 @@ function testRequest() {
 	// 保存在本地
 	localStorage.defaultUrl = url;
 	localStorage.defaultPara = para;
-	if ("MQuery/query" == url) {
+	
+	if ($.trim(para).indexOf("{") != 0) {
 		url = url + "?" + para;
 		para = "";
 	}
@@ -32,10 +33,29 @@ function testRequest() {
 var requestMap = [];
 requestMap["MLogin/login"] = {jsCode:"013UgqcP13Q6V21gOtcP1DLAcP1UgqcO"};
 requestMap["MQuery/query"] = "w=test";
+requestMap["MProduct/getProduct"] = "prodId=1";
+requestMap["MCart/addSku"] = "skuId=1";
+requestMap["MFavorite/addProduct"] = "prodId=1";
+
+
+requestMap["MOrder/countPrice"] = {skuId:[1,2],num:[1,1]}
+requestMap["MOrder/submitOrder"] = {skuId:[1,2],num:[1,1]}
+
+
+
+
+requestMap["MOrder/listMyOrder"] = {};
+
+
+
+
+
+
 
 function urlChange(obj) {
 	var paraVal = requestMap[obj.value];
-	if (obj.value == "MQuery/query") {
+	
+	if (typeof paraVal == "string") {
 		$("#para").val(paraVal);
 	}
 	else {
@@ -60,9 +80,57 @@ $(function() {
 
 
 
+
+
+
+
+
+
+
 <div>
 <select class="form-control" onchange="urlChange(this)">
 	<option value="">请选择</option>
+	
+	<option value="MOrder/submitOrder">MOrder/submitOrder</option>
+	<option value="MOrder/listMyOrder">MOrder/listMyOrder</option>
+	<option value="MOrder/countPrice">MOrder/countPrice</option>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<option value="MFavorite/addProduct">MFavorite/addProduct</option>
+	<option value="MFavorite/listProduct">MFavorite/listProduct</option>
+	<option value="MCart/listSku">MCart/listSku</option>
+	<option value="MCart/addSku">MCart/addSku</option>
+	<option value="MProduct/getProduct">MProduct/getProduct</option>
 	<option value="MHome/listLevelProd">MHome/listLevelProd</option>
 	<option value="MHome/listJson">MHome/listJson</option>
 	<option value="MLogin/login">MLogin/login</option>

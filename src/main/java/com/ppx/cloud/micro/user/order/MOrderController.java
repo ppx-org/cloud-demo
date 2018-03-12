@@ -30,8 +30,8 @@ public class MOrderController {
 	@Autowired
 	private PriceCommonService priceServ;
 	
-	
-	private ConfirmOrderItem countPrice(ConfirmOrderPara para) {
+	@PostMapping @ResponseBody
+	private ConfirmOrderItem countPrice(@RequestBody ConfirmOrderPara para) {
 		Map<Integer, SkuIndex> skuIndexMap = new HashMap<Integer, SkuIndex>();
 		
 		for (int i = 0; i < para.getSkuId().length; i++) {

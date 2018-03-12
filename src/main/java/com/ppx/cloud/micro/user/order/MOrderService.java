@@ -37,6 +37,10 @@ public class MOrderService extends MyDaoSupport {
 		
 		List<UserOrder> orderList = mQueryPage(UserOrder.class, page, sql, openid, storeId);
 		
+		if (orderList.size() == 0) {
+			return new MPageList<UserOrder>(orderList, page); 
+		}
+		
 		List<Integer> orderIdList = new ArrayList<Integer>();
 		for (UserOrder userOrder : orderList) {
 			orderIdList.add(userOrder.getOrderId());

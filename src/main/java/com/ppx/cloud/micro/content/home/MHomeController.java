@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
@@ -37,7 +38,7 @@ public class MHomeController {
 	
 	// 更多时调用
 	@PostMapping @ResponseBody
-	public Map<String, Object> listLevelProd(MPage page) {
+	public Map<String, Object> listLevelProd(@RequestBody MPage page) {
 		List<QueryProduct> list = serv.listLevelProd(page);
 		return ControllerReturn.ok(list);
 	}
