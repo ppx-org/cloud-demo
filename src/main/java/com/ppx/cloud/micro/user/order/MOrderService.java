@@ -22,7 +22,6 @@ import com.ppx.cloud.micro.user.order.bean.ConfirmOrderItem;
 import com.ppx.cloud.micro.user.order.bean.ConfirmOrderPara;
 import com.ppx.cloud.micro.user.order.bean.ConfirmReturn;
 import com.ppx.cloud.micro.user.order.bean.OverflowSku;
-import com.ppx.cloud.store.product.changestock.ChangeStock;
 
 
 @Service
@@ -119,6 +118,7 @@ public class MOrderService extends MyDaoSupport {
 		
 		List<Object[]> itemArgsList = new ArrayList<Object[]>();
 		List<Object[]> stockArgsList = new ArrayList<Object[]>();
+		List<Object[]> changeArgsList = new ArrayList<Object[]>();
 		for (SkuIndex s : skuIndexList) {
 			Object[] itemArg = {orderId, s.getSkuId(), s.getProdId(), s.getPrice(), s.getItemPrice(),
 					s.getNum(), s.getProdTitle(), s.getSkuName(), s.getSkuImgSrc(), s.getPolicy()};
@@ -126,18 +126,17 @@ public class MOrderService extends MyDaoSupport {
 			
 			Object[] stockArg = {s.getNum(), s.getSkuId()};
 			stockArgsList.add(stockArg);
+			
+			Object[] changeArg = {s.getSkuId(), -s.getNum(), openid, orderId};
+			changeArgsList.add(changeArg);
 		}
 		
 		// minus stock
 		String stockSql = "update sku set STOCK_NUM = STOCK_NUM - ? where SKU_ID = ?";
 		getJdbcTemplate().batchUpdate(stockSql, stockArgsList);
 		
-		ChangeStock changeStock = new ChangeStock();
-		// 5:下单扣减
-		changeStock.setChangeType(5);
-		changeStock.setOpenid(openid);
-		changeStock.setOrderId(orderId);
-		insert(changeStock);
+		String changeSql = "insert into change_stock(SKU_ID, CHANGE_NUM, CHANGE_TYPE, CREATED, OPENID, ORDER_ID) values(?, ?, 5, now(), ?, ?)";
+				getJdbcTemplate().batchUpdate(changeSql, changeArgsList);
 		
 		
 		//  order item
