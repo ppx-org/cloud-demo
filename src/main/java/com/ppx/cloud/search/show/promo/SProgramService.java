@@ -27,7 +27,7 @@ public class SProgramService extends MyDaoSupport {
 		
 		List<SProgram> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(SProgram.class), merchantId);
 		// 加上本店的
-		String normalPath = BitSetUtils.ORDER_NORMAL + BitSetUtils.getCurrentVersionName();
+		String normalPath = BitSetUtils.ORDER_NORMAL;
 		BitSet storeBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_STORE, storeId + "");
 		
 		List<SProgram> returnList = new ArrayList<SProgram>();

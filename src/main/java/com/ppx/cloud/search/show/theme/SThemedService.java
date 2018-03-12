@@ -27,7 +27,7 @@ public class SThemedService extends MyDaoSupport {
 		
 		List<STheme> list = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(STheme.class), merchantId, 1);
 		// 加上本店的
-		String normalPath = BitSetUtils.ORDER_NORMAL + BitSetUtils.getCurrentVersionName();
+		String normalPath = BitSetUtils.ORDER_NORMAL;
 		BitSet storeBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), normalPath + "/" + BitSetUtils.PATH_STORE, storeId + "");
 		
 		List<STheme> returnList = new ArrayList<STheme>();
