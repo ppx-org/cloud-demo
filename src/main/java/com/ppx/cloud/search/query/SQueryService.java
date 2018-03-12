@@ -61,7 +61,7 @@ public class SQueryService extends MyDaoSupport {
 		}
 		else {
 			// id转换 转成真实的prodId
-			List<Integer> newProdIdList = changeProdId(BitSetUtils.getCurrentVersionName(), (List<Integer>)findMap.get("prodIdList"), orderType);
+			List<Integer> newProdIdList = changeProdId(BitSetUtils.getCurrentV(), (List<Integer>)findMap.get("prodIdList"), orderType);
 			findMap.put("prodIdList", newProdIdList);
 			
 			List<QueryProduct> prodList = commonServ.listProduct(newProdIdList, sId);
@@ -95,23 +95,23 @@ public class SQueryService extends MyDaoSupport {
 		BitSet resultBs = null;
 		
 		if (StringUtils.isEmpty(w)) {
-			resultBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_STORE, sId + "");
+			resultBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_STORE, sId + "");
 		}
 		else {
-			resultBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_TITLE, w);
+			resultBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_TITLE, w);
 			
 			if (resultBs.cardinality() == 0 && w.length() > 1) {
 				BitSet splitBs = new BitSet();
 				String[] word = WordUtils.splitWord(w).split(",");
 				for (String s : word) {
-					BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_TITLE, s);
+					BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_TITLE, s);
 					splitBs.or(bs);
 				}
 				resultBs = splitBs;
 			}
 			
 			if (resultBs.cardinality() != 0) {
-				BitSet storeBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_STORE, sId + "");
+				BitSet storeBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_STORE, sId + "");
 				resultBs.and(storeBs);
 			}
 			else {
@@ -126,31 +126,31 @@ public class SQueryService extends MyDaoSupport {
 		BitSet fastBs = null;
 		// 查fast
 		if (fast != null) {
-			fastBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_STORE, "local" + sId);
+			fastBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_STORE, "local" + sId);
 			resultBs.and(fastBs);
 		}
 		
 		// 查cId
 		if (cId != null) {
-			BitSet catBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_CAT, cId + "");
+			BitSet catBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_CAT, cId + "");
 			resultBs.and(catBs);
 		}
 		
 		// 查bId
 		if (bId != null) {
-			BitSet brandBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_BRAND, bId + "");
+			BitSet brandBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_BRAND, bId + "");
 			resultBs.and(brandBs);
 		}
 		
 		// 查tId
 		if (tId != null) {
-			BitSet themeBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_THEME, tId + "");
+			BitSet themeBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_THEME, tId + "");
 			resultBs.and(themeBs);
 		}
 		
 		// 查gId
 		if (gId != null) {
-			BitSet promoBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_PROMO + "/" + date, gId + "");
+			BitSet promoBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_PROMO + "/" + date, gId + "");
 			resultBs.and(promoBs);
 		}
 		
@@ -161,7 +161,7 @@ public class SQueryService extends MyDaoSupport {
 		
 		// fast statistic
 		if (fastBs == null) {
-			fastBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_STORE, "local" + sId);
+			fastBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_STORE, "local" + sId);
 		}
 		fastBs.and(resultBs);
 		int fastN = fastBs.cardinality();
@@ -172,7 +172,7 @@ public class SQueryService extends MyDaoSupport {
 		List<QueryCategory> catList = new ArrayList<QueryCategory>();
 		List<Integer> catIdList = listCatId(orderType);		
 		for (Integer catId : catIdList) {			
-			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_CAT, catId + "");
+			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_CAT, catId + "");
 			bs.and(resultBs);
 			int n = bs.cardinality();
 			if (n != 0) catList.add(new QueryCategory(catId, n));
@@ -183,7 +183,7 @@ public class SQueryService extends MyDaoSupport {
 		List<QueryBrand> brandList = new ArrayList<QueryBrand>();
 		List<Integer> brandIdList = listBrandId(orderType);		
 		for (Integer brandId : brandIdList) {			
-			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_BRAND, brandId + "");
+			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_BRAND, brandId + "");
 			bs.and(resultBs);
 			int n = bs.cardinality();
 			if (n != 0) brandList.add(new QueryBrand(brandId, n));
@@ -195,7 +195,7 @@ public class SQueryService extends MyDaoSupport {
 		List<QueryTheme> themeList = new ArrayList<QueryTheme>();
 		List<Integer> themeIdList = listThemeId(orderType);		
 		for (Integer themeId : themeIdList) {			
-			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_THEME, themeId + "");
+			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_THEME, themeId + "");
 			bs.and(resultBs);
 			int n = bs.cardinality();
 			if (n != 0) themeList.add(new QueryTheme(themeId, n));
@@ -207,7 +207,7 @@ public class SQueryService extends MyDaoSupport {
 		List<QueryPromo> progList = new ArrayList<QueryPromo>();
 		List<Integer> progIdList = listProgId(orderType, date);		
 		for (Integer progId : progIdList) {	
-			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_PROMO + "/" + date, progId + "");
+			BitSet bs = BitSetUtils.readBitSet(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_PROMO + "/" + date, progId + "");
 			bs.and(resultBs);
 			int n = bs.cardinality();
 			if (n != 0) progList.add(new QueryPromo(progId, n));
@@ -321,7 +321,7 @@ public class SQueryService extends MyDaoSupport {
 	
 	private List<Integer> listCatId(String orderType) {
 		List<Integer> returnList = new ArrayList<Integer>();
-		String[] fileName = new File(BitSetUtils.getRealPath(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_CAT)).list();
+		String[] fileName = new File(BitSetUtils.getRealPath(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_CAT)).list();
 		for (String catIdName : fileName) {		
 			catIdName = catIdName.replace("_", "");
 			returnList.add(Integer.parseInt(catIdName));
@@ -331,7 +331,7 @@ public class SQueryService extends MyDaoSupport {
 	
 	private List<Integer> listBrandId(String orderType) {
 		List<Integer> returnList = new ArrayList<Integer>();
-		String[] fileName = new File(BitSetUtils.getRealPath(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_BRAND)).list();
+		String[] fileName = new File(BitSetUtils.getRealPath(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_BRAND)).list();
 		for (String brandIdName : fileName) {		
 			brandIdName = brandIdName.replace("_", "");
 			returnList.add(Integer.parseInt(brandIdName));
@@ -341,7 +341,7 @@ public class SQueryService extends MyDaoSupport {
 	
 	private List<Integer> listThemeId(String orderType) {
 		List<Integer> returnList = new ArrayList<Integer>();
-		String[] fileName = new File(BitSetUtils.getRealPath(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_THEME)).list();
+		String[] fileName = new File(BitSetUtils.getRealPath(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_THEME)).list();
 		for (String themeIdName : fileName) {		
 			themeIdName = themeIdName.replace("_", "");
 			returnList.add(Integer.parseInt(themeIdName));
@@ -351,7 +351,7 @@ public class SQueryService extends MyDaoSupport {
 	
 	private List<Integer> listProgId(String orderType, String date) {
 		List<Integer> returnList = new ArrayList<Integer>();
-		String[] fileName = new File(BitSetUtils.getRealPath(BitSetUtils.getCurrentVersionName(), orderType + "/" + BitSetUtils.PATH_PROMO + "/" + date)).list();
+		String[] fileName = new File(BitSetUtils.getRealPath(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_PROMO + "/" + date)).list();
 		if (fileName == null) return new ArrayList<Integer>(); 
 		for (String progIdName : fileName) {	
 			progIdName = progIdName.replace("_", "");

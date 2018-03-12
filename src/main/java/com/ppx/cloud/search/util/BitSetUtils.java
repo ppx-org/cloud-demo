@@ -43,7 +43,7 @@ public class BitSetUtils {
 		versionMap.put(mId, versionName);
 	}	
 	
-	public static String getCurrentVersionName() {
+	public static String getCurrentV() {
 		return versionMap.get(getmId());
 	}
 	
