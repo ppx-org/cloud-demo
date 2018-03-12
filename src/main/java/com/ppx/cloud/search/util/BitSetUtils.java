@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ppx.cloud.grant.common.GrantContext;
 import com.ppx.cloud.search.common.SGrantContext;
 
 /**
@@ -66,8 +65,7 @@ public class BitSetUtils {
 		countMap.put("removeFile", 0);
 		countMap.put("removeFolder", 0);
 		
-		int merchantId = GrantContext.getLoginAccount().getMerchantId();
-		String path = getSearchPath() + merchantId + "/" + versionName;
+		String path = getSearchPath() + getmId() + "/" + versionName;
 		File pathFile = new File(path);
 		if (pathFile.exists()) {
 			deleteAllFilesOfDir(pathFile, countMap);

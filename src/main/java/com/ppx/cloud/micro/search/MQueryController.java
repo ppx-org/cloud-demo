@@ -29,23 +29,22 @@ public class MQueryController {
 	}
 	
 	@RequestMapping @ResponseBody
-	public void listBrand(HttpServletRequest request, HttpServletResponse response) {
-		int mId = MGrantContext.getWxUser().getMerchantId();
-		int sId = MGrantContext.getWxUser().getStoreId();
-		
-		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
-		String json = new RestTemplate().getForObject(searchUrl + "SBrand/listBrand?" + queryString, String.class);
-		ControllerReturn.returnJson(response, json);
-	}
-	
-	
-	@RequestMapping @ResponseBody
 	public void listCategory(HttpServletRequest request, HttpServletResponse response) {
 		int mId = MGrantContext.getWxUser().getMerchantId();
 		int sId = MGrantContext.getWxUser().getStoreId();
 		
 		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
 		String json = new RestTemplate().getForObject(searchUrl + "SCategory/listCategory?" + queryString, String.class);
+		ControllerReturn.returnJson(response, json);
+	}
+	
+	@RequestMapping @ResponseBody
+	public void listBrand(HttpServletRequest request, HttpServletResponse response) {
+		int mId = MGrantContext.getWxUser().getMerchantId();
+		int sId = MGrantContext.getWxUser().getStoreId();
+		
+		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
+		String json = new RestTemplate().getForObject(searchUrl + "SBrand/listBrand?" + queryString, String.class);
 		ControllerReturn.returnJson(response, json);
 	}
 	
