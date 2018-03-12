@@ -27,7 +27,6 @@ public class ChangePriceController {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("skuId", skuId);
 		
-		
 		return mv;
 	}
 
@@ -36,7 +35,6 @@ public class ChangePriceController {
 		
 		PageList<ChangePrice> list = serv.listChangePrice(page, skuId);
 		String skuMsg = serv.getSkuMsg(skuId);
-		
 		
 		return ControllerReturn.ok(list, skuMsg);
 	}
