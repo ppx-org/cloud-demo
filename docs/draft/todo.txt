@@ -1,4 +1,7 @@
 
+1.修改change_stock表结构
+2.MOrder.submit时增加change_stock
+3.Dict添加change_stock的类型
 
 
 移动端接口用代理方式

@@ -138,7 +138,9 @@ create table change_stock
 	CHANGE_TYPE	 	smallint not null,
 	CHANGE_COMMENT	varchar(128),
 	CREATED         timestamp not null default CURRENT_TIMESTAMP,
-	CREATOR			int not null,
+	CREATOR			int,
+	OPENID			varchar(32),
+	ORDER_ID        int,
 	primary key (CHANGE_STOCK_ID)
 ) comment='产品库存变更历史';
 create index idx_change_stock_prod_id on change_stock(SKU_ID);
