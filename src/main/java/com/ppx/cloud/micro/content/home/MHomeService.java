@@ -40,7 +40,8 @@ public class MHomeService extends MyDaoSupport {
 	}
 	
 	public List<QueryProduct> listLevelProd(MPage page) {
-		Integer storeId = MGrantContext.getWxUser().getStoreId();
+		int storeId = MGrantContext.getWxUser().getStoreId();
+		
 		StringBuilder sql = new StringBuilder("select p.PROD_ID PID from home_level_product p join home_level l on p.LEVEL_ID = l.LEVEL_ID and l.STORE_ID = ?" + 
 			" order by l.LEVEL_PRIO, p.PROD_PRIO");
 		List<Integer> prodIdList = mQueryPage(Integer.class, page, sql, storeId);
