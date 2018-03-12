@@ -23,6 +23,7 @@ public class Dict {
 		changeStockTypeMap.put(2, "盘盈");
 		changeStockTypeMap.put(3, "盘亏");
 		changeStockTypeMap.put(4, "损坏");
+		changeStockTypeMap.put(5, "下单");
 	}
 	
 	private static Map<Integer, String> progStatusMap = new HashMap<Integer, String>();

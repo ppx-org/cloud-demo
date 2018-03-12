@@ -51,6 +51,8 @@ function queryPage(pageNumber) {
 		<th class="w-id">数量</th>
 		<th class="w-time">变更时间</th>
 		<th class="w-id">变更人</th>
+		<th class="w-id">OPENID</th>
+		<th class="w-id">订单ID</th>
 		<th class="w-title-s">备注</th>
 	</tr>
 	<script id="pageTemplate" type="text/html">
@@ -61,6 +63,8 @@ function queryPage(pageNumber) {
 		<td>{{v.changeNum}}</td>
 		<td>{{v.created}}</th>
 		<td>{{v.creator}}</th>
+		<td>{{v.openid}}</th>
+		<td>{{v.orderId}}</th>
 		<td>{{v.changeComment}}</td>
 	</tr>
 	{{/each}}

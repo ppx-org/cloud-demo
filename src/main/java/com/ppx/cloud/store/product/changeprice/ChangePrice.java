@@ -19,9 +19,7 @@ public class ChangePrice {
 	
 	private Integer creator;
 	
-	private String openid;
 	
-	private Integer orderId;
 
 	public Integer getChangePriceId() {
 		return changePriceId;
@@ -71,21 +69,7 @@ public class ChangePrice {
 		this.creator = creator;
 	}
 
-	public String getOpenid() {
-		return openid;
-	}
-
-	public void setOpenid(String openid) {
-		this.openid = openid;
-	}
-
-	public Integer getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(Integer orderId) {
-		this.orderId = orderId;
-	}
+	
 
 	
 	

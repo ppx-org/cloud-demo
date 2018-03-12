@@ -22,6 +22,7 @@ import com.ppx.cloud.micro.user.order.bean.ConfirmOrderItem;
 import com.ppx.cloud.micro.user.order.bean.ConfirmOrderPara;
 import com.ppx.cloud.micro.user.order.bean.ConfirmReturn;
 import com.ppx.cloud.micro.user.order.bean.OverflowSku;
+import com.ppx.cloud.store.product.changestock.ChangeStock;
 
 
 @Service
@@ -130,6 +131,13 @@ public class MOrderService extends MyDaoSupport {
 		// minus stock
 		String stockSql = "update sku set STOCK_NUM = STOCK_NUM - ? where SKU_ID = ?";
 		getJdbcTemplate().batchUpdate(stockSql, stockArgsList);
+		
+		ChangeStock changeStock = new ChangeStock();
+		// 5:下单扣减
+		changeStock.setChangeType(5);
+		changeStock.setOpenid(openid);
+		changeStock.setOrderId(orderId);
+		insert(changeStock);
 		
 		
 		//  order item
