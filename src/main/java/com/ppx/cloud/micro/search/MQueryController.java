@@ -24,7 +24,7 @@ public class MQueryController {
 		int mId = MGrantContext.getWxUser().getMerchantId();
 		int sId = MGrantContext.getWxUser().getStoreId();
 		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
-		String json = new RestTemplate().getForObject(searchUrl + "SQuery/query?" + queryString, String.class, "");
+		String json = new RestTemplate().getForObject(searchUrl + "SQuery/query?" + queryString, String.class);
 		ControllerReturn.returnJson(response, json);
 	}
 	
@@ -34,7 +34,7 @@ public class MQueryController {
 		int sId = MGrantContext.getWxUser().getStoreId();
 		
 		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
-		String json = new RestTemplate().getForObject(searchUrl + "SBrand/listBrand?" + queryString, String.class, "");
+		String json = new RestTemplate().getForObject(searchUrl + "SBrand/listBrand?" + queryString, String.class);
 		ControllerReturn.returnJson(response, json);
 	}
 	
@@ -45,7 +45,7 @@ public class MQueryController {
 		int sId = MGrantContext.getWxUser().getStoreId();
 		
 		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
-		String json = new RestTemplate().getForObject(searchUrl + "SCategory/listCategory?" + queryString, String.class, "");
+		String json = new RestTemplate().getForObject(searchUrl + "SCategory/listCategory?" + queryString, String.class);
 		ControllerReturn.returnJson(response, json);
 	}
 	
@@ -55,7 +55,7 @@ public class MQueryController {
 		int sId = MGrantContext.getWxUser().getStoreId();
 		
 		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
-		String json = new RestTemplate().getForObject(searchUrl + "SProgram/listProgram?" + queryString, String.class, "");
+		String json = new RestTemplate().getForObject(searchUrl + "SProgram/listProgram?" + queryString, String.class);
 		ControllerReturn.returnJson(response, json);
 	}
 	
@@ -65,7 +65,7 @@ public class MQueryController {
 		int sId = MGrantContext.getWxUser().getStoreId();
 		
 		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId;
-		String json = new RestTemplate().getForObject(searchUrl + "STheme/listTheme?" + queryString, String.class, "");
+		String json = new RestTemplate().getForObject(searchUrl + "STheme/listTheme?" + queryString, String.class);
 		ControllerReturn.returnJson(response, json);
 	}
 }
