@@ -79,7 +79,7 @@ public class MHomeController {
 	
 	
 	
-	
+	@Cacheable(value = "homeCache")
 	@PostMapping @ResponseBody
 	public Map<String, Object> listJson() {
 		List<MSwiper> swiperList = serv.listSwiper();
