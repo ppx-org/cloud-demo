@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,65 @@ public class MHomeController {
 	
 	@Autowired
 	private MHomeService serv;
+	
+	@Cacheable(value = "homeCache2")
+	@PostMapping @ResponseBody
+	public Map<String, Object> test() {
+		
+		System.out.println("-------------------test------------mongodb-----------");
+		
+		
+		return ControllerReturn.ok();
+	}
+	
+	
+	@Cacheable(value = "homeCache5", key="'key5'")
+	@PostMapping @ResponseBody
+	public Map<String, Object> test5() {
+		System.out.println("-------------------test------------mongod-cache222222222222222222-----------");
+		
+		
+		return ControllerReturn.ok();
+	}
+	
+	@Cacheable(value = "homeCache6", key="'key6'")
+	@PostMapping @ResponseBody
+	public Map<String, Object> test6() {
+		System.out.println("-------------------test------------mongod-cache666666666-----------");
+		
+		
+		
+		return ControllerReturn.ok();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@PostMapping @ResponseBody
 	public Map<String, Object> listJson() {
