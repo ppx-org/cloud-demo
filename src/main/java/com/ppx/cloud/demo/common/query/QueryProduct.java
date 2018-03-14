@@ -1,6 +1,5 @@
 package com.ppx.cloud.demo.common.query;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ppx.cloud.demo.common.price.utils.DecodePolicy;
 
 public class QueryProduct {
@@ -48,7 +47,8 @@ public class QueryProduct {
 	}
 	
 	public String getPromo() {
-		return DecodePolicy.decode(this.arg);
+		this.promo = DecodePolicy.decode(this.arg);
+		return promo;
 	}
 
 	public void setArg(String arg) {
