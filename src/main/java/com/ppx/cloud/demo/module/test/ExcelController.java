@@ -23,7 +23,7 @@ public class ExcelController {
 	
 	@GetMapping @ResponseBody
 	public void test(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("test..........export............excel");
+		System.out.println("test..........export..........excel");
 		
 		List<ExcelTitle> titleList = new ArrayList<ExcelTitle>();
 		ExcelTitle t1 = new ExcelTitle("TEST_ID", "ID");
