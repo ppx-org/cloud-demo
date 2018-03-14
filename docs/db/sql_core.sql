@@ -226,6 +226,22 @@ create index idx_product_img_prod_id on product_img(PROD_ID);
 
 /** ----------------- user ----------------- */
 
+create table user_info
+(
+	OPENID				varchar(32) NOT NULL,
+	NICK_NAME			varchar(64),
+	GENDER				tinyint(1),
+	LANGUAGE			varchar(32),
+	CITY				varchar(32),
+	PROVINCE			varchar(32),
+	COUNTRY				varchar(32),
+	AVATAR_URL			varchar(128),
+	primary key(OPENID)
+) comment='用户信息';
+
+
+
+
 create table user_order
 (
    ORDER_ID             int not null auto_increment,

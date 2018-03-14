@@ -7,11 +7,15 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import org.springframework.cache.Cache;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.MPage;
 import com.ppx.cloud.demo.common.cache.RedisConfig;
@@ -32,10 +36,20 @@ public class MHomeController {
 		
 		
 		Collection<String> c = cacheManager.getCacheNames();
+	
 		
+		RedisCacheManager rCache = (RedisCacheManager) cacheManager;
 		
+		Cache cache = cacheManager.getCache("listHome");
 		
-		System.out.println("-------------------0:" + c);
+		ObjectMapper om = new ObjectMapper();
+		
+		try {
+			System.out.println("-------------------0:" + om.writer().writeValueAsString(cache.get("SimpleKey []").get()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		
 		
 		return ControllerReturn.ok();
