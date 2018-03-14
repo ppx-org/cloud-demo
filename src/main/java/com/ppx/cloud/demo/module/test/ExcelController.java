@@ -23,7 +23,7 @@ public class ExcelController {
 	
 	@GetMapping @ResponseBody
 	public void test(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("test........export............excel");
+		System.out.println("test..........export............excel");
 		
 		List<ExcelTitle> titleList = new ArrayList<ExcelTitle>();
 		ExcelTitle t1 = new ExcelTitle("TEST_ID", "ID");
@@ -36,7 +36,7 @@ public class ExcelController {
 			SXSSFWorkbook wb = ExcelUitlXSSF.getWorkbook(response, "测试导出", titleList, columnBestWidth);
 			
 			int excelRow = 2;
-			int pageSize = 20;
+			int pageSize = 100;
 			for (int i = 0; i < pageSize; i++) {
 				List<Map<String, Object>> dataList = serv.listData(i);
 				excelRow = ExcelUitlXSSF.createDataRow(wb, dataList, titleList, excelRow, columnBestWidth);

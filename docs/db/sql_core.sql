@@ -228,8 +228,9 @@ create index idx_product_img_prod_id on product_img(PROD_ID);
 
 create table user_info
 (
-	OPENID				varchar(32) NOT NULL,
-	LAST_UPDATED		timestamp not null default CURRENT_TIMESTAMP,
+	OPENID				varchar(32) not null,
+	LAST_LOGIN_UPDATED	timestamp not null default CURRENT_TIMESTAMP,
+	LAST_LOGIN_TYPE		tinyint(1) not null,
 	NICK_NAME			varchar(64),
 	GENDER				tinyint(1),
 	LANGUAGE			varchar(32),

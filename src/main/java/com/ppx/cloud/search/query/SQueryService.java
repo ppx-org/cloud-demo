@@ -361,10 +361,9 @@ public class SQueryService extends MyDaoSupport {
 	}
 	
 	// 异步插入
-	public void insertSearchHistory(Integer storeId, String openid, String w) {
-		
+	public void asynInsertSearchHistory(Integer storeId, String openid, String w) {
 		AccessLog log = new AccessLog();
-		log.setUri("asyn insertSearchHistory");
+		log.setUri("asynInsertSearchHistory");
 		log.setBeginTime(new Date());
 		log.setIp("127.0.0.0");
 		ControllerContext.setAccessLog(log);
@@ -384,8 +383,6 @@ public class SQueryService extends MyDaoSupport {
 			
 			String insertLastSql = "insert into search_last_word(OPENID, LAST_WORD) values(?,?) on duplicate key update CREATED = now()";
 			getJdbcTemplate().update(insertLastSql, openid, w);
-			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

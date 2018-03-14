@@ -2,7 +2,9 @@ package com.ppx.cloud.micro.user.login;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -22,6 +24,9 @@ import com.ppx.cloud.micro.common.MGrantUtils;
 
 @Controller
 public class MLoginController {
+	
+	@Autowired
+	private MLoginService serv;
 
 	
 	@PostMapping @ResponseBody
@@ -55,7 +60,7 @@ public class MLoginController {
 		try {
 			Map<?, ?> map = new ObjectMapper().readValue(r.getBody(), Map.class);
 			if (map.get("errcode") != null) {
-				// 微信端登录异常
+				// WX端登录异常
 				Map<String, Object> returnMap = ControllerReturn.ok(-1);
 				returnMap.put("errcode", map.get("errcode"));
 				returnMap.put("errmsg", map.get("errmsg"));
@@ -65,6 +70,8 @@ public class MLoginController {
 			session_key = (String)map.get("session_key");
 		} catch (Exception e) {
 			e.printStackTrace();
+			// WX登录返回解析异常
+			return ControllerReturn.ok(-2);
 		}
 		
 		openid = "oD1n60HZHWBa6ucWSdY50HNWPfq4";
@@ -78,13 +85,70 @@ public class MLoginController {
 		    		.sign(algorithm);
 		    Map<String, Object> returnMap = ControllerReturn.ok(1);
 		    returnMap.put(MGrantUtils.PPXTOKEN, token);
+		    loginLog(openid, 1);
 		    return returnMap;
 		} catch (Exception e) {
 			e.printStackTrace();
 			// 登录JWT异常
-			return ControllerReturn.ok(-2);
+			loginLog(openid, -3);
+			return ControllerReturn.ok(-3);
 		}
 	}
+	
+	
+	
+	private void loginLog(String openid, int lastLoginType) {
+		CompletableFuture.runAsync(() -> {
+			serv.asynInsertUserInfo(openid, lastLoginType);
+		});
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }
 

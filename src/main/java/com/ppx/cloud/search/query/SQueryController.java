@@ -42,7 +42,7 @@ public class SQueryController {
 		if (!StringUtils.isEmpty(s.getOpenid()) && !StringUtils.isEmpty(q.getW())) {
 			// 异步插入搜索历史
 			CompletableFuture.runAsync(() -> {
-				serv.insertSearchHistory(s.getsId(), s.getOpenid(), q.getW());
+				serv.asynInsertSearchHistory(s.getsId(), s.getOpenid(), q.getW());
 			});
 		}
 		
