@@ -1,9 +1,11 @@
 package com.ppx.cloud.micro.content.home;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +23,46 @@ public class MHomeController {
 	
 	@Autowired
 	private MHomeService serv;
+	
+	@Autowired
+	private CacheManager cacheManager;
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> test() {
+		
+		
+		Collection<String> c = cacheManager.getCacheNames();
+		
+		
+		
+		System.out.println("-------------------0:" + c);
+		
+		
+		return ControllerReturn.ok();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@Cacheable(value = "listHome")
 	@PostMapping @ResponseBody
