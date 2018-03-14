@@ -83,9 +83,11 @@ public class RedisCache extends AbstractValueAdaptingCache {
 		byte[] value = cacheWriter.get(name, createAndConvertCacheKey(key));
 
 		if (value == null) {
+			// dengxz
 			ControllerContext.getAccessLog().setCacheKey(name + "::" + key + "|0");
 			return null;
 		}
+		// dengxz
 		ControllerContext.getAccessLog().setCacheKey(name + "::" + key + "|" + value.length);
 		
 		
