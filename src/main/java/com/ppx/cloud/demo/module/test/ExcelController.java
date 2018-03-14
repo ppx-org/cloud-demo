@@ -40,7 +40,6 @@ public class ExcelController {
 			for (int i = 0; i < pageSize; i++) {
 				List<Map<String, Object>> dataList = serv.listData(i);
 				excelRow = ExcelUitlXSSF.createDataRow(wb, dataList, titleList, excelRow, columnBestWidth);
-				//dataList.clear();
 			}
 			wb.write(os);
 		} catch (Exception e) {

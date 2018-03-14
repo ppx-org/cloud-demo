@@ -24,6 +24,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 	titleList.add(t1);
 	titleList.add(t2);
 	
+	// begin >>>>>>>>>>
 	try (OutputStream os = response.getOutputStream()) {
 		int columnBestWidth[] = new int[titleList.size()];
 		SXSSFWorkbook wb = ExcelUitlXSSF.getWorkbook(response, "测试导出", titleList, columnBestWidth);
