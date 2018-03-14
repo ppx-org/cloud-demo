@@ -1,19 +1,16 @@
 package com.ppx.cloud.micro.content.home;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import org.springframework.cache.Cache;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ppx.cloud.common.controller.ControllerReturn;
@@ -35,10 +32,10 @@ public class MHomeController {
 	public Map<String, Object> test() {
 		
 		
-		Collection<String> c = cacheManager.getCacheNames();
+		// Collection<String> c = cacheManager.getCacheNames();
 	
 		
-		RedisCacheManager rCache = (RedisCacheManager) cacheManager;
+		// RedisCacheManager rCache = (RedisCacheManager) cacheManager;
 		
 		Cache cache = cacheManager.getCache("listHome");
 		

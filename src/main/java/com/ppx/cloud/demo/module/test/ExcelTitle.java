@@ -1,7 +1,8 @@
 package com.ppx.cloud.demo.module.test;
-import java.math.BigDecimal;
-import java.util.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 
@@ -40,7 +41,8 @@ public class ExcelTitle implements Serializable {
     protected String style;
     
     // 数据字典转换集合
-    List<Map> changerList;
+    @SuppressWarnings("rawtypes")
+	List<Map> changerList;
     
 
 	public ExcelTitle(){
@@ -58,7 +60,8 @@ public class ExcelTitle implements Serializable {
     	this.changer=changer;
     }
     
-    public ExcelTitle(String code,String name,List changerList){
+    @SuppressWarnings("unchecked")
+	public ExcelTitle(String code,String name,@SuppressWarnings("rawtypes") List changerList){
     	this.code=code;
     	this.name=name;
     	this.changerList=changerList;
@@ -119,7 +122,8 @@ public class ExcelTitle implements Serializable {
 		this.style = style;
 	}
    
-    public List<Map> getChangerList() {
+    @SuppressWarnings("rawtypes")
+	public List<Map> getChangerList() {
 //    	if(changerList==null&&!StringUtils.isEmpty(changer)){
 //    		//默认从数据字典中获取转换类
 //    		changerList=DBUtils.getBaseCodeWithNouse(this.changer);
@@ -127,7 +131,7 @@ public class ExcelTitle implements Serializable {
 		return new ArrayList<Map>();
 	}
 
-	public void setChangerList(List<Map> changerList) {
+	public void setChangerList(@SuppressWarnings("rawtypes") List<Map> changerList) {
 		this.changerList = changerList;
 	}
 
