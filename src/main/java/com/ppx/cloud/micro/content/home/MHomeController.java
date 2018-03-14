@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.MPage;
+import com.ppx.cloud.demo.common.cache.RedisConfig;
 import com.ppx.cloud.demo.common.query.QueryProduct;
 
 
@@ -21,67 +22,9 @@ public class MHomeController {
 	@Autowired
 	private MHomeService serv;
 	
-	@Cacheable(value = "homeCache2")
+	@Cacheable(value = "listHome")
 	@PostMapping @ResponseBody
-	public Map<String, Object> test() {
-		
-		System.out.println("-------------------test------------mongodb-----------");
-		
-		
-		return ControllerReturn.ok();
-	}
-	
-	
-	@Cacheable(value = "homeCache5", key="'key5'")
-	@PostMapping @ResponseBody
-	public Map<String, Object> test5() {
-		System.out.println("-------------------test------------mongod-cache222222222222222222-----------");
-		
-		
-		return ControllerReturn.ok();
-	}
-	
-	@Cacheable(value = "homeCache6", key="'key6'")
-	@PostMapping @ResponseBody
-	public Map<String, Object> test6() {
-		System.out.println("-------------------test------------mongod-cache666666666-----------");
-		
-		
-		
-		return ControllerReturn.ok();
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	@Cacheable(value = "homeCache")
-	@PostMapping @ResponseBody
-	public Map<String, Object> listJson() {
+	public Map<String, Object> listHome() {
 		List<MSwiper> swiperList = serv.listSwiper();
 		List<MLevel> levelList = serv.listLevel();
 		MPage page = new MPage();
@@ -97,6 +40,7 @@ public class MHomeController {
 	}
 	
 	// 更多时调用
+	@Cacheable(value = "levelProd", keyGenerator = RedisConfig.WISELY_KEY_GENERATOR)
 	@PostMapping @ResponseBody
 	public Map<String, Object> listLevelProd(@RequestBody MPage page) {
 		List<QueryProduct> list = serv.listLevelProd(page);
