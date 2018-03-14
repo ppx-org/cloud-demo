@@ -1,6 +1,8 @@
 package com.ppx.cloud.demo.module.test;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -17,6 +19,29 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 /**
  * excel分页导出
+ * 用法:
+  	List<ExcelTitle> titleList = new ArrayList<ExcelTitle>();
+	ExcelTitle t1 = new ExcelTitle("TEST_ID", "ID");
+	ExcelTitle t2 = new ExcelTitle("TEST_NAME", "名称");
+	titleList.add(t1);
+	titleList.add(t2);
+	
+	try (OutputStream os = response.getOutputStream()) {
+		int columnBestWidth[] = new int[titleList.size()];
+		SXSSFWorkbook wb = ExcelUitlXSSF.getWorkbook(response, "测试导出", titleList, columnBestWidth);
+		
+		int excelRow = 2;
+		int pageSize = 2;
+		for (int i = 0; i < pageSize; i++) {
+			List<Map<String, Object>> dataList = serv.listData(i);
+			excelRow = ExcelUitlXSSF.createDataRow(wb, dataList, titleList, excelRow, columnBestWidth);
+		}
+		wb.write(os);
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+ * 
+ * 
  * @author dengxz
  * @date 2018年3月14日
  */

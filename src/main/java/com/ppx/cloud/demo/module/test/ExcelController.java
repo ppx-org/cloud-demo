@@ -33,14 +33,14 @@ public class ExcelController {
 		
 		try (OutputStream os = response.getOutputStream()) {
 			int columnBestWidth[] = new int[titleList.size()];
-			
 			SXSSFWorkbook wb = ExcelUitlXSSF.getWorkbook(response, "测试导出", titleList, columnBestWidth);
 			
 			int excelRow = 2;
-			int pageSize = 2;
+			int pageSize = 20;
 			for (int i = 0; i < pageSize; i++) {
 				List<Map<String, Object>> dataList = serv.listData(i);
 				excelRow = ExcelUitlXSSF.createDataRow(wb, dataList, titleList, excelRow, columnBestWidth);
+				//dataList.clear();
 			}
 			wb.write(os);
 		} catch (Exception e) {
