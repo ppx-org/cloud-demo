@@ -229,6 +229,7 @@ create index idx_product_img_prod_id on product_img(PROD_ID);
 create table user_info
 (
 	OPENID				varchar(32) NOT NULL,
+	LAST_UPDATED		timestamp not null default CURRENT_TIMESTAMP,
 	NICK_NAME			varchar(64),
 	GENDER				tinyint(1),
 	LANGUAGE			varchar(32),
@@ -238,7 +239,6 @@ create table user_info
 	AVATAR_URL			varchar(128),
 	primary key(OPENID)
 ) comment='用户信息';
-
 
 
 
