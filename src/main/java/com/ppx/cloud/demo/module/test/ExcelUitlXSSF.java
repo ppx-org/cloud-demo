@@ -92,7 +92,6 @@ public class ExcelUitlXSSF {
 		return excelRow;
 	}
 	
-	
 	private static int getChineseNum(String context){    ///统计context中是汉字的个数
         int lenOfChinese=0;
         Pattern p = Pattern.compile("[\u4e00-\u9fa5]");    //汉字的Unicode编码范围
