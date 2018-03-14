@@ -17,7 +17,7 @@ public class MLoginService extends MyDaoSupport {
 	// 异步插入
 	public void asynInsertUserInfo(String openid, int lastLoginType) {
 		AccessLog log = new AccessLog();
-		log.setUri("asynInsertSearchHistory");
+		log.setUri("asynInsertUserInfo");
 		log.setBeginTime(new Date());
 		log.setIp("127.0.0.0");
 		ControllerContext.setAccessLog(log);
