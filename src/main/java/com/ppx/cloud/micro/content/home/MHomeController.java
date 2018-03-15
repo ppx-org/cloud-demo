@@ -15,18 +15,21 @@ import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
+import org.springframework.data.redis.connection.DataType;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import com.ppx.cloud.common.config.RedisConfig;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.MPage;
-import com.ppx.cloud.demo.common.cache.RedisConfig;
 import com.ppx.cloud.demo.common.query.QueryProduct;
 
 
@@ -56,11 +59,7 @@ public class MHomeController {
 			converter.setTypeMapper(new DefaultMongoTypeMapper(null));
 			MongoTemplate mongoTemplate = new MongoTemplate(simpleMongoDbFactory, converter);
 			
-			
-			Set<String> s = mongoTemplate.getCollectionNames();
-			
-			System.out.println("..............go:001:" + s);
-			
+			mongoTemplate.getCollectionNames();
 		} catch (Exception e) {
 			System.out.println("..............go:Exception");
 			// 用户名 数据库 密码
@@ -76,7 +75,7 @@ public class MHomeController {
 			converter.setTypeMapper(new DefaultMongoTypeMapper(null));
 			MongoTemplate mongoTemplate = new MongoTemplate(simpleMongoDbFactory, converter);
 			
-			
+		
 			Set<String> s = mongoTemplate.getCollectionNames();
 			
 			System.out.println("..............go:002:" + s);
@@ -129,11 +128,35 @@ public class MHomeController {
 	
 	
 	
-	
+	@Autowired
+	private WebApplicationContext app;
 	
 	
 	@PostMapping @ResponseBody
 	public Map<String, Object> test() {
+		
+		String[] names = app.getBeanDefinitionNames();
+		for (String s : names) {
+			//System.out.println("beanName:" + s);
+		}
+		
+		StringRedisTemplate stringRedisTemplate = app.getBean(StringRedisTemplate.class);
+		
+		DataType dataType = stringRedisTemplate.type("listHome::SimpleKey []");
+		
+		Long expire = stringRedisTemplate.getExpire("listHome::SimpleKey []");
+		
+		
+		String out = stringRedisTemplate.opsForValue().get("listHome::SimpleKey []");
+		
+		
+		
+		
+		//Set<String> set = stringRedisTemplate.keys("listHome*");
+		
+		
+		System.out.println("vvvvvvvvvvvvvvvv.................:" + out);
+		
 		
 		MongoClientOptions op = new MongoClientOptions.Builder().build();
 		System.out.println("xxxxxxxxxxxxxout:" + op.getConnectionsPerHost());
