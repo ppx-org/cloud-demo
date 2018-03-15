@@ -44,17 +44,10 @@ public class MHomeController {
 		System.out.println("..............go:begin");
 		
 		try {
-			// 用户名 数据库 密码
-			MongoCredential credential = MongoCredential.createScramSha1Credential("redsea", "admin", "redsea".toCharArray());
-
-			// IP port
+			// 非验证连接
 			ServerAddress addr = new ServerAddress("139.199.152.193", Integer.parseInt("27017"));
-
-			//MongoClient client = new MongoClient(addr, Arrays.asList(credential));
 			MongoClient client = new MongoClient(addr);
-			
 			SimpleMongoDbFactory simpleMongoDbFactory = new SimpleMongoDbFactory(client, "redsea");
-			
 			MongoDbFactory dbFactory = simpleMongoDbFactory;
 
 			// 去掉_class字段
