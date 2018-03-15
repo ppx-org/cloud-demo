@@ -31,6 +31,7 @@ public class InitListener implements ApplicationListener<ContextRefreshedEvent> 
 		log.setUri("init");
 		log.setBeginTime(new Date());
 		log.setIp("127.0.0.0");
+		log.setMethod("INIT");
 		ControllerContext.setAccessLog(log);
 		
 		searchCreateService.initVersion();
