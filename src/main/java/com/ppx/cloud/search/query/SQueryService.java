@@ -366,6 +366,7 @@ public class SQueryService extends MyDaoSupport {
 		log.setUri("asynInsertSearchHistory");
 		log.setBeginTime(new Date());
 		log.setIp("127.0.0.0");
+		log.setMethod("ASYN");
 		ControllerContext.setAccessLog(log);
 		try {
 			String insertSql = "insert into search_history_word(OPENID, STORE_ID, HIS_WORD) values(?, ?, ?)"; 

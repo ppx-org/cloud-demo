@@ -20,11 +20,12 @@ public class MLoginService extends MyDaoSupport {
 		log.setUri("asynInsertUserInfo");
 		log.setBeginTime(new Date());
 		log.setIp("127.0.0.0");
+		log.setMethod("ASYN");
 		ControllerContext.setAccessLog(log);
 		try {
 			String insertSql = "insert into user_info(OPENID, LAST_LOGIN_UPDATED, LAST_LOGIN_TYPE) values(?, now(), ?)"
 					+ " ON DUPLICATE KEY UPDATE LAST_LOGIN_UPDATED = now(), LAST_LOGIN_TYPE = ?"; 
-			getJdbcTemplate().update(insertSql, openid, openid, lastLoginType);
+			getJdbcTemplate().update(insertSql, openid, lastLoginType, lastLoginType);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
