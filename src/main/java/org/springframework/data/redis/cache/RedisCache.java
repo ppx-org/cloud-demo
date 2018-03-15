@@ -84,11 +84,11 @@ public class RedisCache extends AbstractValueAdaptingCache {
 
 		if (value == null) {
 			// dengxz
-			ControllerContext.getAccessLog().setCacheKey(name + "::" + key + "|0");
+			ControllerContext.getAccessLog().setCacheKey("get|" + name + "::" + key + "|0");
 			return null;
 		}
 		// dengxz
-		ControllerContext.getAccessLog().setCacheKey(name + "::" + key + "|" + value.length);
+		ControllerContext.getAccessLog().setCacheKey("get|" + name + "::" + key + "|" + value.length);
 		
 		
 		return deserializeCacheValue(value);
@@ -179,7 +179,10 @@ public class RedisCache extends AbstractValueAdaptingCache {
 	 */
 	@Override
 	public void evict(Object key) {
+
 		cacheWriter.remove(name, createAndConvertCacheKey(key));
+		
+		ControllerContext.getAccessLog().setCacheKey("evict|" + name + "::" + key);
 	}
 
 	/*
@@ -188,9 +191,11 @@ public class RedisCache extends AbstractValueAdaptingCache {
 	 */
 	@Override
 	public void clear() {
-
+		
 		byte[] pattern = conversionService.convert(createCacheKey("*"), byte[].class);
 		cacheWriter.clean(name, pattern);
+		
+		ControllerContext.getAccessLog().setCacheKey("clear|" + name);
 	}
 
 	/**

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.MongoClientOptions;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.MPage;
 import com.ppx.cloud.demo.common.cache.RedisConfig;
@@ -28,24 +27,30 @@ public class MHomeController {
 	@Autowired
 	private CacheManager cacheManager;
 	
+	
+	
+	
+	
 	@PostMapping @ResponseBody
 	public Map<String, Object> test() {
 		
+		MongoClientOptions op = new MongoClientOptions.Builder().build();
+		System.out.println("xxxxxxxxxxxxxout:" + op.getConnectionsPerHost());
+		System.out.println("xxxxxxxxxxxxxout:" + op.getConnectTimeout());
+		System.out.println("xxxxxxxxxxxxxout:" + op.getMaxWaitTime());
 		
 		// Collection<String> c = cacheManager.getCacheNames();
-	
-		
 		// RedisCacheManager rCache = (RedisCacheManager) cacheManager;
 		
-		Cache cache = cacheManager.getCache("listHome");
 		
-		ObjectMapper om = new ObjectMapper();
 		
-		try {
-			System.out.println("-------------------0:" + om.writer().writeValueAsString(cache.get("SimpleKey []").get()));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		Cache cache = cacheManager.getCache("listHome");
+//		ObjectMapper om = new ObjectMapper();
+//		try {
+//			System.out.println("-------------------0:" + om.writer().writeValueAsString(cache.get("SimpleKey []").get()));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		
 		
 		
