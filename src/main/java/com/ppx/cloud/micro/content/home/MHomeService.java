@@ -11,6 +11,7 @@ import com.ppx.cloud.common.page.MPage;
 import com.ppx.cloud.demo.common.query.QueryCommonService;
 import com.ppx.cloud.demo.common.query.QueryProduct;
 import com.ppx.cloud.micro.common.MGrantContext;
+import com.ppx.cloud.micro.content.store.MStore;
 
 
 @Service
@@ -18,6 +19,15 @@ public class MHomeService extends MyDaoSupport {
 	
 	@Autowired
 	private QueryCommonService commonServ;
+	
+	public MStore getStore() {
+		int storeId = MGrantContext.getWxUser().getStoreId();
+		String sql = "select s.STORE_ID ID, s.STORE_NAME NAME, s.STORE_NO NO, r.REPO_ADDRESS ADDR,"
+				+ " s.STORE_LNG LNG, s.STORE_LAT LAT, s.STORE_PHONE PHONE, s.STORE_IMG IMG from store s left join repository r"
+				+ " on s.STORE_ID = r.REPO_ID where s.STORE_ID = ?";
+		MStore store = getJdbcTemplate().queryForObject(sql,  BeanPropertyRowMapper.newInstance(MStore.class), storeId);
+		return store;
+	}
 	
 	public List<MSwiper> listSwiper() {
 		int storeId = MGrantContext.getWxUser().getStoreId();
