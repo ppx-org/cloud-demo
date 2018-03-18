@@ -55,7 +55,7 @@ public class MHomeController {
 	
 	
 	
-	@Cacheable(value = "listHome")
+	//@Cacheable(value = "listHome")
 	@PostMapping @ResponseBody
 	public Map<String, Object> listHome() {
 		List<MSwiper> swiperList = serv.listSwiper();
@@ -73,7 +73,7 @@ public class MHomeController {
 	}
 	
 	// 更多时调用
-	@Cacheable(value = "levelProd", keyGenerator = RedisConfig.WISELY_KEY_GENERATOR)
+	//@Cacheable(value = "levelProd", keyGenerator = RedisConfig.WISELY_KEY_GENERATOR)
 	@PostMapping @ResponseBody
 	public Map<String, Object> listLevelProd(@RequestBody MPage page) {
 		List<QueryProduct> list = serv.listLevelProd(page);

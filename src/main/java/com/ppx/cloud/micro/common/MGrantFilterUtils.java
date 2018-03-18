@@ -15,12 +15,12 @@ public class MGrantFilterUtils {
 	
 	public static WxUser getLoginUser(HttpServletRequest request) {
 
-		String PPXTOKEN = request.getHeader("PPXTOKEN");
-		String storeId = request.getHeader("storeId");
-		String merchantId = request.getHeader("merchantId");
+		String PPX_TOKEN = request.getHeader("PPX_TOKEN");
+		String storeId = request.getHeader("STORE_ID");
+		String merchantId = request.getHeader("MER_ID");
 		
 		// token为空,表示未登录
-		if (StringUtils.isEmpty(PPXTOKEN)) {
+		if (StringUtils.isEmpty(PPX_TOKEN)) {
 			return null;
 		}
 		
@@ -28,7 +28,7 @@ public class MGrantFilterUtils {
 		try {
 			Algorithm algorithm = Algorithm.HMAC256(MGrantUtils.getJwtPassword());
 			JWTVerifier verifier = JWT.require(algorithm).build();
-			DecodedJWT jwt = verifier.verify(PPXTOKEN);
+			DecodedJWT jwt = verifier.verify(PPX_TOKEN);
 			String openid = jwt.getClaim("openid").asString();
 			String session_key = jwt.getClaim("session_key").asString();
 			u.setOpenid(openid);

@@ -84,7 +84,7 @@ public class MLoginController {
 		    		.withClaim("session_key", session_key)
 		    		.sign(algorithm);
 		    Map<String, Object> returnMap = ControllerReturn.ok(1);
-		    returnMap.put(MGrantUtils.PPXTOKEN, token);
+		    returnMap.put(MGrantUtils.PPX_TOKEN, token);
 		    loginLog(openid, 1);
 		    return returnMap;
 		} catch (Exception e) {

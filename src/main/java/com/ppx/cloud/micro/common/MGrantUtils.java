@@ -2,7 +2,7 @@ package com.ppx.cloud.micro.common;
 
 public class MGrantUtils {
 	
-	public static String PPXTOKEN = "PPXTOKEN";
+	public static String PPX_TOKEN = "PPX_TOKEN";
 	
 	
 	public static String getJwtPassword() {
