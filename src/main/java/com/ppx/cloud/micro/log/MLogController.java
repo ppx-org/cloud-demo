@@ -1,30 +1,32 @@
-package com.ppx.cloud.micro.content.store;
+package com.ppx.cloud.micro.log;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
 
 
 @Controller	
-public class MStoreController {
+public class MLogController {
+	
 	
 	@Autowired
-	private MStoreService serv;
+	private MLogService serv;
 	
-	//@Cacheable(value = "listStore")
 	@PostMapping @ResponseBody
-	public Map<String, Object> listStore( ) {
-		List<MStore> list = serv.listStore();
-		return ControllerReturn.ok(list);
+	public Map<String, Object> addPromoEntry(@RequestBody MLogPromo promo) {
+		System.out.println("----------0988");
+		int r = serv.addPromoEntry(promo);
+		return ControllerReturn.ok(r);
+		
 	}
 	
-	
 
+	
 }
 

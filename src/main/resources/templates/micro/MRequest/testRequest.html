@@ -9,7 +9,7 @@
 
 function testRequest() {
 	var PPX_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvcGVuaWQiOiJvRDFuNjBIWkhXQmE2dWNXU2RZNTBITldQZnE0Iiwic2Vzc2lvbl9rZXkiOiJzZXNzaW9uX2tleV92YWx1ZSIsImlhdCI6MTUyMDU5MTYzM30.fn1-4J5VSL_NFjyp7QaKukVLfXkUpCDBg2ORVWM685g";
-	$.ajaxSetup({headers:{"content-type":"application/json", "STORE_ID":$("#sId").val(), "MER_ID":$("#mId").val(), "PPX_TOKEN":PPX_TOKEN}});
+	$.ajaxSetup({headers:{"content-type":"application/json", "STORE_ID":$("#sId").val(), "MER_ID":$("#mId").val(), "PPX_TOKEN":PPX_TOKEN, "PROMO_CODE":"code001"}});
 
 	showLoading();
 	var para = $("#para").val();
@@ -49,6 +49,8 @@ requestMap["MOrder/listMyOrder"] = {};
 
 
 requestMap["MHome/listLevelProd"] = {pageNumber:1};
+
+requestMap["MLog/addPromoEntry"] = {};
 
 
 
@@ -90,6 +92,8 @@ $(function() {
 <div>
 <select class="form-control" onchange="urlChange(this)">
 	<option value="">请选择</option>
+	
+	<option value="MLog/addPromoEntry">MLog/addPromoEntry</option>
 	
 	<option value="MOrder/submitOrder">MOrder/submitOrder</option>
 	<option value="MOrder/listMyOrder">MOrder/listMyOrder</option>

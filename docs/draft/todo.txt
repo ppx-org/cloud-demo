@@ -19,6 +19,18 @@ catch(e) {
 2.不带，sid和mid为默认值，从后端返回，（可直接在页面上写死?）
 
 
+onLaunch:function() {
+	promoCode url scene date
+}
+
+
+
+
+
+
+
+
+
 
 
 

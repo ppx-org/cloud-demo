@@ -8,7 +8,9 @@ public class WxUser {
 	
 	private Integer storeId;
 	
-	private Integer merchantId;
+	private Integer merId;
+	
+	private String promoCode;
 
 	public String getOpenid() {
 		return openid;
@@ -34,12 +36,20 @@ public class WxUser {
 		this.storeId = storeId;
 	}
 
-	public Integer getMerchantId() {
-		return merchantId;
+	public Integer getMerId() {
+		return merId;
 	}
 
-	public void setMerchantId(Integer merchantId) {
-		this.merchantId = merchantId;
+	public void setMerId(Integer merId) {
+		this.merId = merId;
+	}
+
+	public String getPromoCode() {
+		return promoCode;
+	}
+
+	public void setPromoCode(String promoCode) {
+		this.promoCode = promoCode;
 	}
 	
 	

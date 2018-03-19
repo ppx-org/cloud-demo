@@ -12,7 +12,7 @@ import com.ppx.cloud.micro.common.MGrantContext;
 public class MStoreService extends MyDaoSupport {
 
 	public List<MStore> listStore() {
-		int merchantId = MGrantContext.getWxUser().getMerchantId();
+		int merchantId = MGrantContext.getWxUser().getMerId();
 		
 		String sql = "select s.STORE_ID ID, s.STORE_NAME NAME, s.STORE_NO NO, r.REPO_ADDRESS ADDR,"
 				+ " s.STORE_LNG LNG, s.STORE_LAT LAT, s.STORE_PHONE PHONE, s.STORE_IMG IMG from store s left join repository r"

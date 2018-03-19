@@ -21,7 +21,7 @@ public class MQueryController {
 	
 	@RequestMapping @ResponseBody
 	public void query(HttpServletRequest request, HttpServletResponse response) {
-		int mId = MGrantContext.getWxUser().getMerchantId();
+		int mId = MGrantContext.getWxUser().getMerId();
 		int sId = MGrantContext.getWxUser().getStoreId();
 		String openid = MGrantContext.getWxUser().getOpenid();
 		String queryString = "mId=" + mId + "&sId=" + sId + "&openid=" + openid;
@@ -31,7 +31,7 @@ public class MQueryController {
 	
 	@RequestMapping @ResponseBody
 	public void listCategory(HttpServletRequest request, HttpServletResponse response) {
-		int mId = MGrantContext.getWxUser().getMerchantId();
+		int mId = MGrantContext.getWxUser().getMerId();
 		int sId = MGrantContext.getWxUser().getStoreId();
 		String openid = MGrantContext.getWxUser().getOpenid();
 		
@@ -42,7 +42,7 @@ public class MQueryController {
 	
 	@RequestMapping @ResponseBody
 	public void listBrand(HttpServletRequest request, HttpServletResponse response) {
-		int mId = MGrantContext.getWxUser().getMerchantId();
+		int mId = MGrantContext.getWxUser().getMerId();
 		int sId = MGrantContext.getWxUser().getStoreId();
 		String openid = MGrantContext.getWxUser().getOpenid();
 		
@@ -53,7 +53,7 @@ public class MQueryController {
 	
 	@RequestMapping @ResponseBody
 	public void listProgram(HttpServletRequest request, HttpServletResponse response) {
-		int mId = MGrantContext.getWxUser().getMerchantId();
+		int mId = MGrantContext.getWxUser().getMerId();
 		int sId = MGrantContext.getWxUser().getStoreId();
 		String openid = MGrantContext.getWxUser().getOpenid();
 		
@@ -64,7 +64,7 @@ public class MQueryController {
 	
 	@RequestMapping @ResponseBody
 	public void listTheme(HttpServletRequest request, HttpServletResponse response) {
-		int mId = MGrantContext.getWxUser().getMerchantId();
+		int mId = MGrantContext.getWxUser().getMerId();
 		int sId = MGrantContext.getWxUser().getStoreId();
 		String openid = MGrantContext.getWxUser().getOpenid();
 		
