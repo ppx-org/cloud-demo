@@ -1,4 +1,7 @@
 
+
+
+
 0. mid为固定值
 
 1.scan带参数?sid=1&c=A01
@@ -60,12 +63,16 @@ onLaunch:function() {
 
 
 
+# MongoDB中的数据导出为excel CSV 文件
+mongoexport -d ppx-log-dev -c data_promo_entry -f promoCode,date,openid --type csv -o ./entry.csv
+
+-d  标示 数据库
+-c  标示  数据表
+-f  需要提取的field用逗号分隔
+-o  输出路径
 
 
-
-
-// barcode
-code: https://github.com/demi520/wxapp-qrcode
+# barcode https://github.com/demi520/wxapp-qrcode
 
 
 
