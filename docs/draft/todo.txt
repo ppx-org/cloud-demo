@@ -1,7 +1,7 @@
 
 0. mid为固定值
 
-1.scan带参数?sid=1&c=A
+1.scan带参数?sid=1&c=A01
 
 var c = '1|A01';
 document.write(window.btoa(c));
