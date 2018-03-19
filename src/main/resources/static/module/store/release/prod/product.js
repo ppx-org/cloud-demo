@@ -106,7 +106,7 @@ img.loadImg = function(f, n, imgTr) {
 	
 	// data-max-size默认为1M,maxLength默认为1
 	var maxSize =  $(imgTr).find("input").attr("data-max-size");
-	maxSize = !maxSize ? 1024*1024 : new Number(maxSize);
+	maxSize = !maxSize ? 512*1024 : new Number(maxSize);
 	var maxLength = $(imgTr).find("input").attr("data-max-length");
 	maxLength = !maxLength ? 1 : new Number(maxLength);
 	
@@ -121,7 +121,7 @@ img.loadImg = function(f, n, imgTr) {
 	}
 	
 	if (f[n].size > maxSize) {
-		var max = maxSize >= 1024*1024 ? (maxSize/1024/1024).toFixed(1) + "M" : (maxSize/1024).toFixed(1) + "K";
+		var max = maxSize >= 512*1024 ? (maxSize/1024/1024).toFixed(1) + "M" : (maxSize/1024).toFixed(1) + "K";
 		return alertWarning("不能大于" + max);
 	}
 	if　($(imgTr).find(".imgTd").length　== maxLength) {
