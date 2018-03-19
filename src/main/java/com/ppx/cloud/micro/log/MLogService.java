@@ -18,14 +18,13 @@ public class MLogService extends MyDaoSupport {
 	private MongoTemplate mongoTemplate;
 	
 	public int addPromoEntry(MLogPromo promo) {
-		System.out.println("xxxxxxxxout:" + promo);
+		
 		WxUser u = MGrantContext.getWxUser();
 		promo.setDate(new Date());
 		promo.setOpenid(u.getOpenid());
 		promo.setPromoCode(u.getPromoCode());
-	
 		
-		mongoTemplate.insert(promo, "data_promo_entry");
+		mongoTemplate.insert(promo, "data_launch");
 		return 1;
 	}
 	

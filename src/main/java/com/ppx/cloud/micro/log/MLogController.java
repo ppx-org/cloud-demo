@@ -20,7 +20,8 @@ public class MLogController {
 	
 	@PostMapping @ResponseBody
 	public Map<String, Object> addPromoEntry(@RequestBody MLogPromo promo) {
-		System.out.println("----------0988");
+		// 输入type scene 
+		
 		int r = serv.addPromoEntry(promo);
 		return ControllerReturn.ok(r);
 		
