@@ -18,7 +18,7 @@ public class MStoreController {
 	@Autowired
 	private MStoreService serv;
 	
-	@Cacheable(value = "listStore")
+	//@Cacheable(value = "listStore")
 	@PostMapping @ResponseBody
 	public Map<String, Object> listStore( ) {
 		List<MStore> list = serv.listStore();

@@ -1,8 +1,20 @@
-MID定义
-从STO里读取MID
-传入一个ST_ID
+1.scan带参数?sid=1&mid=1&c=A
 
-log
+var c = '1|1|A01';
+document.write(window.btoa(c));
+try {
+	var ss = window.atob("MXwxfEEwMQ==");
+	var para = ss.split("|");
+	var sid = para[0];
+	var mid = para[1];
+	var code = para[2];
+	alert("out:" + sid + "|" + mid + "|" + code);
+}
+catch(e) {
+	document.write("error.........1");
+}
+
+2.不带，sid和mid为默认值，从后端返回，（可直接在页面上写死?）
 
 
 
@@ -11,6 +23,34 @@ log
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// barcode
 code: https://github.com/demi520/wxapp-qrcode
 
 
