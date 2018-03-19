@@ -1,14 +1,16 @@
-1.scan带参数?sid=1&mid=1&c=A
 
-var c = '1|1|A01';
+0. mid为固定值
+
+1.scan带参数?sid=1&c=A
+
+var c = '1|A01';
 document.write(window.btoa(c));
 try {
-	var ss = window.atob("MXwxfEEwMQ==");
+	var ss = window.atob("MXxBMDE=");
 	var para = ss.split("|");
 	var sid = para[0];
-	var mid = para[1];
-	var code = para[2];
-	alert("out:" + sid + "|" + mid + "|" + code);
+	var code = para[1];
+	alert("out:" + sid + "|" + code);
 }
 catch(e) {
 	document.write("error.........1");
