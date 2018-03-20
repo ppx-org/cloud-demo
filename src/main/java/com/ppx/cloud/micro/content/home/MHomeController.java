@@ -26,8 +26,7 @@ public class MHomeController {
 	@PostMapping @ResponseBody
 	public Map<String, Object> test() {
 		
-		
-
+	
 		return ControllerReturn.ok();
 	}
 	

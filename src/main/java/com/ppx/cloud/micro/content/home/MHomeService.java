@@ -19,7 +19,7 @@ public class MHomeService extends MyDaoSupport {
 	
 	@Autowired
 	private QueryCommonService commonServ;
-	
+
 	public MStore getStore() {
 		int storeId = MGrantContext.getWxUser().getStoreId();
 		String sql = "select s.STORE_ID ID, s.STORE_NAME NAME, s.STORE_NO NO, r.REPO_ADDRESS ADDR,"
