@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager.RedisCacheManagerBuilder;
@@ -28,7 +29,7 @@ import com.ppx.cloud.micro.common.MGrantContext;
  * @author dengxz
  * @date 2017年11月15日
  */
-//@Configuration
+@Configuration
 public class RedisConfig  {
 
 	// 为了让firstConfigBean先运行 (@ComponentScan自动扫描之后@Order不生效)
@@ -37,7 +38,9 @@ public class RedisConfig  {
 
 	public static final String STORE_ID_GENERATOR = "storeIdGenerator";
 	
-	public static final String WISELY_KEY_GENERATOR = "wiselyKeyGenerator";
+	public static final String WISELY_GENERATOR = "wiselyGenerator";
+	
+	public static final String STORE_ID_WISELY_GENERATOR = "storeIdWiselyGenerator";
 	
 	@Bean(name=STORE_ID_GENERATOR)
 	public KeyGenerator wiselyKeyGenerator2() {
@@ -48,17 +51,13 @@ public class RedisConfig  {
 			}
 		};
 	}
-
-	/**
-	 * 复杂参数缓存key生成，包括package(去掉com.redsea.micro), method, params
-	 * 
-	 * @return
-	 */
-	@Bean(name=WISELY_KEY_GENERATOR)
-	public KeyGenerator wiselyKeyGenerator() {
+	
+	@Bean(name=STORE_ID_WISELY_GENERATOR)
+	public KeyGenerator storeIdWiselyGenerator() {
 		return new KeyGenerator() {
 			@Override
 			public Object generate(Object target, Method method, Object... params) {
+				
 				
 				StringBuilder sb = new StringBuilder();
 				// 去掉com.ppx.cloud
@@ -75,7 +74,40 @@ public class RedisConfig  {
 					e.printStackTrace();
 				}
 				
-				return MD5Utils.getMD5(sb.toString());
+				int storeId = MGrantContext.getWxUser().getStoreId();
+				return storeId + "::" + MD5Utils.getMD5(sb.toString());
+			}
+		};
+	}
+
+	/**
+	 * 复杂参数缓存key生成，包括package(去掉com.redsea.micro), method, params
+	 * 
+	 * @return
+	 */
+	@Bean(name=WISELY_GENERATOR)
+	public KeyGenerator wiselyGenerator() {
+		return new KeyGenerator() {
+			@Override
+			public Object generate(Object target, Method method, Object... params) {
+				
+				
+				StringBuilder sb = new StringBuilder();
+				// 去掉com.ppx.cloud
+				sb.append(target.getClass().getName().substring(14));
+				sb.append(method.getName());
+
+				ObjectMapper om = new ObjectMapper();
+				om.setSerializationInclusion(Include.NON_NULL);
+				String key = "";
+				try {
+					key = om.writeValueAsString(params);
+					sb.append(key);
+				} catch (JsonProcessingException e) {
+					e.printStackTrace();
+				}
+				
+				return  MD5Utils.getMD5(sb.toString());
 			}
 		};
 	}

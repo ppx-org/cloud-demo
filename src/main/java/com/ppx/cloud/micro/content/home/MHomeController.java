@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.MPage;
 import com.ppx.cloud.demo.common.query.QueryProduct;
+import com.ppx.cloud.demo.common.redis.RedisConfig;
 import com.ppx.cloud.micro.content.store.MStore;
 
 
@@ -21,13 +23,11 @@ public class MHomeController {
 	@Autowired
 	private MHomeService serv;
 	
-	
-	
 	@PostMapping @ResponseBody
 	public Map<String, Object> test() {
 		
-	
 		return ControllerReturn.ok();
+		
 	}
 	
 	
@@ -53,7 +53,7 @@ public class MHomeController {
 	
 	
 	
-	//@Cacheable(value="listHome", keyGenerator=RedisConfig.STORE_ID_GENERATOR)
+	@Cacheable(value="listHome", keyGenerator=RedisConfig.STORE_ID_GENERATOR)
 	@PostMapping @ResponseBody
 	public Map<String, Object> listHome() {
 		MStore store = serv.getStore();
@@ -72,13 +72,37 @@ public class MHomeController {
 		return returnMap;
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// 更多时调用
-	//@Cacheable(value = "levelProd", keyGenerator = RedisConfig.WISELY_KEY_GENERATOR)
+	@Cacheable(value = "levelProd", keyGenerator = RedisConfig.STORE_ID_WISELY_GENERATOR)
 	@PostMapping @ResponseBody
 	public Map<String, Object> listLevelProd(@RequestBody MPage page) {
 		List<QueryProduct> list = serv.listLevelProd(page);
 		return ControllerReturn.ok(list);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
