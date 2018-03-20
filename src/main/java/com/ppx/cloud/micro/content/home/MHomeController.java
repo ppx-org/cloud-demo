@@ -54,7 +54,7 @@ public class MHomeController {
 	
 	
 	
-	//@Cacheable(value = "listHome")
+	//@Cacheable(value="listHome", keyGenerator=RedisConfig.STORE_ID_GENERATOR)
 	@PostMapping @ResponseBody
 	public Map<String, Object> listHome() {
 		MStore store = serv.getStore();

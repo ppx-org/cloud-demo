@@ -39,7 +39,6 @@ public class SwiperController {
 		return ControllerReturn.ok(list);
 	}
 	
-	//@CacheEvict(value="listHome", allEntries=true)
 	@PostMapping @ResponseBody
 	public Map<String, Object> insertSwiper(Swiper bean) {
 		int r = serv.insertSwiper(bean);
@@ -53,28 +52,24 @@ public class SwiperController {
 	}
     
 	
-	//@CacheEvict(value="listHome", allEntries=true)
 	@PostMapping @ResponseBody
 	public Map<String, Object> deleteSwiper(@RequestParam Integer id) {
 		int r = serv.deleteSwiper(id);
 		return ControllerReturn.ok(r);
 	}
 	
-	//@CacheEvict(value="listHome", allEntries=true)
 	@PostMapping @ResponseBody
 	public Map<String, Object> top(@RequestParam Integer storeId, @RequestParam Integer id) {
 		int r = serv.top(storeId, id);
 		return ControllerReturn.ok(r);
 	}
 	
-	//@CacheEvict(value="listHome", allEntries=true)
 	@PostMapping @ResponseBody
 	public Map<String, Object> up(@RequestParam Integer storeId, @RequestParam Integer id) {
 		int r = serv.up(storeId, id);
 		return ControllerReturn.ok(r);
 	}
 	
-	//@CacheEvict(value="listHome", allEntries=true)
 	@PostMapping @ResponseBody
 	public Map<String, Object> down(@RequestParam Integer storeId, @RequestParam Integer id) {
 		int r = serv.down(storeId, id);

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<link th:replace="common/fragment/common::common"/>
+
+<script type="text/javascript" th:inline="javascript">
+
+
+
+
+function cleanListHome() {
+	
+	var callback = function () {
+		showLoading();
+		$.post([[@{/cleanHome/cleanListHome}]], "storeId=" + $("#storeId").val(), function(r) {
+			hideLoading();
+			if (r.result == 1) {
+				alertWarning("清除成功");
+			}
+		});
+	}
+	var name =  $("#storeId option:selected").text();
+	confirm('确定清除店铺"' + name + '"缓存?', callback);
+}
+
+
+</script>
+</head>
+
+<body>
+<div class="page-list-body">
+	<div class="page-list-query">
+		<form id="queryForm" class="form-inline">
+			<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span><span></span></div>
+			<select class="form-control input-sm" id="storeId" name="storeId" onchange="storeChange(this)">
+				<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
+			</select>
+			<button type="button" class="btn btn-success btn-sm" onclick="cleanListHome()">清除缓存</button>
+		</form>
+	</div>
+</div>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
