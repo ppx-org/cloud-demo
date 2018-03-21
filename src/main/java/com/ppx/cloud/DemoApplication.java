@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author dengxz
  * @date 2017年11月14日
  */
-@SpringBootApplication
+@SpringBootApplication 
 //@EnableDiscoveryClient
 public class DemoApplication {
 	public static void main(String[] args) {
