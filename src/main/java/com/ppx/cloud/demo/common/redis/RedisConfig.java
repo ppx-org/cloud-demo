@@ -7,7 +7,6 @@ import javax.annotation.Resource;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager.RedisCacheManagerBuilder;
@@ -29,7 +28,7 @@ import com.ppx.cloud.micro.common.MGrantContext;
  * @author dengxz
  * @date 2017年11月15日
  */
-@Configuration
+//@Configuration
 public class RedisConfig  {
 
 	// 为了让firstConfigBean先运行 (@ComponentScan自动扫描之后@Order不生效)
