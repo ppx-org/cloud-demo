@@ -54,6 +54,13 @@ public class MHomeController {
 	//@Cacheable(value="listHome", keyGenerator=RedisConfig.STORE_ID_GENERATOR)
 	@PostMapping @ResponseBody
 	public Map<String, Object> listHome() {
+		
+		try {
+			Thread.sleep(1000);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		MStore store = serv.getStore();
 		List<MSwiper> swiperList = serv.listSwiper();
 		List<MLevel> levelList = serv.listLevel();
@@ -65,7 +72,7 @@ public class MHomeController {
 		returnMap.put("swiperList", swiperList);
 		returnMap.put("levelList", levelList);
 		returnMap.put("prodList", prodList);
-		returnMap.put("page", page);
+		returnMap.put("mPage", page);
 		
 		return returnMap;
 	}
@@ -84,8 +91,13 @@ public class MHomeController {
 	//@Cacheable(value = "levelProd", keyGenerator = RedisConfig.STORE_ID_WISELY_GENERATOR)
 	@PostMapping @ResponseBody
 	public Map<String, Object> listLevelProd(@RequestBody MPage page) {
+		try {
+			Thread.sleep(1000);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		List<QueryProduct> list = serv.listLevelProd(page);
-		return ControllerReturn.ok(list);
+		return ControllerReturn.ok(list, page);
 	}
 	
 	
