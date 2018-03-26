@@ -5,15 +5,15 @@ import java.util.List;
 
 import org.springframework.util.StringUtils;
 
+import com.ppx.cloud.demo.common.price.utils.DecodePolicy;
+
 public class MProduct {
 	
 	private Integer prodId;
 	
 	private String prodTitle;
 	
-	private Float maxPrice;
-	
-	private Float minPrice;
+	private String prodPrice;
 	
 	private String policy;
 	
@@ -59,20 +59,18 @@ public class MProduct {
 		this.imgSrcList = imgSrcList;
 	}
 
-	public Float getMaxPrice() {
-		return maxPrice;
+	public String getProdPrice() {
+		if (!StringUtils.isEmpty(prodPrice)) {
+			String[] price = prodPrice.split("-");
+			if (price[0].equals(price[1])) {
+				return price[0];
+			}			
+		}
+		return prodPrice;
 	}
 
-	public void setMaxPrice(Float maxPrice) {
-		this.maxPrice = maxPrice;
-	}
-
-	public Float getMinPrice() {
-		return minPrice;
-	}
-
-	public void setMinPrice(Float minPrice) {
-		this.minPrice = minPrice;
+	public void setProdPrice(String prodPrice) {
+		this.prodPrice = prodPrice;
 	}
 
 	public List<MSku> getSkuList() {
@@ -84,8 +82,8 @@ public class MProduct {
 	}
 	
 	public String getPolicy() {
-		//return DecodePolicy.decode(policy);
-		return policy;
+		return DecodePolicy.decode(policy);
+		//return policy;
 	}
 
 	public void setPolicy(String policy) {
