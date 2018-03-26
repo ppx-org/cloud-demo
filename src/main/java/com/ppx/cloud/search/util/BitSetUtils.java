@@ -114,7 +114,7 @@ public class BitSetUtils {
 	}
 	
 	public static BitSet readBitSet(String versionName, String path, Integer w) {
-		return readBitSet(versionName, path, w);
+		return readBitSet(versionName, path, w + "");
 	}
 	
 	public static BitSet readBitSet(String versionName, String path, String w) {

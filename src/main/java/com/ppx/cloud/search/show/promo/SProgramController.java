@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
+import com.ppx.cloud.search.common.SGrantContext;
 import com.ppx.cloud.search.common.Session;
 
 
@@ -21,6 +22,7 @@ public class SProgramController {
 	
 	@GetMapping @ResponseBody
 	public Map<String, Object> listProgram(Session s) {
+		SGrantContext.setSession(s);
 		
 		List<SProgram> list = serv.listProgram(s);
 		
