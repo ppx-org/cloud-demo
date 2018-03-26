@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
+import com.ppx.cloud.micro.user.favorite.MFavoriteService;
 
 
 @Controller	
@@ -16,6 +17,9 @@ public class MProductController {
 	
 	@Autowired
 	private MProductService serv;
+	
+	@Autowired
+	private MFavoriteService favoriteServ;
 
 	
 	@PostMapping @ResponseBody
@@ -23,7 +27,12 @@ public class MProductController {
 		
 		MProduct product = serv.getProduct(prodId);
 		
-		return ControllerReturn.ok(product);
+		boolean favor = favoriteServ.isFavorite(prodId);
+		
+		Map<String, Object> returnMap = ControllerReturn.ok(product);
+		returnMap.put("favor", favor);
+		
+		return returnMap;
 	}
 	
 }
