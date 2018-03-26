@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.search.common.SGrantContext;
 import com.ppx.cloud.search.common.Session;
+import com.ppx.cloud.search.util.BitSetUtils;
 
 
 @Controller	
@@ -21,13 +22,19 @@ public class SSearchCreateController {
 	private SSearchCreateService serv;
 	
 	@GetMapping @ResponseBody
-	public Map<String, Object> createIndex(Session s, @RequestParam(required=true) String versionName) {
+	public Map<String, Object> createIndex(Session s, @RequestParam(required=true) String versionName, @RequestParam(required=true)Integer first) {
 		if (StringUtils.isEmpty(s.getmId()) || StringUtils.isEmpty(s.getAccountId())) {
 			return ControllerReturn.fail(100, "mId or accountId is null");
 		}
 		SGrantContext.setSession(s);
 		
 		int r = serv.createIndex(versionName);
+		
+		if (first == 1) {
+			// 第一次创建索引时设置使用版本
+			BitSetUtils.setVersionMap(s.getmId(), versionName);
+		}
+		
 		return ControllerReturn.ok(r);
 	}
 	

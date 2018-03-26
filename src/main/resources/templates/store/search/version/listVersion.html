@@ -25,9 +25,11 @@ function query() {
 	});
 }
 
-function createIndex(versionName) {
+function createIndex(versionName, first) {
 	showLoading();
-	$.post([[@{/searchVersion/createIndex}]], "versionName=" + versionName, function(r) {
+	$.post([[@{/searchVersion/createIndex}]], "versionName=" + versionName + "&first=" + first, function(r) {
+		if (first == 1) alertSuccess("创建索引成功");
+		else alertSuccess("重建索引成功");
 		query();
 	});
 }
@@ -35,6 +37,7 @@ function createIndex(versionName) {
 function useIndex(versionName) {
 	showLoading();
 	$.post([[@{/searchVersion/useIndex}]], "versionName=" + versionName, function(r) {
+		
 		query();
 	});
 }
@@ -84,9 +87,9 @@ template.helper('getUpdated', function(updated) {
 		<td class="w-id">{{v.spendTime}}秒</td>
 		<td class="w-id">{{v.versionStatusDesc}}</td>		
 		<td class="w-action-m">
-			{{if v.versionStatus == 1}}<a href="javascript:createIndex('{{v.versionName}}')">重建索引</a>&nbsp;&nbsp;{{/if}}
+			{{if v.versionStatus == 1}}<a href="javascript:createIndex('{{v.versionName}}', 1)">创建索引</a>&nbsp;&nbsp;{{/if}}
 			{{if v.versionStatus == 2}}
-				<a href="javascript:createIndex('{{v.versionName}}')">重建索引</a>&nbsp;&nbsp;
+				<a href="javascript:createIndex('{{v.versionName}}', 0)">重建索引</a>&nbsp;&nbsp;
 				<a href="javascript:useIndex('{{v.versionName}}')">使用索引</a>&nbsp;&nbsp;
 			{{/if}}
 			<a href="#" data-content="{{v.createInfo}}" onclick="viewDetail(this)">[详情]</a>

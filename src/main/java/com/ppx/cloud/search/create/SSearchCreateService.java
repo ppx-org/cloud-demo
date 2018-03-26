@@ -27,14 +27,14 @@ public class SSearchCreateService extends MyDaoSupport {
 	public int useIndex(String versionName) {
 		int updator = SGrantContext.getSession().getAccountId();
 		
-		int merchantId = SGrantContext.getSession().getmId();
+		int mId = SGrantContext.getSession().getmId();
 		String otherSql = "update search_version set UPDATED = now(), UPDATOR = ?, VERSION_STATUS = ? where MERCHANT_ID = ? and VERSION_STATUS = ?";
-		getJdbcTemplate().update(otherSql, updator, 2, merchantId, 3);
+		getJdbcTemplate().update(otherSql, updator, 2, mId, 3);
 		String updateStatus = "update search_version set UPDATED = now(), UPDATOR = ?, VERSION_STATUS = ? where MERCHANT_ID = ? and VERSION_NAME = ?";
-		getJdbcTemplate().update(updateStatus, updator, 3, merchantId, versionName);
+		getJdbcTemplate().update(updateStatus, updator, 3, mId, versionName);
 		
-		////// TODO 改
-		BitSetUtils.setVersionMap(merchantId, versionName);
+		
+		BitSetUtils.setVersionMap(mId, versionName);
 		
 		return 1;
 		
@@ -132,7 +132,7 @@ public class SSearchCreateService extends MyDaoSupport {
 			"where MERCHANT_ID = ? and VERSION_STATUS = ?) t set CREATE_END = now(), UPDATED = now(), UPDATOR = ?," +
 			"VERSION_STATUS = t.STATUS, CREATE_INFO = ? where MERCHANT_ID = ? and VERSION_NAME = ?";
 		getJdbcTemplate().update(endUpdateSql, merchantId, 3, updator, createInfo, merchantId, versionName);
-		
+	
 		return 1;
 	}
 	

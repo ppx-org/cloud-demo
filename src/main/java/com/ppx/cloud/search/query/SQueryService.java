@@ -321,6 +321,7 @@ public class SQueryService extends MyDaoSupport {
 	
 	private List<Integer> listCatId(String orderType) {
 		List<Integer> returnList = new ArrayList<Integer>();
+		System.out.println("out............:" + BitSetUtils.getRealPath(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_CAT));
 		String[] fileName = new File(BitSetUtils.getRealPath(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_CAT)).list();
 		for (String catIdName : fileName) {		
 			catIdName = catIdName.replace("_", "");

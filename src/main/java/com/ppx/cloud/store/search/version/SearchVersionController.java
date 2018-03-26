@@ -47,10 +47,10 @@ public class SearchVersionController {
 	
 	
 	@RequestMapping @ResponseBody
-	public void createIndex(String versionName, HttpServletResponse response) {
+	public void createIndex(String versionName, HttpServletResponse response, Integer first) {
 		int mId = GrantContext.getLoginAccount().getMerchantId();
 		int accountId = GrantContext.getLoginAccount().getAccountId();
-		String queryString = "versionName=" + versionName + "&mId=" + mId + "&accountId=" + accountId;
+		String queryString = "versionName=" + versionName + "&mId=" + mId + "&accountId=" + accountId + "&first=" + first;
 		String json = new RestTemplate().getForObject(searchUrl + "SSearchCreate/createIndex?" + queryString, String.class, "");
 		ControllerReturn.returnJson(response, json);
 	}
