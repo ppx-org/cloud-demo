@@ -33,44 +33,17 @@ public class CleanHomeController {
 		return mv;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	@PostMapping @ResponseBody
 	public Map<String, Object> cleanListHome(@RequestParam Integer storeId) {
 		StringRedisTemplate stringRedisTemplate = app.getBean(StringRedisTemplate.class);
 		
+		// 首页(非产品)
 		stringRedisTemplate.delete("listHome::" + storeId);
 		
+		// 首页产品
 		Set<String> keys = stringRedisTemplate.keys("levelProd::" + storeId + "::*");
 		stringRedisTemplate.delete(keys);
+
 	
 		return ControllerReturn.ok(1);
 	}
