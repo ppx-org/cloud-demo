@@ -3,6 +3,7 @@ package com.ppx.cloud.micro.search;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,10 +12,14 @@ import org.springframework.web.client.RestTemplate;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.micro.common.MGrantContext;
+import com.ppx.cloud.store.content.img.ImgService;
 
 
 @Controller	
 public class MQueryController {
+	
+	@Autowired
+	private ImgService imgServ;
 	
 	@Value("${searchUrl}")
 	private String searchUrl;
@@ -37,6 +42,9 @@ public class MQueryController {
 		
 		String queryString = "mId=" + mId + "&sId=" + sId + "&openid=" + openid;
 		String json = new RestTemplate().getForObject(searchUrl + "SCategory/listCategory?" + queryString, String.class);
+		
+		String imgSrc = imgServ.getImgSrc("cat");
+		json = json.replace("{", "{\"imgSrc\":\"" + imgSrc + "\",");
 		ControllerReturn.returnJson(response, json);
 	}
 	
