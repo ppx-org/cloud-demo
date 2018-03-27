@@ -193,13 +193,13 @@ function getStatusDescByStr(string) {
 function addImgChange() {
 	var x = new Number($("#addProgImgX").val());
 	var y = new Number($("#addProgImgY").val());
-	$("#addProgImg").css("background-position", "-" + 100*x + "px -" + 100*y +"px")
+	$("#addProgImg").css("background-position", "-" + 250*x + "px -" + 100*y +"px")
 }
 
 function editImgChange() {
 	var x = new Number($("#editProgImgX").val());
 	var y = new Number($("#editProgImgY").val());
-	$("#editProgImg").css("background-position", "-" + 100*x + "px -" + 100*y +"px")
+	$("#editProgImg").css("background-position", "-" + 250*x + "px -" + 100*y +"px")
 }
 
 
@@ -222,7 +222,7 @@ function viewStatusHistory(progId) {
 
 <style th:inline="text">
 .progImgList {background-size:250px 250px;width:50px;height:50px;margin:0 auto;}
-.progImg {width:100px;height:100px;margin:0 auto;}
+.progImg {width:250px;height:100px;margin:0 auto;}
 </style>
 </head>
 
