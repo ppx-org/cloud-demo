@@ -12,14 +12,13 @@ import org.springframework.web.client.RestTemplate;
 
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.micro.common.MGrantContext;
-import com.ppx.cloud.store.content.img.ImgService;
 
 
 @Controller	
 public class MQueryController {
 	
 	@Autowired
-	private ImgService imgServ;
+	private MQueryService serv;
 	
 	@Value("${searchUrl}")
 	private String searchUrl;
@@ -43,8 +42,8 @@ public class MQueryController {
 		String queryString = "mId=" + mId + "&sId=" + sId + "&openid=" + openid;
 		String json = new RestTemplate().getForObject(searchUrl + "SCategory/listCategory?" + queryString, String.class);
 		
-		String imgSrc = imgServ.getImgSrc("cat");
-		json = json.replace("{", "{\"imgSrc\":\"" + imgSrc + "\",");
+		String imgSrc = serv.getImgSrc("cat");
+		json = json.replaceFirst("\\{", "{\"imgSrc\":\"" + imgSrc + "\",");
 		ControllerReturn.returnJson(response, json);
 	}
 	
@@ -56,6 +55,9 @@ public class MQueryController {
 		
 		String queryString = "mId=" + mId + "&sId=" + sId + "&openid=" + openid;
 		String json = new RestTemplate().getForObject(searchUrl + "SBrand/listBrand?" + queryString, String.class);
+		
+		String imgSrc = serv.getImgSrc("brand");
+		json = json.replaceFirst("\\{", "{\"imgSrc\":\"" + imgSrc + "\",");
 		ControllerReturn.returnJson(response, json);
 	}
 	
@@ -67,6 +69,9 @@ public class MQueryController {
 		
 		String queryString = "mId=" + mId + "&sId=" + sId + "&openid=" + openid;
 		String json = new RestTemplate().getForObject(searchUrl + "SProgram/listProgram?" + queryString, String.class);
+		
+		String imgSrc = serv.getImgSrc("promo");
+		json = json.replaceFirst("\\{", "{\"imgSrc\":\"" + imgSrc + "\",");
 		ControllerReturn.returnJson(response, json);
 	}
 	
@@ -78,6 +83,9 @@ public class MQueryController {
 		
 		String queryString = "mId=" + mId + "&sId=" + sId + "&openid=" + openid;
 		String json = new RestTemplate().getForObject(searchUrl + "STheme/listTheme?" + queryString, String.class);
+		
+		String imgSrc = serv.getImgSrc("theme");
+		json = json.replaceFirst("\\{", "{\"imgSrc\":\"" + imgSrc + "\",");
 		ControllerReturn.returnJson(response, json);
 	}
 }
