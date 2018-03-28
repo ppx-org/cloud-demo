@@ -27,6 +27,8 @@ public class MProduct {
 	
 	private List<String> imgSrcList = new ArrayList<String>();
 	
+	private String skuDesc;
+	
 	private List<MSku> skuList = new ArrayList<MSku>();
 	
 	private Integer fast;
@@ -137,7 +139,17 @@ public class MProduct {
 
 	public void setProdArg(List<Map<String, String>> prodArg) {
 		this.prodArg = prodArg;
+	}
+
+	public String getSkuDesc() {
+		return skuDesc;
+	}
+
+	public void setSkuDesc(String skuDesc) {
+		this.skuDesc = skuDesc;
 	} 
+	
+	
 	
 	
 
