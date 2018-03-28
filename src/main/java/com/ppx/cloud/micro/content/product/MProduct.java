@@ -1,7 +1,9 @@
 package com.ppx.cloud.micro.content.product;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.util.StringUtils;
 
@@ -19,11 +21,15 @@ public class MProduct {
 	
 	private String prodArgs;
 	
+	private List<Map<String, String>> prodArg;
+	
 	private String prodDesc;
 	
 	private List<String> imgSrcList = new ArrayList<String>();
 	
 	private List<MSku> skuList = new ArrayList<MSku>();
+	
+	private Integer fast;
 	
 	
 	public void setImgSrcStr(String imgSrcStr) {
@@ -83,7 +89,6 @@ public class MProduct {
 	
 	public String getPolicy() {
 		return DecodePolicy.decode(policy);
-		//return policy;
 	}
 
 	public void setPolicy(String policy) {
@@ -92,7 +97,7 @@ public class MProduct {
 	}
 
 	public String getProdArgs() {
-		return prodArgs;
+		return null;
 	}
 
 	public void setProdArgs(String prodArgs) {
@@ -105,7 +110,35 @@ public class MProduct {
 
 	public void setProdDesc(String prodDesc) {
 		this.prodDesc = prodDesc;
+	}
+
+	public Integer getFast() {
+		return fast;
+	}
+
+	public void setFast(Integer fast) {
+		this.fast = fast;
+	}
+
+	public List<Map<String, String>> getProdArg() {
+		if (!StringUtils.isEmpty(prodArgs)) {
+			prodArg = new ArrayList<Map<String, String>>();
+			String[] args = prodArgs.split("@");
+			for (String s : args) {
+				String[] v = (s + "| ").split("\\|");
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("n", v[0]);
+				map.put("v", v[1]);
+				prodArg.add(map);
+			}
+		}
+		return prodArg;
+	}
+
+	public void setProdArg(List<Map<String, String>> prodArg) {
+		this.prodArg = prodArg;
 	} 
+	
 	
 
 	
