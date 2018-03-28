@@ -26,5 +26,12 @@ public class MSearchController {
 		return returnMap;
 	}
 	
+	@PostMapping @ResponseBody
+	public Map<String, Object> deleteLastWord() {
+		int r = serv.deleteLastWord();
+		return ControllerReturn.ok(r);
+	}
+	
+	
 }
 

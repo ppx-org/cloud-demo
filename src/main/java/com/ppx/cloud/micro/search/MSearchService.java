@@ -21,6 +21,15 @@ public class MSearchService extends MyDaoSupport {
 		return list;
 	}
 	
+	public int deleteLastWord() {
+		String openid = MGrantContext.getWxUser().getOpenid();
+		String sql = "delete from search_last_word where OPENID = ?";
+		int r = getJdbcTemplate().update(sql, openid);
+		return r;
+	}
+	
+	
+	
 	public List<String> listHotWord() {
 		
 		int storeId = MGrantContext.getWxUser().getStoreId();
@@ -29,6 +38,8 @@ public class MSearchService extends MyDaoSupport {
 		
 		return list;
 	}
+	
+	
 	
 	
 	
