@@ -104,7 +104,6 @@ public class SQueryService extends MyDaoSupport {
 		else {
 			resultBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_TITLE, w);
 			
-			System.out.println("xxxxxxxxxout:" + resultBs.cardinality());
 			
 			if (resultBs.cardinality() == 0 && w.length() > 1) {
 				BitSet splitBs = new BitSet();
@@ -237,8 +236,8 @@ public class SQueryService extends MyDaoSupport {
 		NamedParameterJdbcTemplate jdbc = new NamedParameterJdbcTemplate(getJdbcTemplate());
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("catIdList", catIdMapNum.keySet());	
-		
-		String catSql = "select CAT_ID CID, PARENT_ID PID, CAT_NAME CN from category where CAT_ID in (:catIdList) order by CAT_PRIO";
+		// 只返回小类
+		String catSql = "select CAT_ID CID, PARENT_ID PID, CAT_NAME CN from category where CAT_ID in (:catIdList) and PARENT_ID != -1 order by CAT_PRIO";
 		
 		List<QueryCategory> resultCatList = jdbc.query(catSql, paramMap, BeanPropertyRowMapper.newInstance(QueryCategory.class));
 		for (QueryCategory c : resultCatList) {
