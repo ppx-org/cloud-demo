@@ -54,7 +54,11 @@ public class SQueryService extends MyDaoSupport {
 	public QueryPageList query(Integer mId, Integer sId, String w, MPage p, String date, Integer cId, 
 			Integer bId, Integer tId, Integer gId, Integer fast, String orderType) {
 		
+		
 		Map<String, Object> findMap = findProdId(mId, sId, w, p, date, cId, bId, tId, gId, fast, orderType);
+		
+		
+		
 				
 		if (p.getTotalRows() == 0) {
 			return new QueryPageList(); 
@@ -99,6 +103,8 @@ public class SQueryService extends MyDaoSupport {
 		}
 		else {
 			resultBs = BitSetUtils.readBitSet(BitSetUtils.getCurrentV(), orderType + "/" + BitSetUtils.PATH_TITLE, w);
+			
+			System.out.println("xxxxxxxxxout:" + resultBs.cardinality());
 			
 			if (resultBs.cardinality() == 0 && w.length() > 1) {
 				BitSet splitBs = new BitSet();
@@ -371,7 +377,7 @@ public class SQueryService extends MyDaoSupport {
 		ControllerContext.setAccessLog(log);
 		try {
 			String insertSql = "insert into search_history_word(OPENID, STORE_ID, HIS_WORD) values(?, ?, ?)"; 
-			getJdbcTemplate().update(insertSql, openid, w);
+			getJdbcTemplate().update(insertSql, openid, storeId, w);
 			
 			String selectSql = "select ifnull((select LAST_WORD from search_last_word where OPENID = ?"
 					+ " and CREATED = (select min(CREATED) from search_last_word where OPENID = ?)"

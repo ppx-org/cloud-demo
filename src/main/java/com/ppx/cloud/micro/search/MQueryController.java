@@ -28,7 +28,7 @@ public class MQueryController {
 		int mId = MGrantContext.getWxUser().getMerId();
 		int sId = MGrantContext.getWxUser().getStoreId();
 		String openid = MGrantContext.getWxUser().getOpenid();
-		String queryString = "mId=" + mId + "&sId=" + sId + "&openid=" + openid;
+		String queryString = request.getQueryString() + "&mId=" + mId + "&sId=" + sId + "&openid=" + openid;
 		String json = new RestTemplate().getForObject(searchUrl + "SQuery/query?" + queryString, String.class);
 		ControllerReturn.returnJson(response, json);
 	}

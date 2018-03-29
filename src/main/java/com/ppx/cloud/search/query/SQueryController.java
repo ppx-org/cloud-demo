@@ -1,5 +1,6 @@
 package com.ppx.cloud.search.query;
 
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -44,6 +45,15 @@ public class SQueryController {
 			CompletableFuture.runAsync(() -> {
 				serv.asynInsertSearchHistory(s.getsId(), s.getOpenid(), q.getW());
 			});
+		}
+		
+		// 转码
+		try {
+			if (q.getW() != null) {
+				q.setW(URLDecoder.decode(q.getW(), "UTF-8"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		

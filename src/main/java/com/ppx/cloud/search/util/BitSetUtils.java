@@ -119,7 +119,6 @@ public class BitSetUtils {
 	
 	public static BitSet readBitSet(String versionName, String path, String w) {
 		String realPath = getRealPath(versionName, path);
-		
 		File f = new File(realPath + "_" + w);
 		if (!f.exists()) return new BitSet();
 		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(realPath + "_" + w))){			
