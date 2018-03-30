@@ -39,6 +39,15 @@ public class MSearchService extends MyDaoSupport {
 		return list;
 	}
 	
+	public String getKeyWord() {
+		
+		Integer storeId = MGrantContext.getWxUser().getStoreId();
+		String sql = "select ifnull((select KEY_WORD from search_key_word where STORE_ID = ?), '')";
+		String r = getJdbcTemplate().queryForObject(sql, String.class, storeId);
+		
+		return r;
+	}
+	
 	
 	
 	

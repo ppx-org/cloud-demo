@@ -116,4 +116,18 @@ public class HotWordService extends MyDaoSupport {
 		
 		return r1 == 1 && r2 == 1 ? 1 : 0;
 	}
+	
+	
+	public int keyWordOk(Integer storeId, String keyWord) {
+		String sql = "insert into search_key_word(STORE_ID, KEY_WORD) values(?, ?)  ON DUPLICATE KEY UPDATE KEY_WORD = ?";
+		int r = getJdbcTemplate().update(sql, storeId, keyWord, keyWord);
+		return r;
+	}
+	
+	public String getKeyWord(Integer storeId) {
+		String sql = "select ifnull((select KEY_WORD from search_key_word where STORE_ID = ?), '')";
+		String r = getJdbcTemplate().queryForObject(sql, String.class, storeId);
+		return r;
+	}
+	
 }

@@ -25,6 +25,8 @@ function query() {
 	$.post([[@{/hotWord/listJson}]], $("#queryForm").serialize(), function(r) {
 		refreshData(r);
 		hideLoading();
+		
+		$("#keyWord").val(r.keyWord);
 	});
 }
 
@@ -105,6 +107,16 @@ move.down = function(id) {
 function storeChange() {
 	query();
 }
+
+function keyWordOk() {
+	var storeId = $("#storeId").val();
+	var keyWord = $("#keyWord").val();
+	$.post([[@{/hotWord/keyWordOk}]], "storeId=" + storeId + "&keyWord=" + keyWord, function(r) {
+		if (r.result == 1) {
+			alertSuccess("操作成功");
+		}
+	});
+}
 </script>
 </head>
 
@@ -117,6 +129,11 @@ function storeChange() {
 				<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
 			</select>
 			<button type="button" class="btn btn-success btn-sm" onclick="add()">新增</button>
+			
+			
+			<span style="padding-left:20px;">搜索栏显示的词</span>
+			<input type="text" id="keyWord" class="form-control">
+			<button type="button" class="btn btn-success btn-sm" onclick="keyWordOk()">确定</button>
 		</form>
 	</div>
 	<table class="page-list-table table table-bordered table-condensed">

@@ -14,7 +14,7 @@ $(function() {
 function queryPage(pageNumber) {
 	showLoading();
 	$("#pageNumber").val(pageNumber);
-	$.post([[@{/hitWord/listJson}]], $("#queryForm").serialize(), function(r) {
+	$.post([[@{/hisWord/listJson}]], $("#queryForm").serialize(), function(r) {
 		refreshPageData(r);
 		hideLoading();
 	});
@@ -28,10 +28,10 @@ function queryPage(pageNumber) {
 <div th:replace="common/fragment/common::pageList('搜索词管理')">
 	<div th:fragment="queryFragment">
 		<select class="form-control input-sm" id="storeId" name="storeId" onchange="storeChange(this)">
-				<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
+			<option th:value="${item.storeId}" th:text="${item.storeName}" th:each="item:${storeList}"></option>
 		</select>
 			
-		<input type="text" class="form-control input-sm" name="extWord" placeholder="请输入搜索词" style="width:200px;">
+		<input type="text" class="form-control input-sm" name="hisWord" placeholder="请输入搜索词" style="width:200px;">
 		<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>
 	</div>
 	<table th:fragment="listFragment">

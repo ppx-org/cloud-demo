@@ -34,7 +34,11 @@ public class HotWordController {
 	@PostMapping @ResponseBody
 	public Map<String, Object> listJson(@RequestParam Integer storeId) {
 		List<HotWord> list = serv.listHotWord(storeId);
-		return ControllerReturn.ok(list);
+		
+		String keyWord = serv.getKeyWord(storeId);
+		Map<String, Object> map = ControllerReturn.ok(list);
+		map.put("keyWord", keyWord);
+		return map;
 	}
 	
 	@PostMapping @ResponseBody
@@ -78,5 +82,16 @@ public class HotWordController {
 		int r = serv.down(storeId, id);
 		return ControllerReturn.ok(r);
 	}
+	
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> keyWordOk(@RequestParam Integer storeId, @RequestParam String keyWord) {
+		int r = serv.keyWordOk(storeId, keyWord);
+		return ControllerReturn.ok(r);
+	}
+	
+	
+	
+	
 }
 

@@ -1,12 +1,14 @@
-package com.ppx.cloud.store.search.hitword;
+package com.ppx.cloud.store.search.hisword;
 
 import java.util.Date;
 
 
 
-public class HitWord {
+public class HisWord {
 
 	private Integer hisId;
+	
+	private Integer storeId;
 	
 	private String openid;
 	
@@ -20,6 +22,14 @@ public class HitWord {
 
 	public void setHisId(Integer hisId) {
 		this.hisId = hisId;
+	}
+
+	public Integer getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
 	}
 
 	public String getOpenid() {

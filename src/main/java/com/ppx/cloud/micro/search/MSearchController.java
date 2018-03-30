@@ -22,6 +22,7 @@ public class MSearchController {
 		Map<String, Object> returnMap = ControllerReturn.ok();
 		returnMap.put("lastWordList", serv.listLastWord());
 		returnMap.put("hotWordList", serv.listHotWord());
+		returnMap.put("keyWord", serv.getKeyWord());
 		
 		return returnMap;
 	}

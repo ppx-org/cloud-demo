@@ -68,6 +68,13 @@ create table search_hot_word
 	primary key (HOT_ID)
 );
 
+create table search_key_word
+(
+	STORE_ID 	int(11) NOT NULL,
+	KEY_WORD 	varchar(32) NOT NULL,
+	primary key (STORE_ID)
+) comment='搜索栏中的词';
+
 create table search_last_updated
 (
 	MERCHANT_ID 			int(11) NOT NULL,
