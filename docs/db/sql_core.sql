@@ -208,8 +208,8 @@ create table product_detail
 	CREATOR			int not null,
 	PROD_POSITION	varchar(32),
 	BAR_CODE		varchar(32),
-	PROD_DESC		varchar(128),
-	PROD_ARGS		varchar(128),
+	PROD_DESC		varchar(512),
+	PROD_ARGS		varchar(512),
 	primary key (PROD_ID)
 ) comment='产品明细';
 
