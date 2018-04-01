@@ -22,11 +22,18 @@ public class MFavoriteController {
 	
 	@PostMapping @ResponseBody
 	public Map<String, Object> addProduct(@RequestParam Integer prodId) {
-		
 		int r = serv.addProduct(prodId);
+		return ControllerReturn.ok(r);
+	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> removeProduct(@RequestParam Integer prodId) {
+		
+		int r = serv.removeProduct(prodId);
 		return ControllerReturn.ok(r);
 		
 	}
+	
 	
 	@PostMapping @ResponseBody
 	public Map<String, Object> listProduct() {

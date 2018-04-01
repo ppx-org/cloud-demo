@@ -30,7 +30,7 @@ public class MFavoriteService extends MyDaoSupport {
 	}
 	
 
-	public int addProduct(@RequestParam Integer prodId) {
+	public int addProduct(Integer prodId) {
 		WxUser u = MGrantContext.getWxUser();
 		
 		String sql = "insert into user_favorite(OPENID, PROD_ID, STORE_ID) values(?, ?, ?)";
@@ -38,6 +38,13 @@ public class MFavoriteService extends MyDaoSupport {
 		return r;
 	}
 	
+	public int removeProduct(Integer prodId) {
+		WxUser u = MGrantContext.getWxUser();
+		
+		String sql = "delete from user_favorite where OPENID = ? and PROD_ID = ?";
+		int r = getJdbcTemplate().update(sql, u.getOpenid(), prodId);
+		return r;
+	}
 	
 	
 	public List<QueryProduct> listProduct() {
