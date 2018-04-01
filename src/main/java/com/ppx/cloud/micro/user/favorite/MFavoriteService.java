@@ -22,43 +22,14 @@ public class MFavoriteService extends MyDaoSupport {
 	public boolean isFavorite(Integer prodId) {
 		WxUser u = MGrantContext.getWxUser();
 		String sql = "select count(*) from user_favorite where OPENID = ? and PROD_ID = ?";
-		int r = getJdbcTemplate().queryForObject(sql, Integer.class, u.getOpenid(), prodId + 4);
+		int r = getJdbcTemplate().queryForObject(sql, Integer.class, u.getOpenid(), prodId);
 		if (r == 1) {
 			return true;
 		}
 		return false;
-		
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	public int addProduct(@RequestParam Integer prodId) {
 		WxUser u = MGrantContext.getWxUser();
 		
