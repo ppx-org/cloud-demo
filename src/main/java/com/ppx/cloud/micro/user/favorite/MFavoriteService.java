@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
-import com.ppx.cloud.demo.common.query.QueryProduct;
 import com.ppx.cloud.demo.common.query.QueryCommonService;
+import com.ppx.cloud.demo.common.query.QueryProduct;
 import com.ppx.cloud.micro.common.MGrantContext;
 import com.ppx.cloud.micro.common.WxUser;
 
