@@ -1,6 +1,6 @@
 // {"skuId":,"num":,"price":"","prodId":,"policy":"","progId":,"itemPrice":"","prodTitle":"","skuDesc":"","skuName":"","skuImgSrc":"","prolicyDesc":""}
-var valu = {};
-valu.count = function(r) {
+var price = {};
+price.count = function(r) {
 	var prodIdMap = {};
 	var groupN = {};
 	var enoughYen = {};

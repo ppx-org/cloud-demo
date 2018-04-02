@@ -70,7 +70,7 @@ function plus(obj, skuId) {
 	var num = new Number(numJObj.text()) + 1;
 	skuMap[skuId].num = num;
 	
-	skuList = valu.count(skuList);	
+	skuList = price.count(skuList);	
 	refreshSkuList(skuList);
 }
 
@@ -83,7 +83,7 @@ function minus(obj, skuId) {
 			var index = skuList.indexOf(skuMap[skuId]);
 			if (index > -1) {
 				skuList.splice(index, 1);
-				skuList = valu.count(skuList);
+				skuList = price.count(skuList);
 				refreshSkuList(skuList);
 			}	
 		}
@@ -91,7 +91,7 @@ function minus(obj, skuId) {
 	}
 	else {
 		skuMap[skuId].num = num;
-		skuList = valu.count(skuList);
+		skuList = price.count(skuList);
 		refreshSkuList(skuList);
 	}
 }
