@@ -124,7 +124,7 @@ function testService() {
 		return;
 	}
 	var para = "date=" + $("#date").val() + "&skuIdStr=" + skuId + "&numStr=" + num;
-	$.post([[@{/valuation/testSubmit}]], para, function(r) {
+	$.post([[@{/testPrice/testSubmit}]], para, function(r) {
 		if (r.result == 1) {
 			refreshBackSkuList(r.arrayList, r.totalNum, r.totalPrice);
 		}
@@ -173,7 +173,7 @@ template.helper('changeImgSrc', function(imgSrc) {
 		<table>
 			<tr><td>{{$value.prodTitle}}</td></tr>
 			<tr><td>{{$value.skuDesc}}:{{$value.skuName}}</td></tr>
-			<tr><td>{{$value.policy}}</td></tr>
+			<tr><td style="color:red;">{{$value.prolicyDesc}}</td></tr>
 			<tr>
 				<td><!--¥-->{{formatPrice($value.price)}}
 				<a href="#this" onclick="plus(this, {{$value.skuId}})" class="glyphicon glyphicon-plus-sign"></a>
@@ -212,7 +212,7 @@ template.helper('changeImgSrc', function(imgSrc) {
 		<td>{{$value.prodTitle}}</td>
 		<td>{{$value.skuDesc}}:{{$value.skuName}}</td>
 		<td>{{$value.num}}</td>
-		<td>{{$value.policy}}</td>
+		<td>{{$value.prolicyDesc}}</td>
 		<td>{{$value.price}}</td>
 		<td>{{$value.itemPrice}}</td>
 	</tr>
