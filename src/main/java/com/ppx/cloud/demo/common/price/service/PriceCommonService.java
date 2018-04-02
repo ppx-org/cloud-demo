@@ -268,6 +268,9 @@ public class PriceCommonService extends MyDaoSupport {
 					float avgMinus = (float)Math.floor(eYen/e) * y / gN;
 					index.setItemPrice((index.getPrice() - avgMinus) * index.getNum());
 				}
+				else {
+					index.setItemPrice(index.getPrice() * index.getNum());
+				}
 			}
 			else if (poli_1.startsWith("B")) {
 				int buyN = Integer.parseInt(poli_1.split(":")[1]);
@@ -316,6 +319,7 @@ public class PriceCommonService extends MyDaoSupport {
 		
 		float excludeChangeTotalPrice = 0;
 		for (SkuIndex index : skuIndexList) {
+			System.out.println("............out:" + index);
 			excludeChangeTotalPrice += index.getItemPrice();
 		}
 		for (SkuIndex index : skuIndexList) {

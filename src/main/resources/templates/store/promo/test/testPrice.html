@@ -28,7 +28,7 @@ function query() {
 	}
 	
 	showLoading();
-	$.post([[@{/valuation/listSku}]], $("#queryForm").serialize(), function(r) {
+	$.post([[@{/testPrice/listSku}]], $("#queryForm").serialize(), function(r) {
 		if (r.result == -1) {
 			alertWarning("输入参数错误");
 		}
