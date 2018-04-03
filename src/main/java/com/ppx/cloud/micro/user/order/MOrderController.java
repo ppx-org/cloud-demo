@@ -31,6 +31,7 @@ public class MOrderController {
 	private PriceCommonService priceServ;
 	
 	// TODO 改成类似于 MCartController里的listSku()
+	// 加上store的信息
 	@PostMapping @ResponseBody
 	private ConfirmOrderItem countPrice(@RequestBody ConfirmOrderPara para) {
 		Map<Integer, SkuIndex> skuIndexMap = new HashMap<Integer, SkuIndex>();
