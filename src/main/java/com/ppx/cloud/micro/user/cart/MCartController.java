@@ -26,6 +26,15 @@ public class MCartController {
 	}
 	
 	@PostMapping @ResponseBody
+	public Map<String, Object> editSkuNum(@RequestParam Integer skuId, @RequestParam Integer num) {
+		int r = serv.editSkuNum(skuId, num);
+		return ControllerReturn.ok(r);
+	}
+	 
+	
+	
+	
+	@PostMapping @ResponseBody
 	public Map<String, Object> listSku() {
 		List<SkuIndex> skuIndexList = serv.listSku();
 		return ControllerReturn.ok(skuIndexList);

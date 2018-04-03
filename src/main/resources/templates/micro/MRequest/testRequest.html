@@ -31,6 +31,10 @@ function testRequest() {
 }
 
 var requestMap = [];
+
+requestMap["MCart/editSkuNum"] = "skuId=1&num=3";
+ 
+
 requestMap["MLogin/login"] = {jsCode:"013UgqcP13Q6V21gOtcP1DLAcP1UgqcO"};
 requestMap["MQuery/query"] = "w=test";
 requestMap["MProduct/getProduct"] = "prodId=1";
@@ -92,6 +96,7 @@ $(function() {
 <div>
 <select class="form-control" onchange="urlChange(this)">
 	<option value="">请选择</option>
+	<option value="MCart/editSkuNum">MCart/editSkuNum</option>
 	
 	<option value="MSearch/deleteLastWord">MSearch/deleteLastWord</option>
 	<option value="MSearch/listWord">MSearch/listWord</option>

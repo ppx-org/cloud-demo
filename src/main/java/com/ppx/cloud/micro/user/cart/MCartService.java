@@ -31,6 +31,14 @@ public class MCartService extends MyDaoSupport {
 		return r;
 	}
 	
+	public int editSkuNum(Integer skuId, Integer num) {
+		WxUser u = MGrantContext.getWxUser();
+		
+		String sql = "update user_cart set SKU_NUM = ? where OPENID = ? and SKU_ID = ?";
+		int r = getJdbcTemplate().update(sql, num, u.getOpenid(), skuId);
+		return r;
+	}
+	
 	public List<SkuIndex> listSku() {
 		WxUser u = MGrantContext.getWxUser();
 		
