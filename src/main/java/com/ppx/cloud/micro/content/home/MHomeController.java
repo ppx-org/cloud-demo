@@ -13,6 +13,7 @@ import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.MPage;
 import com.ppx.cloud.demo.common.query.QueryProduct;
 import com.ppx.cloud.micro.content.store.MStore;
+import com.ppx.cloud.micro.content.store.MStoreService;
 
 
 @Controller	
@@ -20,6 +21,9 @@ public class MHomeController {
 	
 	@Autowired
 	private MHomeService serv;
+	
+	@Autowired
+	private MStoreService mStoreServ;
 	
 	@PostMapping @ResponseBody
 	public Map<String, Object> test() {
@@ -61,7 +65,7 @@ public class MHomeController {
 			// TODO: handle exception
 		}
 		
-		MStore store = serv.getStore();
+		MStore store = mStoreServ.getStore();
 		List<MSwiper> swiperList = serv.listSwiper();
 		List<MLevel> levelList = serv.listLevel();
 		MPage page = new MPage();

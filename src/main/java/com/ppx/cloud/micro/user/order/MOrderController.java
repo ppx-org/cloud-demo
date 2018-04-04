@@ -16,6 +16,7 @@ import com.ppx.cloud.common.page.MPageList;
 import com.ppx.cloud.demo.common.order.UserOrder;
 import com.ppx.cloud.demo.common.price.bean.SkuIndex;
 import com.ppx.cloud.demo.common.price.service.PriceCommonService;
+import com.ppx.cloud.micro.content.store.MStoreService;
 import com.ppx.cloud.micro.user.order.bean.ConfirmOrderItem;
 import com.ppx.cloud.micro.user.order.bean.ConfirmOrderPara;
 import com.ppx.cloud.micro.user.order.bean.ConfirmReturn;
@@ -26,13 +27,33 @@ public class MOrderController {
 
 	@Autowired
 	private MOrderService serv;
+	
+	@Autowired
+	private MStoreService storeServ;
 
 	@Autowired
 	private PriceCommonService priceServ;
 	
-	// TODO 改成类似于 MCartController里的listSku()
 	// 加上store的信息
 	@PostMapping @ResponseBody
+	public Map<String, Object> confirmOrder(@RequestBody ConfirmOrderPara para) {
+		if (para.getSkuId() == null || para.getNum() == null) {
+			return ControllerReturn.fail(1000, "is null");
+		}
+		else if (para.getSkuId().length != para.getNum().length) {
+			return ControllerReturn.fail(1001, "no equal length");
+		}
+		
+		ConfirmOrderItem comfirmOrderItem = countPrice(para);
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("skuList", comfirmOrderItem.getSkuIndexList());
+		returnMap.put("totalNum", comfirmOrderItem.getTotalNum());
+		returnMap.put("totalPrice", comfirmOrderItem.getTotalPrice());
+		returnMap.put("store", storeServ.getStore());
+
+		return returnMap;
+	}
+	
 	private ConfirmOrderItem countPrice(@RequestBody ConfirmOrderPara para) {
 		Map<Integer, SkuIndex> skuIndexMap = new HashMap<Integer, SkuIndex>();
 		
@@ -53,23 +74,6 @@ public class MOrderController {
 		}
 		
 		return new ConfirmOrderItem(skuIndexList, totalNum, totalPrice);
-	}
-	
-	@PostMapping @ResponseBody
-	public Map<String, Object> confirmOrder(@RequestBody ConfirmOrderPara para) {
-		if (para.getSkuId() == null || para.getNum() == null) {
-			return ControllerReturn.fail(1000, "is null");
-		}
-		else if (para.getSkuId().length != para.getNum().length) {
-			return ControllerReturn.fail(1001, "no equal length");
-		}
-		
-		ConfirmOrderItem comfirmOrderItem = countPrice(para);
-		Map<String, Object> returnMap = new HashMap<String, Object>();
-		returnMap.put("totalNum", comfirmOrderItem.getTotalNum());
-		returnMap.put("totalPrice", comfirmOrderItem.getTotalPrice());
-
-		return returnMap;
 	}
 	
 	@PostMapping @ResponseBody
