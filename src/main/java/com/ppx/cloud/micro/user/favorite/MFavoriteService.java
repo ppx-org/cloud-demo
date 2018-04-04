@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
+import com.ppx.cloud.common.page.MPage;
 import com.ppx.cloud.demo.common.query.QueryCommonService;
 import com.ppx.cloud.demo.common.query.QueryProduct;
 import com.ppx.cloud.micro.common.MGrantContext;
@@ -46,11 +47,13 @@ public class MFavoriteService extends MyDaoSupport {
 	}
 	
 	
-	public List<QueryProduct> listProduct() {
+	public List<QueryProduct> listProduct(MPage page) {
 		WxUser u = MGrantContext.getWxUser();
 		
-		String sql = "select PROD_ID from user_favorite where OPENID = ? and STORE_ID = ? order by CREATED desc";
-		List<Integer> prodIdList = getJdbcTemplate().queryForList(sql, Integer.class, u.getOpenid(), u.getStoreId());
+		StringBuilder sql = new StringBuilder("select PROD_ID from user_favorite where OPENID = ? and STORE_ID = ? order by CREATED desc");
+		//List<Integer> prodIdList = getJdbcTemplate().queryForList(sql, Integer.class, u.getOpenid(), u.getStoreId());
+		
+		List<Integer> prodIdList = mQueryPage(Integer.class, page, sql, u.getOpenid(), u.getStoreId());
 		
 		List<QueryProduct> list = queryServ.listProduct(prodIdList, u.getStoreId());
 		return list;
