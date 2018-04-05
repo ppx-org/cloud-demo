@@ -1,4 +1,4 @@
-package com.ppx.cloud.micro.user.favorite;
+package com.ppx.cloud.micro.user.trace;
 
 import java.util.List;
 
@@ -14,26 +14,18 @@ import com.ppx.cloud.micro.common.WxUser;
 
 
 @Service
-public class MFavoriteService extends MyDaoSupport {
+public class MTraceService extends MyDaoSupport {
 	
 	@Autowired
 	private QueryCommonService queryServ;
-	
-	public boolean isFavorite(Integer prodId) {
-		WxUser u = MGrantContext.getWxUser();
-		String sql = "select count(*) from user_favorite where OPENID = ? and PROD_ID = ?";
-		int r = getJdbcTemplate().queryForObject(sql, Integer.class, u.getOpenid(), prodId);
-		if (r == 1) {
-			return true;
-		}
-		return false;
-	}
+
 	
 
 	public int addProduct(Integer prodId) {
+		// TODO 存在的更新时间
 		WxUser u = MGrantContext.getWxUser();
 		
-		String sql = "insert into user_favorite(OPENID, PROD_ID, STORE_ID) values(?, ?, ?)";
+		String sql = "insert into user_trace(OPENID, PROD_ID, STORE_ID) values(?, ?, ?)";
 		int r = getJdbcTemplate().update(sql, u.getOpenid(), prodId, u.getStoreId());
 		return r;
 	}
@@ -41,7 +33,7 @@ public class MFavoriteService extends MyDaoSupport {
 	public int removeProduct(Integer prodId) {
 		WxUser u = MGrantContext.getWxUser();
 		
-		String sql = "delete from user_favorite where OPENID = ? and PROD_ID = ?";
+		String sql = "delete from user_trace where OPENID = ? and PROD_ID = ?";
 		int r = getJdbcTemplate().update(sql, u.getOpenid(), prodId);
 		return r;
 	}
@@ -50,7 +42,7 @@ public class MFavoriteService extends MyDaoSupport {
 	public List<QueryProduct> listProduct(MPage page) {
 		WxUser u = MGrantContext.getWxUser();
 		
-		StringBuilder sql = new StringBuilder("select PROD_ID from user_favorite where OPENID = ? and STORE_ID = ? order by CREATED desc");
+		StringBuilder sql = new StringBuilder("select PROD_ID from user_trace where OPENID = ? and STORE_ID = ? order by CREATED desc");
 		
 		List<Integer> prodIdList = mQueryPage(Integer.class, page, sql, u.getOpenid(), u.getStoreId());
 		

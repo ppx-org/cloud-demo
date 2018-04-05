@@ -321,6 +321,15 @@ create table user_favorite
 	primary key (OPENID, PROD_ID)
 ) comment='收藏';
 
+create table user_trace
+(
+	OPENID		varchar(32) NOT NULL,
+	PROD_ID		int not null,
+	STORE_ID	int not null,
+	CREATED 	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	primary key (OPENID, PROD_ID)
+) comment='足迹';
+
 create table import_data (
   MERCHANT_ID 	int(11) NOT NULL,
   ROWNUM 		int(11) NOT NULL,

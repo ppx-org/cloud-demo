@@ -32,7 +32,9 @@ function testRequest() {
 
 var requestMap = [];
 
-
+// MTrace
+requestMap["MTrace/listProduct"]= {"pageNumber":1}
+requestMap["MFavorite/listProduct"]= {"pageNumber":1}
 requestMap["MOrder/getDetail"] = "orderId=3";
 requestMap["MOrder/confirmOrder"] = {skuId:[1,2],num:[1,1]}
 requestMap["MOrder/submitOrder"] = {skuId:[1,2],num:[1,1]}
@@ -45,7 +47,7 @@ requestMap["MQuery/query"] = "w=test";
 requestMap["MProduct/getProduct"] = "prodId=1";
 requestMap["MCart/addSku"] = "skuId=1";
 requestMap["MFavorite/addProduct"] = "prodId=1";
-requestMap["MFavorite/listProduct"]= {"pageNumber":1}
+
 
 
 
@@ -100,6 +102,9 @@ $(function() {
 <div>
 <select class="form-control" onchange="urlChange(this)">
 	<option value="">请选择</option>
+	
+	<option value="MTrace/listProduct">MTrace/listProduct</option>
+	
 	
 	<option value="MOrder/getDetail">MOrder/getDetail</option>
 	<option value="MOrder/listMyOrder">MOrder/listMyOrder</option>
