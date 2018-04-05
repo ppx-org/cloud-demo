@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.common.page.MPage;
 import com.ppx.cloud.common.page.MPageList;
+import com.ppx.cloud.demo.common.order.OrderStatusHistory;
 import com.ppx.cloud.demo.common.order.UserOrder;
 import com.ppx.cloud.demo.common.price.bean.SkuIndex;
 import com.ppx.cloud.demo.common.price.service.PriceCommonService;
@@ -100,12 +101,26 @@ public class MOrderController {
 		return returnMap;
 	}
 	
-	
-
 	@PostMapping @ResponseBody
 	public Map<String, Object> listMyOrder(@RequestBody MPage page, Integer orderStatus) {
 		MPageList<UserOrder> list = serv.listMyOrder(page, orderStatus);
 		return ControllerReturn.ok(list);
-
 	}
+	
+	@PostMapping @ResponseBody
+	public Map<String, Object> getDetail(Integer orderId) {
+		
+		UserOrder order = serv.getOrder(orderId);
+		
+		List<OrderStatusHistory> statusList = serv.listOrderStatus(orderId);
+		
+		Map<String, Object> map = ControllerReturn.ok();
+		
+		map.put("store", storeServ.getStore());
+		map.put("order", order);
+		map.put("statusList", statusList);
+		
+		return map;
+	}
+	
 }

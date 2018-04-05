@@ -3,6 +3,7 @@ package com.ppx.cloud.demo.common.order;
 import java.util.Date;
 
 import com.ppx.cloud.common.jdbc.annotation.Id;
+import com.ppx.cloud.store.common.dictionary.Dict;
 
 public class OrderStatusHistory {
 
@@ -43,6 +44,10 @@ public class OrderStatusHistory {
 
 	public void setHistoryStatus(Integer historyStatus) {
 		this.historyStatus = historyStatus;
+	}
+	
+	public String getHistoryStatusDesc() {
+		return Dict.getOrderStatusDesc(historyStatus);	
 	}
 
 	public Date getCreated() {

@@ -32,35 +32,22 @@ public class MStoreService extends MyDaoSupport {
 		return store;
 	}
 	
+	
+	public MStore getStore(Integer storeId) {
+		String sql = "select s.STORE_ID ID, s.STORE_NAME NAME, s.STORE_NO NO, r.REPO_ADDRESS ADDR,"
+				+ " s.STORE_LNG LNG, s.STORE_LAT LAT, s.STORE_PHONE PHONE, s.STORE_IMG IMG from store s left join repository r"
+				+ " on s.STORE_ID = r.REPO_ID where s.STORE_ID = ?";
+		MStore store = getJdbcTemplate().queryForObject(sql,  BeanPropertyRowMapper.newInstance(MStore.class), storeId);
+		return store;
+	}
+	
 
 
 	
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	

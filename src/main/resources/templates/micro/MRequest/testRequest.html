@@ -32,6 +32,11 @@ function testRequest() {
 
 var requestMap = [];
 
+
+requestMap["MOrder/getDetail"] = "orderId=3";
+requestMap["MOrder/confirmOrder"] = {skuId:[1,2],num:[1,1]}
+requestMap["MOrder/submitOrder"] = {skuId:[1,2],num:[1,1]}
+
 requestMap["MCart/editSkuNum"] = "skuId=1&num=3";
  
 
@@ -43,8 +48,6 @@ requestMap["MFavorite/addProduct"] = "prodId=1";
 requestMap["MFavorite/listProduct"]= {"pageNumber":1}
 
 
-requestMap["MOrder/confirmOrder"] = {skuId:[1,2],num:[1,1]}
-requestMap["MOrder/submitOrder"] = {skuId:[1,2],num:[1,1]}
 
 
 
@@ -97,6 +100,12 @@ $(function() {
 <div>
 <select class="form-control" onchange="urlChange(this)">
 	<option value="">请选择</option>
+	
+	<option value="MOrder/getDetail">MOrder/getDetail</option>
+	<option value="MOrder/listMyOrder">MOrder/listMyOrder</option>
+	<option value="MOrder/confirmOrder">MOrder/confirmOrder</option>
+	
+	
 	<option value="MCart/editSkuNum">MCart/editSkuNum</option>
 	
 	<option value="MSearch/deleteLastWord">MSearch/deleteLastWord</option>
@@ -105,8 +114,7 @@ $(function() {
 	<option value="MLog/addPromoEntry">MLog/addPromoEntry</option>
 	
 	<option value="MOrder/submitOrder">MOrder/submitOrder</option>
-	<option value="MOrder/listMyOrder">MOrder/listMyOrder</option>
-	<option value="MOrder/confirmOrder">MOrder/confirmOrder</option>
+	
 	
 	
 	

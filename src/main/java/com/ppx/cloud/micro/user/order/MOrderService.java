@@ -16,6 +16,7 @@ import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.page.MPage;
 import com.ppx.cloud.common.page.MPageList;
 import com.ppx.cloud.demo.common.order.OrderItem;
+import com.ppx.cloud.demo.common.order.OrderStatusHistory;
 import com.ppx.cloud.demo.common.order.UserOrder;
 import com.ppx.cloud.demo.common.price.bean.SkuIndex;
 import com.ppx.cloud.micro.common.MGrantContext;
@@ -161,6 +162,26 @@ public class MOrderService extends MyDaoSupport {
 		
 		return confirmReturn;
 	}
+	
+	
+	// >>>>>>>>>>>>detail>>>>>>>>>>>>>>
+	
+	public UserOrder getOrder(Integer orderId) {
+		String sql = "select * from user_order where ORDER_ID = ?";
+		UserOrder order = getJdbcTemplate().queryForObject(sql, BeanPropertyRowMapper.newInstance(UserOrder.class), orderId);
+		
+		String itemSql = "select * from order_item where ORDER_ID = ? order by ITEM_ID";
+		List<OrderItem> listItem = getJdbcTemplate().query(itemSql, BeanPropertyRowMapper.newInstance(OrderItem.class), orderId);
+		order.setListItem(listItem);
+		return order;
+	}
+	
+	public List<OrderStatusHistory> listOrderStatus(Integer orderId) {
+		String sql = "select HISTORY_STATUS, CREATED from order_status_history where ORDER_ID = ? order by HISTORY_ID desc"; 
+		List<OrderStatusHistory> statusList = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(OrderStatusHistory.class), orderId);
+		return statusList;
+	}
+	
 	
 	
 	
