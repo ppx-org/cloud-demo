@@ -103,9 +103,8 @@ public class MOrderController {
 	
 
 	@PostMapping @ResponseBody
-	public Map<String, Object> listMyOrder(@RequestBody MPage page) {
-
-		MPageList<UserOrder> list = serv.listMyOrder(page);
+	public Map<String, Object> listMyOrder(@RequestBody MPage page, Integer orderStatus) {
+		MPageList<UserOrder> list = serv.listMyOrder(page, orderStatus);
 		return ControllerReturn.ok(list);
 
 	}

@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ppx.cloud.common.jdbc.MyCriteria;
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
 import com.ppx.cloud.common.page.MPage;
 import com.ppx.cloud.common.page.MPageList;
@@ -28,14 +29,17 @@ import com.ppx.cloud.micro.user.order.bean.OverflowSku;
 public class MOrderService extends MyDaoSupport {
 	
 	
-	public MPageList<UserOrder> listMyOrder(MPage page) {
+	public MPageList<UserOrder> listMyOrder(MPage page, Integer orderStatus) {
 		String openid = MGrantContext.getWxUser().getOpenid();
 		int storeId = MGrantContext.getWxUser().getStoreId();
 		
-		StringBuilder sql = new StringBuilder("select ORDER_ID, ORDER_TIME, ORDER_STATUS, ORDER_PRICE from user_order where OPENID = ? and STORE_ID = ?");
+		MyCriteria c = createCriteria("and").addAnd("ORDER_STATUS = ?", orderStatus);
 		
+		StringBuilder sql = new StringBuilder("select ORDER_ID, ORDER_TIME, ORDER_STATUS, ORDER_PRICE "
+				+ "from user_order where OPENID = ? and STORE_ID = ?").append(c);
+		c.addPrePara(openid).addPrePara(storeId);
 		
-		List<UserOrder> orderList = mQueryPage(UserOrder.class, page, sql, openid, storeId);
+		List<UserOrder> orderList = mQueryPage(UserOrder.class, page, sql, c.getParaList());
 		
 		if (orderList.size() == 0) {
 			return new MPageList<UserOrder>(orderList, page); 
