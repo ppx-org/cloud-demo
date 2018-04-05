@@ -37,8 +37,8 @@ public class Dict {
 	
 	private static Map<Integer, String> orderStatusMap = new HashMap<Integer, String>();
 	static {
-		orderStatusMap.put(1, "未付款");
-		orderStatusMap.put(2, "已付款");
+		orderStatusMap.put(1, "待付款");
+		orderStatusMap.put(2, "待配货");
 		orderStatusMap.put(3, "待提货");
 		orderStatusMap.put(4, "交易完成");
 		orderStatusMap.put(5, "交易取消");
