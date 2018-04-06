@@ -86,8 +86,6 @@ public class MOrderService extends MyDaoSupport {
 			stockMap.put(skuId[i], num[i]);
 		}
 		
-		
-		
 		// lock >>>>>>>>>>>>>>>>>>>
 		NamedParameterJdbcTemplate jdbc = new NamedParameterJdbcTemplate(getJdbcTemplate());
 		Map<String, Object> lockPara = new HashMap<String, Object>();
@@ -102,7 +100,7 @@ public class MOrderService extends MyDaoSupport {
 			}
 		}
 		if (confirmReturn.getOverflowList().size() > 0) {
-			confirmReturn.setResult(1);
+			confirmReturn.setResult(-1);
 			return confirmReturn;
 		}
 		
@@ -156,10 +154,17 @@ public class MOrderService extends MyDaoSupport {
 		String insertItemSql = "insert into order_item(ORDER_ID, SKU_ID, PROD_ID, ITEM_UNIT_PRICE, ITEM_PRICE, "
 				+ "ITEM_NUM, ITEM_TITLE, ITEM_SKU, ITEM_IMG, ITEM_PROMO) values(?,?,?,?,?,"
 				+ "?,?,?,?,?)";
-		
 		getJdbcTemplate().batchUpdate(insertItemSql, argsList);
 		
 		
+		// 清除购物车
+		Map<String, Object> deletetCartPara = new HashMap<String, Object>();
+		deletetCartPara.put("openid", openid);
+		deletetCartPara.put("skuIdArray", stockMap.keySet());
+		String deleteCartSql = "delete from user_cart where OPENID = :openid and SKU_ID in (:skuIdArray)";
+		jdbc.update(deleteCartSql, deletetCartPara);
+		
+		confirmReturn.setResult(1);
 		return confirmReturn;
 	}
 	
