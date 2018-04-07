@@ -1,13 +1,4 @@
-var para = {}
-para.w = "gogo";
-para.c = 1;
 
-function toParaString(obj) {
-	var r = [];
-	for (i in obj) {r.push(i + "=" + obj[i]);}
-	return r.join("&");
-}
 
-alert(toParaString(para));
 
 
