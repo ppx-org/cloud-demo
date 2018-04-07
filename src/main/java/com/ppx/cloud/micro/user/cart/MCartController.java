@@ -30,13 +30,14 @@ public class MCartController {
 		int r = serv.editSkuNum(skuId, num);
 		return ControllerReturn.ok(r);
 	}
-	 
-	
-	
 	
 	@PostMapping @ResponseBody
 	public Map<String, Object> listSku() {
 		List<SkuIndex> skuIndexList = serv.listSku();
+		if (skuIndexList.size() == 0) {
+			return ControllerReturn.ok(0);
+		}
+		
 		return ControllerReturn.ok(skuIndexList);
 	}
 	

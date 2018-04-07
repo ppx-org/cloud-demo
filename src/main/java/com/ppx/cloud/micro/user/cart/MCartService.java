@@ -44,6 +44,11 @@ public class MCartService extends MyDaoSupport {
 		String sql = "select SKU_ID, SKU_NUM NUM from user_cart where OPENID = ? and STORE_ID = ?";
 		List<SkuIndex> skuIndexList = getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(SkuIndex.class), u.getOpenid(), u.getStoreId());
 		
+		// 购物车为空就返回
+		if (skuIndexList.size() == 0) {
+			return skuIndexList;
+		}
+		
 		// 计价
 		Map<Integer, SkuIndex> skuIndexMap = new HashMap<Integer, SkuIndex>();
 		for (SkuIndex skuIndex : skuIndexList) {
