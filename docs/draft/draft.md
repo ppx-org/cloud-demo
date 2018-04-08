@@ -12,6 +12,11 @@ function test() {
 }
 ```
 
+我是java代码
+```java
+Stirng n = "test";
+```
+
 
 
 
