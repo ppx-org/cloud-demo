@@ -1,6 +1,4 @@
-<style type="text/css">
-  h1 {color:red;}
-</style>
+
 
 # 日志监控
 使用过滤器com.alibaba.druid.support.http.WebStatFilter;

@@ -1,5 +1,4 @@
 	var s = s + 1;
-	
 	var a = a + 1;
 
 我是一个segment
