@@ -5,7 +5,7 @@
 
 # 日志监控
 
-<table>
+<table width="100">
 <tr>
 	<th>URL<th>Error
 </tr>
