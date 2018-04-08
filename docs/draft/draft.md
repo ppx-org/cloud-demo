@@ -19,8 +19,8 @@ function test() {
 Stirng n = "test";
 ```
 
-
-
+>测试--
+>>1.抓取jsp异常，运行时异常
 
 
 
