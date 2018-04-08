@@ -1,7 +1,11 @@
-
+<style type="text/css">
+  h1 {color:red;}
+</style>
 
 # 日志监控
 使用过滤器com.alibaba.druid.support.http.WebStatFilter;
+* **在log4j那边控制日志级别输出 org.apache.log4j.Category**
+
 
 1. 抓取jsp Runtime Exception
 2. 抓取java Runtme Exception
@@ -9,7 +13,7 @@
 > 1. 方式一:FilterChainImpl存在sql的地方
 4. 调用存过的日志
 5. 去掉e.printStrace()和log.error，替换成...
-6. 
+6. 修改log4j的info和error输出?
 
 
 # 优化日志输出
@@ -26,8 +30,9 @@
 
 
 
+
 # 其它
-1. SQL参数
+1. SQL参数读取
 ```
 at com.mysql.jdbc.PreparedStatement.setTimestamp(PreparedStatement.java:4262)
 at com.alibaba.druid.filter.FilterChainImpl.preparedStatement_setTimestamp(FilterChainImpl.java:2866)
