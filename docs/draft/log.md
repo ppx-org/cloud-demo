@@ -9,7 +9,7 @@
 > 3.1 方式一:FilterChainImpl存在sql的地方
 4. 调用存过的日志
 5. 去掉e.printStrace()和log.error
-5. 
+6. 
 
 
 # 优化日志输出
