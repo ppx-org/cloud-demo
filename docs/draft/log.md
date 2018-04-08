@@ -8,7 +8,7 @@
 3. 抓取SQL Exception
 > 3.1 方式一:FilterChainImpl存在sql的地方
 4. 调用存过的日志
-5. 去掉e.printStrace()和log.error
+5. 去掉e.printStrace()和log.error，替换成...
 6. 
 
 
@@ -22,7 +22,7 @@
 
 
 # 注意事项
-1. 小心定时任务时，调用出现的空指针
+1. 注意定时任务时，调用出现的空指针
 
 
 
