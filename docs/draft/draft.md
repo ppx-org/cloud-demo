@@ -1,10 +1,6 @@
-
-
-
 # 日志监控
 
-
-代码片断
+* 代码片断(javascript)
 ```javascript
 var t = "abc";
 function test() {
@@ -12,7 +8,7 @@ function test() {
 }
 ```
 
-我是java代码
+* 代码片断(java)
 ```java
 Stirng n = "test";
 ```
