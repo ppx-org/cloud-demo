@@ -4,11 +4,16 @@
 使用过滤器com.alibaba.druid.support.http.WebStatFilter;
 * **在log4j那边控制日志级别输出 org.apache.log4j.Category**
 
+* 启动类StartListener
+
+
+
 
 1. 抓取jsp Runtime Exception
 2. 抓取java Runtme Exception
 3. 抓取SQL Exception
 > 1. 方式一:FilterChainImpl存在sql的地方
+> 2. JFinal
 4. 调用存过的日志
 5. 去掉e.printStrace()和log.error，替换成...
 6. 修改log4j的info和error输出?
