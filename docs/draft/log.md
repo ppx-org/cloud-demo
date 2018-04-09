@@ -6,9 +6,6 @@
 
 * 启动类StartListener
 
-
-
-
 1. 抓取jsp Runtime Exception
 2. 抓取java Runtme Exception
 3. 抓取SQL Exception
