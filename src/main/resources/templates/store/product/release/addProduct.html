@@ -118,7 +118,7 @@ $(function() {
 </head>
 <body>
 <div class="form-horizontal form-body">
-	<!--  
+	 
 	<div class="form-group"><div class="form-title"><span class="glyphicon glyphicon-th-list"></span><span>新增产品</span></div></div>
 
 	<form id="addForm">
@@ -150,18 +150,18 @@ $(function() {
 			</select>
 		</div>
 	</div>
-	-->
+	
 	
 	<div class="form-group">
-		<label class="col-sm-2 control-label"><span class="required">*</span><!--SKU：-->SSS</label>
+		<label class="col-sm-2 control-label"><span class="required">*</span>SKU：</label>
 		<div class="col-sm-7">
 		<table id="skuTable" class="table table-bordered table-condensed" style="margin-bottom:0px;">
 		<tr>
-			<th style="width:55px"><!--数量-->nnnn</th>
-			<th style="width:95px"><!--价格-->ppp</th>
-			<th style="width:90px"><!--操作-->op</th>
-			<th style="display:none;" class="firstSkuItem w-title-s"><!--SKU名称  -->name</th>	
-			<th>图片(可拖拉图片进来)</th>
+			<th style="width:55px">数量</th>
+			<th style="width:95px">价格</th>
+			<th style="width:90px">操作</th>
+			<th style="display:none;" class="firstSkuItem w-title-s">SKU名称</th>	
+			<th>图片(必须为120x120,小于20K;可拖拉图片进来)</th>
 		</tr>
 		<tr>
 			<td><input type="text" name="stockNum" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px" value="10"></td>
@@ -198,7 +198,7 @@ $(function() {
 			<table style="border-color:#DDDDDD;height:82px;">
 			<tr class="imgTr">
 			<td>
-				<input type="file" data-max-length="3" accept=".jpg,.png" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
+				<input type="file" data-max-length="3" data-max-size="120*1024=" data-width="480" accept=".jpg,.png" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
 				<a href="#this" onclick="$(this).prev().click()">[ + ]</a>
 			</td>
 			</tr>
@@ -207,7 +207,7 @@ $(function() {
 		</div>
 	</div>
 	
-	<!-- 
+	
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>描述：</label>
 		<div class="col-sm-7">
@@ -237,7 +237,7 @@ $(function() {
 			<input type="text" name="barCode" class="form-control" maxlength="32">
 		</div>
 	</div>
-	 -->
+	
 	
 	<div class="form-group">
 		<div style="text-align: center;">
