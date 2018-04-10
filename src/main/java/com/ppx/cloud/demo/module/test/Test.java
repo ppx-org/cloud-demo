@@ -15,9 +15,9 @@ public class Test {
 	public static void main(String[] args) throws Exception {
 		System.out.println("9999999999999999999");
 		
-		RestTemplate restTemplate = new RestTemplate(new SimpleClientHttpRequestFactory() { protected void prepareConnection(HttpURLConnection connection, String httpMethod) throws IOException { super.prepareConnection(connection, httpMethod); connection.setInstanceFollowRedirects(false); } });
+		//RestTemplate restTemplate = new RestTemplate(new SimpleClientHttpRequestFactory() { protected void prepareConnection(HttpURLConnection connection, String httpMethod) throws IOException { super.prepareConnection(connection, httpMethod); connection.setInstanceFollowRedirects(false); } });
 
-		
+		RestTemplate restTemplate = RestTemplateUtils.getRestTemplate();
 
 		HttpHeaders headers = new HttpHeaders();
         headers.add("Connection", "keep-alive");
@@ -29,8 +29,8 @@ public class Test {
         headers.add("Content-Type", "application/x-www-form-urlencoded");
         headers.add("Cookie", "");
 	       
-        HttpEntity<String> formEntity = new HttpEntity<String>("os_username=hukezhou&os_password=hukezhou&os_destination=&user_role=&atl_token=&login=登录", headers); 
-        //HttpEntity<String> formEntity = new HttpEntity<String>("os_username=dengxiangzhong&os_password=dengxiangzhong&os_destination=%2Fbrowse%2FXY-62&user_role=&atl_token=&login=%E7%99%BB%E5%BD%95", headers);        	
+        //HttpEntity<String> formEntity = new HttpEntity<String>("os_username=hukezhou&os_password=hukezhou&os_destination=&user_role=&atl_token=&login=登录", headers); 
+        HttpEntity<String> formEntity = new HttpEntity<String>("os_username=dengxiangzhongs&os_password=dengxiangzhong&os_destination=%2Fbrowse%2FXY-62&user_role=&atl_token=&login=%E7%99%BB%E5%BD%95", headers);        	
     	ResponseEntity<String> r = restTemplate.exchange("http://t.51hrc.cn/login.jsp", HttpMethod.POST, formEntity, String.class, "");
     	
     	System.out.println("r:" + r.getStatusCode());

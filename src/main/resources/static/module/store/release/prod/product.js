@@ -87,6 +87,8 @@ sku.remove = function(obj) {
 
 // >>>>>>>>>>>>>>>>>>>img>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 var img = {};
+img.dataWidth = -1;
+
 img.zIndex = 1000;
 img.click = function(obj) {
 	open("").document.write("<title>预览图片</title><img src='" + obj.src +"'>");
@@ -96,15 +98,20 @@ img.html = '<td class="imgTd">\
 	<td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td></tr>\
 	<tr><td class="glyphicon glyphicon-step-backward leftTopImg" onclick="img.top(this)"></td></tr></table></td>';
 img.fileChange = function(obj) {
+	
+	this.dataWidth = $(obj).attr("data-width");
+	
 	this.loadImg(obj.files, obj.files.length, $(obj).parent().parent());
 	
 	// 重新生成一个，防止在图片被删除时onchange不生效
 	$(obj).prop("outerHTML", $(obj).prop("outerHTML"));
 }
 img.loadImg = function(f, n, imgTr) {
+	
+	
 	n--;
 	
-	// data-max-size默认为1M,maxLength默认为1
+	// data-max-size默认为512K,data-max-length默认为1
 	var maxSize =  $(imgTr).find("input").attr("data-max-size");
 	maxSize = !maxSize ? 512*1024 : new Number(maxSize);
 	var maxLength = $(imgTr).find("input").attr("data-max-length");
@@ -141,8 +148,16 @@ img.loadImg = function(f, n, imgTr) {
 	this.refreshTop(imgTr);
 }
 img.resize = function(img) {
+	if (this.dataWidth) {
+		if (img.width != this.dataWidth) {
+			alertWarning("长宽必须都为" + this.dataWidth);
+			$(img).parents(".imgTd").remove();
+			return;
+		}
+	}
+	
 	if (img.width != img.height) {
-		alertWarning("长宽不一样");
+		alertWarning("长宽必须一样");
 		$(img).parents(".imgTd").remove();
 	}
 	else {
