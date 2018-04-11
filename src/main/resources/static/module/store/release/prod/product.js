@@ -88,7 +88,6 @@ sku.remove = function(obj) {
 // >>>>>>>>>>>>>>>>>>>img>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 var img = {};
 img.dataWidth = -1;
-
 img.zIndex = 1000;
 img.click = function(obj) {
 	open("").document.write("<title>预览图片</title><img src='" + obj.src +"'>");
@@ -98,7 +97,6 @@ img.html = '<td class="imgTd">\
 	<td class="glyphicon glyphicon-remove-circle" onclick="img.remove(this)"></td></tr>\
 	<tr><td class="glyphicon glyphicon-step-backward leftTopImg" onclick="img.top(this)"></td></tr></table></td>';
 img.fileChange = function(obj) {
-	
 	this.dataWidth = $(obj).attr("data-width");
 	
 	this.loadImg(obj.files, obj.files.length, $(obj).parent().parent());
@@ -107,8 +105,7 @@ img.fileChange = function(obj) {
 	$(obj).prop("outerHTML", $(obj).prop("outerHTML"));
 }
 img.loadImg = function(f, n, imgTr) {
-	
-	
+
 	n--;
 	
 	// data-max-size默认为512K,data-max-length默认为1

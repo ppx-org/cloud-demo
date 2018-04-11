@@ -63,12 +63,17 @@ function uploadImg(callback) {
 	
 	$(".skuImg .uploadImg").each(function() {
 		formData.append("file", $(this).data("file"));
-		formData.append("type", "sku");
+		formData.append("type", "noMain");
 	});
 	
-	$("#prodImg .uploadImg").each(function() {
+	$("#prodImg .uploadImg").each(function(i) {
 		formData.append("file", $(this).data("file"));
-		formData.append("type", "prod");
+		if (i == 0) {
+			formData.append("type", "main");
+		}
+		else {
+			formData.append("type", "noMain");
+		}
 	});
 	
 	$.ajax({url:[[#{imgUrl}]] + '../imgUpload/prodSave', type:"POST", contentType:false, data:formData ,processData:false,
@@ -198,7 +203,8 @@ $(function() {
 			<table style="border-color:#DDDDDD;height:82px;">
 			<tr class="imgTr">
 			<td>
-				<input type="file" data-max-length="3" data-max-size="120*1024=" data-width="480" accept=".jpg,.png" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
+				<!-- data-max-size="120*1024=" data-width="480"  --> 
+				<input type="file" data-max-length="3" accept=".jpg,.png" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
 				<a href="#this" onclick="$(this).prev().click()">[ + ]</a>
 			</td>
 			</tr>

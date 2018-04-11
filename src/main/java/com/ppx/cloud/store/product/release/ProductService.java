@@ -133,11 +133,11 @@ public class ProductService extends MyDaoSupport {
 		String insertChangePrice = "insert into change_price(SKU_ID, CHANGE_PRICE, CREATOR) select SKU_ID, PRICE, ? from sku where PROD_ID = ?";
 		getJdbcTemplate().update(insertChangePrice, creator, prodId);
 		
-		
-		
 		// product
 		prod.setProdId(prodId);
 		prod.setMerchantId(merchantId);
+		// img 第一张为主图
+		prod.setMainImgSrc(prodImgSrc.split(",")[0]);
 		insert(prod);
 		
 		// detail
@@ -145,15 +145,18 @@ public class ProductService extends MyDaoSupport {
 		detail.setCreator(creator);
 		insert(detail);
 		
-		// img
+		// img 第一张为主图
 		String[] imgSrc = prodImgSrc.split(",");
-		List<Object[]> imgArgList = new ArrayList<Object[]>();
-		for (int i = 0; i < imgSrc.length; i++) {
-			Object[] arg = {prodId, i, imgSrc[i]};
-			imgArgList.add(arg);
+		if (imgSrc.length > 1) {
+			List<Object[]> imgArgList = new ArrayList<Object[]>();
+			for (int i = 1; i < imgSrc.length; i++) {
+				Object[] arg = {prodId, i, imgSrc[i]};
+				imgArgList.add(arg);
+			}
+			String imgSql = "insert into product_img(PROD_ID, PROD_IMG_PRIO, PROD_IMG_SRC) values(?,?,?)";
+			getJdbcTemplate().batchUpdate(imgSql, imgArgList);
 		}
-		String imgSql = "insert into product_img(PROD_ID, PROD_IMG_PRIO, PROD_IMG_SRC) values(?,?,?)";
-		getJdbcTemplate().batchUpdate(imgSql, imgArgList);
+		
 		
 		return r;
 	}
@@ -179,6 +182,7 @@ public class ProductService extends MyDaoSupport {
 	}
 	
 	public List<ProductImg> listProductImg(int prodId) {
+		
 		String imgSql = "select * from product_img where PROD_ID = ? order by PROD_IMG_PRIO";
 		List<ProductImg> imgList = getJdbcTemplate().query(imgSql, BeanPropertyRowMapper.newInstance(ProductImg.class), prodId);
 		return imgList;
@@ -210,23 +214,26 @@ public class ProductService extends MyDaoSupport {
 			getJdbcTemplate().batchUpdate(insertSkuSql, newSkuArgList);
 		}
 		
-		
+		// img 第一张为主图
+		prod.setMainImgSrc(prodImgSrc.split(",")[0]);
 		// product
 		int r = update(prod);
 		
 		// detail
 		update(detail);
 		
-		// img
+		// img 第一张为主图
 		getJdbcTemplate().update("delete from product_img where PROD_ID = ?", prod.getProdId());
 		String[] imgSrc = prodImgSrc.split(",");
-		List<Object[]> imgArgList = new ArrayList<Object[]>();
-		for (int i = 0; i < imgSrc.length; i++) {
-			Object[] arg = {prod.getProdId(), i, imgSrc[i]};
-			imgArgList.add(arg);
+		if (imgSrc.length > 1) {
+			List<Object[]> imgArgList = new ArrayList<Object[]>();
+			for (int i = 1; i < imgSrc.length; i++) {
+				Object[] arg = {prod.getProdId(), i, imgSrc[i]};
+				imgArgList.add(arg);
+			}
+			String imgSql = "insert into product_img(PROD_ID, PROD_IMG_PRIO, PROD_IMG_SRC) values(?,?,?)";
+			getJdbcTemplate().batchUpdate(imgSql, imgArgList);
 		}
-		String imgSql = "insert into product_img(PROD_ID, PROD_IMG_PRIO, PROD_IMG_SRC) values(?,?,?)";
-		getJdbcTemplate().batchUpdate(imgSql, imgArgList);
 		
 		return r;
 	}

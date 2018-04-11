@@ -26,6 +26,8 @@ public class Product {
 	
 	private Integer prodStatus;
 	
+	private String mainImgSrc;
+	
 	@Column(readonly=true)
 	private String prodPrice;
 	
@@ -128,6 +130,14 @@ public class Product {
 
 	public void setProdStock(Integer prodStock) {
 		this.prodStock = prodStock;
+	}
+
+	public String getMainImgSrc() {
+		return mainImgSrc;
+	}
+
+	public void setMainImgSrc(String mainImgSrc) {
+		this.mainImgSrc = mainImgSrc;
 	}
 
 	

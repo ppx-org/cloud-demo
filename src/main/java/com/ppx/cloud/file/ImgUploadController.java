@@ -22,14 +22,16 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ppx.cloud.common.controller.ControllerReturn;
 import com.ppx.cloud.grant.common.GrantContext;
 
+import net.coobird.thumbnailator.Thumbnails;
+
 @Controller
 public class ImgUploadController {
 
 	private static Set<String> prodTypeSet = new HashSet<String>();
 	
 	static {
-		prodTypeSet.add("prod");
-		prodTypeSet.add("sku");
+		prodTypeSet.add("main");
+		prodTypeSet.add("noMain");
 	}
 	/**
 	 * product
@@ -49,6 +51,7 @@ public class ImgUploadController {
 		
 		for (String t : type) {
 			if (!prodTypeSet.contains(t)) {
+				System.out.println("-------error");
 				return ControllerReturn.ok(returnList);
 			}
 		}
@@ -67,9 +70,9 @@ public class ImgUploadController {
 				buffStream.write(bytes);
 				
 				// 图片压缩 不需要 
-//				if ("prod".equals(type[i])) {
-//					Thumbnails.of(savePath).size(200, 200).toFile(savePath + "_200.jpg");
-//				}
+				if ("main".equals(type[i])) {
+					Thumbnails.of(savePath).size(240, 240).toFile(savePath + "_240.jpg");
+				}
 				
 				returnList.add(path);
 			} catch (Exception e) {
