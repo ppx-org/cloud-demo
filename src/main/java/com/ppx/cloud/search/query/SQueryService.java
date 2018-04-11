@@ -162,6 +162,7 @@ public class SQueryService extends MyDaoSupport {
 		
 		p.setTotalRows(resultBs.cardinality());
 		List<Integer> prodIdList = BitSetUtils.bsToPage(resultBs, (p.getPageNumber() - 1) * p.getPageSize(), p.getPageSize());
+		System.out.println("xxxxxxxxxxxxxxxxxout:" + p.getPageNumber() );
 		returnMap.put("prodIdList", prodIdList);
 		
 		// fast statistic

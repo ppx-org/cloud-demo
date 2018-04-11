@@ -12,7 +12,10 @@ function queryPage(pageNumber) {
 	$("#pageNumber").val(pageNumber);
 	showLoading();
 	
-	$.get([[#{searchUrl}]] + 'testSearch/query', $("#queryForm").serialize(), function(r) {
+	var para = $("#queryForm").serialize();
+	para = para.replace("pageNumber", "p.pageNumber");
+	para = para.replace("pageSize", "p.pageSize");
+	$.get([[#{searchUrl}]] + 'testSearch/query', para, function(r) {
 		refreshPageData(r);
 		
 		$("#fastView").empty();
