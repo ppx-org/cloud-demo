@@ -24,6 +24,7 @@ import com.ppx.cloud.store.merchant.repo.RepositoryService;
 import com.ppx.cloud.store.product.release.bean.Product;
 import com.ppx.cloud.store.product.release.bean.ProductDetail;
 import com.ppx.cloud.store.product.release.bean.ProductExport;
+import com.ppx.cloud.store.product.release.bean.ProductImg;
 
 
 @Controller	
@@ -112,7 +113,12 @@ public class ProductController {
 		ProductDetail detail = serv.getProductDetail(prodId);
 		mv.addObject("detail", detail);
 		mv.addObject("listSku", serv.listSku(prodId));
-		mv.addObject("listImg", serv.listProductImg(prodId));
+		List<ProductImg> listImg = new ArrayList<ProductImg>();
+		ProductImg productImg = new ProductImg();
+		productImg.setProdImgSrc(prod.getMainImgSrc());
+		listImg.add(productImg);
+		listImg.addAll(serv.listProductImg(prodId));
+		mv.addObject("listImg", listImg);
 		
 		// 产品参数
 		List<Map<String, String>> prodArsList = new ArrayList<Map<String, String>>();

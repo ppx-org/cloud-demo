@@ -51,7 +51,6 @@ public class ImgUploadController {
 		
 		for (String t : type) {
 			if (!prodTypeSet.contains(t)) {
-				System.out.println("-------error");
 				return ControllerReturn.ok(returnList);
 			}
 		}

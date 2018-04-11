@@ -1,17 +1,13 @@
  // 要想实现拖拽，首页需要阻止浏览器默认行为，一个四个事件。
 $(document).on({
-	dragleave:function(e){        //拖离
-		e.preventDefault();
-	},
-    drop:function(e){            //拖后放
-    	e.preventDefault();
-	},
-	dragenter:function(e){       //拖进
-		e.preventDefault();
-    },
-	dragover:function(e){        //拖来拖去
-		e.preventDefault();
-	}
+	// 拖离
+	dragleave:function(e){e.preventDefault()},
+	// 拖后放
+    drop:function(e){e.preventDefault()},
+	// 拖进
+	dragenter:function(e){e.preventDefault()},
+    // 拖来拖去
+	dragover:function(e) {e.preventDefault()}
 });
 
 var refreshDrag = function() {
@@ -87,7 +83,7 @@ sku.remove = function(obj) {
 
 // >>>>>>>>>>>>>>>>>>>img>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 var img = {};
-img.dataWidth = -1;
+img.dataWidth;
 img.zIndex = 1000;
 img.click = function(obj) {
 	open("").document.write("<title>预览图片</title><img src='" + obj.src +"'>");

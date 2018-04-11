@@ -196,8 +196,9 @@ $(function() {
 	</div>
 	
 	<div id="prodImg" class="form-group">
-		<label class="col-sm-2 control-label"><span class="required">*</span>PPPIMG：</label>
+		<label class="col-sm-2 control-label"><span class="required">*</span>产品图片：</label>
 		<div class="col-sm-7 dragImg">
+			<div style="color:gray;">说明：第一张图为主图，将在产品列表中显示</div>
 			<div style="background:linear-gradient(90deg, #EEEEEE 50%, #FFFFFF 50%);background-size:8px 8px;">
 			<input type="hidden" id="prodImgSrc" name="prodImgSrc">
 			<table style="border-color:#DDDDDD;height:82px;">
@@ -217,12 +218,12 @@ $(function() {
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>描述：</label>
 		<div class="col-sm-7">
-		<textarea type="text" name="prodDesc" class="form-control validate[required]" maxlength="256" style="width:100%">desc1</textarea></div>
+		<textarea name="prodDesc" class="form-control validate[required]" maxlength="256" style="width:100%">desc1</textarea></div>
 	</div>
 	
 	<div class="form-group">
 		<label class="col-sm-2 control-label">产品参数：</label>
-		<div  class="col-sm-7">
+		<div class="col-sm-7">
 			<div style="background-color:#EEEEEE;height:105px;overflow-y: scroll">
 			<div th:each="i:${#strings.arraySplit('1,2,3,4,5,6,7,8,9,10',',')}">
 			<label th:text="${i}" style="width:20px;text-align:right"></label>

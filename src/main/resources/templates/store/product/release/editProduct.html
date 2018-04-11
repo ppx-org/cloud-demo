@@ -69,13 +69,15 @@ function uploadImg(callback) {
 	
 	$("#prodImg .uploadImg").each(function(i) {
 		formData.append("file", $(this).data("file"));
-		if (i == 0) {
+		if (i == 0 && this == $("#prodImg img").get(0)) {
+			// 第一张为主图
 			formData.append("type", "main");
 		}
 		else {
 			formData.append("type", "noMain");
 		}
 	});
+	
 	
 	// 没有新图片上传
 	if (formData.get("file") == null) {
@@ -299,6 +301,7 @@ function viewChangePrice(skuId) {
 		<label class="col-sm-2 control-label"><span class="required">*</span>产品图片：</label>
 		<input type="hidden" id="prodImgSrc" name="prodImgSrc">
 		<div class="col-sm-7 dragImg">
+		<div style="color:gray;">说明：第一张图为主图，将在产品列表中显示</div>
 		<div style="background:linear-gradient(90deg, #EEEEEE 50%, #FFFFFF 50%);background-size:8px 8px;">
 			<table style="border-color:#DDDDDD;height:82px">
 			<tr class="imgTr">
@@ -317,6 +320,8 @@ function viewChangePrice(skuId) {
 			</td>
 			</tr>
 			</table>
+			
+			
 		</div>
 		</div>
 	</div>
