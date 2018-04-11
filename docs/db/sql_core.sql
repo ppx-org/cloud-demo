@@ -194,6 +194,7 @@ create table product
    SKU_DESC				varchar(32),
    PROD_PRIO			int not null default 10000,
    PROD_STATUS 			tinyint(1) not null DEFAULT 1,   
+   MAIN_IMG_SRC         varchar(128) not null,
    primary key (PROD_ID)
 ) comment='产品';
 create index idx_product_merchant_id on product(MERCHANT_ID);
