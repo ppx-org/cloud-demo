@@ -1,13 +1,9 @@
 package com.ppx.cloud.demo.module.test;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 public class Test {
