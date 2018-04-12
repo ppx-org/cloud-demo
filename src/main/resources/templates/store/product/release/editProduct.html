@@ -242,7 +242,7 @@ function viewChangePrice(skuId) {
 			<th style="width:85px">价格</th>
 			<th style="width:90px">操作</th>
 			<th th:style="${prod.skuDesc == ''}?'display:none':'width:210px'" class="firstSkuItem w-title-s">SKU名称</th>
-			<th style="width:150px">图片(<span style="color:red">必须为120x120,小于20K;</span>可拖拉图片进来)</th>
+			<th style="width:240px">图片(<span style="color:red">120x120,小于20K;</span>可拖拉图片)</th>
 			<th>变更操作</th>
 		</tr>
 		
@@ -313,17 +313,14 @@ function viewChangePrice(skuId) {
 				</table>
 			</td>
 			</tr>
-			</table>
-			
-			
+			</table>	
 		</div>
 		</div>
 	</div>
 	
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>描述：</label>
-		<div class="col-sm-8">
-		<textarea th:text="${detail.prodDesc}" name="prodDesc" class="form-control validate[required]" maxlength="256" style="width:500px;"></textarea></div>
+		<div class="col-sm-7"><textarea th:text="${detail.prodDesc}" name="prodDesc" class="form-control validate[required]" maxlength="256" style="width:100%;"></textarea></div>
 	</div>
 	
 	<div class="form-group">
