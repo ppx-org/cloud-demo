@@ -242,7 +242,7 @@ function viewChangePrice(skuId) {
 			<th style="width:85px">价格</th>
 			<th style="width:90px">操作</th>
 			<th th:style="${prod.skuDesc == ''}?'display:none':'width:210px'" class="firstSkuItem w-title-s">SKU名称</th>
-			<th style="width:150px">图片(可拖拉图片进来)</th>
+			<th style="width:150px">图片(<span style="color:red">必须为120x120,小于20K;</span>可拖拉图片进来)</th>
 			<th>变更操作</th>
 		</tr>
 		
@@ -260,7 +260,7 @@ function viewChangePrice(skuId) {
 			<td class="dragImg skuImg" style="background:linear-gradient(90deg, #EEEEEE 50%, #FFFFFF 50%);background-size:8px 8px;">
 				<input type="hidden" name="skuImgSrc">
 				<table><tr class="imgTr"><td>
-					<input type="file" data-max-size="131072" onchange="img.fileChange(this)" style="display:none" accept=".jpg,.png">
+					<input type="file"  data-max-size="20480" data-width="120" onchange="img.fileChange(this)" style="display:none" accept=".jpg,.png">
 					<a href="#this" onclick="$(this).prev().click()">[ + ]</a>
 				</td>
 				<td class="imgTd" style="height:80px">					
@@ -295,12 +295,12 @@ function viewChangePrice(skuId) {
 		<label class="col-sm-2 control-label"><span class="required">*</span>产品图片：</label>
 		<input type="hidden" id="prodImgSrc" name="prodImgSrc">
 		<div class="col-sm-7 dragImg">
-		<div style="color:gray;">说明：第一张图为主图，将在产品列表中显示</div>
+		<div style="color:gray;">说明：第一张图为主图，将在产品列表中显示(<span style="color:red">必须为480x480,小于120K;</span>可拖拉图片进来)</div>
 		<div style="background:linear-gradient(90deg, #EEEEEE 50%, #FFFFFF 50%);background-size:8px 8px;">
 			<table style="border-color:#DDDDDD;height:82px">
 			<tr class="imgTr">
 			<td>
-				<input type="file" data-max-length="3" accept=".jpg,.png" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
+				<input type="file" data-max-length="3" accept=".jpg,.png" data-max-size="122880" data-width="480" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
 				<a href="#this" onclick="$(this).prev().click()">[ + ]</a>
 			</td>
 			<td class="imgTd" style="height:80px;width:100px;" th:each="img,imgStat:${listImg}">

@@ -162,13 +162,13 @@ $(function() {
 			<th style="width:95px">价格</th>
 			<th style="width:90px">操作</th>
 			<th style="display:none;" class="firstSkuItem w-title-s">SKU名称</th>	
-			<th>图片(必须为120x120,小于20K;可拖拉图片进来)</th>
+			<th>图片(<span style="color:red">必须为120x120,小于20K;</span>可拖拉图片进来)</th>
 		</tr>
 		<tr>
 			<td><input type="text" name="stockNum" class="form-control validate[required,custom[integer]]" maxlength="3" style="width:50px" value="10"></td>
 			<td><input type="text" name="price" class="form-control validate[required,custom[number]]" maxlength="7" style="width:90px" value="9.9"></td>
 			
-			<td class="skuAction"><a href="#this" onclick="sku.add(this)"><!--[增加SKU]-->add</a></td>
+			<td class="skuAction"><a href="#this" onclick="sku.add(this)">[增加SKU]</a></td>
 			<td style="display:none;" class="firstSkuItem"><input type="text" name="skuName" class="form-control validate[required]" maxlength="32"></td>
 			<td class="dragImg skuImg" style="background:linear-gradient(90deg, #EEEEEE 50%, #FFFFFF 50%);background-size:8px 8px;">
 			<input type="hidden" name="skuImgSrc">
@@ -187,21 +187,20 @@ $(function() {
 	</div>
 	
 	<div id="skuDescDiv" class="form-group" style="display:none">
-		<label class="col-sm-2 control-label"><span class="required">*</span><!-- SKU属性 -->xxx：</label>
+		<label class="col-sm-2 control-label"><span class="required">*</span>SKU属性</label>
 		<div class="col-sm-8"><input type="text" name="skuDesc" class="form-control validate[required]" maxlength="32"></div>
 	</div>
 	
 	<div id="prodImg" class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>产品图片：</label>
 		<div class="col-sm-7 dragImg">
-			<div style="color:gray;">说明：第一张图为主图，将在产品列表中显示</div>
+			<div style="color:gray;">说明：第一张图为主图，将在产品列表中显示(<span style="color:red">必须为480x480,小于120K;</span>可拖拉图片进来)</div>
 			<div style="background:linear-gradient(90deg, #EEEEEE 50%, #FFFFFF 50%);background-size:8px 8px;">
 			<input type="hidden" id="prodImgSrc" name="prodImgSrc">
 			<table style="border-color:#DDDDDD;height:82px;">
 			<tr class="imgTr">
 			<td>
-				<!-- data-max-size="120*1024=" data-width="480"  --> 
-				<input type="file" data-max-length="3" accept=".jpg,.png" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
+				<input type="file" data-max-length="3" accept=".jpg,.png" data-max-size="122880" data-width="480" multiple="multiple" onchange="img.fileChange(this)" style="display:none">
 				<a href="#this" onclick="$(this).prev().click()">[ + ]</a>
 			</td>
 			</tr>
@@ -209,7 +208,6 @@ $(function() {
 			</div>
 		</div>
 	</div>
-	
 	
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><span class="required">*</span>描述：</label>
