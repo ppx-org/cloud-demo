@@ -30,8 +30,8 @@ public class ImgUploadController {
 	private static Set<String> prodTypeSet = new HashSet<String>();
 	
 	static {
-		prodTypeSet.add("main");
-		prodTypeSet.add("noMain");
+		prodTypeSet.add("prod");
+		prodTypeSet.add("sku");
 	}
 	/**
 	 * product
@@ -69,7 +69,7 @@ public class ImgUploadController {
 				buffStream.write(bytes);
 				
 				// 图片压缩 不需要 
-				if ("main".equals(type[i])) {
+				if ("prod".equals(type[i])) {
 					Thumbnails.of(savePath).size(240, 240).toFile(savePath + "_240.jpg");
 				}
 				

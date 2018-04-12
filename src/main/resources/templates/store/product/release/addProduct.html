@@ -63,17 +63,13 @@ function uploadImg(callback) {
 	
 	$(".skuImg .uploadImg").each(function() {
 		formData.append("file", $(this).data("file"));
-		formData.append("type", "noMain");
+		formData.append("type", "sku");
 	});
 	
 	$("#prodImg .uploadImg").each(function(i) {
 		formData.append("file", $(this).data("file"));
-		if (i == 0) {
-			formData.append("type", "main");
-		}
-		else {
-			formData.append("type", "noMain");
-		}
+		formData.append("type", "prod");
+		
 	});
 	
 	$.ajax({url:[[#{imgUrl}]] + '../imgUpload/prodSave', type:"POST", contentType:false, data:formData ,processData:false,
