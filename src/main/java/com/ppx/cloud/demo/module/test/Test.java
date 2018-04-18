@@ -8,8 +8,9 @@ public class Test {
 		
 		System.out.println("xxxxxxxxx--1");
 		
-		String path = "C:/Users/LENOVO/Desktop/tmp/1.png";
-		Thumbnails.of(path).size(150, 150).toFile("C:/Users/LENOVO/Desktop/tmp/1_150.png");
+		
+		//String path = "C:/Users/LENOVO/Desktop/tmp/1.png";
+		//Thumbnails.of(path).size(150, 150).toFile("C:/Users/LENOVO/Desktop/tmp/1_150.png");
 		
 		
 		/*
