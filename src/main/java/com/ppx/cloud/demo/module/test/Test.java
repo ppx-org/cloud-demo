@@ -12,7 +12,31 @@ import net.coobird.thumbnailator.geometry.Coordinate;
 public class Test {
 	
 	
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
+		String s = "";
+		System.out.println("xxxxxxxxxx:" + s.split(";")[0]);
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static void mainx(String[] args) throws Exception {
 		System.out.println("----------begin");
 		
 		String path = "E:/U/img/";
