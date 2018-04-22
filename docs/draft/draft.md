@@ -9,10 +9,7 @@ BFC(block formatting context）
 1. 输出位置
 > 1. 输出到控制台
 > 2. 输出到mongodb
-
-
-
-
+> 3. 记住
 
 
 
