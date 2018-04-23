@@ -25,7 +25,7 @@ https://help.github.com/articles/configuring-jekyll/
 
 # 或者使用
 ```
-github: [metadata]
+ github: [metadata]
  encoding: UTF-8
  kramdown:
    input: GFM
