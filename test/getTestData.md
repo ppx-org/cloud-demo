@@ -14,3 +14,8 @@ console.log(r.join("\r\n"));
 3. 复制到excel
 
 
+4. 公式indirect相当于js的eval, &可以连接字符串
+```
+=INDIRECT("A" & RANDBETWEEN(2, 19))
+```
+
