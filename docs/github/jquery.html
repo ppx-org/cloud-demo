@@ -1,0 +1,42 @@
+<script src="jquery-2.0.0.min.js"></script>
+
+
+<input type="text" id="ghusername" value="mark-person"/>
+
+<button type="button" id="ghsubmitbtn">go</button>
+
+<script>
+function requestJSON(url, callback) {
+	// head 'Authorization: token 5199831f4dd3b79e7c5b7e0ebe75d67aa66e79d4'
+	$.ajax({
+	  headers: {
+		Authorization: "99aa3a9aa26497b14b67335926953b5fe6888ea1"
+	  },
+	  url: url,
+	  complete: function(xhr) {
+		callback.call(null, xhr.responseJSON);
+	  }
+	});
+}
+
+$(function(){
+  
+	
+	$('#ghsubmitbtn').on('click', function(e){
+		e.preventDefault();
+		$('#ghapidata').html('<div id="loader"><img src="css/loader.gif" alt="loading..."></div>');
+		
+		var username = $('#ghusername').val();
+		var requri   = 'https://api.github.com/users/'+username;
+		var repouri  = 'https://api.github.com/users/'+username+'/repos';
+		
+		
+		// requri = 
+		
+		requestJSON(repouri, function(json) {
+			alert(JSON.stringify(json));
+		});
+		
+	});
+});
+</script>
