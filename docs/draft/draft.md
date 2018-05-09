@@ -1,5 +1,5 @@
 
-
+jquery 递延对象 jQuery.Deferred
 
 BFC(block formatting context）
 
