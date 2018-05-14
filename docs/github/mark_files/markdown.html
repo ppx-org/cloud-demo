@@ -1,0 +1,62 @@
+<script src="jquery-2.0.0.min.js"></script>
+
+
+<script>
+function go() {
+	$.ajax({
+		type: "POST",
+		dataType: "html",
+		processData: false,
+		url: "https://api.github.com/markdown/raw",
+		data: $("#inText").val(),
+		contentType: "text/plain",
+		success: function(data){
+			//console.log("success!");
+			//console.log(data);
+			$("#view").html(data);
+		}, 
+		error: function(jqXHR, textStatus, error){
+			console.log(jqXHR, textStatus, error);
+		}
+	});
+}
+
+</script>
+
+<link rel="stylesheet" href="https://cdn.bootcss.com/github-markdown-css/2.10.0/github-markdown.min.css" />
+
+<textarea id="inText" cols="100" rows="5"></textarea>
+
+<button onclick="go()">GO</button>
+
+<div id="view" class="markdown-body"></div>
+
+
+
+
+<script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+

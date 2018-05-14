@@ -1,0 +1,63 @@
+
+<!-- saved from url=(0055)file:///C:/Users/LENOVO/Desktop/jquery-github/mark.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><script src="./mark_files/jquery-2.0.0.min.js.&#19979;&#36733;"></script>
+
+
+<script>
+function go() {
+	$.ajax({
+		type: "POST",
+		dataType: "html",
+		processData: false,
+		url: "https://api.github.com/markdown/raw",
+		data: $("#inText").val(),
+		contentType: "text/plain",
+		success: function(data){
+			//console.log("success!");
+			//console.log(data);
+			$("#view").html(data);
+		}, 
+		error: function(jqXHR, textStatus, error){
+			console.log(jqXHR, textStatus, error);
+		}
+	});
+}
+
+</script>
+
+<link rel="stylesheet" href="./mark_files/github-markdown.min.css">
+
+</head><body style=""><textarea id="inText" cols="100" rows="5"></textarea>
+
+<div id="view" class="markdown-body"></div>
+
+<button onclick="go()">GO</button>
+
+
+<script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+</body></html>
