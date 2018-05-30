@@ -1,0 +1,42 @@
+<script>
+var N = 5;
+var x = 0;
+var y = 0;
+var action = "012";
+function getAction() {
+	var t = 0;
+	for (var i = 0; i < action.length; i++) {
+		action = (action.charAt(i) == t) ? (action.substring(0, i) + t++ + action.substring(i)) : action;
+		t = (t == 4) ? 0 : t;
+	}	 
+	action = (action.charAt(action.length - 1) == "2") ? (action + "30") : action;
+	action = (action.charAt(action.length - 1) == "0") ? (action + "12") : action;
+}
+for (var i = 2; i < N; i++) {getAction()}
+var r = [[0,0]];
+var run = ["x++", "y++", "x--", "y--"];
+for (var i = 0; i < action.length; i++) {
+	eval(run[(action.charAt(i))]);
+	r.push([x,y]);
+}
+
+// 打印结果
+var rMap = {};
+for (var i = 0; i < r.length; i++) {
+	rMap[r[i] + ""] = (i + 1);
+}
+var table = "";
+for (var y = 0; y < N; y++) {
+	table += "<tr>";
+	for (var x = 0; x < N; x++) {
+		table += "<td>" + rMap[[x,y]] + "</td>";
+	}
+	table += "</tr>";
+}
+document.write("<table border=1>" + table + "</table>");
+</script>
+
+
+
+
+

@@ -1,0 +1,44 @@
+<script>
+var N = 4;
+var x = 0;
+var y = 0;
+var arrow = [];
+for (i = 0; i < N; i++) {
+	var r = "";
+	var t = (i % 2 != 0) ? "3" : "1";
+	for (j = 0; j < i + 1; j++) {r += t}
+	arrow[i] = r;
+}
+
+var action = [];
+for (i = 0; i < arrow.length; i++) {
+	action.push(arrow[i].charAt(0) == "1" ? "0" : "2");
+	action.push(arrow[i]);
+}
+
+var left = action.join("").substring(0, Math.ceil(N*N/2));
+var right = "";
+for (var i = Math.floor(N*N/2) - 2; i >= 0; i--) {right += left.charAt(i)}
+var action = left + right;
+
+var r = [];
+r.push([0,0]);
+var run = ["x++", "x--;y++", "y++", "x++;y--"];
+for (var i = 0; i < action.length; i++) {
+	eval(run[(action.charAt(i))]);
+	r.push([x,y]);
+}
+
+// 打印结果
+var rMap = {};
+for (var i = 0; i < r.length; i++) {rMap[r[i] + ""] = (i + 1)}
+var table = "";
+for (var y = 0; y < N; y++) {
+	table += "<tr>";
+	for (var x = 0; x < N; x++) {
+		table += "<td>" + rMap[[x,y]] + "</td>";
+	}
+	table += "</tr>";
+}
+document.write("<table border=1>" + table + "</table>");
+</script>
