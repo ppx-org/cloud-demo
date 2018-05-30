@@ -3,15 +3,17 @@ package com.ppx.cloud.demo.module.test;
 public class Test {
 	
 	
-	public static void mainT(String[] args) {
-		
-		// aspose words for java 16.8.0
-		// https://artifact.aspose.com/webapp/#/artifacts/browse/tree/General/repo/com/aspose/aspose-words/18.4/aspose-words-18.4-jdk16.jar
-		
-		String s = "";
-		System.out.println("xxxxxxxxxx:" + s.split(";")[0]);
-		
-		
+	public static void main(String[] args) {
+		System.out.println("-----------1");
+		try {
+			Del.test();
+			//throw new NoClassDefFoundError("e");
+		} catch (Exception e) {
+			System.out.println("-----------2");
+		} finally {
+			System.out.println("-----------3");
+		}
+		System.out.println("-----------4");
 	}
 	
 	
